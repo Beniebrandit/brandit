@@ -1,0 +1,50 @@
+.swiper-button-next,
+.swiper-button-prev {
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  color: #191d1e;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  border: 1px solid grey;
+  border-color: grey;
+  z-index: 10;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.swiper-button-next {
+  right: -90px; /* Adjust this value as needed */
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.swiper-button-prev {
+  left: -90px; /* Adjust this value as needed */
+  top: 50%;
+  transform: translateY(-50%);
+}
+.play-button-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .play-button-overlay Typography {
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
