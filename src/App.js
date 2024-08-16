@@ -1,29 +1,17 @@
 import "./App.css";
-import BannerFeature from "./components/BannerFeature/BannerFeature";
-import Bannerslider from "./components/Bannerslider/Bannerslider";
-import Detail from "./components/Detail/Detail";
-import Faq from "./components/Faq/Faq";
-
-import Footer from "./components/Footer/Footer";
-import Header from "./components/Header/Header";
-import Product from "./components/Product/Product";
-import ProductDescription from "./components/ProductDescription/ProductDescription";
-import ReviewCard from "./components/ReviewCard/ReviewCard";
-import Services from "./components/Services/Services";
+import { Route, Routes } from 'react-router-dom';
+import  HomePage  from "./pages/HomePage";
+import ProductPage from "./pages/ProductPage";
 function App() {
   return (
     <>
-      <Header />
-      <Product />
-      <ProductDescription />
-      <Services />
-      <BannerFeature />
 
-      <Bannerslider />
-      <Detail />
-      <Faq />
-      <ReviewCard />
-      <Footer />
+<Routes>
+      <Route path='/' element={<HomePage/>}></Route>
+      <Route path='/products' element={<ProductPage/>}></Route>
+    </Routes>
+
+      
     </>
   );
 }

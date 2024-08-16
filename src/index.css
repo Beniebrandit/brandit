@@ -11,3 +11,153 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/*  Header.css */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.header {
+  background-color: #3f5163;
+  color: white;
+  padding: 10px 0;
+}
+
+.header_btn {
+  background-color: #3f5163 !important;
+  margin-right: 10px !important;
+}
+
+.inner_header {
+  padding-top: 10px;
+  background-color: white;
+}
+
+.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
+  height: 0.2em !important;
+  width: 100%;
+}
+
+/* product.css*/
+.product_box{
+  margin-top:89px !important;
+}
+
+
+.swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal{
+  display:flex;
+  justify-content: space-between;
+}
+.swiper-button-next,
+.swiper-button-prev {
+  color: #000; /* Ensure the color is visible */
+}
+
+/* Bannerslider.css */
+
+/* Hide the default navigation icons */
+.swiper-button-next,
+.swiper-button-prev {
+  background: none; /* Remove default background */
+  color: transparent; /* Hide default arrow icons */
+}
+
+/* Apply custom SVG directly */
+.swiper-button-next svg,
+.swiper-button-prev svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Optional: Customize the position, size, etc. */
+.swiper-button-next,
+.swiper-button-prev {
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 80px;
+  height: 81px;
+  z-index: 10;
+}
+.swiper-button-next {
+  right: -10%;
+}
+.swiper-button-prev {
+  left: -10%;
+}
+
+@media only screen and (max-width: 768px) {
+  .swiper-button-prev,
+  .swiper-button-next,
+  .swiper-button-prev-video,
+  .swiper-button-next-video {
+    display: none !important;
+  }
+}
+@media only screen and (min-width: 600px) {
+  .swiper-button-prev,
+  .swiper-button-next,
+  .swiper-button-prev-video,
+  .swiper-button-next-video {
+    display: none !important;
+  }
+}
+
+
+/* Media Queries */
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+  }
+
+  .inner_header img {
+    width: 100%;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px; /* Thinner scrollbar on smaller screens */
+  }
+
+  .custom-scrollbar {
+    scrollbar-width: thin;
+  }
+}
+
+.custom-scrollbar-container {
+  overflow-x: auto; /* Allows horizontal scrolling if needed */
+  overflow-y: auto; /* Allows vertical scrolling if needed */
+  white-space: nowrap; /* Prevents wrapping of content */
+  max-width: 100%; /* Ensures the container doesn't exceed the screen width */
+}
+
+ .background {
+    background-image: url("./asset/images/Banner.png");
+    background-size: 100% 100%;
+    background-position: top left;
+    background-repeat: no-repeat;
+    height: 80vh; /* Default for small screens */
+  }
+
+  @media (min-width: 320px) {
+    /* md screens */
+    .background {
+      height: 120vh;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    /* lg screens */
+    .background {
+      height: 100vh;
+    }
+  }
+
+.background1 {
+  background-image: url("./asset/images/Group 396.png");
+  background-size: 100% 100%;
+  height: 100vh;
+}
