@@ -3,7 +3,6 @@ import React from "react";
 import whyBranditSignage from "../asset/images/whyBranditSignage.png";
 import Brandit_icon1 from "../asset/images/Brandit_icon1.svg";
 import Brandit_icon2 from "../asset/images/Brandit_icon2.svg";
-import Brandit_image from "../asset/images/Brandit.png";
 
 const WhyBranditSignage = () => {
   return (
@@ -43,13 +42,7 @@ const WhyBranditSignage = () => {
         </Container>
       </Box>
 
-      <Box sx={{marginTop:"5rem"}}>
-        <Container>
-          <h1 style={{position:"absolute",textAlign:"left",width:"30rem",marginTop:"20%",paddingLeft:"3rem",color:"white"}}>Lorem ipsum dolor sit amet, 
-          consectetur adipiscing elit.</h1>
-          <img src={Brandit_image} alt="" style={{margin:"auto",height:"100%" , width:"100%"}} />
-        </Container>
-      </Box>
+    
     </>
   );
 };

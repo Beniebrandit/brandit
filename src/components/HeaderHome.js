@@ -22,6 +22,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import React, { useState } from "react";
 import { Drawer, List, ListItem, ListItemText } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import Pop_Up from "./Pop_Up";
 
 const HeaderHome = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -29,8 +30,14 @@ const HeaderHome = () => {
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
   };
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <>
+    <Pop_Up open={open} handleClose={handleClose} />
       <Box className="background">
         <Box className="header">
           <Container
@@ -380,7 +387,7 @@ const HeaderHome = () => {
                 </Typography>
               </Box>
             </Box>
-            <Button sx={{ width: "7rem", margin: "auto" }}>Design Now</Button>
+            <Button onClick={handleOpen} sx={{ width: "7rem", margin: "auto" }}>Design Now</Button>
           </Box>
         </Container>
       </Box>
