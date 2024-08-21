@@ -15,6 +15,7 @@ const TabPanel = ({ children, value, index }) => {
 
 const ProductDescription = () => {
   const [value, setValue] = useState(0);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -27,7 +28,6 @@ const ProductDescription = () => {
           borderRadius: "10px",
           boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
           height: "100%",
-
           marginTop: "100px",
           padding: "30px",
         }}
@@ -37,75 +37,33 @@ const ProductDescription = () => {
           onChange={handleChange}
           sx={{
             "& .MuiTabs-indicator": {
-              display: "none", // Hide the indicator
+              display: "none",
             },
           }}
         >
-          <Tab
-            label="Description"
-            sx={{
-              border: "1px solid #3F5163",
-              color: "#FFFFFF",
-              borderRadius: "35px",
-              backgroundColor: "#3F5163",
-              fontSize: "18px",
-              lineHeight: "18px",
-              fontFamily: "Cerebri Sans",
-              fontWeight: "400",
-              marginRight: "10px",
-              "&.Mui-selected": {
-                color: "#FFFFFF",
-                backgroundColor: "#3F5163",
-              },
-            }}
-          />
-          <Tab
-            label="Lorem Ipsum"
-            sx={{
-              border: "1px solid #DCDCDC",
-              color: "#868686",
-              borderRadius: "35px",
-              fontSize: "18px",
-              lineHeight: "18px",
-              fontFamily: "Cerebri Sans",
-              fontWeight: "500",
-              marginRight: "10px",
-              "&.Mui-selected": {
-                color: "#3F5163",
-              },
-            }}
-          />
-          <Tab
-            label="Lorem Ipsum"
-            sx={{
-              border: "1px solid #DCDCDC",
-              color: "#868686",
-              borderRadius: "35px",
-              fontSize: "18px",
-              lineHeight: "18px",
-              fontFamily: "Cerebri Sans",
-              fontWeight: "500",
-              marginRight: "10px",
-              "&.Mui-selected": {
-                color: "#3F5163", // Ensure selected tab color
-              },
-            }}
-          />
-          <Tab
-            label="Lorem Ipsum"
-            sx={{
-              border: "1px solid #DCDCDC",
-              color: "#868686",
-              borderRadius: "35px",
-              fontSize: "18px",
-              lineHeight: "18px",
-              fontFamily: "Cerebri Sans",
-              fontWeight: "500",
-              "&.Mui-selected": {
-                color: "#3F5163", // Ensure selected tab color
-              },
-            }}
-          />
+          {[
+            "Description",
+            "Lorem Ipsum 1",
+            "Lorem Ipsum 2",
+            "Lorem Ipsum 3",
+          ].map((label, index) => (
+            <Tab
+              key={index}
+              label={label}
+              sx={{
+                border: "1px solid #DCDCDC",
+                borderRadius: "35px",
+                fontSize: "18px",
+                lineHeight: "18px",
+                fontWeight: "500",
+                marginRight: "10px",
+                backgroundColor: value === index ? "#3F5163" : "#F5F5F5",
+                "&.Mui-selected": {
+                  color: value === index ? "#FFFFFF" : "#868686",
+                },
+              }}
+            />
+          ))}
         </Tabs>
         <TabPanel value={value} index={0}>
           <Typography
@@ -113,7 +71,6 @@ const ProductDescription = () => {
               fontSize: "18px",
               color: "#8C8E8F",
               lineHeight: "28px",
-              fontFamily: "Cerebri Sans",
               fontWeight: "500",
             }}
           >
@@ -129,7 +86,6 @@ const ProductDescription = () => {
               fontSize: "18px",
               color: "#8C8E8F",
               lineHeight: "28px",
-              fontFamily: "Cerebri Sans",
               fontWeight: "500",
             }}
           >
@@ -144,7 +100,6 @@ const ProductDescription = () => {
               fontSize: "18px",
               color: "#8C8E8F",
               lineHeight: "28px",
-              fontFamily: "Cerebri Sans",
               fontWeight: "400",
             }}
           >

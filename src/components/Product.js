@@ -20,22 +20,28 @@ import { Pagination, Navigation } from "swiper";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const TestimonialsCarouselData9 = [
-  { thumbimg: require("../asset/images/bannerslider_img.png") },
-  { thumbimg: require("../asset/images/bannerslider_img.png") },
-  { thumbimg: require("../asset/images/bannerslider_img.png") },
-  { thumbimg: require("../asset/images/bannerslider_img.png") },
+  { thumbimg: require("../asset/images/product_1.png") },
+  { thumbimg: require("../asset/images/product_1.png") },
+  { thumbimg: require("../asset/images/product_1.png") },
+  { thumbimg: require("../asset/images/product_1.png") },
+  { thumbimg: require("../asset/images/product_1.png") },
+  { thumbimg: require("../asset/images/product_1.png") },
+  { thumbimg: require("../asset/images/product_1.png") },
+  { thumbimg: require("../asset/images/product_1.png") },
 ];
 
 const Product = (props) => {
   const [count, setCount] = useState(0);
   const [value, setValue] = React.useState(2);
   const swiperRef = useRef(null);
+  const swiperThumbRef = useRef(null);
+  const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
   const customPagination = (index, className) => {
     return `
-      <div class="${className}" style="display: flex; align-items: center; justify-content: center; width: 20%; height: 20%;">
-        <img src="${TestimonialsCarouselData9[index].thumbimg}" alt="Thumbnail" style="width: 100%; height: 100%; border-radius: 4px;" />
-      </div>
+    <div style="margin:0 10px;">
+      <span class="${className}" style="background-image: url(${TestimonialsCarouselData9[index].thumbimg});"></span>
+    </div>
     `;
   };
 
@@ -55,9 +61,13 @@ const Product = (props) => {
                     clickable: true,
                     renderBullet: customPagination,
                   }}
+                  className="product-swiper"
                 >
                   {TestimonialsCarouselData9.map((item, index) => (
-                    <SwiperSlide key={index} className="text-center">
+                    <SwiperSlide
+                      key={index}
+                      className="product-swiper-slide text-center"
+                    >
                       <img
                         src={item.thumbimg}
                         alt=""
@@ -65,10 +75,23 @@ const Product = (props) => {
                       />
                     </SwiperSlide>
                   ))}
+                  <button
+                    onClick={() => swiperRef.current.swiper.slidePrev()}
+                    className="swiper-button-next-nav"
+                  >
+                    Prev
+                  </button>
+                  <button
+                    onClick={() => swiperRef.current.swiper.slideNext()}
+                    className="swiper-button-next-nav"
+                  >
+                    Next
+                  </button>
                 </Swiper>
               </div>
             </Box>
           </Grid>
+
           <Grid item xs={12} md={6}>
             <Box p={2}>
               <Typography
@@ -94,7 +117,6 @@ const Product = (props) => {
                 style={{
                   fontSize: "30px",
                   lineHeight: "34px",
-                  fontFamily: "Cerebri Sans",
                   fontWeight: "500",
                   color: "#3F5163",
                   marginTop: "20px",
@@ -107,7 +129,6 @@ const Product = (props) => {
                   color: "#8C8E8F",
                   fontSize: "18px",
                   lineHeight: "28px",
-                  fontFamily: "Cerebri Sans",
                   fontWeight: "400",
                   marginTop: "20px",
                 }}
@@ -123,7 +144,6 @@ const Product = (props) => {
                       style={{
                         fontSize: "22px",
                         lineHeight: "32px",
-                        fontFamily: "Cerebri Sans",
                         fontWeight: "bold",
                       }}
                     >
@@ -145,7 +165,6 @@ const Product = (props) => {
                       style={{
                         fontSize: "22px",
                         lineHeight: "32px",
-                        fontFamily: "Cerebri Sans",
                         fontWeight: "bold",
                       }}
                     >
@@ -205,7 +224,6 @@ const Product = (props) => {
                   id="panel1-header"
                   style={{
                     fontSize: "18px",
-                    fontFamily: "Cerebri Sans",
                     color: "#3F5163",
                     lineHeight: "18px",
                     fontWeight: "400",
@@ -233,7 +251,6 @@ const Product = (props) => {
                   id="panel2-header"
                   style={{
                     fontSize: "18px",
-                    fontFamily: "Cerebri Sans",
                     color: "#3F5163",
                     lineHeight: "18px",
                     fontWeight: "400",
@@ -260,7 +277,6 @@ const Product = (props) => {
                   id="panel3-header"
                   style={{
                     fontSize: "18px",
-                    fontFamily: "Cerebri Sans",
                     color: "#3F5163",
                     lineHeight: "18px",
                     fontWeight: "400",
@@ -283,7 +299,6 @@ const Product = (props) => {
                   marginTop: "10px",
                   color: "#FFFFFF",
                   fontSize: "18px",
-                  fontFamily: "Cerebri Sans",
                   lineHeight: "18px",
                   fontWeight: "500",
                   padding: "15px",
@@ -296,7 +311,6 @@ const Product = (props) => {
               <Typography
                 style={{
                   color: "#868686",
-                  fontFamily: "Cerebri Sans",
                   fontSize: "18px",
                   lineHeight: "18px",
                   marginTop: "20px",
@@ -306,7 +320,6 @@ const Product = (props) => {
                 <span
                   style={{
                     color: "#3F5163 !important",
-                    fontFamily: "Cerebri Sans",
                     fontSize: "18px",
                     lineHeight: "18px",
                     fontWeight: "600",

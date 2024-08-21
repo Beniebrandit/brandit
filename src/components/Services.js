@@ -23,7 +23,6 @@ const Services = () => {
               fontSize: "18px",
               lineHeight: "28px",
               color: "#8C8E8F",
-              fontFamily: "Cerebri Sans",
               fontWeight: "500",
             }}
           >
@@ -57,7 +56,6 @@ const Services = () => {
                       color: "#3F5163",
                       fontSize: "26px",
                       lineHeight: "34px",
-                      fontFamily: "Cerebri Sans",
                       fontWeight: "600",
                     }}
                   >
@@ -68,7 +66,6 @@ const Services = () => {
                       color: "#8C8E8F",
                       fontSize: "18px",
                       lineHeight: "28px",
-                      fontFamily: "Cerebri Sans",
                       fontWeight: "400",
                       marginTop: "10px",
                     }}
@@ -104,7 +101,6 @@ const Services = () => {
                       color: "#3F5163",
                       fontSize: "26px",
                       lineHeight: "34px",
-                      fontFamily: "Cerebri Sans",
                       fontWeight: "600",
                     }}
                   >
@@ -115,55 +111,6 @@ const Services = () => {
                       color: "#8C8E8F",
                       fontSize: "18px",
                       lineHeight: "28px",
-                      fontFamily: "Cerebri Sans",
-                      fontWeight: "400",
-                      marginTop: "10px",
-                    }}
-                  >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-                    at nisi tincidunt, iaculis velit ac, suscipit elit.
-                    Vestibulum tincidunt vel metus sit amet condimentum
-                  </Typography>
-                </Box>
-              </Box>
-            </Grid>
-            <Grid item md={6} xs={12} sm={12}>
-              <Box
-                sx={{
-                  backgroundColor: "#FFFFFF",
-                  boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
-                  borderRadius: "20px",
-                  position: "relative",
-                  padding: "30px",
-                  marginTop: "30px",
-                }}
-              >
-                <CheckCircleIcon
-                  sx={{
-                    fontSize: "90px",
-                    position: "absolute",
-                    top: "-20%",
-                    color: "#E0CE8F",
-                  }}
-                />
-                <Box sx={{ marginTop: "30px" }}>
-                  <Typography
-                    sx={{
-                      color: "#3F5163",
-                      fontSize: "26px",
-                      lineHeight: "34px",
-                      fontFamily: "Cerebri Sans",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Lorem Ipsum is simply dummy text
-                  </Typography>
-                  <Typography
-                    sx={{
-                      color: "#8C8E8F",
-                      fontSize: "18px",
-                      lineHeight: "28px",
-                      fontFamily: "Cerebri Sans",
                       fontWeight: "400",
                       marginTop: "10px",
                     }}
@@ -200,7 +147,6 @@ const Services = () => {
                       color: "#3F5163",
                       fontSize: "26px",
                       lineHeight: "34px",
-                      fontFamily: "Cerebri Sans",
                       fontWeight: "600",
                     }}
                   >
@@ -211,7 +157,52 @@ const Services = () => {
                       color: "#8C8E8F",
                       fontSize: "18px",
                       lineHeight: "28px",
-                      fontFamily: "Cerebri Sans",
+                      fontWeight: "400",
+                      marginTop: "10px",
+                    }}
+                  >
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
+                    at nisi tincidunt, iaculis velit ac, suscipit elit.
+                    Vestibulum tincidunt vel metus sit amet condimentum
+                  </Typography>
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item md={6} xs={12} sm={12}>
+              <Box
+                sx={{
+                  backgroundColor: "#FFFFFF",
+                  boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
+                  borderRadius: "20px",
+                  position: "relative",
+                  padding: "30px",
+                  marginTop: "30px",
+                }}
+              >
+                <CheckCircleIcon
+                  sx={{
+                    fontSize: "90px",
+                    position: "absolute",
+                    top: "-20%",
+                    color: "#E0CE8F",
+                  }}
+                />
+                <Box sx={{ marginTop: "30px" }}>
+                  <Typography
+                    sx={{
+                      color: "#3F5163",
+                      fontSize: "26px",
+                      lineHeight: "34px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Lorem Ipsum is simply dummy text
+                  </Typography>
+                  <Typography
+                    sx={{
+                      color: "#8C8E8F",
+                      fontSize: "18px",
+                      lineHeight: "28px",
                       fontWeight: "400",
                       marginTop: "10px",
                     }}

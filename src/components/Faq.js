@@ -51,7 +51,6 @@ const Faq = () => {
               id="panel1-header"
               style={{
                 fontSize: "20px",
-                fontFamily: "Cerebri Sans",
                 color: "#868686",
                 lineHeight: "22px",
                 fontWeight: "500",
@@ -89,7 +88,6 @@ const Faq = () => {
               id="panel1-header"
               style={{
                 fontSize: "20px",
-                fontFamily: "Cerebri Sans",
                 color: "#868686",
                 lineHeight: "22px",
                 fontWeight: "500",
@@ -127,7 +125,6 @@ const Faq = () => {
               id="panel1-header"
               style={{
                 fontSize: "20px",
-                fontFamily: "Cerebri Sans",
                 color: "#868686",
                 lineHeight: "22px",
                 fontWeight: "500",
@@ -165,7 +162,6 @@ const Faq = () => {
               id="panel1-header"
               style={{
                 fontSize: "20px",
-                fontFamily: "Cerebri Sans",
                 color: "#868686",
                 lineHeight: "22px",
                 fontWeight: "500",
@@ -203,7 +199,6 @@ const Faq = () => {
               id="panel1-header"
               style={{
                 fontSize: "20px",
-                fontFamily: "Cerebri Sans",
                 color: "#868686",
                 lineHeight: "22px",
                 fontWeight: "500",
@@ -241,7 +236,6 @@ const Faq = () => {
               id="panel1-header"
               style={{
                 fontSize: "20px",
-                fontFamily: "Cerebri Sans",
                 color: "#868686",
                 lineHeight: "22px",
                 fontWeight: "500",
@@ -279,7 +273,6 @@ const Faq = () => {
               id="panel1-header"
               style={{
                 fontSize: "20px",
-                fontFamily: "Cerebri Sans",
                 color: "#868686",
                 lineHeight: "22px",
                 fontWeight: "500",

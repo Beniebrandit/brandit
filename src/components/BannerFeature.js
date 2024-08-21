@@ -70,7 +70,6 @@ const BannerFeature = () => {
                     color: "#8C8E8F",
                     fontSize: "18px",
                     lineHeight: "28px",
-                    fontFamily: "Cerebri Sans",
                     fontWeight: "500",
                     marginTop: "10px",
                   }}
@@ -87,7 +86,6 @@ const BannerFeature = () => {
                     color: "#8C8E8F",
                     fontSize: "18px",
                     lineHeight: "28px",
-                    fontFamily: "Cerebri Sans",
                     fontWeight: "500",
                     marginTop: "10px",
                   }}

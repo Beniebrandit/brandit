@@ -43,10 +43,7 @@ const Bannerslider = () => {
           <Box sx={{ position: "relative", marginTop: "30px" }}>
             <div className="swiper-container-wrapper">
               <Swiper
-                navigation={{
-                  nextEl: ".swiper-button-next",
-                  prevEl: ".swiper-button-prev",
-                }}
+                navigation={true}
                 modules={[Navigation]}
                 className="mySwiper"
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
