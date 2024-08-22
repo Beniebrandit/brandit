@@ -7,10 +7,47 @@ import {
   AccordionDetails,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import React from "react";
+import React, { useState } from "react";
+
+const faqData = [
+  {
+    question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit?",
+    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+  },
+  {
+    question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit?",
+    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+  },
+  {
+    question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit?",
+    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+  },
+  {
+    question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit?",
+    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+  },
+  {
+    question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit?",
+    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+  },
+  {
+    question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit?",
+    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+  },
+  {
+    question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit?",
+    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+  },
+  // Add more FAQ items as needed
+];
 
 const Faq = () => {
+  const [expanded, setExpanded] = useState(1); // Initialize with index 1 (second item)
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+
   return (
     <>
       <Box sx={{ marginTop: "100px" }}>
@@ -25,265 +62,48 @@ const Faq = () => {
           >
             Frequently Asked Questions
           </Typography>
-          <Accordion
-            style={{
-              marginBottom: "10px",
-              backgroundColor: "#FFFFFF !important",
-              boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
-              border: "1px solid #868686",
-              borderRadius: "10px",
-              marginTop: "25px",
-              width: "100%",
-            }}
-          >
-            <AccordionSummary
-              expandIcon={
-                <AddIcon
-                  sx={{
-                    color: "#3F5163",
-                    border: "2.4px solid #3F5163",
-                    borderRadius: "5px",
-                    fontSize: "20px",
-                  }}
-                />
-              }
-              aria-controls="panel1-content"
-              id="panel1-header"
-              style={{
-                fontSize: "20px",
-                color: "#868686",
-                lineHeight: "22px",
-                fontWeight: "500",
+          {faqData.map((faq, index) => (
+            <Accordion
+              key={index}
+              expanded={expanded === index}
+              onChange={handleChange(index)}
+              sx={{
+                marginBottom: "10px",
+                backgroundColor: "#FFFFFF !important",
+                boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
+                border: "1px solid #868686",
+                borderRadius: "10px",
+                marginTop: "25px",
+                width: "100%",
               }}
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-            </AccordionSummary>
-            <AccordionDetails>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-            </AccordionDetails>
-          </Accordion>
-          <Accordion
-            style={{
-              marginBottom: "10px",
-              backgroundColor: "#FFFFFF !important",
-              boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
-              border: "1px solid #868686",
-              borderRadius: "10px",
-              marginTop: "25px",
-              width: "100%",
-            }}
-          >
-            <AccordionSummary
-              expandIcon={
-                <AddIcon
-                  sx={{
-                    color: "#3F5163",
-                    border: "2.4px solid #3F5163",
-                    borderRadius: "5px",
-                    fontSize: "20px",
-                  }}
-                />
-              }
-              aria-controls="panel1-content"
-              id="panel1-header"
-              style={{
-                fontSize: "20px",
-                color: "#868686",
-                lineHeight: "22px",
-                fontWeight: "500",
-              }}
-            >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-            </AccordionSummary>
-            <AccordionDetails>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-            </AccordionDetails>
-          </Accordion>
-          <Accordion
-            style={{
-              marginBottom: "10px",
-              backgroundColor: "#FFFFFF !important",
-              boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
-              border: "1px solid #868686",
-              borderRadius: "10px",
-              marginTop: "25px",
-              width: "100%",
-            }}
-          >
-            <AccordionSummary
-              expandIcon={
-                <AddIcon
-                  sx={{
-                    color: "#3F5163",
-                    border: "2.4px solid #3F5163",
-                    borderRadius: "5px",
-                    fontSize: "20px",
-                  }}
-                />
-              }
-              aria-controls="panel1-content"
-              id="panel1-header"
-              style={{
-                fontSize: "20px",
-                color: "#868686",
-                lineHeight: "22px",
-                fontWeight: "500",
-              }}
-            >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-            </AccordionSummary>
-            <AccordionDetails>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-            </AccordionDetails>
-          </Accordion>
-          <Accordion
-            style={{
-              marginBottom: "10px",
-              backgroundColor: "#FFFFFF !important",
-              boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
-              border: "1px solid #868686",
-              borderRadius: "10px",
-              marginTop: "25px",
-              width: "100%",
-            }}
-          >
-            <AccordionSummary
-              expandIcon={
-                <AddIcon
-                  sx={{
-                    color: "#3F5163",
-                    border: "2.4px solid #3F5163",
-                    borderRadius: "5px",
-                    fontSize: "20px",
-                  }}
-                />
-              }
-              aria-controls="panel1-content"
-              id="panel1-header"
-              style={{
-                fontSize: "20px",
-                color: "#868686",
-                lineHeight: "22px",
-                fontWeight: "500",
-              }}
-            >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-            </AccordionSummary>
-            <AccordionDetails>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-            </AccordionDetails>
-          </Accordion>
-          <Accordion
-            style={{
-              marginBottom: "10px",
-              backgroundColor: "#FFFFFF !important",
-              boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
-              border: "1px solid #868686",
-              borderRadius: "10px",
-              marginTop: "25px",
-              width: "100%",
-            }}
-          >
-            <AccordionSummary
-              expandIcon={
-                <AddIcon
-                  sx={{
-                    color: "#3F5163",
-                    border: "2.4px solid #3F5163",
-                    borderRadius: "5px",
-                    fontSize: "20px",
-                  }}
-                />
-              }
-              aria-controls="panel1-content"
-              id="panel1-header"
-              style={{
-                fontSize: "20px",
-                color: "#868686",
-                lineHeight: "22px",
-                fontWeight: "500",
-              }}
-            >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-            </AccordionSummary>
-            <AccordionDetails>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-            </AccordionDetails>
-          </Accordion>
-          <Accordion
-            style={{
-              marginBottom: "10px",
-              backgroundColor: "#FFFFFF !important",
-              boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
-              border: "1px solid #868686",
-              borderRadius: "10px",
-              marginTop: "25px",
-              width: "100%",
-            }}
-          >
-            <AccordionSummary
-              expandIcon={
-                <AddIcon
-                  sx={{
-                    color: "#3F5163",
-                    border: "2.4px solid #3F5163",
-                    borderRadius: "5px",
-                    fontSize: "20px",
-                  }}
-                />
-              }
-              aria-controls="panel1-content"
-              id="panel1-header"
-              style={{
-                fontSize: "20px",
-                color: "#868686",
-                lineHeight: "22px",
-                fontWeight: "500",
-              }}
-            >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-            </AccordionSummary>
-            <AccordionDetails>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-            </AccordionDetails>
-          </Accordion>
-          <Accordion
-            style={{
-              marginBottom: "10px",
-              backgroundColor: "#FFFFFF !important",
-              boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
-              border: "1px solid #868686",
-              borderRadius: "10px",
-              marginTop: "25px",
-              width: "100%",
-            }}
-          >
-            <AccordionSummary
-              expandIcon={
-                <AddIcon
-                  sx={{
-                    color: "#3F5163",
-                    border: "2.4px solid #3F5163",
-                    borderRadius: "5px",
-                    fontSize: "20px",
-                  }}
-                />
-              }
-              aria-controls="panel1-content"
-              id="panel1-header"
-              style={{
-                fontSize: "20px",
-                color: "#868686",
-                lineHeight: "22px",
-                fontWeight: "500",
-              }}
-            >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-            </AccordionSummary>
-            <AccordionDetails>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-            </AccordionDetails>
-          </Accordion>
+              <AccordionSummary
+                expandIcon={
+                  <AddIcon
+                    sx={{
+                      color: "#3F5163",
+                      border: "2.4px solid #3F5163",
+                      borderRadius: "5px",
+                      fontSize: "20px",
+                    }}
+                  />
+                }
+                aria-controls={`panel${index + 1}-content`}
+                id={`panel${index + 1}-header`}
+                sx={{
+                  fontSize: "20px",
+                  color: "#868686",
+                  lineHeight: "80px",
+                  fontWeight: expanded === index ? "bold" : "normal", // Conditionally set font weight
+                }}
+              >
+                {faq.question}
+              </AccordionSummary>
+              <AccordionDetails sx={{ fontWeight: "normal" }}>
+                {faq.answer}
+              </AccordionDetails>
+            </Accordion>
+          ))}
         </Container>
       </Box>
     </>

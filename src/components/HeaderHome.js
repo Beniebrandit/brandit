@@ -22,7 +22,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import React, { useState } from "react";
 import { Drawer, List, ListItem, ListItemText } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import Pop_Up from "./Pop_Up";
+import PopUp from "./Pop_Up";
 
 const HeaderHome = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -37,7 +37,7 @@ const HeaderHome = () => {
 
   return (
     <>
-    <Pop_Up open={open} handleClose={handleClose} />
+    <PopUp open={open} handleClose={handleClose} />
       <Box className="background">
         <Box className="header">
           <Container

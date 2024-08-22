@@ -74,55 +74,7 @@ code {
   color: #000; /* Ensure the color is visible */
 }
 
-/* Bannerslider.css */
 
-/* Hide the default navigation icons */
-.swiper-button-next,
-.swiper-button-prev {
-  background: none; /* Remove default background */
-  color: transparent; /* Hide default arrow icons */
-}
-
-/* Apply custom SVG directly */
-.swiper-button-next svg,
-.swiper-button-prev svg {
-  width: 100%;
-  height: 100%;
-}
-
-/* Optional: Customize the position, size, etc. */
-.swiper-button-next,
-.swiper-button-prev {
-  top: 50%;
-  transform: translateY(-50%);
-
-  width: 80px;
-  height: 81px;
-  z-index: 10;
-}
-.swiper-button-next {
-  right: -10%;
-}
-.swiper-button-prev {
-  left: -10%;
-}
-
-@media only screen and (max-width: 768px) {
-  .swiper-button-prev,
-  .swiper-button-next,
-  .swiper-button-prev-video,
-  .swiper-button-next-video {
-    display: none !important;
-  }
-}
-@media only screen and (min-width: 600px) {
-  .swiper-button-prev,
-  .swiper-button-next,
-  .swiper-button-prev-video,
-  .swiper-button-next-video {
-    display: none !important;
-  }
-}
 
 /* Media Queries */
 @media (max-width: 600px) {
@@ -183,3 +135,4 @@ code {
 .product-swiper-slide {
   margin-bottom: 25px;
 }
+

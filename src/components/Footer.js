@@ -18,6 +18,8 @@ import facebook5 from "../asset/images/facebook5.png";
 import facebook6 from "../asset/images/facebook6.png";
 import facebook7 from "../asset/images/facebook7.png";
 import facebook8 from "../asset/images/facebook8.png";
+import visa from "../asset/images/visa_image.svg";
+import paypal from "../asset/images/paypal_image.svg";
 import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
@@ -200,7 +202,7 @@ const Footer = () => {
               </Typography>
               <Typography
                 sx={{
-                  textAlign: "justify",
+                  textAlign: "left",
                   fontSize: "18px",
                   lineHeight: "27px",
                   color: "#545454",
@@ -208,9 +210,8 @@ const Footer = () => {
                   marginTop: "20px",
                 }}
               >
-                Need help? Just give us call at 800-905-8851 or email us at
-                contactus@brandit.net and one of our associates will be happy to
-                assist you{" "}
+                Need help? Just give us call at{" "}
+                <span style={{ color: "#E0CE8F" }}> 800-905-8851</span> or email us at <span style={{ color: "#E0CE8F" }}> contactus@brandit.net</span> and one of our associates will be happy to assist you
               </Typography>
             </Grid>
 
@@ -264,7 +265,7 @@ const Footer = () => {
               >
                 Youtube
               </Typography>
-              <Box sx={{ marginTop: "30px" }}>
+              <Box sx={{ marginTop: "30px", height: "53%" }}>
                 <img alt="care_img" src={care_img} width="100%" height="100%" />
               </Box>
             </Grid>
@@ -313,6 +314,10 @@ const Footer = () => {
               >
                 Payment Options
               </Typography>
+              <Box>
+                <img src={visa} alt="" />
+                <img src={paypal} alt="" />
+              </Box>
             </Grid>
             <Grid item md={4} sm={12} xs={12}>
               <Typography
@@ -320,16 +325,45 @@ const Footer = () => {
               >
                 Subscribe
               </Typography>
-              <div>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                }}
+              >
                 <TextField
                   placeholder="Email address"
                   sx={{
-                    borderRadius: "0px",
-                    marginTop: "10px",
+                    borderRadius: "1px",
                     backgroundColor: "white",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 />
-              </div>
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "#E0CE8F",
+                    color: "#3F5163",
+                    borderRadius: "8px",
+                    fontWeight: "400",
+                    padding: "9px",
+                    width: "70px",
+                    height: "38px",
+                    "&:hover": {
+                      backgroundColor: "#E0CE8F",
+                    },
+
+                    "& .MuiButtonBase-root": {
+                      borderRadius:"0px !important"
+                    }
+                  }}
+                >
+                  Send
+                </Button>
+              </Box>
               <Box sx={{ marginTop: "40px" }}>
                 <Button
                   variant="contained"

@@ -17,6 +17,7 @@ import facebook3 from "../asset/images/facebook3.png";
 import facebook4 from "../asset/images/facebook4.png";
 import facebook5 from "../asset/images/facebook5.png";
 import facebook6 from "../asset/images/facebook6.png";
+import { ReactComponent as Customerreviewicon } from "../asset/images/customerreviewicon.svg";
 const Reviews = (props) => {
   return (
     <>
@@ -34,7 +35,12 @@ const Reviews = (props) => {
             Customer Reviews
           </Typography>
 
-          <Grid container sx={{ marginTop: "40px", marginBottom: "40px" }} spacing={2}>
+          <Grid
+            container
+            sx={{ marginTop: "40px", marginBottom: "40px",gridTemplateColumns:"1.5fr 2fr 3fr 3fr" }}
+            spacing={2}
+
+          >
             <Grid item md={3} sm={12} xs={12}>
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Typography
@@ -79,10 +85,13 @@ const Reviews = (props) => {
                       <Box sx={{ flexGrow: 1, marginLeft: 2 }}>
                         <LinearProgress
                           variant="determinate"
-                          value={Math.random() * 100} 
-                          sx={{ height: 10,  "& .MuiLinearProgress-bar": {
-                            backgroundColor: "#FCB20F", 
-                          }, }}
+                          value={Math.random() * 100}
+                          sx={{
+                            height: 10,
+                            "& .MuiLinearProgress-bar": {
+                              backgroundColor: "#FCB20F",
+                            },
+                          }}
                         />
                       </Box>
                     </Box>
@@ -191,48 +200,80 @@ const Reviews = (props) => {
                         <Box
                           sx={{
                             display: "flex",
+                            flexDirection: "row",
                             justifyContent: "space-between",
                             marginBottom: "10px",
                           }}
                         >
-                          <Box>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                              marginBottom: "10px",
+                            }}
+                          >
+                            <Customerreviewicon />
                             <Box
                               sx={{
                                 display: "flex",
-                                alignItems: "center",
-                                justifyContent: "space-between",
+                                alignItems: "flex-start",
+                                flexDirection: "column",
+                                paddingLeft:"10px",
                                 marginBottom: "5px",
                               }}
                             >
-                              <Typography
+                              <Box
                                 sx={{
-                                  fontSize: "16px",
-                                  fontWeight: "500",
-                                  color: "#000",
-                                  marginRight: "10px",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  flexDirection: "row",
                                 }}
                               >
-                                John Doe
-                              </Typography>
-                              <Typography
+                                <Typography
+                                  sx={{
+                                    fontSize: "16px",
+                                    fontWeight: "500",
+                                    color: "#000",
+                                    // marginRight: "10px",
+                                  }}
+                                >
+                                  John Doe
+                                </Typography>
+                                <Typography
+                                  sx={{
+                                    fontSize: "16px",
+                                    lineHeight: "14px",
+                                    color: "#D4BA46",
+                                    marginLeft: "50px",
+                                  }}
+                                >
+                                  Verified Buyer
+                                </Typography>
+                              </Box>
+                              <Box
                                 sx={{
-                                  fontSize: "16px",
-                                  lineHeight: "14px",
-                                  color: "#D4BA46",
-                                  marginLeft: "90px",
+                                  // margin: "auto",
+                                  display: "flex",
+                                  justifyContent: "flex-start",
                                 }}
                               >
-                                Verified Buyer
-                              </Typography>
-                            </Box>
-                            <Box sx={{ display: "flex", alignItems: "center" }}>
-                              {Array(5)
-                                .fill("")
-                                .map((_, i) => (
-                                  <StarIcon key={i} sx={{ color: "black" }} />
-                                ))}
+                                <Box
+                                  sx={{ display: "flex", alignItems: "center" }}
+                                >
+                                  {Array(5)
+                                    .fill("")
+                                    .map((_, i) => (
+                                      <StarIcon
+                                        key={i}
+                                        sx={{ color: "black" }}
+                                      />
+                                    ))}
+                                </Box>
+                              </Box>
                             </Box>
                           </Box>
+
                           <Typography
                             sx={{
                               textAlign: "end",
@@ -264,7 +305,18 @@ const Reviews = (props) => {
                             marginTop: "10px",
                           }}
                         >
-                          ITEM TYPE: {item.itemtype}
+                          <b>ITEM TYPE: {item.itemtype}</b>
+                        </Typography>
+                        <Typography
+                          sx={{
+                            color: "#4D4D4D",
+                            fontSize: "16px",
+                            lineHeight: "20px",
+                            fontWeight: "500",
+                            marginTop: "10px",
+                          }}
+                        >
+                          Lorem Ipsum is simply dummy text
                         </Typography>
                         <Box
                           sx={{
@@ -283,10 +335,12 @@ const Reviews = (props) => {
                           >
                             Was this helpful?
                           </Typography>
-                          <ThumbUpIcon sx={{ color: "black" }} /> 0
+                          <ThumbUpIcon sx={{ color: "black" }} />
+                          &nbsp; 0
                           <ThumbDownAltIcon
                             sx={{ marginLeft: "10px", color: "black" }}
                           />
+                          &nbsp;0
                         </Box>
                       </Box>
                     </Grid>

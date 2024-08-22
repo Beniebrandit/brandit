@@ -6,9 +6,21 @@ import Bannerslider_img from "../asset/images/bannerslider_img.png";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import { useRef, useState } from "react";
-import { Navigation } from "swiper";
+import { Navigation,Pagination } from "swiper";
+import "./Bannerslider.css";
 
-const Bannerslider = () => {
+const TestimonialsCarouselData9 = [
+  { thumbimg: require("../asset/images/product_1.png") },
+  { thumbimg: require("../asset/images/product_1.png") },
+  { thumbimg: require("../asset/images/product_1.png") },
+  { thumbimg: require("../asset/images/product_1.png") },
+  { thumbimg: require("../asset/images/product_1.png") },
+  { thumbimg: require("../asset/images/product_1.png") },
+  { thumbimg: require("../asset/images/product_1.png") },
+  { thumbimg: require("../asset/images/product_1.png") },
+];
+
+const Bannerslider = (props) => {
   let swiperRef = useRef(null);
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -22,6 +34,14 @@ const Bannerslider = () => {
       }
       setIsPlaying(!isPlaying);
     }
+  };
+
+  const customPagination = (index, className) => {
+    return `
+    <div style="margin:0 10px;">
+      <span class="${className}" style="background-image: url(${TestimonialsCarouselData9[index].thumbimg});"></span>
+    </div>
+    `;
   };
 
   return (
@@ -43,7 +63,10 @@ const Bannerslider = () => {
           <Box sx={{ position: "relative", marginTop: "30px" }}>
             <div className="swiper-container-wrapper">
               <Swiper
-                navigation={true}
+                navigation={{
+                  nextEl: ".swiper-button-next",
+                  prevEl: ".swiper-button-prev",
+                }}
                 modules={[Navigation]}
                 className="mySwiper"
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
@@ -143,7 +166,7 @@ const Bannerslider = () => {
             Our Video Gallery
           </Typography>
 
-          <Box
+          {/* <Box
             sx={{
               position: "relative",
               marginTop: "30px",
@@ -198,7 +221,51 @@ const Bannerslider = () => {
                 </IconButton>
               </Box>
             </Box>
-          </Box>
+          </Box> */}
+           <Grid item xs={12} md={6}>
+            <Box p={2}>
+              <div className={props.className}>
+                <Swiper
+                  {...props.carouselOption}
+                  ref={swiperRef}
+                  modules={[Navigation, Pagination]}
+                  navigation={false}
+                  pagination={{
+                    clickable: true,
+                    renderBullet: customPagination,
+                  }}
+                  className="product-swiper"
+                >
+                  {TestimonialsCarouselData9.map((item, index) => (
+                    <SwiperSlide
+                      key={index}
+                      className="product-swiper-slide text-center"
+                    >
+                      <img
+                        src={item.thumbimg}
+                        alt=""
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    </SwiperSlide>
+                  ))}
+                  <button
+                    onClick={() => swiperRef.current.swiper.slidePrev()}
+                    className="swiper-button-next-nav"
+                  >
+                    Prev
+                  </button>
+                  <button
+                    onClick={() => swiperRef.current.swiper.slideNext()}
+                    className="swiper-button-next-nav"
+                  >
+                    Next
+                  </button>
+                </Swiper>
+              </div>
+            </Box>
+          </Grid>
+          
+
         </Box>
       </Container>
     </>
