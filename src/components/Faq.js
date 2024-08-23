@@ -75,6 +75,8 @@ const Faq = () => {
                 borderRadius: "10px",
                 marginTop: "25px",
                 width: "100%",
+                lineHeight:"40px"
+              
               }}
             >
               <AccordionSummary
@@ -85,6 +87,7 @@ const Faq = () => {
                       border: "2.4px solid #3F5163",
                       borderRadius: "5px",
                       fontSize: "20px",
+                      
                     }}
                   />
                 }
@@ -93,7 +96,7 @@ const Faq = () => {
                 sx={{
                   fontSize: "20px",
                   color: "#868686",
-                  lineHeight: "80px",
+                
                   fontWeight: expanded === index ? "bold" : "normal", // Conditionally set font weight
                 }}
               >

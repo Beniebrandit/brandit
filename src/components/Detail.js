@@ -8,13 +8,14 @@ const Detail = () => {
       <Box sx={{ backgroundColor: "#CFE5F9", marginTop: "100px" }}>
         <Grid container sx={{ display: "flex", alignItems: "center" }}>
           <Grid item md={6}>
-            <Box sx={{ padding: "50px 50px 50px 90px" }}>
+            <Box sx={{ padding: "130px 150px 50px 220px" }}>
               <Typography
                 sx={{
                   color: "#3F5163",
                   fontSize: "60px",
                   lineHeight: "auto",
                   fontWeight: "600",
+                  
                 }}
               >
                 Installation
@@ -83,7 +84,7 @@ const Detail = () => {
             />
           </Grid>
           <Grid item md={6}>
-            <Box sx={{ padding: "50px 50px 50px 90px" }}>
+            <Box sx={{ padding: "50px 220px 50px 90px" }}>
               <Typography
                 sx={{
                   color: "#3F5163",

@@ -347,10 +347,10 @@ const Footer = () => {
                   sx={{
                     backgroundColor: "#E0CE8F",
                     color: "#3F5163",
-                    borderRadius: "8px",
+                  
                     fontWeight: "400",
                     padding: "9px",
-                    width: "70px",
+                    width: "100px",
                     height: "38px",
                     "&:hover": {
                       backgroundColor: "#E0CE8F",

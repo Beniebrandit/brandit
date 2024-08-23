@@ -3,10 +3,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import Bannerslider_img from "../asset/images/bannerslider_img.png";
+import Bannervideo from "../asset/images/bannervideo_2.png"
+import Bannervideo2 from "../asset/images/bannervideo_3.png"
+
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import { useRef, useState } from "react";
-import { Navigation,Pagination } from "swiper";
+import { Navigation, Pagination } from "swiper";
 import "./Bannerslider.css";
 
 const TestimonialsCarouselData9 = [
@@ -23,8 +26,11 @@ const TestimonialsCarouselData9 = [
 const Bannerslider = (props) => {
   let swiperRef = useRef(null);
   const videoRef = useRef(null);
+  const [mainPoster, setMainPoster] = useState(Bannerslider_img);
   const [isPlaying, setIsPlaying] = useState(false);
-
+  const handleGridVideoClick = (posterImage) => {
+    setMainPoster(posterImage);
+  };
   const handlePlayPause = () => {
     if (videoRef.current) {
       if (isPlaying) {
@@ -46,7 +52,7 @@ const Bannerslider = (props) => {
 
   return (
     <>
-      <Container sx={{ marginTop: "190px" }}>
+      <Container sx={{ marginTop: "250px" }}>
         <Box>
           <Typography
             sx={{
@@ -166,7 +172,7 @@ const Bannerslider = (props) => {
             Our Video Gallery
           </Typography>
 
-          {/* <Box
+          <Box
             sx={{
               position: "relative",
               marginTop: "30px",
@@ -177,7 +183,7 @@ const Bannerslider = (props) => {
               sx={{
                 position: "relative",
                 marginTop: "30px",
-                borderRadius: "10px",
+                borderRadius: "30px",
                 overflow: "hidden",
                 height: "500px",
               }}
@@ -186,7 +192,7 @@ const Bannerslider = (props) => {
                 ref={videoRef}
                 width="100%"
                 height="100%"
-                poster={Bannerslider_img}
+                poster={mainPoster}
                 style={{ objectFit: "cover" }}
               >
                 <source
@@ -208,7 +214,7 @@ const Bannerslider = (props) => {
                   onClick={handlePlayPause}
                   sx={{
                     color: "#fff",
-                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    backgroundColor: "#E0CE8F",
                     padding: "20px",
                     borderRadius: "50%",
                   }}
@@ -221,8 +227,66 @@ const Bannerslider = (props) => {
                 </IconButton>
               </Box>
             </Box>
-          </Box> */}
-           <Grid item xs={12} md={6}>
+          </Box>
+          <Grid container spacing={3}>
+        {[Bannervideo, Bannervideo2, Bannervideo].map((poster, index) => (
+          <Grid item lg={4} md={3} sm={12} xs={12} key={index}>
+            <Box
+              sx={{
+                position: 'relative',
+                marginTop: '30px',
+                borderRadius: '10px',
+              }}
+            >
+              <Box
+                sx={{
+                  position: 'relative',
+                  marginTop: '30px',
+                  borderRadius: '30px',
+                  overflow: 'hidden',
+                  height: '100%',
+                }}
+              >
+                <video
+                  width="100%"
+                  height="100%"
+                  poster={poster}
+                  style={{ objectFit: 'cover' }}
+                  onClick={() => handleGridVideoClick(poster)} 
+                >
+                 asd
+                </video>
+
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                >
+                  <IconButton
+                    // onClick={handlePlayPause}
+                    sx={{
+                      color: '#fff',
+                      backgroundColor: '#E0CE8F',
+                      padding: '20px',
+                      borderRadius: '50%',
+                    }}
+                  >
+                    {isPlaying ? (
+                      <PauseIcon sx={{ fontSize: 40 }} />
+                    ) : (
+                      <PlayArrowIcon sx={{ fontSize: 40 }} />
+                    )}
+                  </IconButton>
+                </Box>
+              </Box>
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
+          {/* <Grid item xs={12} md={6}>
             <Box p={2}>
               <div className={props.className}>
                 <Swiper
@@ -263,9 +327,7 @@ const Bannerslider = (props) => {
                 </Swiper>
               </div>
             </Box>
-          </Grid>
-          
-
+          </Grid> */}
         </Box>
       </Container>
     </>

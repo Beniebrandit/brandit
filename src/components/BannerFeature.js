@@ -193,7 +193,7 @@ const BannerFeature = () => {
           >
             <Grid item md={6} sm={12} xs={12} >
               {" "}
-              <Box sx={{paddingLeft:"10px",marginTop:"50px"}}>
+              <Box sx={{paddingLeft:"53px",marginTop:"50px"}}>
                 <Typography
                   sx={{
                     color: "#3F5163",
@@ -260,7 +260,7 @@ const BannerFeature = () => {
             </Grid>
           </Grid>
 
-          <Box >
+          <Box sx={{position:"absolute",bottom:"-6%",left:"10%"}}>
             <Container>
               <Grid container spacing={4}>
                 {cardData.map((card) => (

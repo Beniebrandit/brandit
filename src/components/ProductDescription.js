@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Container, Tabs, Tab, Typography } from "@mui/material";
-
+import "./Product.css"
 const TabPanel = ({ children, value, index }) => {
   return (
     <div role="tabpanel" hidden={value !== index}>
@@ -53,7 +53,7 @@ const ProductDescription = () => {
               sx={{
                 border: "1px solid #DCDCDC",
                 borderRadius: "35px",
-                fontSize: "18px",
+                fontSize: {lg:"18px",md:"18px"},
                 lineHeight: "18px",
                 fontWeight: "500",
                 marginRight: "10px",

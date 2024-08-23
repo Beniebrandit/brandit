@@ -5,7 +5,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 const Services = () => {
   return (
     <>
-      <Container sx={{ marginTop: "50px" }}>
+      <Container sx={{ marginTop: "130px" }}>
         <Box>
           <Typography
             sx={{
@@ -24,6 +24,7 @@ const Services = () => {
               lineHeight: "28px",
               color: "#8C8E8F",
               fontWeight: "500",
+              marginTop:"23px"
             }}
           >
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut at nisi

@@ -6,8 +6,9 @@ import {
   Pagination,
   Button,
   LinearProgress,
+  Rating,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import StarIcon from "@mui/icons-material/Star";
@@ -19,14 +20,15 @@ import facebook5 from "../asset/images/facebook5.png";
 import facebook6 from "../asset/images/facebook6.png";
 import { ReactComponent as Customerreviewicon } from "../asset/images/customerreviewicon.svg";
 const Reviews = (props) => {
+  const [value, setValue] = useState(5);
   return (
     <>
-      <Box sx={{ marginTop: "50px" }}>
+      <Box sx={{ marginTop: "130px" }}>
         <Container>
           <Typography
             sx={{
               textAlign: "center",
-              fontSize: "40px",
+              fontSize: "60px",
               color: "#3F5163",
               fontWeight: "600",
               marginBottom: "20px",
@@ -52,11 +54,14 @@ const Reviews = (props) => {
                 >
                   4.8
                 </Typography>
-                {Array(5)
-                  .fill("")
-                  .map((_, i) => (
-                    <StarIcon key={i} sx={{ color: "#FCB20F" }} />
-                  ))}
+                <Rating
+                style={{ color: "#FCB20F !important" }}
+                name="simple-controlled"
+                value={value}
+                onChange={(event, newValue) => {
+                  setValue(newValue);
+                }}
+              />
               </Box>
               <Typography sx={{ color: "#868686", fontSize: "15px" }}>
                 Based on 695 reviews

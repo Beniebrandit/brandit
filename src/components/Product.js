@@ -12,13 +12,18 @@ import {
   AccordionSummary,
   AccordionDetails,
   AccordionActions,
+  hexToRgb,
 } from "@mui/material";
 import "swiper/css";
 // Libraries
+import EastIcon from "@mui/icons-material/East";
+import AddIcon from "@mui/icons-material/Add";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
+import "./Product.css";
+import { Add } from "@mui/icons-material";
 const TestimonialsCarouselData9 = [
   { thumbimg: require("../asset/images/product_1.png") },
   { thumbimg: require("../asset/images/product_1.png") },
@@ -31,11 +36,9 @@ const TestimonialsCarouselData9 = [
 ];
 
 const Product = (props) => {
-  const [count, setCount] = useState(0);
-  const [value, setValue] = React.useState(2);
+  const [count, setCount] = useState(1);
+  const [value, setValue] = useState(2);
   const swiperRef = useRef(null);
-  const swiperThumbRef = useRef(null);
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
   const customPagination = (index, className) => {
     return `
@@ -43,6 +46,11 @@ const Product = (props) => {
       <span class="${className}" style="background-image: url(${TestimonialsCarouselData9[index].thumbimg});"></span>
     </div>
     `;
+  };
+
+  // Function to handle thumbnail click
+  const handleThumbClick = (index) => {
+    swiperRef.current.swiper.slideTo(index);
   };
 
   return (
@@ -57,10 +65,10 @@ const Product = (props) => {
                   ref={swiperRef}
                   modules={[Navigation, Pagination]}
                   navigation={false}
-                  pagination={{
-                    clickable: true,
-                    renderBullet: customPagination,
-                  }}
+                  // pagination={{
+                  //   clickable: true,
+                  //   renderBullet: customPagination,
+                  // }}
                   className="product-swiper"
                 >
                   {TestimonialsCarouselData9.map((item, index) => (
@@ -75,7 +83,7 @@ const Product = (props) => {
                       />
                     </SwiperSlide>
                   ))}
-                  <button
+                  {/* <button
                     onClick={() => swiperRef.current.swiper.slidePrev()}
                     className="swiper-button-next-nav"
                   >
@@ -86,8 +94,43 @@ const Product = (props) => {
                     className="swiper-button-next-nav"
                   >
                     Next
-                  </button>
+                  </button> */}
                 </Swiper>
+              </div>
+              <div className="swiper-container">
+                <Swiper
+                  navigation={{
+                    prevEl: ".swiper-prev",
+                    nextEl: ".swiper-next",
+                  }}
+                  modules={[Navigation]}
+                  loop={true}
+                  spaceBetween={20}
+                  slidesPerView="4"
+                  freeMode
+                >
+                  {TestimonialsCarouselData9.map((item, index) => (
+                    <SwiperSlide key={index}>
+                      <img
+                        onClick={() => handleThumbClick(index)}
+                        src={item.thumbimg}
+                        alt=""
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          cursor: "pointer",
+                          borderRadius: "20px",
+                        }}
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+                <div className="swiper-prev">
+                  <KeyboardBackspaceIcon />
+                </div>
+                <div className="swiper-next">
+                  <EastIcon />
+                </div>
               </div>
             </Box>
           </Grid>
@@ -138,8 +181,8 @@ const Product = (props) => {
               </Typography>
               <Divider style={{ width: "100%", marginTop: "40px" }} />
               <Box style={{ marginTop: "30px" }}>
-                <Grid container spacing={4} justifyContent="space-between">
-                  <Grid item md={6}>
+                <Grid container spacing={4}>
+                  <Grid item lg={6} md={6} sm={12} xs={12}>
                     <Typography
                       style={{
                         fontSize: "22px",
@@ -149,18 +192,27 @@ const Product = (props) => {
                     >
                       Size (in Inches)
                     </Typography>
-                    <Box style={{ marginTop: "20px" }}>
-                      <TextField
-                        style={{
-                          border: "none",
-                          width: "40%",
-                          marginRight: "20px",
-                        }}
-                      />
-                      <TextField style={{ border: "none", width: "40%" }} />
-                    </Box>
+                    <div className="size-form">
+                      <div className="size-field">
+                        <div className="left">
+                          <p className="weight_para">W</p>
+                        </div>
+                        <div className="right">
+                          <input type="text" placeholder=""  className="weight_input"/>
+                        </div>
+                      </div>
+
+                      <div className="size-field">
+                        <div className="left">
+                          <p className="height_para">H</p>
+                        </div>
+                        <div className="right">
+                          <input type="text" placeholder="" className="weight_input"/>
+                        </div>
+                      </div>
+                    </div>
                   </Grid>
-                  <Grid item md={6}>
+                  <Grid item lg={6} md={6} sm={12} xs={12}>
                     <Typography
                       style={{
                         fontSize: "22px",
@@ -173,39 +225,42 @@ const Product = (props) => {
 
                     <Box
                       style={{
-                        border: "1px solid #3F5163",
-                        width: "55%",
+                        border: "1px solid #868686",
+                        width: "50%",
                         marginTop: "20px",
+                        height: "53%",
                         borderRadius: "10px",
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "center",
+                        justifyContent: "space-around",
                       }}
                     >
-                      <Button
+                      <Typography
                         onClick={() => setCount(count - 1)}
-                        style={{ marginRight: "10px" }}
+                        style={{ marginRight: "10px", color: "#868686",cursor: "pointer" }}
                       >
                         -
-                      </Button>
+                      </Typography>
                       <span
                         style={{
                           fontSize: "16px",
                           fontWeight: "bold",
+                          color: "#868686"
                         }}
                       >
                         {count}
                       </span>
-                      <Button
+                      <Typography
                         onClick={() => setCount(count + 1)}
-                        style={{ marginLeft: "10px" }}
+                        style={{ marginLeft: "10px", color: "#868686",cursor: "pointer" }}
                       >
                         +
-                      </Button>
+                      </Typography>
                     </Box>
                   </Grid>
                 </Grid>
               </Box>
+
               <Divider style={{ width: "100%", marginTop: "40px" }} />
 
               <Accordion
@@ -219,7 +274,7 @@ const Product = (props) => {
                 }}
               >
                 <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
+                  expandIcon={<AddIcon />}
                   aria-controls="panel1-content"
                   id="panel1-header"
                   style={{
@@ -246,7 +301,7 @@ const Product = (props) => {
                 }}
               >
                 <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
+                  expandIcon={<AddIcon />}
                   aria-controls="panel2-content"
                   id="panel2-header"
                   style={{
@@ -272,7 +327,7 @@ const Product = (props) => {
                 }}
               >
                 <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
+                  expandIcon={<AddIcon />}
                   aria-controls="panel3-content"
                   id="panel3-header"
                   style={{
@@ -292,41 +347,31 @@ const Product = (props) => {
                   <Button>Agree</Button>
                 </AccordionActions>
               </Accordion>
+              <Divider />
               <Button
-                style={{
+                variant="contained"
+                sx={{
                   backgroundColor: "#3F5163",
-                  width: "100%",
-                  marginTop: "10px",
                   color: "#FFFFFF",
                   fontSize: "18px",
                   lineHeight: "18px",
-                  fontWeight: "500",
-                  padding: "15px",
+                  fontWeight: "400",
+                  padding: "21px",
+                  marginTop: "10px",
                   borderRadius: "10px",
+                  width: "100%",
+                  textTransform: "none",
+                  "&:hover": {
+                    backgroundColor: "#3F5163 !important",
+                  },
                 }}
               >
                 Add to Cart
               </Button>
-
               <Typography
-                style={{
-                  color: "#868686",
-                  fontSize: "18px",
-                  lineHeight: "18px",
-                  marginTop: "20px",
-                }}
+                sx={{ color: "#868686", fontSize: "18px", marginTop: "30px" }}
               >
-                Category
-                <span
-                  style={{
-                    color: "#3F5163 !important",
-                    fontSize: "18px",
-                    lineHeight: "18px",
-                    fontWeight: "600",
-                  }}
-                >
-                   Rigid Signs
-                </span>
+                Category <span className="rigidsign">Rigid Signs</span>
               </Typography>
             </Box>
           </Grid>
