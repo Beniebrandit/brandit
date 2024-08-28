@@ -23,6 +23,7 @@ import {
   import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
   import InstagramIcon from "@mui/icons-material/Instagram";
   import LinkedInIcon from "@mui/icons-material/LinkedIn";
+  import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
   const HomeFooter = () => {
     return (
       <>
@@ -371,7 +372,7 @@ import {
 
               <Box sx={{padding: "90px 0px 90px 0px" }}>
           <Container>
-            <Grid container spacing={8} style={{margin:"auto"}}>
+            <Grid container spacing={8}>
               <Grid item md={6} sm={12} xs={12} >
                 <Typography
                   sx={{ color: "#FFFFFF", fontWeight: "600", fontSize: "20px",margin:"auto",textAlign:"center" }}
@@ -380,6 +381,7 @@ import {
                 </Typography>
                 <Box sx={{margin:"auto",textAlign:"center"}}>
                     <img src={visa} alt=""/>
+                    &nbsp;&nbsp;
                     <img src={paypal} alt=""/>
                 </Box>
                 
@@ -400,7 +402,9 @@ import {
                       backgroundColor: "white",
                     }}
                     />
-                    <Button sx={{backgroundColor:"#3F5163",marginTop:"10px"}}>+</Button>
+                    <Button sx={{backgroundColor:"#3F5163",marginTop:"10px",color:"white"}}>
+                      <ArrowForwardIosOutlinedIcon/>
+                    </Button>
                 </Box>
                 
               </Grid>

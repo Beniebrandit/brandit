@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Grid,
   Container,
@@ -24,6 +24,7 @@ import { Pagination, Navigation } from "swiper";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import "./Product.css";
 import { Add } from "@mui/icons-material";
+import axios from "axios";
 const TestimonialsCarouselData9 = [
   { thumbimg: require("../asset/images/product_1.png") },
   { thumbimg: require("../asset/images/product_1.png") },
@@ -34,10 +35,26 @@ const TestimonialsCarouselData9 = [
   { thumbimg: require("../asset/images/product_1.png") },
   { thumbimg: require("../asset/images/product_1.png") },
 ];
+const ProductData = [
+  {
+    title: "Plastic Sign",
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
+  },
+];
+
+const url = `https://flagg.devlopix.com/api`;
+const token = `6|q8mTawTdGKbRdLazOGLcm1Y0zJe5ks4IPUWRJNIR13495c0c`
 
 const Product = (props) => {
   const [count, setCount] = useState(1);
   const [value, setValue] = useState(2);
+  const [alldata, setAllData] = useState();
+  const [state, setState] = useState({
+    height: "",
+    width: "",
+  });
+
   const swiperRef = useRef(null);
 
   const customPagination = (index, className) => {
@@ -51,6 +68,48 @@ const Product = (props) => {
   // Function to handle thumbnail click
   const handleThumbClick = (index) => {
     swiperRef.current.swiper.slideTo(index);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setState((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    console.log(state, "state");
+  };
+
+  const data = {
+    name: ProductData[0].title,
+    description: ProductData[0].description,
+  };
+  const getApi = async () => {
+
+    const res = await axios.get(`${url}/product/2`, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+     const response = res.data
+     setAllData(response)
+     console.log(alldata,"alldata")
+     console.log(response,"response")
+  }
+
+  useEffect(() => {
+    getApi();
+  },[])
+
+  const handleClick = async (e) => {
+    let response = await axios(`${url}/product`, {
+      method: "POST", //not needed here declare above
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      data: { ...data }
+    });
+    console.log(response);
   };
 
   return (
@@ -146,7 +205,7 @@ const Product = (props) => {
                   fontFamily: "Avenir LT Std",
                 }}
               >
-                Plastic Sign
+                {alldata?.data.name}
               </Typography>
               <Rating
                 style={{ color: "#F6AA03 !important" }}
@@ -176,8 +235,7 @@ const Product = (props) => {
                   marginTop: "20px",
                 }}
               >
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry.
+                {alldata?.data.description}
               </Typography>
               <Divider style={{ width: "100%", marginTop: "40px" }} />
               <Box style={{ marginTop: "30px" }}>
@@ -198,7 +256,14 @@ const Product = (props) => {
                           <p className="weight_para">W</p>
                         </div>
                         <div className="right">
-                          <input type="text" placeholder=""  className="weight_input"/>
+                          <input
+                            type="number"
+                            placeholder=""
+                            onChange={(e) => handleChange(e)}
+                            name="height"
+                            value={state.height}
+                            className="weight_input"
+                          />
                         </div>
                       </div>
 
@@ -207,7 +272,14 @@ const Product = (props) => {
                           <p className="height_para">H</p>
                         </div>
                         <div className="right">
-                          <input type="text" placeholder="" className="weight_input"/>
+                          <input
+                            type="number"
+                            placeholder=""
+                            onChange={(e) => handleChange(e)}
+                            name="width"
+                            value={state.width}
+                            className="weight_input"
+                          />
                         </div>
                       </div>
                     </div>
@@ -237,7 +309,11 @@ const Product = (props) => {
                     >
                       <Typography
                         onClick={() => setCount(count - 1)}
-                        style={{ marginRight: "10px", color: "#868686",cursor: "pointer" }}
+                        style={{
+                          marginRight: "10px",
+                          color: "#868686",
+                          cursor: "pointer",
+                        }}
                       >
                         -
                       </Typography>
@@ -245,14 +321,18 @@ const Product = (props) => {
                         style={{
                           fontSize: "16px",
                           fontWeight: "bold",
-                          color: "#868686"
+                          color: "#868686",
                         }}
                       >
                         {count}
                       </span>
                       <Typography
                         onClick={() => setCount(count + 1)}
-                        style={{ marginLeft: "10px", color: "#868686",cursor: "pointer" }}
+                        style={{
+                          marginLeft: "10px",
+                          color: "#868686",
+                          cursor: "pointer",
+                        }}
                       >
                         +
                       </Typography>
@@ -350,6 +430,7 @@ const Product = (props) => {
               <Divider />
               <Button
                 variant="contained"
+                onClick={handleClick}
                 sx={{
                   backgroundColor: "#3F5163",
                   color: "#FFFFFF",

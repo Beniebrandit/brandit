@@ -37,7 +37,7 @@ const HeaderHome = () => {
 
   return (
     <>
-    <PopUp open={open} handleClose={handleClose} />
+      <PopUp open={open} handleClose={handleClose} />
       <Box className="background">
         <Box className="header">
           <Container
@@ -116,7 +116,7 @@ const HeaderHome = () => {
             </Box>
 
             <Box
-              sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center" }}
+              sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}
             >
               <IconButton>
                 <img alt="facebook_logo" src={facebook_logo} />
@@ -303,6 +303,8 @@ const HeaderHome = () => {
             </Typography>
           </Box>
         </Box>
+        
+        <Box>
 
         <Box
           sx={{
@@ -313,21 +315,53 @@ const HeaderHome = () => {
               lg: "10rem",
               md: "8rem",
             },
-            marginTop: "0rem",
             padding: "2rem",
-            position: "relative",
           }}
+          className="demophoto"
         >
-          <Box sx={{margin:"auto"}}>
-            <img src={MaskGroup} alt="MaskGroup" height={90} />
+          <Box
+          >
+            <img
+              src={MaskGroup}
+              alt="MaskGroup"
+              height={90}
+              style={{ display: "block",margin:"auto" }}
+            />
           </Box>
-          <Box sx={{ padding: { sx: "2rem", sm: "1rem" },margin:"auto" }}>
-            <img src={star} alt="star" style={{margin:"auto",display:{sx:"block",sm:"inline"}}}/>
-            <Typography sx={{textAlign:{sx:"center",sm:"left"}}}>John Doe</Typography>
-            <Typography sx={{ width: { sx: "200px", sm: "300px" },textAlign:{sx:"center",sm:"left"} }}>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-            </Typography>
+          <Box sx={{ padding: { sx: "2rem", sm: "1rem" } }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: { xs: "center", sm: "flex-start" },
+                alignItems: "center",
+              }}
+            >
+              <img src={star} alt="star" style={{ display: "block" }} />
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: { xs: "center", sm: "flex-start" },
+                alignItems: "center",
+              }}
+            >
+              <Typography sx={{ textAlign: { sx: "center", sm: "left" } }}>
+                John Doe
+              </Typography>
+            </Box>
+            <Box>
+              <Typography
+                sx={{
+                  width: { sx: "200px", sm: "300px" },
+                  // textAlign: { sx: "center", sm: "left" }, not working in inline 
+                }}
+                className="protext"
+              >
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+              </Typography>
+            </Box>
           </Box>
+        </Box>
         </Box>
       </Box>
       <Box sx={{ margin: "auto", marginTop: "-3rem", position: "relative" }}>
@@ -387,7 +421,9 @@ const HeaderHome = () => {
                 </Typography>
               </Box>
             </Box>
-            <Button onClick={handleOpen} sx={{ width: "7rem", margin: "auto" }}>Design Now</Button>
+            <Button onClick={handleOpen} sx={{ width: "7rem", margin: "auto" }}>
+              Design Now
+            </Button>
           </Box>
         </Container>
       </Box>

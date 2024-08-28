@@ -35,8 +35,9 @@ const CardComponent = ({ title, description, iconColor }) => (
       borderRadius: "20px",
       backgroundColor: "#FFFFFF",
       height: "100%",
-      width: "80%",
-      padding: "20px 40px",
+      width: "100%",
+      maxWidth: "400px",
+      padding: "20px",
       boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
       display: "flex",
       flexDirection: "column",
@@ -45,14 +46,14 @@ const CardComponent = ({ title, description, iconColor }) => (
       textAlign: "center",
     }}
   >
-    <CheckCircleIcon sx={{ color: iconColor, fontSize: "90px" }} />
+    <CheckCircleIcon sx={{ color: iconColor, fontSize: "60px" }} />
     <Typography
       sx={{
         color: "#000000",
-        fontSize: "26px",
-        lineHeight: "40px",
+        fontSize: "20px",
+        lineHeight: "30px",
         fontWeight: "600",
-        marginTop: "20px",
+        marginTop: "15px",
       }}
     >
       {title}
@@ -60,10 +61,10 @@ const CardComponent = ({ title, description, iconColor }) => (
     <Typography
       sx={{
         color: "#868686",
-        fontSize: "16px",
-        lineHeight: "30px",
+        fontSize: "14px",
+        lineHeight: "24px",
         fontWeight: "400",
-        marginTop: "20px",
+        marginTop: "10px",
       }}
     >
       {description}
@@ -73,211 +74,212 @@ const CardComponent = ({ title, description, iconColor }) => (
 
 const BannerFeature = () => {
   return (
-    <>
-      <Box
+    <Box
+      sx={{
+        backgroundColor: "#FAF8EE",
+        padding: { xs: "60px 0px", md: "90px 0px 250px" },
+        position: "relative",
+      }}
+    >
+      <Typography
         sx={{
-          backgroundColor: "#FAF8EE",
-          marginTop: "90px",
-          padding: "90px 0px 250px 0px",
-          position: "relative",
-          height: "100%",
-          zIndex:"-2"
+          textAlign: "center",
+          fontSize: { xs: "36px", md: "60px" },
+          lineHeight: "auto",
+          fontFamily: "Avenir LT Std",
+          fontWeight: "600",
+          color: "#3F5163",
+          marginBottom: "50px",
         }}
       >
-        <Typography
+        Banners Features
+      </Typography>
+
+      <Container>
+        <Grid
+          container
+          spacing={2}
           sx={{
-            textAlign: "center",
-            fontSize: "60px",
-            lineHeight: "auto",
-            fontFamily: "Avenir LT Std",
-            fontWeight: "600",
-            color: "#3F5163",
+            alignItems: "center",
+            marginBottom: "50px",
+            zIndex:"1",
+            position:"relative",
           }}
         >
-          Banners Features
-        </Typography>
-
-        <Container>
-          <Grid
-            container
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              marginTop: "50px",
-            }}
-          >
-            <Grid item md={6} sm={12} xs={12}>
-              {" "}
-              <Box
+          <Grid item md={6} xs={12}>
+            <Box
+              sx={{
+                backgroundColor: "#E0CE8F",
+                borderRadius: "30px",
+                width: "100%",
+                height: "auto",
+                aspectRatio: "499 / 540",
+                overflow: "hidden",
+              }}
+            >
+              <img
+                alt="banner_image"
+                src={banner_image}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            </Box>
+          </Grid>
+          <Grid item md={6} xs={12}>
+            <Box>
+              <Typography
                 sx={{
-                  backgroundColor: "#E0CE8F",
-                  borderRadius: "30px",
-                  width: "499px",
-                  height: "540px",
+                  color: "#3F5163",
+                  fontSize: { xs: "24px", md: "40px" },
+                  lineHeight: "auto",
+                  fontFamily: "Avenir LT Std",
+                  fontWeight: "bold",
                 }}
               >
-                <img
-                  alt="banner_image"
-                  src={banner_image}
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </Box>
-            </Grid>
-            <Grid item md={6} sm={12} xs={12}>
-              {" "}
-              <Box sx={{}}>
-                <Typography
-                  sx={{
-                    color: "#3F5163",
-                    fontSize: "40px",
-                    lineHeight: "auto",
-                    fontFamily: "Avenir LT Std",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Lorem ipsum dolor sit amet, consectetur
-                </Typography>
-                <Typography
-                  sx={{
-                    color: "#8C8E8F",
-                    fontSize: "18px",
-                    lineHeight: "28px",
-                    fontWeight: "500",
-                    marginTop: "10px",
-                  }}
-                >
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur.
-                </Typography>
-                <Typography
-                  sx={{
-                    color: "#8C8E8F",
-                    fontSize: "18px",
-                    lineHeight: "28px",
-                    fontWeight: "500",
-                    marginTop: "10px",
-                  }}
-                >
-                  {" "}
-                  Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                  qui officia deserunt mollit anim id est laborum.
-                </Typography>
-              </Box>
-            </Grid>
+                Lorem ipsum dolor sit amet, consectetur
+              </Typography>
+              <Typography
+                sx={{
+                  color: "#8C8E8F",
+                  fontSize: { xs: "14px", md: "18px" },
+                  lineHeight: "24px",
+                  fontWeight: "500",
+                  marginTop: "10px",
+                }}
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+                irure dolor in reprehenderit in voluptate velit esse cillum
+                dolore eu fugiat nulla pariatur.
+              </Typography>
+              <Typography
+                sx={{
+                  color: "#8C8E8F",
+                  fontSize: { xs: "14px", md: "18px" },
+                  lineHeight: "24px",
+                  fontWeight: "500",
+                  marginTop: "10px",
+                }}
+              >
+                Excepteur sint occaecat cupidatat non proident, sunt in culpa
+                qui officia deserunt mollit anim id est laborum.
+              </Typography>
+            </Box>
           </Grid>
+        </Grid>
 
-          <Box
+        <Box
             sx={{
+              
               height: "600px",
               width: "1000px",
               position: "absolute",
-              zIndex: "-1",
+              zIndex: "0",
               backgroundColor: "white",
-              marginTop:"-70px",
-              borderRadius:"10px"
+              marginTop:"-110px",
+              borderRadius:"10px",
+              display: {
+                xs: 'none', 
+                md: 'none', // Hide on medium screens (up to 960px)
+                lg: 'none', // Hide on large screens (up to 1050px)
+                xl: 'block', // Show on extra large screens (above 1050px)
+              },
             }}
           ></Box>
-          <Grid
-            container
-            sx={{
-              display: "flex",
-              alignItems: "flex-start",
-              marginTop: "50px",
-              marginBottom: "50px",
-              position:"relative"
-            }}
-          >
-            <Grid item md={6} sm={12} xs={12} >
-              {" "}
-              <Box sx={{paddingLeft:"53px",marginTop:"50px"}}>
-                <Typography
-                  sx={{
-                    color: "#3F5163",
-                    fontSize: "40px",
-                    lineHeight: "auto",
-                    fontFamily: "Avenir LT Std",
-                    fontWeight: "bold",
-                  
-                  }}
-                >
-                  Lorem ipsum dolor sit amet, consectetur
-                </Typography>
-                <Typography
-                  sx={{
-                    color: "#8C8E8F",
-                    fontSize: "18px",
-                    lineHeight: "28px",
-                    fontWeight: "500",
-                    marginTop: "10px",
-                  }}
-                >
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur.
-                </Typography>
-                <Typography
-                  sx={{
-                    color: "#8C8E8F",
-                    fontSize: "18px",
-                    lineHeight: "28px",
-                    fontWeight: "500",
-                    marginTop: "10px",
-                  }}
-                >
-                  {" "}
-                  Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                  qui officia deserunt mollit anim id est laborum.
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item md={6} sm={12} xs={12} sx={{position:"relative"}}>
-              {" "}
-              <Box
+
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            alignItems: "flex-start",
+            marginBottom: "50px",
+            zIndex:"1",
+            position:"relative",
+          }}
+        >
+          <Grid item md={6} xs={12}>
+            <Box sx={{ paddingLeft: { xs: "20px", md: "53px",marginTop:"4rem" } }}>
+              <Typography
                 sx={{
-                  backgroundColor: "#E0CE8F",
-                  borderRadius: "30px",
-                  width: "499px",
-                  height: "540px",
-                  display: "flex",
-                  justifyContent: "right",
-                  alignItems: "center",
-                  margin: "auto",
+                  color: "#3F5163",
+                  fontSize: { xs: "24px", md: "40px" },
+                  lineHeight: "auto",
+                  fontFamily: "Avenir LT Std",
+                  fontWeight: "bold",
                 }}
               >
-                <img
-                  alt="banner_image"
-                  src={Bg}
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </Box>
-            </Grid>
+                Lorem ipsum dolor sit amet, consectetur
+              </Typography>
+              <Typography
+                sx={{
+                  color: "#8C8E8F",
+                  fontSize: { xs: "14px", md: "18px" },
+                  lineHeight: "24px",
+                  fontWeight: "500",
+                  marginTop: "10px",
+                }}
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+                irure dolor in reprehenderit in voluptate velit esse cillum
+                dolore eu fugiat nulla pariatur.
+              </Typography>
+              <Typography
+                sx={{
+                  color: "#8C8E8F",
+                  fontSize: { xs: "14px", md: "18px" },
+                  lineHeight: "24px",
+                  fontWeight: "500",
+                  marginTop: "10px",
+                }}
+              >
+                Excepteur sint occaecat cupidatat non proident, sunt in culpa
+                qui officia deserunt mollit anim id est laborum.
+              </Typography>
+            </Box>
           </Grid>
+          <Grid item md={6} xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+            <Box
+              sx={{
+                backgroundColor: "#E0CE8F",
+                borderRadius: "30px",
+                width: "100%",
+                height: "auto",
+                aspectRatio: "499 / 540",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <img
+                alt="Bg"
+                src={Bg}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            </Box>
+          </Grid>
+        </Grid>
 
-          <Box sx={{position:"absolute",bottom:"-6%",left:"10%"}}>
-            <Container>
-              <Grid container spacing={4}>
-                {cardData.map((card) => (
-                  <Grid key={card.id} item md={4} sm={12} xs={12}>
-                    <CardComponent
-                      title={card.title}
-                      description={card.description}
-                      iconColor={card.iconColor}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            </Container>
-          </Box>
-        </Container>
-      </Box>
-    </>
+        {/* <Box sx={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
+          <Container>
+            <Grid container spacing={4} justifyContent="center">
+              {cardData.map((card) => (
+                <Grid key={card.id} item xs={12} sm={6} md={4}>
+                  <CardComponent
+                    title={card.title}
+                    description={card.description}
+                    iconColor={card.iconColor}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </Container>
+        </Box> */}
+      </Container>
+    </Box>
   );
 };
 

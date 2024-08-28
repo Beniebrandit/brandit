@@ -9,7 +9,12 @@ const Services = () => {
         <Box>
           <Typography
             sx={{
-              fontSize: "60px",
+              fontSize: {
+                xs: "30px", // Mobile
+                sm: "35px", // Small tablets
+                md: "50px", // Tablets and small laptops
+                lg: "60px", // Larger laptops and desktops
+              },
               lineHeight: "auto",
               fontFamily: "Avenir LT Std",
               fontWeight: "bold",

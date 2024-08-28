@@ -71,15 +71,14 @@ const TrendingProducts = () => {
 
   return (
     <>
-    <Box className="background1">
-     <Typography sx={{position:"relative",zIndex:"3",fontSize:"50px",paddingTop:"4rem",paddingLeft:"8rem"}}>Trending products</Typography>
-     
-     <Box sx={{ marginTop: "1rem" ,position:"relative" , zIndex:"1" }}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+    <Box className="background1" sx={{position:"absolute",zIndex:"-1"}}></Box>
+     <Box sx={{ marginTop: "1rem" }}>
+     <Typography sx={{fontSize:{xs:"30px",sm:"50px"},paddingTop:"4rem",paddingLeft:{xs:"1.5rem",sm:"8rem"}}}>Trending products</Typography>
+            <Box className="custom-scrollbar custom-scrollbar-container" sx={{ borderBottom: 1, borderColor: "divider" }}>
               <Tabs
                 value={value}
                 onChange={handleChange}
-                className="basic tabs example"
+                // className="basic tabs example"
                 sx={{
                   display: "grid",
                   // gridTemplateColumns: {
@@ -92,6 +91,7 @@ const TrendingProducts = () => {
                   gap: "1rem",
                   justifyContent: "center",
                   alignItems: "center",
+                  width: "800px"
                 }}
               >
                 {tabData?.map((tab, index) => (
@@ -131,7 +131,7 @@ const TrendingProducts = () => {
                     xl: "repeat(4, 1fr)", // For large screens, create 3 equal columns
                     lg: "repeat(4, 1fr)", // For large screens, create 3 equal columns
                     md: "repeat(2, 1fr)", // For large screens, create 3 equal columns
-                    sm: "repeat(1)", // For large screens, create 3 equal columns
+                    sm: "repeat(1, 1fr)", // For large screens, create 3 equal columns
                   },
                   gap: "1rem",
                   justifyContent: "center",
@@ -173,7 +173,6 @@ const TrendingProducts = () => {
               Sign Holders
             </CustomTabPanel>
           </Box>
-    </Box>
     </>
   )
 }

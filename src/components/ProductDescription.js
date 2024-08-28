@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { Box, Container, Tabs, Tab, Typography } from "@mui/material";
-import "./Product.css"
-const TabPanel = ({ children, value, index }) => {
-  return (
-    <div role="tabpanel" hidden={value !== index}>
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-};
+import { styled } from "@mui/system";
+import "./Product.css";
+
+// Styled TabPanel component
+const TabPanel = styled(({ children, value, index, ...other }) => (
+  <div role="tabpanel" hidden={value !== index} {...other}>
+    {value === index && (
+      <Box sx={{ p: { xs: 2, sm: 3 }, width: "100%" }}>{children}</Box>
+    )}
+  </div>
+))``;
 
 const ProductDescription = () => {
   const [value, setValue] = useState(0);
@@ -28,10 +27,15 @@ const ProductDescription = () => {
           borderRadius: "10px",
           boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
           height: "100%",
-          marginTop: "100px",
-          padding: "30px",
+          marginTop: { xs: "50px", sm: "100px" },
+          padding: { xs: "20px", sm: "30px" },
+          maxWidth: "100%",
         }}
       >
+        <Box
+          className="custom-scrollbar custom-scrollbar-container"
+        >
+
         <Tabs
           value={value}
           onChange={handleChange}
@@ -39,6 +43,8 @@ const ProductDescription = () => {
             "& .MuiTabs-indicator": {
               display: "none",
             },
+            mb: { xs: 2, sm: 3 },
+            width:"70rem"
           }}
         >
           {[
@@ -53,22 +59,23 @@ const ProductDescription = () => {
               sx={{
                 border: "1px solid #DCDCDC",
                 borderRadius: "35px",
-                fontSize: {lg:"18px",md:"18px"},
+                fontSize: { xs: "14px", sm: "18px" },
                 lineHeight: "18px",
                 fontWeight: "500",
-                marginRight: "10px",
+                marginRight: { xs: "5px", sm: "10px" },
                 backgroundColor: value === index ? "#3F5163" : "#F5F5F5",
                 "&.Mui-selected": {
-                  color: value === index ? "#FFFFFF" : "#868686",
+                  color: "#FFFFFF",
                 },
               }}
             />
           ))}
         </Tabs>
+        </Box>
         <TabPanel value={value} index={0}>
           <Typography
             sx={{
-              fontSize: "18px",
+              fontSize: { xs: "14px", sm: "18px" },
               color: "#8C8E8F",
               lineHeight: "28px",
               fontWeight: "500",
@@ -83,10 +90,11 @@ const ProductDescription = () => {
           </Typography>
           <Typography
             sx={{
-              fontSize: "18px",
+              fontSize: { xs: "14px", sm: "18px" },
               color: "#8C8E8F",
               lineHeight: "28px",
               fontWeight: "500",
+              mt: 2,
             }}
           >
             Pellentesque iaculis nulla sollicitudin purus lobortis, varius
@@ -97,10 +105,11 @@ const ProductDescription = () => {
           </Typography>
           <Typography
             sx={{
-              fontSize: "18px",
+              fontSize: { xs: "14px", sm: "18px" },
               color: "#8C8E8F",
               lineHeight: "28px",
               fontWeight: "400",
+              mt: 2,
             }}
           >
             Pellentesque iaculis nulla sollicitudin purus lobortis, varius

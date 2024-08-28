@@ -19,11 +19,11 @@ const ProductPage = () => {
       <Services />
       <BannerFeature />
 
-      <Bannerslider />
+      {/* <Bannerslider />
       <Detail />
       <Faq />
       <ReviewCard />
-      <Footer />
+      <Footer /> */}
     </>
   );
 };
