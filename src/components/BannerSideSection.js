@@ -8,7 +8,6 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { ReactComponent as Eye } from "../asset/images/Eye.svg";
 
-
 const BannerSideSection = () => {
   return (
     <>
@@ -16,13 +15,13 @@ const BannerSideSection = () => {
         style={{
           height: "82vh", // Full height of the viewport
           width: "15rem", // Width of the sidebar
-          backgroundColor: "whitesmoke", // Background color of the sidebar
+          boxShadow: "0px 5px 30px -15px", // Background color of the sidebar
           display: "flex",
           flexDirection: "column",
           alignItems: "end", // Align items to the end of the flex container
           padding: "20px 0", // Padding at the top and bottom
           position: "fixed", // Fixes the sidebar to the right
-          right: "0", // Move the sidebar to the right
+          right: "0.5rem", // Move the sidebar to the right
           top: "5rem", // Set the top position of the sidebar
           color: "#3F5163", // Text color
           borderRadius: "6px",
@@ -76,15 +75,26 @@ const BannerSideSection = () => {
                     <span style={{ color: "#E0CE8F" }}>$13.31</span> each{" "}
                   </Typography>
                 </Box>
-                <Box sx={{display:"flex"}}>
-                  <Eye style={{width: "20px", height: "auto"}}/>
+                <Box sx={{ display: "flex" }}>
+                  <Eye style={{ width: "20px", height: "auto" }} />
                   &nbsp;
-                  <Typography sx={{ }}>
+                  <Typography sx={{}}>
                     <b>View Proof</b>
                   </Typography>
                 </Box>
-                <Divider/>
-                <Button sx={{color:"white" ,backgroundColor:"#3F5163"}}>Save & Continue</Button>
+                <Divider />
+                <Button
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#3F5163",
+                    textTransform: "none",
+                    "&:hover": {
+                      backgroundColor: "#3F5163",
+                    },
+                  }}
+                >
+                  Save & Continue
+                </Button>
               </Box>
             </Box>
           </AccordionDetails>

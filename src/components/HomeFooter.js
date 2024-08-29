@@ -387,7 +387,7 @@ import {
                 
               </Grid>
               
-              <Grid item md={6} sm={12} xs={12}>
+              <Grid item md={6} sm={12} xs={12} sx={{display:"flex" , flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
                 <Typography
                   sx={{ color: "#FFFFFF", fontWeight: "600", fontSize: "20px" }}
                 >

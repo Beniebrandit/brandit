@@ -11,9 +11,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileArrowUp } from "@fortawesome/free-solid-svg-icons";
 import DesignServicesIcon from "@mui/icons-material/DesignServices";
-import {ReactComponent as SearchTemplete} from "../asset/images/Vector.svg";
-import {ReactComponent as DesignOnline} from "../asset/images/DesignOnline.svg";
-import {ReactComponent as UploadFile} from "../asset/images/UploadFile.svg";
+import { ReactComponent as SearchTemplete } from "../asset/images/Vector.svg";
+import { ReactComponent as DesignOnline } from "../asset/images/DesignOnline.svg";
+import { ReactComponent as UploadFile } from "../asset/images/UploadFile.svg";
 
 const style = {
   position: "absolute",
@@ -23,15 +23,14 @@ const style = {
   width: 1170,
   bgcolor: "background.paper",
   boxShadow: 24,
-  
-  'input': {
-    '&::placeholder': {
-      textOverflow: 'ellipsis !important',
-      color: '#3F5163'
-    }
-  }
-};
 
+  input: {
+    "&::placeholder": {
+      textOverflow: "ellipsis !important",
+      color: "#3F5163",
+    },
+  },
+};
 
 const Pop_Up = ({ open, handleClose }) => {
   return (
@@ -48,7 +47,7 @@ const Pop_Up = ({ open, handleClose }) => {
             id="keep-mounted-modal-title"
             variant="h6"
             component="h2"
-            sx={{ backgroundColor: "#3F5163", padding: "1rem" ,color:"white"}}
+            sx={{ backgroundColor: "#3F5163", padding: "1rem", color: "white" }}
           >
             Select one of the Following
           </Typography>
@@ -58,7 +57,7 @@ const Pop_Up = ({ open, handleClose }) => {
               flexDirection: "row",
               justifyContent: "space-evenly",
               margin: "auto",
-              backgroundColor:"#E0CE8F"
+              backgroundColor: "#E0CE8F",
             }}
           >
             <Typography
@@ -90,32 +89,72 @@ const Pop_Up = ({ open, handleClose }) => {
             sx={{
               display: "grid",
               gridTemplateColumns: { md: "1fr 1fr 1fr", sm: "1fr" },
-              padding:"1rem"
+              padding: "1rem",
             }}
           >
-            <Box sx={{ display:"flex",flexDirection:"column",padding: "1rem", margin: "auto",backgroundColor:"#E0CE8F",width:"250px",height:"150px" }}>
+            <Button
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                padding: "1rem",
+                margin: "auto",
+                backgroundColor: "#E0CE8F",
+                width: "250px",
+                height: "150px",
+              }}
+            >
+              <Box sx={{ margin: "auto", display: "block" }}>
+                <Button>
+                  <UploadFile />
+                </Button>
+              </Box>
+              <Typography sx={{ textAlign: "center", color: "#3F5163" }}>
+                Upload File
+              </Typography>
+            </Button>
+            <Button
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                padding: "1rem",
+                margin: "auto",
+                backgroundColor: "#E0CE8F",
+                width: "250px",
+                height: "150px",
+              }}
+            >
+              <Box sx={{ margin: "auto", display: "block" }}>
+                <Button>
+                  <DesignOnline />
+                </Button>
+              </Box>
+
+              <Typography sx={{ textAlign: "center", color: "#3F5163" }}>
+                Upload File
+              </Typography>
+            </Button>
+            <Button
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                padding: "1rem",
+                margin: "auto",
+                backgroundColor: "#E0CE8F",
+                width: "250px",
+                height: "150px",
+              }}
+            >
               <Box sx={{ margin: "auto", display: "block" }}>
 
-              <UploadFile/>
-              </Box>
-              <Typography sx={{textAlign:"center",color:"#3F5163"}}>Upload File</Typography>
-            </Box>
-            <Box sx={{ display:"flex",flexDirection:"column",padding: "1rem", margin: "auto",backgroundColor:"#E0CE8F",width:"250px",height:"150px" }}>
-              <Box sx={{ margin: "auto", display: "block" }}>
+                  <SearchTemplete />
 
-              <DesignOnline/>
               </Box>
 
-              <Typography sx={{textAlign:"center",color:"#3F5163"}}>Upload File</Typography>
-            </Box>
-            <Box sx={{ display:"flex",flexDirection:"column",padding: "1rem", margin: "auto",backgroundColor:"#E0CE8F",width:"250px",height:"150px" }}>
-              <Box sx={{ margin: "auto", display: "block" }}>
-
-              <SearchTemplete/>
-              </Box>
-
-              <TextField sx={{color:"#3F5163",backgroundColor:"white"}} placeholder="Search Template" />
-            </Box>
+              <TextField
+                sx={{ color: "#3F5163", backgroundColor: "white" }}
+                placeholder="Search Template"
+              />
+            </Button>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
             <Divider sx={{ flexGrow: 1 }} />
@@ -127,17 +166,27 @@ const Pop_Up = ({ open, handleClose }) => {
             <Divider sx={{ flexGrow: 1 }} />
           </Box>
           <Box sx={{ padding: "1rem", margin: "auto" }}>
-            <Box sx={{ padding: "1rem", margin: "auto",width:"60%" }}>
-
-            <Typography sx={{ textAlign:"center" }}><h2>Lorem Ipsum is simply dummy text</h2></Typography>
-            <Typography sx={{ textAlign:"center",marginTop:"0.5rem" }}>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s
-            </Typography>
-            <Box sx={{ textAlign:"center",marginTop:"0.5rem" }}>
-              <Button sx={{ backgroundColor: "#3F5163",padding:"1rem",color:"white",fontSize:"13px"}}>Submit a Design Request</Button>
-            </Box>
+            <Box sx={{ padding: "1rem", margin: "auto", width: "60%" }}>
+              <Typography sx={{ textAlign: "center" }}>
+                <h2>Lorem Ipsum is simply dummy text</h2>
+              </Typography>
+              <Typography sx={{ textAlign: "center", marginTop: "0.5rem" }}>
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry. Lorem Ipsum has been the industry's standard dummy
+                text ever since the 1500s
+              </Typography>
+              <Box sx={{ textAlign: "center", marginTop: "0.5rem" }}>
+                <Button
+                  sx={{
+                    backgroundColor: "#3F5163",
+                    padding: "1rem",
+                    color: "white",
+                    fontSize: "13px",
+                  }}
+                >
+                  Submit a Design Request
+                </Button>
+              </Box>
             </Box>
           </Box>
         </Box>

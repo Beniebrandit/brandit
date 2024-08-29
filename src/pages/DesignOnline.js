@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import main_logo from "../asset/images/main_logo.png";
 import { ReactComponent as Help } from "../asset/images/help.svg";
@@ -11,6 +11,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Sidebar from "../components/Sidebar";
 import BannerSideSection from "../components/BannerSideSection";
+import Toolbar from "../components/Toolbar";
 
 const DesignOnline = () => {
   const [File, setFile] = React.useState("");
@@ -18,19 +19,26 @@ const DesignOnline = () => {
   const handleChange = (event) => {
     setFile(event.target.value);
   };
+
+  const [selectedFile, setSelectedFile] = useState();
+
+    const handleImageChange = (e) => {
+    setSelectedFile(URL.createObjectURL(e.target.files[0]));
+  };
   return (
     <>
-      <Box className="inner_header" sx={{ width: "100%" }}>
+      <Box className="inner_header" sx={{ width: "100%" ,position:"sticky"}}>
         <Box
-          maxWidth="lg"
+          // maxWidth="lg"
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            margin: "auto",
+            width: "100%",
+            marginX: "10rem",
           }}
         >
-          <Box className="header_box">
+          <Box className="header_box" sx={{paddingLeft:"5rem"}}>
             <img
               alt="main_logo"
               src={main_logo}
@@ -67,20 +75,33 @@ const DesignOnline = () => {
                 </Select>
               </FormControl>
             </Box>
-            <Typography
-              sx={{ color: "#FFFFFF", fontWeight: "600", fontSize: "20px" }}
+            {/* <Typography
+              sx={{ color: "black", fontWeight: "600", fontSize: "20px" }}
             >
               Subscribe
-            </Typography>
+            </Typography> */}
             <Box>
               <TextField
+                variant="outlined"
                 placeholder="Name this Design"
                 sx={{
-                  borderRadius: "0px",
-                  backgroundColor: "white",
+                  backgroundColor: "transparent",
+                  "& fieldset": { border: "none" },
+                  boxShadow: "0px 5px 30px -15px",
                 }}
               />
-              <Button sx={{ backgroundColor: "#3F5163", color: "white" }}>
+              <Button
+                sx={{
+                  backgroundColor: "#3F5163",
+                  color: "white",
+                  padding: "6px",
+                  paddingX: "1.4rem",
+                  textTransform: "none",
+                  "&:hover": {
+                    backgroundColor: "#3F5163",
+                  },
+                }}
+              >
                 Save
               </Button>
             </Box>
@@ -135,6 +156,7 @@ const DesignOnline = () => {
                 display: "flex",
                 alignItems: "center",
                 paddingLeft: "1rem",
+                paddingRight: "1.5rem",
               }}
             >
               <Cart0
@@ -152,23 +174,29 @@ const DesignOnline = () => {
       </Box>
 
       <Box style={{ display: "flex" }}>
-        <Sidebar />
+        <Sidebar handleImageChange={handleImageChange} />
         <Box
           style={{
-            height: "82vh", // Full height of the viewport
+            height: "100%", // Full height of the viewport
             width: "100%",
             marginLeft: "210px", // Adjust margin based on sidebar width
-            marginRight: "250px", // Adjust margin based on sidebar width
+            marginRight: "265px", // Adjust margin based on sidebar width
             padding: "20px",
-            backgroundColor: "whitesmoke", // Background color of the sidebar
+            position: "relative",
+            boxShadow: "0px 5px 30px -15px", // Background color of the sidebar
             alignItems: "flex-start", // Align items to the start of the flex container
-            top: "10rem",
+            top: "5rem",
             color: "#3F5163", // Text color
             borderRadius: "6px",
+            zIndex:"-1"
           }}
         >
           <h1>Your Content Here</h1>
           <p>This is your main content area.</p>
+          {selectedFile && 
+          <img src={selectedFile} style={{height:"100%" ,width:"100%"}} alt="img"/>
+          }
+          <Toolbar/>
         </Box>
         <BannerSideSection />
       </Box>
