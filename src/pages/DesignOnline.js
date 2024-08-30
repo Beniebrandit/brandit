@@ -20,10 +20,18 @@ const DesignOnline = () => {
     setFile(event.target.value);
   };
 
-  const [selectedFile, setSelectedFile] = useState();
+  const [selectedFile, setSelectedFile] = useState([]);
 
-    const handleImageChange = (e) => {
-    setSelectedFile(URL.createObjectURL(e.target.files[0]));
+  const handleImageChange = (e) => {
+    const newImage = URL.createObjectURL(e.target.files[0]);
+    setSelectedFile((prevFiles) => [...prevFiles, newImage]);
+    console.log(selectedFile,"selectedFile");
+  };
+
+  const handleDelete = (indexToDelete) => {
+    setSelectedFile((prevFiles) =>
+      prevFiles.filter((_, index) => index !== indexToDelete)
+    );
   };
   return (
     <>
@@ -48,13 +56,16 @@ const DesignOnline = () => {
 
           <Box
             sx={{
+              // display: "grid",
+              // gridTemplateColumns:"0.3fr 1.7fr 1fr",
+              // width:"40rem",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              margin: "auto",
+              // margin: "auto",
             }}
           >
-            <Box sx={{ minWidth: 120 }}>
+            <Box sx={{ minWidth: 80 }}>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">File</InputLabel>
                 <Select
@@ -88,6 +99,7 @@ const DesignOnline = () => {
                   backgroundColor: "transparent",
                   "& fieldset": { border: "none" },
                   boxShadow: "0px 5px 30px -15px",
+                  height:"36.2px"
                 }}
               />
               <Button
@@ -174,7 +186,7 @@ const DesignOnline = () => {
       </Box>
 
       <Box style={{ display: "flex" }}>
-        <Sidebar handleImageChange={handleImageChange} />
+        <Sidebar handleImageChange={handleImageChange} selectedFile={selectedFile} handleDelete={handleDelete}/>
         <Box
           style={{
             height: "100%", // Full height of the viewport
@@ -185,7 +197,7 @@ const DesignOnline = () => {
             position: "relative",
             boxShadow: "0px 5px 30px -15px", // Background color of the sidebar
             alignItems: "flex-start", // Align items to the start of the flex container
-            top: "5rem",
+            top: "0.8rem",
             color: "#3F5163", // Text color
             borderRadius: "6px",
             zIndex:"-1"
@@ -194,7 +206,10 @@ const DesignOnline = () => {
           <h1>Your Content Here</h1>
           <p>This is your main content area.</p>
           {selectedFile && 
-          <img src={selectedFile} style={{height:"100%" ,width:"100%"}} alt="img"/>
+           selectedFile?.map((image) => (
+
+             <img src={image} style={{height:"100%" ,width:"100%"}} alt="img"/>
+           ))
           }
           <Toolbar/>
         </Box>
