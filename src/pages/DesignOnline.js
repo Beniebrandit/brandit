@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import main_logo from "../asset/images/main_logo.png";
 import { ReactComponent as Help } from "../asset/images/help.svg";
@@ -21,21 +21,34 @@ const DesignOnline = () => {
   };
 
   const [selectedFile, setSelectedFile] = useState([]);
+  const [addimage, AddImage] = useState([]);
 
   const handleImageChange = (e) => {
     const newImage = URL.createObjectURL(e.target.files[0]);
     setSelectedFile((prevFiles) => [...prevFiles, newImage]);
-    console.log(selectedFile,"selectedFile");
+    console.log(selectedFile, "selectedFile");
   };
 
-  const handleDelete = (indexToDelete) => {
-    setSelectedFile((prevFiles) =>
-      prevFiles.filter((_, index) => index !== indexToDelete)
-    );
+  const handleDeleteImage = (index) => {
+    setSelectedFile((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    console.log(index, "index");
   };
+  // const selectImage = (index) => {
+  //   const Image = selectedFile.filter((_, i) => i == index);
+  //   // const storedImage = [...Image]
+  //   AddImage((prevFiles) => [...prevFiles, Image]);
+  //   console.log(Image, "storedImage");
+  // };
+  const selectImage = (index) => {
+    console.log(index, "inside selectImage");
+    const Image = selectedFile[index];
+    AddImage((prevFiles) => [...prevFiles, Image]);
+    console.log(Image, "storedImage");
+  };
+  
   return (
     <>
-      <Box className="inner_header" sx={{ width: "100%" ,position:"sticky"}}>
+      <Box className="inner_header" sx={{ width: "100%", position: "fixed" }}>
         <Box
           // maxWidth="lg"
           style={{
@@ -46,7 +59,7 @@ const DesignOnline = () => {
             marginX: "10rem",
           }}
         >
-          <Box className="header_box" sx={{paddingLeft:"5rem"}}>
+          <Box className="header_box" sx={{ paddingLeft: "5rem" }}>
             <img
               alt="main_logo"
               src={main_logo}
@@ -99,8 +112,13 @@ const DesignOnline = () => {
                   backgroundColor: "transparent",
                   "& fieldset": { border: "none" },
                   boxShadow: "0px 5px 30px -15px",
-                  height:"36.2px"
+                  // height: "36.2px",
                 }}
+                inputProps={{
+                  style: {
+                    height: "36.2px",
+                  },
+              }}
               />
               <Button
                 sx={{
@@ -186,7 +204,13 @@ const DesignOnline = () => {
       </Box>
 
       <Box style={{ display: "flex" }}>
-        <Sidebar handleImageChange={handleImageChange} selectedFile={selectedFile} handleDelete={handleDelete}/>
+        <Sidebar
+          handleImageChange={handleImageChange}
+          selectedFile={selectedFile}
+          onDeleteImage={handleDeleteImage}
+          selectImage={selectImage}
+          // AddingImage={selectImage}
+        />
         <Box
           style={{
             height: "100%", // Full height of the viewport
@@ -197,21 +221,24 @@ const DesignOnline = () => {
             position: "relative",
             boxShadow: "0px 5px 30px -15px", // Background color of the sidebar
             alignItems: "flex-start", // Align items to the start of the flex container
-            top: "0.8rem",
+            // top: "0.8rem",
+            top: "5rem",
             color: "#3F5163", // Text color
             borderRadius: "6px",
-            zIndex:"-1"
+            zIndex: "-1",
           }}
         >
           <h1>Your Content Here</h1>
           <p>This is your main content area.</p>
-          {selectedFile && 
-           selectedFile?.map((image) => (
-
-             <img src={image} style={{height:"100%" ,width:"100%"}} alt="img"/>
-           ))
-          }
-          <Toolbar/>
+          {addimage &&
+            addimage?.map((image) => (
+              <img
+                src={image}
+                style={{ height: "100%", width: "100%" }}
+                alt="img"
+              />
+            ))}
+          <Toolbar />
         </Box>
         <BannerSideSection />
       </Box>
