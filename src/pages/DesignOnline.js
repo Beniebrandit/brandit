@@ -110,15 +110,16 @@ const DesignOnline = () => {
                 placeholder="Name this Design"
                 sx={{
                   backgroundColor: "transparent",
-                  "& fieldset": { border: "none" },
+                  "& .MuiInputBase-input-MuiOutlinedInput-input": { border: "none" },
                   boxShadow: "0px 5px 30px -15px",
-                  // height: "36.2px",
+                  height: "36.2px",
+                  fontSize:"10px"
                 }}
-                inputProps={{
-                  style: {
-                    height: "36.2px",
-                  },
-              }}
+              //   inputProps={{
+              //     style: {
+              //       height: "36.2px",
+              //     },
+              // }}
               />
               <Button
                 sx={{
@@ -238,6 +239,43 @@ const DesignOnline = () => {
                 alt="img"
               />
             ))}
+            {/* <div className="container">
+          {addimage &&
+            addimage?.map((image) => (
+              <Rnd
+              default={{
+                x: 100,
+                y: 100,
+                width: 200,
+                height: 200,
+              }}
+              minWidth={100}
+              minHeight={100}
+              bounds="parent"
+              enableResizing={{
+                top: true,
+                right: true,
+                bottom: true,
+                left: true,
+                topRight: true,
+                bottomRight: true,
+                bottomLeft: true,
+                topLeft: true,
+              }}
+              className="rnd-box"
+            >
+              <img
+                src={image}
+                className="resizable-image"
+                style={{ height: "100%", width: "100%" }}
+                alt="img"
+              />
+              <div className="rotate-handle">&#8635;</div>
+            </Rnd>
+
+
+            ))}
+            </div> */}
           <Toolbar />
         </Box>
         <BannerSideSection />

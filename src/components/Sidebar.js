@@ -1,21 +1,11 @@
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Divider,
-  Grid,
   IconButton,
-  MenuItem,
-  Paper,
-  Select,
-  styled,
-  TextField,
 } from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ReactComponent as Sidebarsetting } from "../asset/images/sidebar_setting.svg";
@@ -24,34 +14,23 @@ import { ReactComponent as Sidebartext } from "../asset/images/sidebar_text.svg"
 import { ReactComponent as Sidebarshapes } from "../asset/images/sidebar_shapes.svg";
 import { ReactComponent as Sidebarbackground } from "../asset/images/sidebar_background.svg";
 import { ReactComponent as SidebarQRcode } from "../asset/images/sidebar_QRcode.svg";
-import WbCloudyOutlinedIcon from "@mui/icons-material/WbCloudyOutlined";
-import AddToDriveOutlinedIcon from "@mui/icons-material/AddToDriveOutlined";
-import RecyclingOutlinedIcon from "@mui/icons-material/RecyclingOutlined";
-import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
-import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
-import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
+import Config from "./Config";
+import MyUpload from "./MyUpload";
 
-const data = [
-  {header:"Printed Sides:",title1:"Single Sided",title2:"Double Sided"},
-  {header:"Poles:",title1:"Pole Set",title2:"None"},
-  {header:"Base:",title1:"Ground Stake",title2:"Square Base",title3:"Cross Base",title4:"Cross Base & Water Bag"},
-  {header:"Accessories:",title1:"No Carry Bag",title2:"Carring Case"},
-]
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
+// const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+//   "& .MuiDialogContent-root": {
+//     padding: theme.spacing(2),
+//   },
+//   "& .MuiDialogActions-root": {
+//     padding: theme.spacing(1),
+//   },
+// }));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -249,393 +228,16 @@ const Sidebar = ({
           {isTabOpen && (
             <>
               <TabPanel value={value} index={0}>
-                  <Box>
-                <Box className="custom-scrollbar custom-scrollbar-container">
-
-                  <Box sx={{height:"30rem"}}>
-                    <Typography>Select product :</Typography>
-                    <Select fullWidth defaultValue="Feather Flag Banner">
-                      <MenuItem value="Feather Flag Banner">
-                        Feather Flag Banner
-                      </MenuItem>
-                      <MenuItem value="3 Sided table Cover">
-                        3 Sided table Cover
-                      </MenuItem>
-                      <MenuItem value="A-Frame Sign">A-Frame Sign</MenuItem>
-                      <MenuItem value="Acrylic Photo print">
-                        Acrylic Photo print
-                      </MenuItem>
-                      {/* Add more products as needed */}
-                    </Select>
-                    <Divider
-                      sx={{ marginTop: "1rem", marginBottom: "0.5rem" }}
-                    />
-                    <Typography>Size (in Inches)</Typography>
-                    <Select fullWidth defaultValue="Small">
-                      <MenuItem value="Small">Small (24.25"x79.5")</MenuItem>
-                      <MenuItem value="Medium">Medium (24.25"x79.5")</MenuItem>
-                      <MenuItem value="Large">Large (24.25"x79.5")</MenuItem>
-                      <MenuItem value="X-Large">
-                        X-Large (24.25"x79.5")
-                      </MenuItem>
-                      {/* Add more sizes as needed */}
-                    </Select>
-                    <Divider
-                      sx={{ marginTop: "1rem", marginBottom: "0.5rem" }}
-                    />
-
-                    <Typography>Quantity</Typography>
-
-                    <TextField fullWidth type="number" defaultValue={1} />
-
-                    <Box
-                      sx={{
-                        position: "relative",
-                        mt: 1,
-                        "&:hover .hover-content": {
-                          display: "block",
-                        },
-                      }}
-                    >
-                      <Typography variant="body1" color="primary">
-                        Buy More, Save More!
-                      </Typography>
-                      <Box
-                        className="hover-content"
-                        sx={{
-                          display: "none",
-                          position: "relative",
-                          left: 0,
-                          right:0,
-                          mt: 1,
-                          // backgroundColor: "#fff",
-                          // padding: "10px",
-                          // boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
-                          // zIndex: 1,
-                          width: "100%",
-                        }}
-                      >
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          2 for $139.78 ea.{" "}
-                          <a href="#" style={{ color: "#0066cc" }}>
-                            Save 7%
-                          </a>
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          3 for $138.75 ea.{" "}
-                          <a href="#" style={{ color: "#0066cc" }}>
-                            Save 8%
-                          </a>
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          4 for $137.71 ea.{" "}
-                          <a href="#" style={{ color: "#0066cc" }}>
-                            Save 8%
-                          </a>
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          5 for $136.68 ea.{" "}
-                          <a href="#" style={{ color: "#0066cc" }}>
-                            Save 9%
-                          </a>
-                        </Typography>
-                      </Box>
-                    </Box>
-                   {data?.map((val) => {
-                    return <>
-                   <Accordion defaultExpanded>
-                      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography>{val.header}</Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <Grid container spacing={2}>
-                          <Grid item xs={6}>
-                            <Paper
-                              elevation={3}
-                              sx={{
-                                padding: 1,
-                                textAlign: "center",
-                                border: "2px solid",
-                                borderColor: "#0066cc",
-                              }}
-                            >
-                              <Typography
-                                variant="body1"
-                                sx={{ fontWeight: "bold" }}
-                              >
-                                {val.title1}
-                              </Typography>
-                              <img
-                                src="single-sided-image-url"
-                                alt="Single Sided"
-                                style={{ width: "100%", marginTop: "10px" }}
-                              />
-                            </Paper>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Paper
-                              elevation={1}
-                              sx={{
-                                padding: 1,
-                                textAlign: "center",
-                                border: "1px solid #e0e0e0",
-                              }}
-                            >
-                              <Typography
-                                variant="body1"
-                                sx={{ fontWeight: "bold" }}
-                              >
-                                 {val.title2}
-                              </Typography>
-                              <img
-                                src="double-sided-image-url"
-                                alt="Double Sided"
-                                style={{ width: "100%", marginTop: "10px" }}
-                              />
-                            </Paper>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Paper
-                              elevation={1}
-                              sx={{
-                                padding: 1,
-                                textAlign: "center",
-                                border: "1px solid #e0e0e0",
-                              }}
-                            >
-                              <Typography
-                                variant="body1"
-                                sx={{ fontWeight: "bold" }}
-                              >
-                                 {val.title3}
-                              </Typography>
-                              <img
-                                src="double-sided-image-url"
-                                alt="Double Sided"
-                                style={{ width: "100%", marginTop: "10px" }}
-                              />
-                            </Paper>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Paper
-                              elevation={1}
-                              sx={{
-                                padding: 1,
-                                textAlign: "center",
-                                border: "1px solid #e0e0e0",
-                              }}
-                            >
-                              <Typography
-                                variant="body1"
-                                sx={{ fontWeight: "bold" }}
-                              >
-                                 {val.title4}
-                              </Typography>
-                              <img
-                                src="double-sided-image-url"
-                                alt="Double Sided"
-                                style={{ width: "100%", marginTop: "10px" }}
-                              />
-                            </Paper>
-                          </Grid>
-                        </Grid>
-                      </AccordionDetails>
-                    </Accordion>
-                    </>
-                    
-                   })}
-                  </Box>
-                  </Box>
-                  <Box sx={{ mt: 2, textAlign: "center" }}>
-                    <Typography variant="h6">$150.33 each</Typography>
-                    <Typography variant="body2">Subtotal: $150.33</Typography>
-                  </Box>
-                </Box>
+                <Config />
               </TabPanel>
               <TabPanel value={value} index={1}>
-                <Box
-                  sx={{
-                    border: "2px dashed #bfbfbf",
-                    borderRadius: "8px",
-                    padding: "16px",
-                    textAlign: "center",
-                    marginBottom: "20px",
-                  }}
-                >
-                  <Typography variant="body1" gutterBottom>
-                    Drag or drop here to upload or
-                  </Typography>
-                  <Box
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <label
-                      className="custom-file-upload"
-                      style={{
-                        backgroundColor: "#44c767",
-                        color: "white",
-                        padding: "10px 20px",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      BROWSE YOUR FILES
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        style={{
-                          display: "none", // Hide the file input
-                        }}
-                      />
-                    </label>
-                  </Box>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-around",
-                    paddingBottom: "16px",
-                  }}
-                >
-                  <Box sx={{ textAlign: "center" }}>
-                    <CloudUploadOutlinedIcon
-                      style={{ width: "40px", height: "auto" }}
-                    />
-                    <Typography variant="caption">Upload</Typography>
-                  </Box>
-                  <Box sx={{ textAlign: "center" }}>
-                    <WbCloudyOutlinedIcon
-                      style={{ width: "40px", height: "auto" }}
-                    />
-                    <Typography variant="caption">Google Drive</Typography>
-                  </Box>
-                  <Box sx={{ textAlign: "center" }}>
-                    <AddToDriveOutlinedIcon
-                      style={{ width: "40px", height: "auto" }}
-                    />
-                    <Typography variant="caption">Dropbox</Typography>
-                  </Box>
-                  <Box sx={{ textAlign: "center" }}>
-                    <RecyclingOutlinedIcon
-                      style={{ width: "40px", height: "auto" }}
-                    />
-                    <Typography variant="caption">OneDrive</Typography>
-                  </Box>
-                </Box>
-                <Typography
-                  variant="caption"
-                  display="block"
-                  textAlign="center"
-                >
-                  JPG, JPEG, PNG, GIF, TIFF, BMP, AI, EPS, SVG, PDF, HEIC, JFIF,
-                  PJPEG, WEBP
-                  <br />
-                  Max file size: 200 MB
-                </Typography>
-                {selectedFile && (
-                  <Box
-                    sx={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr 1fr",
-                      gap: 2,
-                    }}
-                  >
-                    {selectedFile?.map((image, index) => (
-                      <Box
-                        key={index}
-                        sx={{
-                          position: "relative",
-                          width: "100px",
-                          height: "100px",
-                          margin: "auto",
-                          "&:hover .icon-box": {
-                            top: "0", // Move icons into view on hover
-                            opacity: 1, // Make icons visible on hover
-                          },
-                        }}
-                      >
-                        <img
-                          src={image}
-                          style={{
-                            height: "100px",
-                            width: "100px",
-                            display: "block",
-                          }}
-                          alt="img"
-                          onClick={() => {
-                            selectImage(index);
-                            console.log(index, "selectImage");
-                          }}
-                        />
-                        <Box
-                          sx={{
-                            position: "absolute",
-                            top: "0", // Position it over the image
-                            marginTop: "5px",
-                            left: "21%",
-                            transform: "translateX(-50%)",
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            width: "70px",
-                            opacity: 0, // Initially hide icons
-                            transition:
-                              "top 0.3s ease-in-out, opacity 0.3s ease-in-out", // Smooth transition
-                          }}
-                          className="icon-box"
-                        >
-                          <Button onClick={() => handleDeleteClick(index)}>
-                            <DeleteOutlinedIcon
-                              sx={{
-                                backgroundColor: "whitesmoke",
-                                padding: "3px",
-                                borderRadius: "5px",
-                              }}
-                            />
-                          </Button>
-                          <Button onClick={() => handleExpand(index)}>
-                            <OpenInFullOutlinedIcon
-                              sx={{
-                                backgroundColor: "whitesmoke",
-                                padding: "3px",
-                                borderRadius: "5px",
-                              }}
-                            />
-                          </Button>
-                        </Box>
-                      </Box>
-                    ))}
-                  </Box>
-                )}
+                <MyUpload
+                  handleImageChange={handleImageChange}
+                  selectedFile={selectedFile}
+                  handleDeleteClick={handleDeleteClick}
+                  selectImage={selectImage}
+                  handleExpand={handleExpand}
+                />
               </TabPanel>
               <TabPanel value={value} index={2}>
                 Item Three
