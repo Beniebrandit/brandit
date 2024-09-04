@@ -25,6 +25,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import "./Product.css";
 import { Add } from "@mui/icons-material";
 import axios from "axios";
+import { ProductService } from "../services/Product.service";
+
 const TestimonialsCarouselData9 = [
   { thumbimg: require("../asset/images/product_1.png") },
   { thumbimg: require("../asset/images/product_1.png") },
@@ -43,8 +45,8 @@ const ProductData = [
   },
 ];
 
-const url = `https://flagg.devlopix.com/api`;
-const token = `6|q8mTawTdGKbRdLazOGLcm1Y0zJe5ks4IPUWRJNIR13495c0c`
+// const url = `https://flagg.devlopix.com/api`;
+// const token = `6|q8mTawTdGKbRdLazOGLcm1Y0zJe5ks4IPUWRJNIR13495c0c`
 
 const Product = (props) => {
   const [count, setCount] = useState(1);
@@ -54,7 +56,7 @@ const Product = (props) => {
     height: "",
     width: "",
   });
-
+  console.log(alldata?.productSizes[0]?.size,"alldata?.productSizes[0]?.size")
   const swiperRef = useRef(null);
 
   const customPagination = (index, className) => {
@@ -84,32 +86,42 @@ const Product = (props) => {
     description: ProductData[0].description,
   };
   const getApi = async () => {
+    ProductService.product().then((res) => {
+      const response = res.data;
+      setAllData(response);
+      console.log(alldata, "alldata");
+      console.log(response, "response");
 
-    const res = await axios.get(`${url}/product/2`, {
-      headers: {
-        "Authorization": `Bearer ${token}`
+      if (alldata?.productSizes?.length > 0) {
+        setState({
+          height: alldata.productSizes[0]?.size.height || "",
+          width: alldata.productSizes[0]?.size.width || "",
+        });
       }
     });
-     const response = res.data
-     setAllData(response)
-     console.log(alldata,"alldata")
-     console.log(response,"response")
-  }
+
+    
+    // const res = await axios.get(`${url}/product/2`, {
+    //   headers: {
+    //     "Authorization": `Bearer ${token}`
+    //   }
+    // });
+  };
 
   useEffect(() => {
     getApi();
-  },[])
+  }, []);
 
   const handleClick = async (e) => {
-    let response = await axios(`${url}/product`, {
-      method: "POST", //not needed here declare above
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      },
-      data: { ...data }
-    });
-    console.log(response);
+    // let response = await axios(`${url}/product`, {
+    //   method: "POST", //not needed here declare above
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "Authorization": `Bearer ${token}`
+    //   },
+    //   data: { ...data }
+    // });
+    // console.log(response);
   };
 
   return (
@@ -168,21 +180,32 @@ const Product = (props) => {
                   slidesPerView="4"
                   freeMode
                 >
-                  {TestimonialsCarouselData9.map((item, index) => (
-                    <SwiperSlide key={index}>
-                      <img
-                        onClick={() => handleThumbClick(index)}
-                        src={item.thumbimg}
-                        alt=""
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          cursor: "pointer",
-                          borderRadius: "20px",
-                        }}
-                      />
-                    </SwiperSlide>
-                  ))}
+                  {alldata?.images?.map((item, index) => {
+                    console.log(
+                      process.env.REACT_APP_API_BASE_URL + item?.path,
+                      "alldata"
+                    );
+                    return (
+                      <>
+                        <SwiperSlide key={index}>
+                          <img
+                            key={index}
+                            onClick={() => handleThumbClick(index)}
+                            src={
+                              process.env.REACT_APP_API_BASE_URL + item?.path
+                            }
+                            alt=""
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              cursor: "pointer",
+                              borderRadius: "20px",
+                            }}
+                          />
+                        </SwiperSlide>
+                      </>
+                    );
+                  })}
                 </Swiper>
                 <div className="swiper-prev">
                   <KeyboardBackspaceIcon />
@@ -205,7 +228,7 @@ const Product = (props) => {
                   fontFamily: "Avenir LT Std",
                 }}
               >
-                {alldata?.data.name}
+                {alldata?.name}
               </Typography>
               <Rating
                 style={{ color: "#F6AA03 !important" }}
@@ -235,7 +258,7 @@ const Product = (props) => {
                   marginTop: "20px",
                 }}
               >
-                {alldata?.data.description}
+                {alldata?.description}
               </Typography>
               <Divider style={{ width: "100%", marginTop: "40px" }} />
               <Box style={{ marginTop: "30px" }}>
@@ -256,12 +279,12 @@ const Product = (props) => {
                           <p className="weight_para">W</p>
                         </div>
                         <div className="right">
-                          <input
+                        <input
                             type="number"
                             placeholder=""
                             onChange={(e) => handleChange(e)}
-                            name="height"
-                            value={state.height}
+                            name="width"
+                            value={state.width}
                             className="weight_input"
                           />
                         </div>
@@ -276,8 +299,8 @@ const Product = (props) => {
                             type="number"
                             placeholder=""
                             onChange={(e) => handleChange(e)}
-                            name="width"
-                            value={state.width}
+                            name="height"
+                            value={state.height}
                             className="weight_input"
                           />
                         </div>

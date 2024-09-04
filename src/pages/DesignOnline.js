@@ -110,10 +110,11 @@ const DesignOnline = () => {
                 placeholder="Name this Design"
                 sx={{
                   backgroundColor: "transparent",
+                  padding:"7px",
                   "& .MuiInputBase-input-MuiOutlinedInput-input": { border: "none" },
                   boxShadow: "0px 5px 30px -15px",
-                  height: "36.2px",
-                  fontSize:"10px"
+                  // height: "36.2px",
+                  // fontSize:"10px"
                 }}
               //   inputProps={{
               //     style: {

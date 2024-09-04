@@ -4,6 +4,7 @@ import  HomePage  from "./pages/HomePage";
 import ProductPage from "./pages/ProductPage";
 import DesignOnline from "./pages/DesignOnline";
 function App() {
+  console.log("base_url",process.env.REACT_APP_API_BASE_URL );
   return (
     <>
 
