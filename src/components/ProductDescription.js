@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Container, Tabs, Tab, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import "./Product.css";
+import { ProductService } from "../services/Product.service";
 
 // Styled TabPanel component
 const TabPanel = styled(({ children, value, index, ...other }) => (
@@ -14,10 +15,29 @@ const TabPanel = styled(({ children, value, index, ...other }) => (
 
 const ProductDescription = () => {
   const [value, setValue] = useState(0);
+  const [alldata, setAllData] = useState();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const getApi = async () => {
+    ProductService.product().then((res) => {
+      const response = res.data;
+      setAllData(response);
+      console.log(alldata, "alldata1");
+    });
+
+    // const res = await axios.get(`${url}/product/2`, {
+    //   headers: {
+    //     "Authorization": `Bearer ${token}`
+    //   }
+    // });
+  };
+
+  useEffect(() => {
+    getApi();
+  }, []);
 
   return (
     <Container>
@@ -81,12 +101,12 @@ const ProductDescription = () => {
               fontWeight: "500",
             }}
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut at nisi
-            tincidunt, iaculis velit ac, suscipit elit. Vestibulum tincidunt vel
-            metus sit amet condimentum. Integer tincidunt fermentum est, sed
-            lacinia leo tempor ut. Proin blandit suscipit justo, ac laoreet mi
-            ornare quis. In a sem lobortis lacus consectetur varius id lacinia
-            lorem.
+           {/* {alldata?.long_description} */}
+           Pellentesque iaculis nulla sollicitudin purus lobortis, varius
+            tempor diam iaculis. Cras nec mauris commodo, suscipit arcu sed,
+            dapibus ligula. Vestibulum fringilla lorem mi, nec aliquam dui
+            blandit et. Sed ornare porta suscipit. Aliquam maximus, ex id
+            sodales pulvinar.
           </Typography>
           <Typography
             sx={{

@@ -13,6 +13,9 @@ import {
   AccordionDetails,
   AccordionActions,
   hexToRgb,
+  FormHelperText,
+  InputLabel,
+  Paper,
 } from "@mui/material";
 import "swiper/css";
 // Libraries
@@ -21,29 +24,15 @@ import AddIcon from "@mui/icons-material/Add";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import "./Product.css";
 import { Add } from "@mui/icons-material";
 import axios from "axios";
 import { ProductService } from "../services/Product.service";
-
-const TestimonialsCarouselData9 = [
-  { thumbimg: require("../asset/images/product_1.png") },
-  { thumbimg: require("../asset/images/product_1.png") },
-  { thumbimg: require("../asset/images/product_1.png") },
-  { thumbimg: require("../asset/images/product_1.png") },
-  { thumbimg: require("../asset/images/product_1.png") },
-  { thumbimg: require("../asset/images/product_1.png") },
-  { thumbimg: require("../asset/images/product_1.png") },
-  { thumbimg: require("../asset/images/product_1.png") },
-];
-const ProductData = [
-  {
-    title: "Plastic Sign",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
-  },
-];
+import { Theme, useTheme } from "@mui/material/styles";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 // const url = `https://flagg.devlopix.com/api`;
 // const token = `6|q8mTawTdGKbRdLazOGLcm1Y0zJe5ks4IPUWRJNIR13495c0c`
@@ -56,21 +45,39 @@ const Product = (props) => {
     height: "",
     width: "",
   });
-  console.log(alldata?.productSizes[0]?.size,"alldata?.productSizes[0]?.size")
-  const swiperRef = useRef(null);
+  const [selectedCard, setSelectedCard] = useState(() => {
+    const initialSelection = {};
+    alldata?.categories[1].subCategories.map((val) => {
+      initialSelection[val.id] = val.subCatName;
+    });
+    return initialSelection;
+  });
 
-  const customPagination = (index, className) => {
-    return `
-    <div style="margin:0 10px;">
-      <span class="${className}" style="background-image: url(${TestimonialsCarouselData9[index].thumbimg});"></span>
-    </div>
-    `;
+  const handleCardClick = (id, subCatName) => {
+    setSelectedCard((prevSelectedCards) => ({
+      ...prevSelectedCards,
+      [id]: subCatName,
+    }));
+    console.log(selectedCard, "selectedCard");
   };
+
+  const swiperRef = useRef(null);
 
   // Function to handle thumbnail click
   const handleThumbClick = (index) => {
     swiperRef.current.swiper.slideTo(index);
   };
+
+  const widthSizes = alldata?.productSizes
+    ?.filter((val) => val.size_type === "W") // Filter for size_type that equals "W"
+    ?.map((val) => val.size); // Map to get the size values
+
+  const heightSizes = alldata?.productSizes
+    ?.filter((val) => val.size_type === "H") // Filter for size_type that equals "H"
+    ?.map((val) => val.size); // Map to get the size values
+
+  // console.log(widthSizes); // Output: [5, 10, 25]
+  // console.log(heightSizes); // Output: [5, 10, 25]
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -78,29 +85,21 @@ const Product = (props) => {
       ...prev,
       [name]: value,
     }));
-    console.log(state, "state");
+    // console.log(state, "state");
   };
 
-  const data = {
-    name: ProductData[0].title,
-    description: ProductData[0].description,
-  };
+  // const data = {
+  //   name: ProductData[0].title,
+  //   description: ProductData[0].description,
+  // };
   const getApi = async () => {
     ProductService.product().then((res) => {
       const response = res.data;
       setAllData(response);
       console.log(alldata, "alldata");
       console.log(response, "response");
-
-      if (alldata?.productSizes?.length > 0) {
-        setState({
-          height: alldata.productSizes[0]?.size.height || "",
-          width: alldata.productSizes[0]?.size.width || "",
-        });
-      }
     });
 
-    
     // const res = await axios.get(`${url}/product/2`, {
     //   headers: {
     //     "Authorization": `Bearer ${token}`
@@ -124,6 +123,12 @@ const Product = (props) => {
     // console.log(response);
   };
 
+  // const [age, setAge] = React.useState("");
+
+  // const handleChange = (event) => {
+  //   setAge(event.target.value);
+  // };
+
   return (
     <Box className="product_box">
       <Container>
@@ -136,19 +141,20 @@ const Product = (props) => {
                   ref={swiperRef}
                   modules={[Navigation, Pagination]}
                   navigation={false}
+                  loop={true}
                   // pagination={{
                   //   clickable: true,
                   //   renderBullet: customPagination,
                   // }}
                   className="product-swiper"
                 >
-                  {TestimonialsCarouselData9.map((item, index) => (
+                  {alldata?.images?.map((item, index) => (
                     <SwiperSlide
                       key={index}
                       className="product-swiper-slide text-center"
                     >
                       <img
-                        src={item.thumbimg}
+                        src={process.env.REACT_APP_API_BASE_URL + item?.path}
                         alt=""
                         style={{ width: "100%", height: "100%" }}
                       />
@@ -181,10 +187,10 @@ const Product = (props) => {
                   freeMode
                 >
                   {alldata?.images?.map((item, index) => {
-                    console.log(
-                      process.env.REACT_APP_API_BASE_URL + item?.path,
-                      "alldata"
-                    );
+                    // console.log(
+                    //   process.env.REACT_APP_API_BASE_URL + item?.path,
+                    //   "alldata"
+                    // );
                     return (
                       <>
                         <SwiperSlide key={index}>
@@ -207,10 +213,18 @@ const Product = (props) => {
                     );
                   })}
                 </Swiper>
-                <div className="swiper-prev">
+                <div
+                  // className="swiper-prev"
+                  onClick={() => swiperRef.current.swiper.slidePrev()}
+                  className="swiper-button-next-nav swiper-prev"
+                >
                   <KeyboardBackspaceIcon />
                 </div>
-                <div className="swiper-next">
+                <div
+                  // className="swiper-next"
+                  onClick={() => swiperRef.current.swiper.slideNext()}
+                  className="swiper-button-next-nav swiper-next"
+                >
                   <EastIcon />
                 </div>
               </div>
@@ -279,14 +293,33 @@ const Product = (props) => {
                           <p className="weight_para">W</p>
                         </div>
                         <div className="right">
-                        <input
-                            type="number"
-                            placeholder=""
-                            onChange={(e) => handleChange(e)}
-                            name="width"
-                            value={state.width}
-                            className="weight_input"
-                          />
+                          <FormControl sx={{ m: 0, minWidth: 70 }}>
+                            <Select
+                              value={state?.width}
+                              name="width"
+                              onChange={(e) => handleChange(e)}
+                              displayEmpty
+                              inputProps={{ "aria-label": "Without label" }}
+                            >
+                              <MenuItem value="">
+                                <em>
+                                  {widthSizes && widthSizes.length > 0
+                                    ? widthSizes[0]
+                                    : null}
+                                </em>
+                              </MenuItem>
+                              {widthSizes && widthSizes.length > 1 && (
+                                <MenuItem value={widthSizes[1]}>
+                                  {widthSizes[1]}
+                                </MenuItem>
+                              )}
+                              {widthSizes && widthSizes.length > 2 && (
+                                <MenuItem value={widthSizes[2]}>
+                                  {widthSizes[2]}
+                                </MenuItem>
+                              )}
+                            </Select>
+                          </FormControl>
                         </div>
                       </div>
 
@@ -295,14 +328,33 @@ const Product = (props) => {
                           <p className="height_para">H</p>
                         </div>
                         <div className="right">
-                          <input
-                            type="number"
-                            placeholder=""
-                            onChange={(e) => handleChange(e)}
-                            name="height"
-                            value={state.height}
-                            className="weight_input"
-                          />
+                          <FormControl sx={{ m: 0, minWidth: 70 }}>
+                            <Select
+                              value={state?.height}
+                              name="height"
+                              onChange={(e) => handleChange(e)}
+                              displayEmpty
+                              inputProps={{ "aria-label": "Without label" }}
+                            >
+                              <MenuItem value="">
+                                <em>
+                                  {heightSizes && heightSizes.length > 0
+                                    ? heightSizes[0]
+                                    : null}
+                                </em>
+                              </MenuItem>
+                              {heightSizes && heightSizes.length > 1 && (
+                                <MenuItem value={heightSizes[1]}>
+                                  {heightSizes[1]}
+                                </MenuItem>
+                              )}
+                              {heightSizes && heightSizes.length > 2 && (
+                                <MenuItem value={heightSizes[2]}>
+                                  {heightSizes[2]}
+                                </MenuItem>
+                              )}
+                            </Select>
+                          </FormControl>
                         </div>
                       </div>
                     </div>
@@ -386,11 +438,88 @@ const Product = (props) => {
                     lineHeight: "18px",
                     fontWeight: "400",
                   }}
+                  sx={{
+                    "& .MuiAccordionSummary-content": {
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    },
+                  }}
                 >
-                  Lorem Ipsum is simply dummy text
+                  {alldata?.categories[1]?.name}
+                  {selectedCard[alldata?.categories[1].subCategories[0].id] && (
+                          <Typography>
+                            {selectedCard[alldata?.categories[1].subCategories[0].id]}
+                          </Typography>
+                        )}
                 </AccordionSummary>
                 <AccordionDetails>
-                  Lorem Ipsum is simply dummy text
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <Paper
+                        elevation={3}
+                        sx={{
+                          padding: 1,
+                          textAlign: "center",
+                          border:
+                            selectedCard[alldata?.categories[1].subCategories[0].id] === alldata?.categories[1].subCategories[0].subCatName
+                              ? "2px solid"
+                              : "none",
+                          borderColor:
+                            selectedCard[alldata?.categories[1].subCategories[0].id] ===
+                              alldata?.categories[1].subCategories[0].subCatName && "#ff9900",
+                          cursor: "pointer",
+                        }}
+                        onClick={() =>
+                          handleCardClick(alldata?.categories[1].subCategories[0].id, alldata?.categories[1].subCategories[0].subCatName)
+                        }
+                      >
+                        <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                          {alldata?.categories[1].subCategories[0].subCatName}
+                        </Typography>
+                        <img
+                          src={
+                            process.env.REACT_APP_API_BASE_URL +
+                            alldata?.categories[1].subCategories[0].image
+                          }
+                          alt="Single Sided"
+                          style={{ width: "100%", marginTop: "10px" }}
+                        />
+                      </Paper>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Paper
+                        elevation={3}
+                        sx={{
+                          padding: 1,
+                          textAlign: "center",
+                          border:
+                            selectedCard[alldata?.categories[1].subCategories[1].id] === alldata?.categories[1].subCategories[1].subCatName
+                              ? "2px solid"
+                              : "none",
+                          borderColor:
+                            selectedCard[alldata?.categories[1].subCategories[1].id] ===
+                              alldata?.categories[1].subCategories[1].subCatName && "#ff9900",
+                          cursor: "pointer",
+                        }}
+                        onClick={() =>
+                          handleCardClick(alldata?.categories[1].subCategories[1].id, alldata?.categories[1].subCategories[1].subCatName)
+                        }
+                      >
+                        <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                          {alldata?.categories[1].subCategories[1].subCatName}
+                        </Typography>
+                        <img
+                          src={
+                            process.env.REACT_APP_API_BASE_URL +
+                            alldata?.categories[1].subCategories[1].image
+                          }
+                          alt="Single Sided"
+                          style={{ width: "100%", marginTop: "10px" }}
+                        />
+                      </Paper>
+                    </Grid>
+                  </Grid>
                 </AccordionDetails>
               </Accordion>
               <Accordion
