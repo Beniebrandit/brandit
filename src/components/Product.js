@@ -41,32 +41,22 @@ const Product = (props) => {
   const [count, setCount] = useState(1);
   const [value, setValue] = useState(2);
   const [alldata, setAllData] = useState();
-  const [state, setState] = useState({
-    height: "",
-    width: "",
-  });
-  const [selectedCard, setSelectedCard] = useState(() => {
-    const initialSelection = {};
-    alldata?.categories[1].subCategories.map((val) => {
-      initialSelection[val.id] = val.subCatName;
-    });
-    return initialSelection;
-  });
 
-  const handleCardClick = (id, subCatName) => {
-    setSelectedCard((prevSelectedCards) => ({
-      ...prevSelectedCards,
-      [id]: subCatName,
-    }));
-    console.log(selectedCard, "selectedCard");
-  };
+  const [selectedCard, setSelectedCard] = useState({});
 
-  const swiperRef = useRef(null);
-
-  // Function to handle thumbnail click
-  const handleThumbClick = (index) => {
-    swiperRef.current.swiper.slideTo(index);
-  };
+  // Use effect to set the initial selected card after the data is available
+  useEffect(() => {
+    if (alldata?.categories?.length > 0) {
+      const initialSelection = {};
+      alldata?.categories?.forEach((category) => {
+        if (category?.subCategories?.length > 0) {
+          // Set the first subcategory as the default selected card
+          initialSelection[category.id] = category.subCategories[0];
+        }
+      });
+      setSelectedCard(initialSelection); // Update the state with initial selections
+    }
+  }, [alldata]);
 
   const widthSizes = alldata?.productSizes
     ?.filter((val) => val.size_type === "W") // Filter for size_type that equals "W"
@@ -78,6 +68,41 @@ const Product = (props) => {
 
   // console.log(widthSizes); // Output: [5, 10, 25]
   // console.log(heightSizes); // Output: [5, 10, 25]
+  const [state, setState] = useState({
+    width: widthSizes?.[0] || "", // Default to the first width size
+    height: heightSizes?.[0] || "", // Default to the first height size
+  });
+
+  useEffect(() => {
+    // Ensure the state is set with the first item from the arrays initially
+    if (widthSizes?.length > 0 && !state.width) {
+      setState((prevState) => ({
+        ...prevState,
+        width: widthSizes[0],
+      }));
+    }
+    if (heightSizes?.length > 0 && !state.height) {
+      setState((prevState) => ({
+        ...prevState,
+        height: heightSizes[0],
+      }));
+    }
+  }, [widthSizes, heightSizes]);
+
+  const handleCardClick = (categoryId, subCat) => {
+    // Update the selected card for the specific category
+    setSelectedCard((prevSelectedCards) => ({
+      ...prevSelectedCards,
+      [categoryId]: subCat, // Store the selected subcategory object
+    }));
+  };
+
+  const swiperRef = useRef(null);
+
+  // Function to handle thumbnail click
+  const handleThumbClick = (index) => {
+    swiperRef.current.swiper.slideTo(index);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -275,7 +300,7 @@ const Product = (props) => {
                 {alldata?.description}
               </Typography>
               <Divider style={{ width: "100%", marginTop: "40px" }} />
-              <Box style={{ marginTop: "30px" }}>
+              {/* <Box style={{ marginTop: "30px" }}>
                 <Grid container spacing={4}>
                   <Grid item lg={6} md={6} sm={12} xs={12}>
                     <Typography
@@ -300,6 +325,20 @@ const Product = (props) => {
                               onChange={(e) => handleChange(e)}
                               displayEmpty
                               inputProps={{ "aria-label": "Without label" }}
+                              sx={{
+                                boxShadow: "none",
+                                ".MuiOutlinedInput-notchedOutline": {
+                                  border: 0,
+                                },
+                                "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+                                  {
+                                    border: 0,
+                                  },
+                                "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                  {
+                                    border: 0,
+                                  },
+                              }}
                             >
                               <MenuItem value="">
                                 <em>
@@ -335,6 +374,20 @@ const Product = (props) => {
                               onChange={(e) => handleChange(e)}
                               displayEmpty
                               inputProps={{ "aria-label": "Without label" }}
+                              sx={{
+                                boxShadow: "none",
+                                ".MuiOutlinedInput-notchedOutline": {
+                                  border: 0,
+                                },
+                                "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+                                  {
+                                    border: 0,
+                                  },
+                                "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                  {
+                                    border: 0,
+                                  },
+                              }}
                             >
                               <MenuItem value="">
                                 <em>
@@ -414,171 +467,222 @@ const Product = (props) => {
                     </Box>
                   </Grid>
                 </Grid>
+              </Box> */}
+              <Box sx={{ marginTop: "30px" }}>
+                <Grid container spacing={4}>
+                  {/* Size (in Inches) Section */}
+                  <Grid item lg={6} md={6} sm={12} xs={12}>
+                    <Typography
+                      sx={{
+                        fontSize: "22px",
+                        lineHeight: "32px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Size (in Inches)
+                    </Typography>
+
+                    <div className="size-form">
+                      {/* Width Field */}
+                      <div className="size-field">
+                        <div className="left">
+                          <p className="weight_para">W</p>
+                        </div>
+                        <div className="right">
+                          <FormControl sx={{ minWidth: 70 }}>
+                            <Select
+                              value={state?.width}
+                              name="width"
+                              onChange={handleChange}
+                              displayEmpty
+                              inputProps={{ "aria-label": "Without label" }}
+                              sx={{
+                                boxShadow: "none",
+                                ".MuiOutlinedInput-notchedOutline": {
+                                  border: 0,
+                                },
+                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                  border: 0,
+                                },
+                                "&.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                  { border: 0 },
+                              }}
+                            >
+                              {widthSizes?.map((size, index) => (
+                                <MenuItem key={index} value={size}>
+                                  <em>{size}</em>
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </div>
+                      </div>
+
+                      {/* Height Field */}
+                      <div className="size-field">
+                        <div className="left">
+                          <p className="height_para">H</p>
+                        </div>
+                        <div className="right">
+                          <FormControl sx={{ minWidth: 70 }}>
+                            <Select
+                              value={state?.height}
+                              name="height"
+                              onChange={handleChange}
+                              displayEmpty
+                              inputProps={{ "aria-label": "Without label" }}
+                              sx={{
+                                boxShadow: "none",
+                                ".MuiOutlinedInput-notchedOutline": {
+                                  border: 0,
+                                },
+                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                  border: 0,
+                                },
+                                "&.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                  { border: 0 },
+                              }}
+                            >
+                              {heightSizes?.map((size, index) => (
+                                <MenuItem key={index} value={size}>
+                                  <em>{size}</em>
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </div>
+                      </div>
+                    </div>
+                  </Grid>
+
+                  {/* Quantity Section */}
+                  <Grid item lg={6} md={6} sm={12} xs={12}>
+                    <Typography
+                      sx={{
+                        fontSize: "22px",
+                        lineHeight: "32px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Quantity:
+                    </Typography>
+
+                    <Box
+                      sx={{
+                        border: "1px solid #868686",
+                        width: "50%",
+                        marginTop: "20px",
+                        height: "53%",
+                        borderRadius: "10px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-around",
+                      }}
+                    >
+                      <Typography
+                        onClick={() => setCount(count - 1)}
+                        sx={{ color: "#868686", cursor: "pointer" }}
+                      >
+                        -
+                      </Typography>
+                      <span
+                        sx={{
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                          color: "#868686",
+                        }}
+                      >
+                        {count}
+                      </span>
+                      <Typography
+                        onClick={() => setCount(count + 1)}
+                        sx={{ color: "#868686", cursor: "pointer" }}
+                      >
+                        +
+                      </Typography>
+                    </Box>
+                  </Grid>
+                </Grid>
               </Box>
 
               <Divider style={{ width: "100%", marginTop: "40px" }} />
-
-              <Accordion
-                style={{
-                  marginBottom: "10px",
-                  backgroundColor: "transparent",
-                  boxShadow: "none",
-                  border: "1px solid #DCDCDC",
-                  borderRadius: "10px",
-                  marginTop: "25px",
-                }}
-              >
-                <AccordionSummary
-                  expandIcon={<AddIcon />}
-                  aria-controls="panel1-content"
-                  id="panel1-header"
+              {alldata?.categories?.map((category) => (
+                <Accordion
+                  key={category.id}
                   style={{
-                    fontSize: "18px",
-                    color: "#3F5163",
-                    lineHeight: "18px",
-                    fontWeight: "400",
-                  }}
-                  sx={{
-                    "& .MuiAccordionSummary-content": {
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    },
+                    marginBottom: "10px",
+                    backgroundColor: "transparent",
+                    boxShadow: "none",
+                    border: "1px solid #DCDCDC",
+                    borderRadius: "10px",
+                    marginTop: "25px",
                   }}
                 >
-                  {alldata?.categories[1]?.name}
-                  {selectedCard[alldata?.categories[1].subCategories[0].id] && (
-                          <Typography>
-                            {selectedCard[alldata?.categories[1].subCategories[0].id]}
-                          </Typography>
-                        )}
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <Paper
-                        elevation={3}
-                        sx={{
-                          padding: 1,
-                          textAlign: "center",
-                          border:
-                            selectedCard[alldata?.categories[1].subCategories[0].id] === alldata?.categories[1].subCategories[0].subCatName
-                              ? "2px solid"
-                              : "none",
-                          borderColor:
-                            selectedCard[alldata?.categories[1].subCategories[0].id] ===
-                              alldata?.categories[1].subCategories[0].subCatName && "#ff9900",
-                          cursor: "pointer",
-                        }}
-                        onClick={() =>
-                          handleCardClick(alldata?.categories[1].subCategories[0].id, alldata?.categories[1].subCategories[0].subCatName)
-                        }
-                      >
-                        <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                          {alldata?.categories[1].subCategories[0].subCatName}
-                        </Typography>
-                        <img
-                          src={
-                            process.env.REACT_APP_API_BASE_URL +
-                            alldata?.categories[1].subCategories[0].image
-                          }
-                          alt="Single Sided"
-                          style={{ width: "100%", marginTop: "10px" }}
-                        />
-                      </Paper>
+                  <AccordionSummary
+                    expandIcon={<AddIcon />}
+                    aria-controls={`panel${category.id}-content`}
+                    id={`panel${category.id}-header`}
+                    style={{
+                      fontSize: "18px",
+                      color: "#3F5163",
+                      lineHeight: "18px",
+                      fontWeight: "400",
+                    }}
+                    sx={{
+                      "& .MuiAccordionSummary-content": {
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      },
+                    }}
+                  >
+                    {category?.name}
+                    {/* Display the selected subcategory's name */}
+                    {selectedCard[category.id] && (
+                      <Typography sx={{ marginLeft: "10px" }}>
+                        {selectedCard[category.id].subCatName}
+                      </Typography>
+                    )}
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Grid container spacing={2}>
+                      {category?.subCategories?.map((subCat) => (
+                        <Grid item xs={6} key={subCat.id}>
+                          <Paper
+                            elevation={3}
+                            sx={{
+                              padding: 1,
+                              textAlign: "center",
+                              border:
+                                selectedCard[category.id]?.id === subCat.id
+                                  ? "2px solid"
+                                  : "none",
+                              borderColor:
+                                selectedCard[category.id]?.id === subCat.id
+                                  ? "#ff9900"
+                                  : "none",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => handleCardClick(category.id, subCat)}
+                          >
+                            <Typography
+                              variant="body1"
+                              sx={{ fontWeight: "bold" }}
+                            >
+                              {subCat.subCatName}
+                            </Typography>
+                            <img
+                              src={`${process.env.REACT_APP_API_BASE_URL}${subCat.image}`}
+                              alt={subCat.subCatName}
+                              style={{ width: "100%", marginTop: "10px" }}
+                            />
+                          </Paper>
+                        </Grid>
+                      ))}
                     </Grid>
-                    <Grid item xs={6}>
-                      <Paper
-                        elevation={3}
-                        sx={{
-                          padding: 1,
-                          textAlign: "center",
-                          border:
-                            selectedCard[alldata?.categories[1].subCategories[1].id] === alldata?.categories[1].subCategories[1].subCatName
-                              ? "2px solid"
-                              : "none",
-                          borderColor:
-                            selectedCard[alldata?.categories[1].subCategories[1].id] ===
-                              alldata?.categories[1].subCategories[1].subCatName && "#ff9900",
-                          cursor: "pointer",
-                        }}
-                        onClick={() =>
-                          handleCardClick(alldata?.categories[1].subCategories[1].id, alldata?.categories[1].subCategories[1].subCatName)
-                        }
-                      >
-                        <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                          {alldata?.categories[1].subCategories[1].subCatName}
-                        </Typography>
-                        <img
-                          src={
-                            process.env.REACT_APP_API_BASE_URL +
-                            alldata?.categories[1].subCategories[1].image
-                          }
-                          alt="Single Sided"
-                          style={{ width: "100%", marginTop: "10px" }}
-                        />
-                      </Paper>
-                    </Grid>
-                  </Grid>
-                </AccordionDetails>
-              </Accordion>
-              <Accordion
-                style={{
-                  marginBottom: "10px",
-                  backgroundColor: "transparent",
-                  boxShadow: "none",
-                  border: "1px solid #DCDCDC",
-                  borderRadius: "10px",
-                  marginTop: "25px",
-                }}
-              >
-                <AccordionSummary
-                  expandIcon={<AddIcon />}
-                  aria-controls="panel2-content"
-                  id="panel2-header"
-                  style={{
-                    fontSize: "18px",
-                    color: "#3F5163",
-                    lineHeight: "18px",
-                    fontWeight: "400",
-                  }}
-                >
-                  Lorem Ipsum is simply dummy text
-                </AccordionSummary>
-                <AccordionDetails>
-                  Lorem Ipsum is simply dummy text
-                </AccordionDetails>
-              </Accordion>
-              <Accordion
-                style={{
-                  backgroundColor: "transparent",
-                  boxShadow: "none",
-                  border: "1px solid #DCDCDC",
-                  borderRadius: "10px",
-                  marginTop: "25px",
-                }}
-              >
-                <AccordionSummary
-                  expandIcon={<AddIcon />}
-                  aria-controls="panel3-content"
-                  id="panel3-header"
-                  style={{
-                    fontSize: "18px",
-                    color: "#3F5163",
-                    lineHeight: "18px",
-                    fontWeight: "400",
-                  }}
-                >
-                  Lorem Ipsum is simply dummy text
-                </AccordionSummary>
-                <AccordionDetails>
-                  Lorem Ipsum is simply dummy text
-                </AccordionDetails>
-                <AccordionActions>
-                  <Button>Cancel</Button>
-                  <Button>Agree</Button>
-                </AccordionActions>
-              </Accordion>
+                  </AccordionDetails>
+                </Accordion>
+              ))}
               <Divider />
               <Button
                 variant="contained"
