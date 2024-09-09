@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import { Box, Typography, Button ,CircularProgress } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Typography, Button, CircularProgress } from "@mui/material";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import WbCloudyOutlinedIcon from "@mui/icons-material/WbCloudyOutlined";
-import AddToDriveOutlinedIcon from "@mui/icons-material/AddToDriveOutlined";
-import RecyclingOutlinedIcon from "@mui/icons-material/RecyclingOutlined";
+import { ReactComponent as Microsoft } from "../asset/images/microsoft.svg";
+import { ReactComponent as Googledrive } from "../asset/images/googledrive.svg";
+import { ReactComponent as Dropbox } from "../asset/images/dropbox.svg";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
+import useDrivePicker from "react-google-drive-picker";
 
 const MyUpload = ({
   handleImageChange,
@@ -14,17 +16,60 @@ const MyUpload = ({
   selectImage,
   handleExpand,
 }) => {
-    const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState([]);
+  // const [openPicker,data, authResponse] = useDrivePicker();
 
-    const handleFileChange = (event) => {
-      setLoading(true);
-      handleImageChange(event);
-  
-      // Simulate the loading process by using a timeout
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files);
+    const newLoadingState = files.map(() => true); // Set loader true for each file
+    setLoading([...loading, ...newLoadingState]);
+
+    handleImageChange(event); // Call parent function to handle file input
+
+    files.forEach((file, index) => {
+      // Simulate the loading process
       setTimeout(() => {
-        setLoading(false); // Hide loader after 2 seconds
-      }, 2000);
-    };
+        setLoading((prev) => {
+          const newState = [...prev];
+          newState[selectedFile.length + index] = false; // Disable loader for specific image
+          console.log(newState, "newState");
+          return newState;
+        });
+      }, 2000); // Simulate 2-second loading for each image
+    });
+  };
+
+  // const handleOpenPicker = () => {
+  //   openPicker({
+  //     clientId:
+  //       "1062247369631-cvrso0qqo4s11pp75ciel1ces9e4al33.apps.googleusercontent.com",
+  //     developerKey: "AIzaSyBemgDiT5TbKCNMjPvs69GN9go6yrnYKYs",
+  //     viewId: "DOCS_IMAGES",
+  //     token:
+  //       "ya29.a0AcM612yj3FVgRS2wqfoU0NwofPYJ_OAJ0XEADCsft46hmG96xR7EMUfAlGBcq2inwywuYtK-DX94FpCL1tHAgMhxdmUcqctJ2AJqy1JpEbTUmtWfQszlBcFgwfkY3mtkDQD42byXDxullM07GdVpCB-gw32lf8wdNqV2rA0taCgYKAesSARISFQHGX2MiO5veFzb_OOfoeWdGgc28iA0175", // pass oauth token in case you already have one
+  //     showUploadView: true,
+  //     showUploadFolders: true,
+  //     supportDrives: true,
+  //     multiselect: true,
+  //     // customViews: customViewsArray, // custom view
+      
+  //   });
+  // };
+  // useEffect((data) => {
+  //   if (data) {
+  //     data.docs.map((i) => console.log(i,"i"))
+  //   }
+  //   console.log(data,"data")
+  // },[data])
+
+  const handleDeleteImage = (index) => {
+    // Remove the image from the parent component's selectedFile state
+    handleDeleteClick(index);
+
+    // Update the loading state to remove the corresponding loader entry
+    setLoading((prev) => prev.filter((_, i) => i !== index));
+  };
+
   return (
     <>
       <Box
@@ -76,21 +121,89 @@ const MyUpload = ({
           paddingBottom: "16px",
         }}
       >
-        <Box sx={{ textAlign: "center" }}>
-          <CloudUploadOutlinedIcon style={{ width: "40px", height: "auto" }} />
-          <Typography variant="caption">Upload</Typography>
+        <Box
+          sx={{
+            textAlign: "center",
+            border: "0.5px solid #cfd4d9",
+            borderRadius: "4px",
+            height: "50px",
+            width: "50px",
+            position: "relative", // Ensure proper placement of elements
+          }}
+        >
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange} // Use handleFileChange to trigger the loader
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              opacity: 0, // Hide the input but make it clickable
+              cursor: "pointer",
+            }}
+          />
+          <CloudUploadOutlinedIcon
+            sx={{
+              width: "40px",
+              height: "100%",
+              pointerEvents: "none", // Make the icon unclickable
+            }}
+          />
         </Box>
-        <Box sx={{ textAlign: "center" }}>
-          <WbCloudyOutlinedIcon style={{ width: "40px", height: "auto" }} />
-          <Typography variant="caption">Google Drive</Typography>
+
+        <Box
+          sx={{
+            textAlign: "center",
+            border: "1px solid #cfd4d9",
+            borderRadius: "4px",
+            height: "50px",
+            width: "50px",
+          }}
+        >
+          <Dropbox
+            style={{ width: "40px", height: "100%", pointerEvents: "none" }}
+          />
         </Box>
-        <Box sx={{ textAlign: "center" }}>
-          <AddToDriveOutlinedIcon style={{ width: "40px", height: "auto" }} />
-          <Typography variant="caption">Dropbox</Typography>
+        <Box
+          sx={{
+            textAlign: "center",
+            border: "1px solid #cfd4d9",
+            borderRadius: "4px",
+            height: "50px",
+            width: "50px",
+          }}
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "40px",
+              height: "100%",
+              opacity: 0, // Hide the input but make it clickable
+              cursor: "pointer",
+            }}
+            // onClick={() => handleOpenPicker()}
+          ></Box>
+          <Googledrive
+            style={{ width: "40px", height: "100%", pointerEvents: "none" }}
+          />
         </Box>
-        <Box sx={{ textAlign: "center" }}>
-          <RecyclingOutlinedIcon style={{ width: "40px", height: "auto" }} />
-          <Typography variant="caption">OneDrive</Typography>
+        <Box
+          sx={{
+            textAlign: "center",
+            border: "1px solid #cfd4d9",
+            borderRadius: "4px",
+            height: "50px",
+            width: "50px",
+          }}
+        >
+          <Microsoft
+            style={{ width: "40px", height: "100%", pointerEvents: "none" }}
+          />
         </Box>
       </Box>
       <Typography variant="caption" display="block" textAlign="center">
@@ -127,13 +240,14 @@ const MyUpload = ({
                   height: "100px",
                   width: "100px",
                   display: "block",
+                  opacity: loading[index] ? 0.5 : 1,
                 }}
                 alt="img"
                 onClick={() => {
                   selectImage(index);
                 }}
               />
-              {loading && (
+              {loading[index] && (
                 <Box
                   sx={{
                     position: "absolute",
@@ -166,7 +280,7 @@ const MyUpload = ({
                 }}
                 className="icon-box"
               >
-                <Button onClick={() => handleDeleteClick(index)}>
+                <Button onClick={() => handleDeleteImage(index)}>
                   <DeleteOutlinedIcon
                     sx={{
                       backgroundColor: "whitesmoke",

@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from "react";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import React, {  useState } from "react";
+import { Box, Button, TextField } from "@mui/material";
 import main_logo from "../asset/images/main_logo.png";
 import { ReactComponent as Help } from "../asset/images/help.svg";
 import { ReactComponent as Share } from "../asset/images/share.svg";
@@ -110,17 +110,16 @@ const DesignOnline = () => {
                 placeholder="Name this Design"
                 sx={{
                   backgroundColor: "transparent",
-                  padding:"7px",
                   "& .MuiInputBase-input-MuiOutlinedInput-input": { border: "none" },
                   boxShadow: "0px 5px 30px -15px",
                   // height: "36.2px",
                   // fontSize:"10px"
                 }}
-              //   inputProps={{
-              //     style: {
-              //       height: "36.2px",
-              //     },
-              // }}
+                inputProps={{
+                  style: {
+                    padding:"7px",
+                  },
+              }}
               />
               <Button
                 sx={{

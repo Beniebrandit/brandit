@@ -22,6 +22,7 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Config from "./Config";
 import MyUpload from "./MyUpload";
+import Text from "./Text";
 
 // const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 //   "& .MuiDialogContent-root": {
@@ -223,14 +224,15 @@ const Sidebar = ({
             position: "relative",
             backgroundColor: "whitesmoke",
             flexGrow: 1,
+            // width:"24rem"
           }}
         >
           {isTabOpen && (
             <>
-              <TabPanel value={value} index={0}>
+              <TabPanel value={value} index={0} style={{width:"22rem"}}>
                 <Config />
               </TabPanel>
-              <TabPanel value={value} index={1}>
+              <TabPanel value={value} index={1} style={{width:"24rem"}}>
                 <MyUpload
                   handleImageChange={handleImageChange}
                   selectedFile={selectedFile}
@@ -240,10 +242,10 @@ const Sidebar = ({
                 />
               </TabPanel>
               <TabPanel value={value} index={2}>
-                Item Three
+                Premium images
               </TabPanel>
               <TabPanel value={value} index={3}>
-                Item Four
+                <Text/>
               </TabPanel>
               <TabPanel value={value} index={4}>
                 Item Five
