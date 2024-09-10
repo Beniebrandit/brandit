@@ -8,7 +8,6 @@ import { ReactComponent as Dropbox } from "../asset/images/dropbox.svg";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 import useDrivePicker from "react-google-drive-picker";
-import GooglePicker from "./GooglePicker";
 
 const MyUpload = ({
   handleImageChange,
