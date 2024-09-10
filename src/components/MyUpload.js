@@ -8,6 +8,7 @@ import { ReactComponent as Dropbox } from "../asset/images/dropbox.svg";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 import useDrivePicker from "react-google-drive-picker";
+import GooglePicker from "./GooglePicker";
 
 const MyUpload = ({
   handleImageChange,
@@ -17,7 +18,75 @@ const MyUpload = ({
   handleExpand,
 }) => {
   const [loading, setLoading] = useState([]);
-  // const [openPicker,data, authResponse] = useDrivePicker();
+  const [openPicker, data, authResponse] = useDrivePicker();
+  const [accessToken, setAccessToken] = useState(null);
+
+  // Function to refresh access token
+  const refreshAccessToken = async () => {
+    const refreshToken = "1//049qhv9w-4i8ICgYIARAAGAQSNwF-L9IrdUwuIM2wDBjsVslkw-f0HFvVpUvRa8lxhLpTwUjytQmNutg759wE8sLLtx3JuM37q98"; // Update with your actual refresh token
+    const clientId = "1062247369631-2i266asc9rltsjaknplpc6pl079ji3r1.apps.googleusercontent.com"; // Update with your actual client ID
+    const clientSecret = "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"; // Update with your actual client secret
+
+    try {
+      const response = await fetch("https://oauth2.googleapis.com/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          grant_type: "refresh_token",
+          refresh_token: refreshToken,
+          client_id: clientId,
+          client_secret: clientSecret,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+  
+      if (data.error) {
+        throw new Error(`Error refreshing token: ${data.error_description}`);
+      }
+  
+      console.log("New access token:", data.access_token);
+      setAccessToken(data.access_token); // Update the state with new access token
+    } catch (error) {
+      console.error("Failed to refresh access token:", error.message);
+    }
+  };
+
+  const handleOpenPicker = async () => {
+    // Refresh access token before opening the picker
+    await refreshAccessToken();
+
+    openPicker({
+      clientId: "1062247369631-2i266asc9rltsjaknplpc6pl079ji3r1.apps.googleusercontent.com",
+      developerKey: "AIzaSyAkUl6HfJdQ52iswh8Uhmi6xA_vk1nebZ4",
+      viewId: "DOCS",
+      // token: token, // pass oauth token in case you already have one
+      showUploadView: true,
+      showUploadFolders: true,
+      supportDrives: true,
+      multiselect: true,
+      // customViews: customViewsArray, // custom view
+      callbackFunction: (data) => {
+        if (data.action === 'cancel') {
+          console.log('User clicked cancel/close button')
+        }
+        console.log(data)
+      },
+    })
+  };
+
+  useEffect(() => {
+    if (data) {
+      data?.docs?.map((i) => console.log(i, "i"));
+      console.log(data, "data");
+    }
+  }, [data]);
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
@@ -38,29 +107,6 @@ const MyUpload = ({
       }, 2000); // Simulate 2-second loading for each image
     });
   };
-
-  // const handleOpenPicker = () => {
-  //   openPicker({
-  //     clientId:
-  //       "1062247369631-cvrso0qqo4s11pp75ciel1ces9e4al33.apps.googleusercontent.com",
-  //     developerKey: "AIzaSyBemgDiT5TbKCNMjPvs69GN9go6yrnYKYs",
-  //     viewId: "DOCS_IMAGES",
-  //     token:
-  //       "ya29.a0AcM612yj3FVgRS2wqfoU0NwofPYJ_OAJ0XEADCsft46hmG96xR7EMUfAlGBcq2inwywuYtK-DX94FpCL1tHAgMhxdmUcqctJ2AJqy1JpEbTUmtWfQszlBcFgwfkY3mtkDQD42byXDxullM07GdVpCB-gw32lf8wdNqV2rA0taCgYKAesSARISFQHGX2MiO5veFzb_OOfoeWdGgc28iA0175", // pass oauth token in case you already have one
-  //     showUploadView: true,
-  //     showUploadFolders: true,
-  //     supportDrives: true,
-  //     multiselect: true,
-  //     // customViews: customViewsArray, // custom view
-      
-  //   });
-  // };
-  // useEffect((data) => {
-  //   if (data) {
-  //     data.docs.map((i) => console.log(i,"i"))
-  //   }
-  //   console.log(data,"data")
-  // },[data])
 
   const handleDeleteImage = (index) => {
     // Remove the image from the parent component's selectedFile state
@@ -179,14 +225,15 @@ const MyUpload = ({
           <Box
             sx={{
               position: "absolute",
-              top: 0,
-              left: 0,
-              width: "40px",
-              height: "100%",
+              // top: 0,
+              // left: 0,
+              width: "50px",
+              height: "50px",
               opacity: 0, // Hide the input but make it clickable
               cursor: "pointer",
+              zIndex:"3"
             }}
-            // onClick={() => handleOpenPicker()}
+            onClick={() => handleOpenPicker()}
           ></Box>
           <Googledrive
             style={{ width: "40px", height: "100%", pointerEvents: "none" }}
@@ -303,6 +350,7 @@ const MyUpload = ({
           ))}
         </Box>
       )}
+      {/* <GooglePicker/> */}
     </>
   );
 };
