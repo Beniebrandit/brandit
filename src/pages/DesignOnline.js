@@ -1,5 +1,5 @@
 import React, {  useState } from "react";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, Drawer, Grid, IconButton, List, ListItem, TextField, Typography } from "@mui/material";
 import main_logo from "../asset/images/main_logo.png";
 import { ReactComponent as Help } from "../asset/images/help.svg";
 import { ReactComponent as Share } from "../asset/images/share.svg";
@@ -12,6 +12,7 @@ import Select from "@mui/material/Select";
 import Sidebar from "../components/Sidebar";
 import BannerSideSection from "../components/BannerSideSection";
 import Toolbar from "../components/Toolbar";
+import MenuIcon from "@mui/icons-material/Menu";
 
 const DesignOnline = () => {
   const [File, setFile] = React.useState("");
@@ -45,6 +46,12 @@ const DesignOnline = () => {
     AddImage((prevFiles) => [...prevFiles, Image]);
     console.log(Image, "storedImage");
   };
+
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const toggleDrawer = (open) => () => {
+    setDrawerOpen(open);
+  };
   
   return (
     <>
@@ -59,7 +66,7 @@ const DesignOnline = () => {
             marginX: "10rem",
           }}
         >
-          <Box className="header_box" sx={{ paddingLeft: "5rem" }}>
+          <Box className="header_box" sx={{ paddingLeft: {xs:"1rem",sm:"5rem"} }}>
             <img
               alt="main_logo"
               src={main_logo}
@@ -139,68 +146,83 @@ const DesignOnline = () => {
           </Box>
 
           <Box
+          sx={{
+            display: { xs: "none", md: "flex"},
+            alignItems: "center",
+            gap: { xs: "0.5rem", sm: "1rem" },
+          }}
+          sm="auto" 
+        >
+          <Box
             sx={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-around",
+              gap: "0.5rem",
             }}
           >
-            <Box
-              sx={{
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-                paddingLeft: "1rem",
-              }}
-            >
-              <Help style={{ width: "20px", height: "auto" }} />
-              &nbsp;
-              <span>Get Design Help</span>
-            </Box>
-            <Box
-              sx={{
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-                paddingLeft: "1rem",
-              }}
-            >
-              <Share style={{ width: "20px", height: "auto" }} />
-              &nbsp;
-              <span>Share</span>
-            </Box>
-            <Box
-              sx={{
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-                paddingLeft: "1rem",
-              }}
-            >
-              <Save style={{ width: "20px", height: "auto" }} />
-              &nbsp;
-              <span>Save</span>
-            </Box>
-            <Box
-              sx={{
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-                paddingLeft: "1rem",
-                paddingRight: "1.5rem",
-              }}
-            >
-              <Cart0
-                style={{
-                  width: "20px",
-                  height: "auto",
-                  backgroundColor: "#3F5163",
-                  padding: "8px",
-                  borderRadius: "5px",
-                }}
-              />
-            </Box>
+            <Help sx={{ width: "20px", height: "auto" }} />
+            <Typography variant="body2">Get Design Help</Typography>
           </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
+            <Share sx={{ width: "20px", height: "auto" }} />
+            <Typography variant="body2">Share</Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
+            <Save sx={{ width: "20px", height: "auto" }} />
+            <Typography variant="body2">Save</Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              paddingRight: "1.5rem",
+            }}
+          >
+            <Cart0
+              sx={{
+                width: "20px",
+                height: "auto",
+                backgroundColor: "#3F5163",
+                padding: "8px",
+                borderRadius: "5px",
+              }}
+            />
+          </Box>
+        {/* </Box> */}
+          </Box>
+          <Grid item xs={12} sm="auto" sx={{ display: { md: "none" } }}>
+            <IconButton onClick={toggleDrawer(true)}>
+              <MenuIcon />
+            </IconButton>
+            <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
+              <List>
+                <ListItem>
+                  <Typography variant="body2">Large Format</Typography>
+                </ListItem>
+                <ListItem>
+                  <Typography variant="body2">Stickers and Labels</Typography>
+                </ListItem>
+                <ListItem>
+                  <Typography variant="body2">Fabrics</Typography>
+                </ListItem>
+                <ListItem>
+                  <Typography variant="body2">Accessories</Typography>
+                </ListItem>
+              </List>
+            </Drawer>
+          </Grid>
         </Box>
       </Box>
 

@@ -21,7 +21,6 @@
     "react-dom": "^18.3.1",
     "react-google-drive-picker": "^1.2.2",
     "react-player": "^2.16.0",
-    "react-rnd": "^10.4.12",
     "react-router-dom": "^6.26.0",
     "react-scripts": "5.0.1",
     "react-slick": "^0.30.2",

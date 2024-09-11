@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Button, CircularProgress } from "@mui/material";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
-import WbCloudyOutlinedIcon from "@mui/icons-material/WbCloudyOutlined";
 import { ReactComponent as Microsoft } from "../asset/images/microsoft.svg";
 import { ReactComponent as Googledrive } from "../asset/images/googledrive.svg";
 import { ReactComponent as Dropbox } from "../asset/images/dropbox.svg";
@@ -19,6 +18,7 @@ const MyUpload = ({
   const [loading, setLoading] = useState([]);
   const [openPicker, data, authResponse] = useDrivePicker();
   const [accessToken, setAccessToken] = useState(null);
+  const [drivedata, setDriveData] = useState();
 
   // Function to refresh access token
   const refreshAccessToken = async () => {
@@ -64,7 +64,7 @@ const MyUpload = ({
     openPicker({
       clientId: "1062247369631-2i266asc9rltsjaknplpc6pl079ji3r1.apps.googleusercontent.com",
       developerKey: "AIzaSyAkUl6HfJdQ52iswh8Uhmi6xA_vk1nebZ4",
-      viewId: "DOCS",
+      viewId:"DOCS_IMAGES",
       // token: token, // pass oauth token in case you already have one
       showUploadView: true,
       showUploadFolders: true,
@@ -75,7 +75,8 @@ const MyUpload = ({
         if (data.action === 'cancel') {
           console.log('User clicked cancel/close button')
         }
-        console.log(data)
+        console.log(data,"drivedata")
+        setDriveData(data)
       },
     })
   };
@@ -83,6 +84,7 @@ const MyUpload = ({
   useEffect(() => {
     if (data) {
       data?.docs?.map((i) => console.log(i, "i"));
+      console.log(data.docs, "data.docs");
       console.log(data, "data");
     }
   }, [data]);
@@ -350,6 +352,24 @@ const MyUpload = ({
         </Box>
       )}
       {/* <GooglePicker/> */}
+      <Box>
+        {
+          drivedata?.docs?.map((val) => {
+            console.log(val,"val")
+            return <>
+            <img
+                src={val.url}
+                style={{
+                  height: "100px",
+                  width: "100px",
+                  display: "block",
+                }}
+                alt="img"
+              />
+            </>
+          })
+        }
+      </Box>
     </>
   );
 };
