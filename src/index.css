@@ -198,3 +198,23 @@ input[type="file"] {
   font-size: 18px;
   color: #007bff;
 }
+
+html .pintura-editor {
+  --color-background: 255, 255, 255;
+  --color-foreground: 10, 10, 10;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+      color: #fff;
+      background: #111;
+  }
+
+  html .pintura-editor {
+      --color-background: 10, 10, 10;
+      --color-foreground: 255, 255, 255;
+  }
+}
+.pintura-editor {
+  height: 600px;
+}

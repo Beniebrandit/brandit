@@ -1,5 +1,16 @@
-import React, {  useState } from "react";
-import { Box, Button, Drawer, Grid, IconButton, List, ListItem, TextField, Typography } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  Divider,
+  Drawer,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  TextField,
+  Typography,
+} from "@mui/material";
 import main_logo from "../asset/images/main_logo.png";
 import { ReactComponent as Help } from "../asset/images/help.svg";
 import { ReactComponent as Share } from "../asset/images/share.svg";
@@ -13,7 +24,11 @@ import Sidebar from "../components/Sidebar";
 import BannerSideSection from "../components/BannerSideSection";
 import Toolbar from "../components/Toolbar";
 import MenuIcon from "@mui/icons-material/Menu";
+import "@pqina/pintura/pintura.css";
+import { PinturaEditor } from "@pqina/react-pintura";
+import { getEditorDefaults } from "@pqina/pintura";
 
+const editorDefaults = getEditorDefaults();
 const DesignOnline = () => {
   const [File, setFile] = React.useState("");
 
@@ -52,7 +67,7 @@ const DesignOnline = () => {
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
   };
-  
+
   return (
     <>
       <Box className="inner_header" sx={{ width: "100%", position: "fixed" }}>
@@ -66,7 +81,10 @@ const DesignOnline = () => {
             marginX: "10rem",
           }}
         >
-          <Box className="header_box" sx={{ paddingLeft: {xs:"1rem",sm:"5rem"} }}>
+          <Box
+            className="header_box"
+            sx={{ paddingLeft: { xs: "1rem", sm: "5rem" } }}
+          >
             <img
               alt="main_logo"
               src={main_logo}
@@ -100,9 +118,21 @@ const DesignOnline = () => {
                     },
                   }}
                 >
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
+                  <MenuItem value={10} sx={{display:"flex" ,justifyContent:"space-between"}}>
+                  <Typography>Undo</Typography>
+                  <Typography>Crtl+Z</Typography>                 
+                  </MenuItem>
+                  <MenuItem value={20} sx={{display:"flex" ,justifyContent:"space-between"}}>
+                  <Typography>Redo</Typography>
+                  <Typography>Crtl+Y</Typography>  
+                  </MenuItem>
+                  <Divider/>
+                  <MenuItem value={30}>Save</MenuItem>
+                  <MenuItem value={30}>Save as copy</MenuItem>
+                  <MenuItem value={30}>Load previous design</MenuItem>
+                  <Divider/>
+                  <MenuItem value={30}>Show ruler</MenuItem>
+                  <MenuItem value={30}>Show grid</MenuItem>
                 </Select>
               </FormControl>
             </Box>
@@ -117,16 +147,18 @@ const DesignOnline = () => {
                 placeholder="Name this Design"
                 sx={{
                   backgroundColor: "transparent",
-                  "& .MuiInputBase-input-MuiOutlinedInput-input": { border: "none" },
+                  "& .MuiInputBase-input-MuiOutlinedInput-input": {
+                    border: "none",
+                  },
                   boxShadow: "0px 5px 30px -15px",
                   // height: "36.2px",
                   // fontSize:"10px"
                 }}
                 inputProps={{
                   style: {
-                    padding:"7px",
+                    padding: "7px",
                   },
-              }}
+                }}
               />
               <Button
                 sx={{
@@ -146,67 +178,71 @@ const DesignOnline = () => {
           </Box>
 
           <Box
-          sx={{
-            display: { xs: "none", md: "flex"},
-            alignItems: "center",
-            gap: { xs: "0.5rem", sm: "1rem" },
-          }}
-          sm="auto" 
-        >
-          <Box
             sx={{
-              display: "flex",
+              display: { xs: "none", md: "flex" },
               alignItems: "center",
-              gap: "0.5rem",
+              gap: { xs: "0.5rem", sm: "1rem" },
             }}
+            sm="auto"
           >
-            <Help sx={{ width: "20px", height: "auto" }} />
-            <Typography variant="body2">Get Design Help</Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
-            <Share sx={{ width: "20px", height: "auto" }} />
-            <Typography variant="body2">Share</Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
-            <Save sx={{ width: "20px", height: "auto" }} />
-            <Typography variant="body2">Save</Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              paddingRight: "1.5rem",
-            }}
-          >
-            <Cart0
+            <Box
               sx={{
-                width: "20px",
-                height: "auto",
-                backgroundColor: "#3F5163",
-                padding: "8px",
-                borderRadius: "5px",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
               }}
-            />
-          </Box>
-        {/* </Box> */}
+            >
+              <Help sx={{ width: "20px", height: "auto" }} />
+              <Typography variant="body2">Get Design Help</Typography>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+              }}
+            >
+              <Share sx={{ width: "20px", height: "auto" }} />
+              <Typography variant="body2">Share</Typography>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+              }}
+            >
+              <Save sx={{ width: "20px", height: "auto" }} />
+              <Typography variant="body2">Save</Typography>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                paddingRight: "1.5rem",
+              }}
+            >
+              <Cart0
+                sx={{
+                  width: "20px",
+                  height: "auto",
+                  backgroundColor: "#3F5163",
+                  padding: "8px",
+                  borderRadius: "5px",
+                }}
+              />
+            </Box>
+            {/* </Box> */}
           </Box>
           <Grid item xs={12} sm="auto" sx={{ display: { md: "none" } }}>
             <IconButton onClick={toggleDrawer(true)}>
               <MenuIcon />
             </IconButton>
-            <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
+            <Drawer
+              anchor="right"
+              open={drawerOpen}
+              onClose={toggleDrawer(false)}
+            >
               <List>
                 <ListItem>
                   <Typography variant="body2">Large Format</Typography>
@@ -236,70 +272,43 @@ const DesignOnline = () => {
         />
         <Box
           style={{
-            height: "100%", // Full height of the viewport
+            height: "100%",
             width: "100%",
-            marginLeft: "210px", // Adjust margin based on sidebar width
-            marginRight: "265px", // Adjust margin based on sidebar width
+            marginLeft: "210px",
+            marginRight: "265px",
             padding: "20px",
             position: "relative",
-            boxShadow: "0px 5px 30px -15px", // Background color of the sidebar
-            alignItems: "flex-start", // Align items to the start of the flex container
-            // top: "0.8rem",
+            boxShadow: "0px 5px 30px -15px",
+            alignItems: "flex-start",
             top: "5rem",
-            color: "#3F5163", // Text color
+            color: "#3F5163",
             borderRadius: "6px",
-            zIndex: "-1",
+            zIndex: "1", // Make sure zIndex is positive to be above other elements
           }}
         >
           <h1>Your Content Here</h1>
           <p>This is your main content area.</p>
           {addimage &&
-            addimage?.map((image) => (
-              <img
-                src={image}
-                style={{ height: "100%", width: "100%" }}
-                alt="img"
-              />
-            ))}
-            {/* <div className="container">
-          {addimage &&
-            addimage?.map((image) => (
-              <Rnd
-              default={{
-                x: 100,
-                y: 100,
-                width: 200,
-                height: 200,
-              }}
-              minWidth={100}
-              minHeight={100}
-              bounds="parent"
-              enableResizing={{
-                top: true,
-                right: true,
-                bottom: true,
-                left: true,
-                topRight: true,
-                bottomRight: true,
-                bottomLeft: true,
-                topLeft: true,
-              }}
-              className="rnd-box"
-            >
-              <img
-                src={image}
-                className="resizable-image"
-                style={{ height: "100%", width: "100%" }}
-                alt="img"
-              />
-              <div className="rotate-handle">&#8635;</div>
-            </Rnd>
+          <div style={{ height: "600px", position: "relative", zIndex: "10" }}>
 
-
+            {addimage?.map((image) => (
+              <PinturaEditor
+              {...editorDefaults}
+              src={image}
+              imageCropAspectRatio={16 / 9}
+              cropSelectPresetOptions={[
+                [undefined, "Custom"],
+                [1, "Square"],
+                [16 / 9, "16:9"],
+                [4 / 3, "4:3"],
+              ]}
+            />
             ))}
-            </div> */}
+          </div>
+            }
           <Toolbar />
         </Box>
+
         <BannerSideSection />
       </Box>
     </>

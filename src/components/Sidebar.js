@@ -81,7 +81,7 @@ const Sidebar = ({
   const [expandedImageIndex, setExpandedImageIndex] = useState(null); // New state for tracking expanded image
 
   const tabRef = useRef(null);
-  const modalRef = useRef(null); // Create a ref for the modal
+  const dialogRef = useRef(null); // Create a ref for the modal
 
   console.log(selectImage, "selectImage");
 
@@ -137,19 +137,21 @@ const Sidebar = ({
   };
 
   const handleClickOutside = (event) => {
+    // If the click is outside the tabRef and not in dialogRef
     if (
       tabRef.current &&
       !tabRef.current.contains(event.target) &&
-      modalRef.current &&
-      !modalRef.current.contains(event.target) // Check if the click is outside the modal as well
+      (!dialogRef.current || !dialogRef.current.contains(event.target)) // Ensure clicks inside dialog don't close TabPanel
     ) {
-      setIsTabOpen(false); // Close the tab if clicked outside both tab and modal
+      setIsTabOpen(false); // Close the TabPanel if clicked outside
     }
   };
-
+  
   useEffect(() => {
+    // Add the event listener when the component is mounted
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
+      // Remove the event listener when the component is unmounted
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
@@ -229,10 +231,10 @@ const Sidebar = ({
         >
           {isTabOpen && (
             <>
-              <TabPanel value={value} index={0} style={{width:"22rem"}}>
+              <TabPanel value={value} index={0} style={{ width: "22rem" }}>
                 <Config />
               </TabPanel>
-              <TabPanel value={value} index={1} style={{width:"24rem"}}>
+              <TabPanel value={value} index={1} style={{ width: "24rem" }}>
                 <MyUpload
                   handleImageChange={handleImageChange}
                   selectedFile={selectedFile}
@@ -245,7 +247,7 @@ const Sidebar = ({
                 Premium images
               </TabPanel>
               <TabPanel value={value} index={3}>
-                <Text/>
+                <Text />
               </TabPanel>
               <TabPanel value={value} index={4}>
                 Item Five
@@ -257,6 +259,9 @@ const Sidebar = ({
 
       {/* Single Expand Image Dialog */}
       <Dialog
+        PaperProps={{
+          ref: dialogRef, // Assign ref to the dialog for outside click detection
+        }}
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open && expandedImageIndex !== null}
@@ -328,6 +333,9 @@ const Sidebar = ({
 
       {/* Single Delete Confirmation Dialog */}
       <Dialog
+        PaperProps={{
+          ref: dialogRef, // Assign ref to the dialog for outside click detection
+        }}
         onClose={handledelClose}
         aria-labelledby="customized-dialog-title"
         open={delopen}
