@@ -83,7 +83,7 @@ const Sidebar = ({
   const tabRef = useRef(null);
   const dialogRef = useRef(null); // Create a ref for the modal
 
-  console.log(selectImage, "selectImage");
+  // console.log(selectImage, "selectImage");
 
   const handleClickOpen = () => {
     setOpen(true);

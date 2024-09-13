@@ -26,9 +26,55 @@ import Toolbar from "../components/Toolbar";
 import MenuIcon from "@mui/icons-material/Menu";
 import "@pqina/pintura/pintura.css";
 import { PinturaEditor } from "@pqina/react-pintura";
-import { getEditorDefaults } from "@pqina/pintura";
+import {
+  createDefaultImageReader,
+  createDefaultImageWriter,
+  createDefaultImageOrienter,
+  setPlugins,
+  plugin_crop,
+  locale_en_gb,
+  plugin_crop_locale_en_gb,
+} from "@pqina/pintura";
 
-const editorDefaults = getEditorDefaults();
+setPlugins(plugin_crop);
+
+const editorDefaults = {
+  imageReader: createDefaultImageReader(),
+  imageWriter: {
+    postprocessImageData: (imageData) =>
+      new Promise((resolve) => {
+        // create a canvas element to handle the imageData
+        const canvas = document.createElement("canvas");
+        canvas.width = imageData.width;
+        canvas.height = imageData.height;
+        const ctx = canvas.getContext("2d");
+        ctx.putImageData(imageData, 0, 0);
+
+        // only draw image where we render our circular mask
+        ctx.globalCompositeOperation = "destination-in";
+
+        // draw our circular mask
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(
+          imageData.width * 0.5,
+          imageData.height * 0.5,
+          imageData.width * 0.5,
+          0,
+          2 * Math.PI
+        );
+        ctx.fill();
+
+        // returns the modified imageData
+        resolve(ctx.getImageData(0, 0, canvas.width, canvas.height));
+      }),
+  },
+  imageOrienter: createDefaultImageOrienter(),
+  locale: {
+    ...locale_en_gb,
+    ...plugin_crop_locale_en_gb,
+  },
+};
 const DesignOnline = () => {
   const [File, setFile] = React.useState("");
 
@@ -40,26 +86,25 @@ const DesignOnline = () => {
   const [addimage, AddImage] = useState([]);
 
   const handleImageChange = (e) => {
-    const newImage = URL.createObjectURL(e.target.files[0]);
-    setSelectedFile((prevFiles) => [...prevFiles, newImage]);
-    console.log(selectedFile, "selectedFile");
+    const file = e.target.files[0];
+    if (file) {
+      const newImageUrl = URL.createObjectURL(file);
+      setSelectedFile((prevFiles) => [...prevFiles, newImageUrl]);
+
+      // Automatically set the first uploaded image as active if none exists
+      if (addimage === null) {
+        AddImage(0);
+      }
+    }
   };
 
   const handleDeleteImage = (index) => {
     setSelectedFile((prevFiles) => prevFiles.filter((_, i) => i !== index));
     console.log(index, "index");
   };
-  // const selectImage = (index) => {
-  //   const Image = selectedFile.filter((_, i) => i == index);
-  //   // const storedImage = [...Image]
-  //   AddImage((prevFiles) => [...prevFiles, Image]);
-  //   console.log(Image, "storedImage");
-  // };
+
   const selectImage = (index) => {
-    console.log(index, "inside selectImage");
-    const Image = selectedFile[index];
-    AddImage((prevFiles) => [...prevFiles, Image]);
-    console.log(Image, "storedImage");
+    AddImage(selectedFile[index]);
   };
 
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -118,19 +163,25 @@ const DesignOnline = () => {
                     },
                   }}
                 >
-                  <MenuItem value={10} sx={{display:"flex" ,justifyContent:"space-between"}}>
-                  <Typography>Undo</Typography>
-                  <Typography>Crtl+Z</Typography>                 
+                  <MenuItem
+                    value={10}
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Typography>Undo</Typography>
+                    <Typography>Crtl+Z</Typography>
                   </MenuItem>
-                  <MenuItem value={20} sx={{display:"flex" ,justifyContent:"space-between"}}>
-                  <Typography>Redo</Typography>
-                  <Typography>Crtl+Y</Typography>  
+                  <MenuItem
+                    value={20}
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Typography>Redo</Typography>
+                    <Typography>Crtl+Y</Typography>
                   </MenuItem>
-                  <Divider/>
+                  <Divider />
                   <MenuItem value={30}>Save</MenuItem>
                   <MenuItem value={30}>Save as copy</MenuItem>
                   <MenuItem value={30}>Load previous design</MenuItem>
-                  <Divider/>
+                  <Divider />
                   <MenuItem value={30}>Show ruler</MenuItem>
                   <MenuItem value={30}>Show grid</MenuItem>
                 </Select>
@@ -283,29 +334,21 @@ const DesignOnline = () => {
             top: "5rem",
             color: "#3F5163",
             borderRadius: "6px",
-            zIndex: "1", // Make sure zIndex is positive to be above other elements
+            zIndex: "1", // Ensure zIndex is properly set
           }}
         >
           <h1>Your Content Here</h1>
           <p>This is your main content area.</p>
-          {addimage &&
-          <div style={{ height: "600px", position: "relative", zIndex: "10" }}>
-
-            {addimage?.map((image) => (
-              <PinturaEditor
-              {...editorDefaults}
-              src={image}
-              imageCropAspectRatio={16 / 9}
-              cropSelectPresetOptions={[
-                [undefined, "Custom"],
-                [1, "Square"],
-                [16 / 9, "16:9"],
-                [4 / 3, "4:3"],
-              ]}
-            />
-            ))}
-          </div>
-            }
+          {addimage.length > 0 ? (
+            <div
+              style={{ height: "600px", position: "relative", zIndex: "10" }}
+            >
+              <PinturaEditor {...editorDefaults} src={addimage} />
+            </div>
+          ) :(
+            <Typography>No image selected</Typography>
+          )         
+          }
           <Toolbar />
         </Box>
 
