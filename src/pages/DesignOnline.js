@@ -34,11 +34,12 @@ import {
   plugin_crop,
   locale_en_gb,
   plugin_crop_locale_en_gb,
+  getEditorDefaults,
 } from "@pqina/pintura";
 
 setPlugins(plugin_crop);
 
-const editorDefaults = {
+const editorDefaults = getEditorDefaults({
   imageReader: createDefaultImageReader(),
   imageWriter: {
     postprocessImageData: (imageData) =>
@@ -54,7 +55,7 @@ const editorDefaults = {
         ctx.globalCompositeOperation = "destination-in";
 
         // draw our circular mask
-        ctx.fillStyle = "black";
+        ctx.fillStyle = "yellow";
         ctx.beginPath();
         ctx.arc(
           imageData.width * 0.5,
@@ -68,13 +69,33 @@ const editorDefaults = {
         // returns the modified imageData
         resolve(ctx.getImageData(0, 0, canvas.width, canvas.height));
       }),
+    targetSize: {
+      width: 512,
+      height: 512,
+      fit: "contain",
+    },
+    preprocessImageState: (imageState) => {
+      // Create new annotation array
+      imageState.annotation = imageState.annotation.map((shape) => {
+        // This is not a text shape so skip
+        if (!shape.text) return shape;
+
+        // Replace placeholders in text properties
+        shape.text = shape.text.replace(/{name}/g, "John Connor");
+
+        return shape;
+      });
+
+      // Return updated image state
+      return imageState;
+    },
   },
   imageOrienter: createDefaultImageOrienter(),
   locale: {
     ...locale_en_gb,
     ...plugin_crop_locale_en_gb,
   },
-};
+});
 const DesignOnline = () => {
   const [File, setFile] = React.useState("");
 
@@ -84,6 +105,12 @@ const DesignOnline = () => {
 
   const [selectedFile, setSelectedFile] = useState([]);
   const [addimage, AddImage] = useState([]);
+  const [textStyle, setTextStyle] = useState({
+    fontWeight: "normal",
+    fontStyle: "normal",
+  });
+  const [editorResult, setEditorResult] = useState(undefined);
+
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -112,6 +139,17 @@ const DesignOnline = () => {
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
   };
+
+  const handleStyleChange = (newStyle) => {
+    setTextStyle((prevStyle) => ({
+      ...prevStyle,
+      ...newStyle,
+    }));
+  };
+
+  const handleEditorProcess = (imageState) => {
+    setEditorResult(URL.createObjectURL(imageState.dest));
+};
 
   return (
     <>
@@ -319,6 +357,7 @@ const DesignOnline = () => {
           selectedFile={selectedFile}
           onDeleteImage={handleDeleteImage}
           selectImage={selectImage}
+          onStyleChange={handleStyleChange}
           // AddingImage={selectImage}
         />
         <Box
@@ -343,12 +382,26 @@ const DesignOnline = () => {
             <div
               style={{ height: "600px", position: "relative", zIndex: "10" }}
             >
-              <PinturaEditor {...editorDefaults} src={addimage} />
+               {editorResult && <img alt="" src={editorResult} />}
+              <PinturaEditor
+                {...editorDefaults}
+                src={addimage}
+                imageAnnotation={[
+                  {
+                    x: 128,
+                    y: 128,
+                    fontSize: 40,
+                    fontWeight: textStyle.fontWeight, // Apply the dynamic styles here
+                    fontStyle: textStyle.fontStyle, // Apply dynamic font style here
+                    text: "Hello {name}",
+                  },
+                ]}
+                onProcess={handleEditorProcess}
+              />
             </div>
-          ) :(
+          ) : (
             <Typography>No image selected</Typography>
-          )         
-          }
+          )}
           <Toolbar />
         </Box>
 

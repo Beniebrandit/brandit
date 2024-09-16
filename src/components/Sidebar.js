@@ -71,6 +71,7 @@ const Sidebar = ({
   selectedFile,
   onDeleteImage,
   selectImage,
+  onStyleChange,
 }) => {
   const [value, setValue] = React.useState(1);
   const [open, setOpen] = React.useState(false);
@@ -247,7 +248,7 @@ const Sidebar = ({
                 Premium images
               </TabPanel>
               <TabPanel value={value} index={3}>
-                <Text />
+                <Text onStyleChange={onStyleChange} />
               </TabPanel>
               <TabPanel value={value} index={4}>
                 Item Five
