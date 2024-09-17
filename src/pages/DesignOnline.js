@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -35,11 +35,13 @@ import {
   locale_en_gb,
   plugin_crop_locale_en_gb,
   getEditorDefaults,
+  plugin_annotate,
+  plugin_finetune,
 } from "@pqina/pintura";
 
-setPlugins(plugin_crop);
+setPlugins(plugin_crop, plugin_finetune, plugin_annotate);
 
-const editorDefaults = getEditorDefaults({
+const editorDefaults = {
   imageReader: createDefaultImageReader(),
   imageWriter: {
     postprocessImageData: (imageData) =>
@@ -95,7 +97,8 @@ const editorDefaults = getEditorDefaults({
     ...locale_en_gb,
     ...plugin_crop_locale_en_gb,
   },
-});
+};
+
 const DesignOnline = () => {
   const [File, setFile] = React.useState("");
 
@@ -110,6 +113,7 @@ const DesignOnline = () => {
     fontStyle: "normal",
   });
   const [editorResult, setEditorResult] = useState(undefined);
+  const editorRef = useRef(null);  // Reference to store the editor instance
 
 
   const handleImageChange = (e) => {
@@ -150,6 +154,79 @@ const DesignOnline = () => {
   const handleEditorProcess = (imageState) => {
     setEditorResult(URL.createObjectURL(imageState.dest));
 };
+
+const handleButtonClick = () => {
+  // we merge our new circle shape with the existing list of shapes
+  // it's added at the end of the list, so it will be drawn on top
+  const updatedAnnotationList = [
+      ...editorRef.current.editor.imageAnnotation,
+      {
+          id: 'rectangle',
+          x: 64,
+          y: 64,
+          rx: 128,
+          ry: 128,
+          backgroundColor: [0, 1, 0],
+      },
+  ];
+
+  editorRef.current.editor.imageAnnotation = updatedAnnotationList;
+};
+
+const willRenderUtilTabs = (tabs, env, redraw) => {
+  return [
+    [
+      'div',
+      'tab-group',
+      {
+        style:
+          'display:flex; flex-direction:' +
+          (env.orientation === 'landscape' ? 'row' : 'column'),
+      },
+      tabs.map((tab) => [
+        'button',
+        tab.id,
+        {
+          label: tab.label + (tab.selected ? ' *' : ''),
+          onclick: () => {
+            if (editorRef.current) {
+              // Call showTextInput with the desired options
+              editorRef.current.showTextInput(
+                (text) => {
+                  console.log('Text confirmed:', text);
+                  // Handle the confirmed text here
+                },
+                (err) => {
+                  console.error('Text input error:', err);
+                  // Handle any errors here
+                },
+                {
+                  align: 'top',
+                  justify: 'center',
+                  text: 'Current text',
+                  placeholder: 'Type something',
+                  buttonConfirm: {
+                    label: 'Generate',
+                  },
+                  buttonCancel: {
+                    hideLabel: true,
+                    label: 'Cancel',
+                    icon: `<g stroke="currentColor" stroke-width="2">
+                          <line x1="18" y1="6" x2="6" y2="18"/>
+                          <line x1="6" y1="6" x2="18" y2="18"/>
+                      </g>`,
+                  },
+                }
+              );
+            }
+          },
+        },
+      ]),
+    ],
+  ];
+};
+
+console.log("addimage",addimage)
 
   return (
     <>
@@ -382,9 +459,10 @@ const DesignOnline = () => {
             <div
               style={{ height: "600px", position: "relative", zIndex: "10" }}
             >
-               {editorResult && <img alt="" src={editorResult} />}
+               {/* {editorResult && <img alt="" src={editorResult} />} */}
               <PinturaEditor
                 {...editorDefaults}
+                ref={editorRef}  // Store editor instance here
                 src={addimage}
                 imageAnnotation={[
                   {
@@ -396,8 +474,15 @@ const DesignOnline = () => {
                     text: "Hello {name}",
                   },
                 ]}
+                enableText={true}
                 onProcess={handleEditorProcess}
+                willRenderUtilTabs={willRenderUtilTabs}
+                // enableSelectToolToAddShape={enableSelectToolToAddShape}
+            // onInit={(editor) => { editorRef.current = editor; }}  // Capture editor instance when initialized
               />
+              <button type="button" onClick={handleButtonClick}>
+                Add green circle
+            </button>
             </div>
           ) : (
             <Typography>No image selected</Typography>
