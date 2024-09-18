@@ -1,101 +1,90 @@
-import React from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import React from 'react';
+import { Box, Button } from '@mui/material';
 
 const Text = ({ onStyleChange }) => {
   const handleHeadingClick = () => {
-    onStyleChange({ fontWeight: 'bold' });
+    onStyleChange({ text: 'Heading Text', fontSize: 24, fontWeight: 'bold' });
   };
 
   const handleItalicClick = () => {
-    onStyleChange({ fontStyle: 'italic' });
+    onStyleChange({ text: 'Italic Text', fontStyle: 'italic' });
   };
+
+  const handleBodyTextClick = () => {
+    onStyleChange({ text: 'Body Text', fontSize: 14, fontWeight: 'normal' });
+  };
+
+  const handleCurvedTextClick = () => {
+    // For curved text, you'd need additional customization to reflect the curvature in Filerobot
+    onStyleChange({ text: 'Curved Text', fontSize: 18, fontWeight: 'bold' });
+  };
+
   return (
     <Box
       sx={{
-        width: "300px",
-        margin: "0 auto",
-        padding: "16px",
-        borderRadius: "8px",
-        backgroundColor: "#f5f5f5",
+        width: '300px',
+        margin: '0 auto',
+        padding: '16px',
+        borderRadius: '8px',
+        backgroundColor: '#f5f5f5',
       }}
     >
-      {/* Heading */}
+      {/* Heading Button */}
       <Button
         fullWidth
-        // variant="outlined"
-        // defaultValue="Add Heading"
         onClick={handleHeadingClick}
-        InputProps={{ style: { fontWeight: "bold" } }}
         sx={{
-          marginBottom: "12px",
-          backgroundColor: "#fff",
-          color: "black",
-          border: "1px solid gray",
-          textTransform: "none", // Apply to the component itself
+          marginBottom: '12px',
+          backgroundColor: '#fff',
+          color: 'black',
+          border: '1px solid gray',
+          textTransform: 'none',
         }}
-        disableElevation
       >
         Add Heading
       </Button>
 
-      {/* Subheading */}
+      {/* Italic Text Button */}
       <Button
         fullWidth
-        // variant="outlined"
-        // defaultValue="Add subheading"
         onClick={handleItalicClick}
         sx={{
-          marginBottom: "12px",
-          backgroundColor: "#fff",
-          color: "black",
-          border: "1px solid gray",
-          textTransform: "none", // Apply to the component itself
+          marginBottom: '12px',
+          backgroundColor: '#fff',
+          color: 'black',
+          border: '1px solid gray',
+          textTransform: 'none',
         }}
-        disableElevation
       >
-        Add subheading
+        Add Italic Text
       </Button>
 
-      {/* Body Text */}
+      {/* Body Text Button */}
       <Button
         fullWidth
-        //  variant="contained"
-        // defaultValue="Add body text"
+        onClick={handleBodyTextClick}
         sx={{
-          marginBottom: "12px",
-          backgroundColor: "#fff",
-          color: "black",
-          border: "1px solid gray",
-          textTransform: "none", // Apply to the component itself
+          marginBottom: '12px',
+          backgroundColor: '#fff',
+          color: 'black',
+          border: '1px solid gray',
+          textTransform: 'none',
         }}
-        disableElevation
       >
-        Add body text
+        Add Body Text
       </Button>
 
-      {/* Curved Text */}
+      {/* Curved Text Button */}
       <Button
+        fullWidth
+        onClick={handleCurvedTextClick}
         sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "80px",
-          backgroundColor: "#e3f2fd",
-          borderRadius: "8px",
-          textTransform: "none"
+          backgroundColor: '#e3f2fd',
+          borderRadius: '8px',
+          textTransform: 'none',
         }}
       >
-        <svg width="100%" height="auto">
-          {/* Define the path for the text to follow */}
-          <path id="textPath" d="M100 60 Q 160 -10 230 60" fill="transparent" />
-
-          {/* Add curved text */}
-          <text fill="#1976d2" fontSize="16" fontWeight="bold">
-            <textPath href="#textPath" startOffset="50%" textAnchor="middle">
-              Add curved text
-            </textPath>
-          </text>
-        </svg>
+        Add Curved Text
       </Button>
     </Box>
   );
