@@ -85,7 +85,7 @@ console.log("addimage",addimage)
 
   return (
     <>
-    <HeaderDesign/>
+      <HeaderDesign />
       <Box style={{ display: "flex" }}>
         <Sidebar
           handleImageChange={handleImageChange}
@@ -115,59 +115,77 @@ console.log("addimage",addimage)
           <p>This is your main content area.</p>
           {addimage.length > 0 ? (
             <FilerobotImageEditor
-            source={addimage}
-            ref={editorRef}  // Attach the ref to access editor methods
-            annotationsCommon={annotationsCommon}
-        onComplete={(canvas, changed, newAnnotations) => {
-          // Store the updated annotations
-          setAnnotations(newAnnotations);
-        }}
-            Rotate={{ angle: 90, componentType: 'slider' }}
-            Crop={{
-              presetsItems: [
+              source={addimage}
+              ref={editorRef} // Attach the ref to access editor methods
+              annotationsCommon={annotationsCommon}
+              onComplete={(canvas, changed, newAnnotations) => {
+                // Store the updated annotations
+                setAnnotations(newAnnotations);
+              }}
+              overlays={[
                 {
-                  titleKey: 'classicTv',
-                  descriptionKey: '4:3',
-                  ratio: 4 / 3,
-                  // icon: CropClassicTv, // optional, CropClassicTv is a React Function component. Possible (React Function component, string or HTML Element)
+                  image: { addimage }, // Overlay flag image
+                  x: 50, // X position
+                  y: 50, // Y position
+                  width: 100, // Width of the overlay
+                  height: 100, // Height of the overlay
                 },
-                {
-                  titleKey: 'cinemascope',
-                  descriptionKey: '21:9',
-                  ratio: 21 / 9,
-                  // icon: CropCinemaScope, // optional, CropCinemaScope is a React Function component.  Possible (React Function component, string or HTML Element)
-                },
-              ],
-              presetsFolders: [
-                {
-                  titleKey: 'socialMedia', // will be translated into Social Media as backend contains this translation key
-                  // icon: Social, // optional, Social is a React Function component. Possible (React Function component, string or HTML Element)
-                  groups: [
-                    {
-                      titleKey: 'facebook',
-                      items: [
-                        {
-                          titleKey: 'profile',
-                          width: 180,
-                          height: 180,
-                          descriptionKey: 'fbProfileSize',
-                        },
-                        {
-                          titleKey: 'coverPhoto',
-                          width: 820,
-                          height: 312,
-                          descriptionKey: 'fbCoverPhotoSize',
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            }}
-            tabsIds={[TABS.ADJUST, TABS.ANNOTATE, TABS.WATERMARK]} // or {['Adjust', 'Annotate', 'Watermark']}
-            defaultTabId={TABS.ANNOTATE} // or 'Annotate'
-            defaultToolId={TOOLS.TEXT} // or 'Text'
-          />
+              ]}
+              toolbar={{
+                reorder: ['Watermark','Adjust', 'Annotate'], // Reorder toolbar tools
+                customToolbar: (defaultToolbar) => (
+                  <>
+                    {defaultToolbar}
+                    <button onClick={() => console.log("Custom button clicked")}>Custom Tool</button>
+                  </>
+                ),
+              }}
+              Rotate={{ angle: 90, componentType: "slider" }}
+              Crop={{
+                presetsItems: [
+                  {
+                    titleKey: "classicTv",
+                    descriptionKey: "4:3",
+                    ratio: 4 / 3,
+                    // icon: CropClassicTv, // optional, CropClassicTv is a React Function component. Possible (React Function component, string or HTML Element)
+                  },
+                  {
+                    titleKey: "cinemascope",
+                    descriptionKey: "21:9",
+                    ratio: 21 / 9,
+                    // icon: CropCinemaScope, // optional, CropCinemaScope is a React Function component.  Possible (React Function component, string or HTML Element)
+                  },
+                ],
+                presetsFolders: [
+                  {
+                    titleKey: "socialMedia", // will be translated into Social Media as backend contains this translation key
+                    // icon: Social, // optional, Social is a React Function component. Possible (React Function component, string or HTML Element)
+                    groups: [
+                      {
+                        titleKey: "facebook",
+                        items: [
+                          {
+                            titleKey: "profile",
+                            width: 180,
+                            height: 180,
+                            descriptionKey: "fbProfileSize",
+                          },
+                          {
+                            titleKey: "coverPhoto",
+                            width: 820,
+                            height: 312,
+                            descriptionKey: "fbCoverPhotoSize",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              }}
+              tabsIds={[TABS.ADJUST, TABS.ANNOTATE, TABS.WATERMARK]} // or {['Adjust', 'Annotate', 'Watermark']}
+              defaultTabId={TABS.ANNOTATE} // or 'Annotate'
+              defaultToolId={TOOLS.TEXT} // or 'Text'
+            />
           ) : (
             <Typography>No image selected</Typography>
           )}
@@ -181,4 +199,3 @@ console.log("addimage",addimage)
 };
 
 export default DesignOnline;
-//sjkdfsjkfs

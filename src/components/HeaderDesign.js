@@ -1,43 +1,41 @@
-import React, { useState } from 'react'
-import {
-    Box,
-    Button,
-    Divider,
-    Drawer,
-    Grid,
-    IconButton,
-    List,
-    ListItem,
-    TextField,
-    Typography,
-  } from "@mui/material";
-  import main_logo from "../asset/images/main_logo.png";
-  import { ReactComponent as Help } from "../asset/images/help.svg";
-  import { ReactComponent as Share } from "../asset/images/share.svg";
-  import { ReactComponent as Save } from "../asset/images/save.svg";
-  import { ReactComponent as Cart0 } from "../asset/images/cart.svg";
-  import InputLabel from "@mui/material/InputLabel";
-  import MenuItem from "@mui/material/MenuItem";
-  import FormControl from "@mui/material/FormControl";
-  import Select from "@mui/material/Select";
-  import MenuIcon from "@mui/icons-material/Menu";
+import React, { useState } from "react";
+import { Box, Button, Divider, Drawer, Grid, IconButton, List, ListItem, TextField, Typography } from "@mui/material";
+import main_logo from "../asset/images/main_logo.png";
+import { ReactComponent as Help } from "../asset/images/help.svg";
+import { ReactComponent as Share } from "../asset/images/share.svg";
+import { ReactComponent as Save } from "../asset/images/save.svg";
+import { ReactComponent as Cart0 } from "../asset/images/cart.svg";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import MenuIcon from "@mui/icons-material/Menu";
+import LoginModal from "./LoginModal";
 
-  
 const HeaderDesign = () => {
+  const [File, setFile] = React.useState("");
+  const [open, setOpen] = useState(false);
 
-    const [File, setFile] = React.useState("");
+  const handleChange = (event) => {
+    setFile(event.target.value);
+  };
 
-    const handleChange = (event) => {
-      setFile(event.target.value);
-    };
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-    const [drawerOpen, setDrawerOpen] = useState(false);
+  const toggleDrawer = (open) => () => {
+    setDrawerOpen(open);
+  };
 
-    const toggleDrawer = (open) => () => {
-      setDrawerOpen(open);
-    };
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
-    <Box className="inner_header" sx={{ width: "100%", position: "fixed" }}>
+    <>
+      <Box className="inner_header" sx={{ width: "100%", position: "fixed" }}>
         <Box
           // maxWidth="lg"
           style={{
@@ -48,15 +46,8 @@ const HeaderDesign = () => {
             marginX: "10rem",
           }}
         >
-          <Box
-            className="header_box"
-            sx={{ paddingLeft: { xs: "1rem", sm: "5rem" } }}
-          >
-            <img
-              alt="main_logo"
-              src={main_logo}
-              style={{ width: "50px", height: "auto" }}
-            />
+          <Box className="header_box" sx={{ paddingLeft: { xs: "1rem", sm: "5rem" } }}>
+            <img alt="main_logo" src={main_logo} style={{ width: "50px", height: "auto" }} />
           </Box>
 
           <Box
@@ -85,17 +76,11 @@ const HeaderDesign = () => {
                     },
                   }}
                 >
-                  <MenuItem
-                    value={10}
-                    sx={{ display: "flex", justifyContent: "space-between" }}
-                  >
+                  <MenuItem value={10} sx={{ display: "flex", justifyContent: "space-between" }}>
                     <Typography>Undo</Typography>
                     <Typography>Crtl+Z</Typography>
                   </MenuItem>
-                  <MenuItem
-                    value={20}
-                    sx={{ display: "flex", justifyContent: "space-between" }}
-                  >
+                  <MenuItem value={20} sx={{ display: "flex", justifyContent: "space-between" }}>
                     <Typography>Redo</Typography>
                     <Typography>Crtl+Y</Typography>
                   </MenuItem>
@@ -178,7 +163,7 @@ const HeaderDesign = () => {
               <Share sx={{ width: "20px", height: "auto" }} />
               <Typography variant="body2">Share</Typography>
             </Box>
-            <Box
+            <Button
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -186,8 +171,10 @@ const HeaderDesign = () => {
               }}
             >
               <Save sx={{ width: "20px", height: "auto" }} />
-              <Typography variant="body2">Save</Typography>
-            </Box>
+              <Typography onClick={handleClickOpen} variant="body2">
+                Save
+              </Typography>
+            </Button>
             <Box
               sx={{
                 display: "flex",
@@ -211,11 +198,7 @@ const HeaderDesign = () => {
             <IconButton onClick={toggleDrawer(true)}>
               <MenuIcon />
             </IconButton>
-            <Drawer
-              anchor="right"
-              open={drawerOpen}
-              onClose={toggleDrawer(false)}
-            >
+            <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
               <List>
                 <ListItem>
                   <Typography variant="body2">Large Format</Typography>
@@ -234,7 +217,10 @@ const HeaderDesign = () => {
           </Grid>
         </Box>
       </Box>
-  )
-}
 
-export default HeaderDesign
+      <LoginModal handleClose={handleClose} open={open} setOpen={setOpen} />
+    </>
+  );
+};
+
+export default HeaderDesign;
