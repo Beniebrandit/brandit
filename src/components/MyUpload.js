@@ -1,3 +1,4 @@
+// MyUpload.js
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Button, CircularProgress } from "@mui/material";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
@@ -6,88 +7,87 @@ import { ReactComponent as Googledrive } from "../asset/images/googledrive.svg";
 import { ReactComponent as Dropbox } from "../asset/images/dropbox.svg";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
-import useDrivePicker from "react-google-drive-picker";
+import useGooglePicker from "./useGooglePicker"; // Adjust the path as needed
 
-const MyUpload = ({
-  handleImageChange,
-  selectedFile,
-  handleDeleteClick,
-  selectImage,
-  handleExpand,
-}) => {
+const MyUpload = ({ handleImageChange, selectedFile, handleDeleteClick, selectImage, handleExpand }) => {
   const [loading, setLoading] = useState([]);
-  const [openPicker, data, authResponse] = useDrivePicker();
-  const [accessToken, setAccessToken] = useState(null);
-  const [drivedata, setDriveData] = useState();
+  const [driveData, setDriveData] = useState();
 
-  // Function to refresh access token
-  const refreshAccessToken = async () => {
-    const refreshToken = "1//049qhv9w-4i8ICgYIARAAGAQSNwF-L9IrdUwuIM2wDBjsVslkw-f0HFvVpUvRa8lxhLpTwUjytQmNutg759wE8sLLtx3JuM37q98"; // Update with your actual refresh token
-    const clientId = "1062247369631-2i266asc9rltsjaknplpc6pl079ji3r1.apps.googleusercontent.com"; // Update with your actual client ID
-    const clientSecret = "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"; // Update with your actual client secret
+  const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  const developerKey = process.env.REACT_APP_GOOGLE_DEVELOPER_KEY;
+  const scope = ["https://www.googleapis.com/auth/drive.file"];
 
-    try {
-      const response = await fetch("https://oauth2.googleapis.com/token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-          grant_type: "refresh_token",
-          refresh_token: refreshToken,
-          client_id: clientId,
-          client_secret: clientSecret,
-        }),
-      });
-  
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+  const { gapiLoaded, pickerLoaded } = useGooglePicker(clientId, developerKey, scope);
+
+  // Function to create and show the picker
+  const createPicker = () => {
+    if (window.google && window.google.picker && window.gapi.auth2) {
+      const isSignedIn = window.gapi.auth2.getAuthInstance().isSignedIn.get();
+      if (!isSignedIn) {
+        console.error("User is not signed in.");
+        return;
       }
-  
-      const data = await response.json();
-  
-      if (data.error) {
-        throw new Error(`Error refreshing token: ${data.error_description}`);
-      }
-  
-      console.log("New access token:", data.access_token);
-      setAccessToken(data.access_token); // Update the state with new access token
-    } catch (error) {
-      console.error("Failed to refresh access token:", error.message);
+
+      const oauthToken = window.gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
+      const picker = new window.google.picker.PickerBuilder()
+        .addView(window.google.picker.ViewId.DOCS_IMAGES)
+        .setOAuthToken(oauthToken)
+        .setDeveloperKey(developerKey)
+        .setCallback(pickerCallback)
+        .setOrigin(window.location.protocol + "//" + window.location.host)
+        .build();
+      picker.setVisible(true);
+    } else {
+      console.error("Google Picker or gapi not loaded.");
     }
   };
 
-  const handleOpenPicker = async () => {
-    // Refresh access token before opening the picker
-    await refreshAccessToken();
+  // Callback after selecting files
+  const pickerCallback = (data) => {
+    if (data.action === window.google.picker.Action.PICKED) {
+      const files = data.docs;
+      console.log("Selected files:", files);
+      setDriveData(files);
+    } else if (data.action === window.google.picker.Action.CANCEL) {
+      console.log("User canceled the picker.");
+    }
+  };
 
-    openPicker({
-      clientId: "1062247369631-2i266asc9rltsjaknplpc6pl079ji3r1.apps.googleusercontent.com",
-      developerKey: "AIzaSyAkUl6HfJdQ52iswh8Uhmi6xA_vk1nebZ4",
-      viewId:"DOCS_IMAGES",
-      // token: token, // pass oauth token in case you already have one
-      showUploadView: true,
-      showUploadFolders: true,
-      supportDrives: true,
-      multiselect: true,
-      // customViews: customViewsArray, // custom view
-      callbackFunction: (data) => {
-        if (data.action === 'cancel') {
-          console.log('User clicked cancel/close button')
+  // Function to handle opening the picker
+  const handleOpenPicker = () => {
+    try {
+      if (gapiLoaded && pickerLoaded) {
+        const isSignedIn = window.gapi.auth2.getAuthInstance().isSignedIn.get();
+        if (isSignedIn) {
+          createPicker();
+        } else {
+          window.gapi.auth2
+            .getAuthInstance()
+            .signIn()
+            .then(() => {
+              createPicker();
+            })
+            .catch((error) => {
+              console.error("Error during sign-in:", error);
+              alert("Failed to sign in. Please try again.");
+            });
         }
-        console.log(data,"drivedata")
-        setDriveData(data)
-      },
-    })
+      } else {
+        console.error("GAPI or Picker API not loaded.");
+        alert("Google APIs are not loaded yet. Please try again later.");
+      }
+    } catch (error) {
+      console.error("Error opening picker:", error);
+      alert("An unexpected error occurred. Please try again.");
+    }
   };
 
   useEffect(() => {
-    if (data) {
-      data?.docs?.map((i) => console.log(i, "i"));
-      console.log(data.docs, "data.docs");
-      console.log(data, "data");
+    if (driveData) {
+      console.log("Drive Data:", driveData);
+      // You can process the selected files here (e.g., display them or upload to your server)
     }
-  }, [data]);
+  }, [driveData]);
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
@@ -210,9 +210,7 @@ const MyUpload = ({
             width: "50px",
           }}
         >
-          <Dropbox
-            style={{ width: "40px", height: "100%", pointerEvents: "none" }}
-          />
+          <Dropbox style={{ width: "40px", height: "100%", pointerEvents: "none" }} />
         </Box>
         <Box
           sx={{
@@ -226,19 +224,15 @@ const MyUpload = ({
           <Box
             sx={{
               position: "absolute",
-              // top: 0,
-              // left: 0,
               width: "50px",
               height: "50px",
               opacity: 0, // Hide the input but make it clickable
               cursor: "pointer",
-              zIndex:"3"
+              zIndex: "3",
             }}
             onClick={() => handleOpenPicker()}
           ></Box>
-          <Googledrive
-            style={{ width: "40px", height: "100%", pointerEvents: "none" }}
-          />
+          <Googledrive style={{ width: "40px", height: "100%", pointerEvents: "none" }} />
         </Box>
         <Box
           sx={{
@@ -249,14 +243,11 @@ const MyUpload = ({
             width: "50px",
           }}
         >
-          <Microsoft
-            style={{ width: "40px", height: "100%", pointerEvents: "none" }}
-          />
+          <Microsoft style={{ width: "40px", height: "100%", pointerEvents: "none" }} />
         </Box>
       </Box>
       <Typography variant="caption" display="block" textAlign="center">
-        JPG, JPEG, PNG, GIF, TIFF, BMP, AI, EPS, SVG, PDF, HEIC, JFIF, PJPEG,
-        WEBP
+        JPG, JPEG, PNG, GIF, TIFF, BMP, AI, EPS, SVG, PDF, HEIC, JFIF, PJPEG, WEBP
         <br />
         Max file size: 200 MB
       </Typography>
@@ -351,24 +342,23 @@ const MyUpload = ({
           ))}
         </Box>
       )}
-      {/* <GooglePicker/> */}
+      {/* Display images from Google Drive */}
       <Box>
-        {
-          drivedata?.docs?.map((val) => {
-            console.log(val,"val")
-            return <>
+        {driveData?.map((val, index) => {
+          console.log(val.url, "val");
+          return (
             <img
-                src={val.url}
-                style={{
-                  height: "100px",
-                  width: "100px",
-                  display: "block",
-                }}
-                alt="img"
-              />
-            </>
-          })
-        }
+              key={index}
+              src={val.url}
+              style={{
+                height: "100px",
+                width: "100px",
+                display: "block",
+              }}
+              alt="img"
+            />
+          );
+        })}
       </Box>
     </>
   );
