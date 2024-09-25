@@ -11,7 +11,7 @@ import FilerobotImageEditor, {
   TOOLS,
 } from 'react-filerobot-image-editor';
 import HeaderDesign from "../components/HeaderDesign";
-
+import  Test  from "../components/Editor/EditorArea";
 
 
 const DesignOnline = () => {
@@ -113,7 +113,7 @@ console.log("addimage",addimage)
         >
           <h1>Your Content Here</h1>
           <p>This is your main content area.</p>
-          {addimage.length > 0 ? (
+          {/*{addimage.length > 0 ? (
             <FilerobotImageEditor
               source={addimage}
               ref={editorRef} // Attach the ref to access editor methods
@@ -188,8 +188,9 @@ console.log("addimage",addimage)
             />
           ) : (
             <Typography>No image selected</Typography>
-          )}
-          <Toolbar />
+          )}*/}
+          <Test/>
+          {/*<Toolbar />*/}
         </Box>
 
         <BannerSideSection />
