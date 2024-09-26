@@ -44,6 +44,18 @@ const Product = (props) => {
 
   const [selectedCard, setSelectedCard] = useState({});
 
+  // New state to store selected width, height, and subCat ids
+  const [selectedWidthId, setSelectedWidthId] = useState("");
+  const [selectedHeightId, setSelectedHeightId] = useState("");
+  const [selectedSubCatId, setSelectedSubCatId] = useState(null);
+
+  // Payload for API or other actions
+  const [payload, setPayload] = useState({
+    widthId: "",
+    heightId: "",
+    subCatId: "",
+  });
+
   // Use effect to set the initial selected card after the data is available
   useEffect(() => {
     if (alldata?.categories?.length > 0) {
@@ -52,6 +64,7 @@ const Product = (props) => {
         if (category?.subCategories?.length > 0) {
           // Set the first subcategory as the default selected card
           initialSelection[category.id] = category.subCategories[0];
+          setSelectedSubCatId(category.subCategories[0]?.id); // Set initial subCatId
         }
       });
       setSelectedCard(initialSelection); // Update the state with initial selections
@@ -59,18 +72,16 @@ const Product = (props) => {
   }, [alldata]);
 
   const widthSizes = alldata?.productSizes
-    ?.filter((val) => val.size_type === "W") // Filter for size_type that equals "W"
-    ?.map((val) => val.size); // Map to get the size values
+    ?.filter((val) => val.size_type === "W")
+    ?.map((val) => ({ size: val.size, id: val.id }));
 
   const heightSizes = alldata?.productSizes
-    ?.filter((val) => val.size_type === "H") // Filter for size_type that equals "H"
-    ?.map((val) => val.size); // Map to get the size values
+    ?.filter((val) => val.size_type === "H")
+    ?.map((val) => ({ size: val.size, id: val.id }));
 
-  // console.log(widthSizes); // Output: [5, 10, 25]
-  // console.log(heightSizes); // Output: [5, 10, 25]
   const [state, setState] = useState({
-    width: widthSizes?.[0] || "", // Default to the first width size
-    height: heightSizes?.[0] || "", // Default to the first height size
+    width: widthSizes?.[0]?.size || "",
+    height: heightSizes?.[0]?.size || "",
   });
 
   useEffect(() => {
@@ -78,16 +89,27 @@ const Product = (props) => {
     if (widthSizes?.length > 0 && !state.width) {
       setState((prevState) => ({
         ...prevState,
-        width: widthSizes[0],
+        width: widthSizes[0].size,
       }));
+      setSelectedWidthId(widthSizes[0].id);
     }
     if (heightSizes?.length > 0 && !state.height) {
       setState((prevState) => ({
         ...prevState,
-        height: heightSizes[0],
+        height: heightSizes[0].size,
       }));
+      setSelectedHeightId(heightSizes[0].id);
     }
   }, [widthSizes, heightSizes]);
+
+  // Monitor width, height, and subCat changes to update the payload
+  useEffect(() => {
+    setPayload({
+      widthId: selectedWidthId,
+      heightId: selectedHeightId,
+      subCatId: selectedSubCatId,
+    });
+  }, [selectedWidthId, selectedHeightId, selectedSubCatId]);
 
   const handleCardClick = (categoryId, subCat) => {
     // Update the selected card for the specific category
@@ -95,6 +117,7 @@ const Product = (props) => {
       ...prevSelectedCards,
       [categoryId]: subCat, // Store the selected subcategory object
     }));
+    setSelectedSubCatId(subCat?.id); // Update selected subCat id
   };
 
   const swiperRef = useRef(null);
@@ -110,7 +133,13 @@ const Product = (props) => {
       ...prev,
       [name]: value,
     }));
-    // console.log(state, "state");
+     if (name === "width") {
+       const selectedWidth = widthSizes.find((size) => size.size === value);
+       setSelectedWidthId(selectedWidth?.id);
+     } else if (name === "height") {
+       const selectedHeight = heightSizes.find((size) => size.size === value);
+       setSelectedHeightId(selectedHeight?.id);
+     }
   };
 
   // const data = {
@@ -122,7 +151,6 @@ const Product = (props) => {
       const response = res.data;
       setAllData(response);
       console.log(alldata, "alldata");
-      console.log(response, "response");
     });
 
     // const res = await axios.get(`${url}/product/2`, {
@@ -145,14 +173,14 @@ const Product = (props) => {
     //   },
     //   data: { ...data }
     // });
-    // console.log(response);
+    // console.log("selectId",selectedCard[category.id]?.id === subCat.id);
   };
 
-  // const [age, setAge] = React.useState("");
-
-  // const handleChange = (event) => {
-  //   setAge(event.target.value);
-  // };
+useEffect(() => {
+  console.log("Payload:", payload);
+  // Example API call
+  // await axios.post('/your-endpoint', payload);
+}, [payload]);
 
   return (
     <Box className="product_box">
@@ -174,10 +202,7 @@ const Product = (props) => {
                   className="product-swiper"
                 >
                   {alldata?.images?.map((item, index) => (
-                    <SwiperSlide
-                      key={index}
-                      className="product-swiper-slide text-center"
-                    >
+                    <SwiperSlide key={index} className="product-swiper-slide text-center">
                       <img
                         src={process.env.REACT_APP_API_BASE_URL + item?.path}
                         alt=""
@@ -222,9 +247,7 @@ const Product = (props) => {
                           <img
                             key={index}
                             onClick={() => handleThumbClick(index)}
-                            src={
-                              process.env.REACT_APP_API_BASE_URL + item?.path
-                            }
+                            src={process.env.REACT_APP_API_BASE_URL + item?.path}
                             alt=""
                             style={{
                               width: "100%",
@@ -300,174 +323,6 @@ const Product = (props) => {
                 {alldata?.description}
               </Typography>
               <Divider style={{ width: "100%", marginTop: "40px" }} />
-              {/* <Box style={{ marginTop: "30px" }}>
-                <Grid container spacing={4}>
-                  <Grid item lg={6} md={6} sm={12} xs={12}>
-                    <Typography
-                      style={{
-                        fontSize: "22px",
-                        lineHeight: "32px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Size (in Inches)
-                    </Typography>
-                    <div className="size-form">
-                      <div className="size-field">
-                        <div className="left">
-                          <p className="weight_para">W</p>
-                        </div>
-                        <div className="right">
-                          <FormControl sx={{ m: 0, minWidth: 70 }}>
-                            <Select
-                              value={state?.width}
-                              name="width"
-                              onChange={(e) => handleChange(e)}
-                              displayEmpty
-                              inputProps={{ "aria-label": "Without label" }}
-                              sx={{
-                                boxShadow: "none",
-                                ".MuiOutlinedInput-notchedOutline": {
-                                  border: 0,
-                                },
-                                "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                                  {
-                                    border: 0,
-                                  },
-                                "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                  {
-                                    border: 0,
-                                  },
-                              }}
-                            >
-                              <MenuItem value="">
-                                <em>
-                                  {widthSizes && widthSizes.length > 0
-                                    ? widthSizes[0]
-                                    : null}
-                                </em>
-                              </MenuItem>
-                              {widthSizes && widthSizes.length > 1 && (
-                                <MenuItem value={widthSizes[1]}>
-                                  {widthSizes[1]}
-                                </MenuItem>
-                              )}
-                              {widthSizes && widthSizes.length > 2 && (
-                                <MenuItem value={widthSizes[2]}>
-                                  {widthSizes[2]}
-                                </MenuItem>
-                              )}
-                            </Select>
-                          </FormControl>
-                        </div>
-                      </div>
-
-                      <div className="size-field">
-                        <div className="left">
-                          <p className="height_para">H</p>
-                        </div>
-                        <div className="right">
-                          <FormControl sx={{ m: 0, minWidth: 70 }}>
-                            <Select
-                              value={state?.height}
-                              name="height"
-                              onChange={(e) => handleChange(e)}
-                              displayEmpty
-                              inputProps={{ "aria-label": "Without label" }}
-                              sx={{
-                                boxShadow: "none",
-                                ".MuiOutlinedInput-notchedOutline": {
-                                  border: 0,
-                                },
-                                "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                                  {
-                                    border: 0,
-                                  },
-                                "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                  {
-                                    border: 0,
-                                  },
-                              }}
-                            >
-                              <MenuItem value="">
-                                <em>
-                                  {heightSizes && heightSizes.length > 0
-                                    ? heightSizes[0]
-                                    : null}
-                                </em>
-                              </MenuItem>
-                              {heightSizes && heightSizes.length > 1 && (
-                                <MenuItem value={heightSizes[1]}>
-                                  {heightSizes[1]}
-                                </MenuItem>
-                              )}
-                              {heightSizes && heightSizes.length > 2 && (
-                                <MenuItem value={heightSizes[2]}>
-                                  {heightSizes[2]}
-                                </MenuItem>
-                              )}
-                            </Select>
-                          </FormControl>
-                        </div>
-                      </div>
-                    </div>
-                  </Grid>
-                  <Grid item lg={6} md={6} sm={12} xs={12}>
-                    <Typography
-                      style={{
-                        fontSize: "22px",
-                        lineHeight: "32px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Quantity :
-                    </Typography>
-
-                    <Box
-                      style={{
-                        border: "1px solid #868686",
-                        width: "50%",
-                        marginTop: "20px",
-                        height: "53%",
-                        borderRadius: "10px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-around",
-                      }}
-                    >
-                      <Typography
-                        onClick={() => setCount(count - 1)}
-                        style={{
-                          marginRight: "10px",
-                          color: "#868686",
-                          cursor: "pointer",
-                        }}
-                      >
-                        -
-                      </Typography>
-                      <span
-                        style={{
-                          fontSize: "16px",
-                          fontWeight: "bold",
-                          color: "#868686",
-                        }}
-                      >
-                        {count}
-                      </span>
-                      <Typography
-                        onClick={() => setCount(count + 1)}
-                        style={{
-                          marginLeft: "10px",
-                          color: "#868686",
-                          cursor: "pointer",
-                        }}
-                      >
-                        +
-                      </Typography>
-                    </Box>
-                  </Grid>
-                </Grid>
-              </Box> */}
               <Box sx={{ marginTop: "30px" }}>
                 <Grid container spacing={4}>
                   {/* Size (in Inches) Section */}
@@ -504,13 +359,12 @@ const Product = (props) => {
                                 "&:hover .MuiOutlinedInput-notchedOutline": {
                                   border: 0,
                                 },
-                                "&.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                  { border: 0 },
+                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": { border: 0 },
                               }}
                             >
-                              {widthSizes?.map((size, index) => (
-                                <MenuItem key={index} value={size}>
-                                  <em>{size}</em>
+                              {widthSizes?.map((size) => (
+                                <MenuItem key={size.id} value={size.size}>
+                                  <em>{size.size}</em>
                                 </MenuItem>
                               ))}
                             </Select>
@@ -539,13 +393,12 @@ const Product = (props) => {
                                 "&:hover .MuiOutlinedInput-notchedOutline": {
                                   border: 0,
                                 },
-                                "&.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                  { border: 0 },
+                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": { border: 0 },
                               }}
                             >
-                              {heightSizes?.map((size, index) => (
-                                <MenuItem key={index} value={size}>
-                                  <em>{size}</em>
+                              {heightSizes?.map((size) => (
+                                <MenuItem key={size.id} value={size.size}>
+                                  <em>{size.size}</em>
                                 </MenuItem>
                               ))}
                             </Select>
@@ -579,10 +432,7 @@ const Product = (props) => {
                         justifyContent: "space-around",
                       }}
                     >
-                      <Typography
-                        onClick={() => setCount(count - 1)}
-                        sx={{ color: "#868686", cursor: "pointer" }}
-                      >
+                      <Typography onClick={() => setCount(count - 1)} sx={{ color: "#868686", cursor: "pointer" }}>
                         -
                       </Typography>
                       <span
@@ -594,10 +444,7 @@ const Product = (props) => {
                       >
                         {count}
                       </span>
-                      <Typography
-                        onClick={() => setCount(count + 1)}
-                        sx={{ color: "#868686", cursor: "pointer" }}
-                      >
+                      <Typography onClick={() => setCount(count + 1)} sx={{ color: "#868686", cursor: "pointer" }}>
                         +
                       </Typography>
                     </Box>
@@ -607,81 +454,75 @@ const Product = (props) => {
 
               <Divider style={{ width: "100%", marginTop: "40px" }} />
               {alldata?.categories?.map((category) => (
-                <Accordion
-                  key={category.id}
-                  style={{
-                    marginBottom: "10px",
-                    backgroundColor: "transparent",
-                    boxShadow: "none",
-                    border: "1px solid #DCDCDC",
-                    borderRadius: "10px",
-                    marginTop: "25px",
-                  }}
-                >
-                  <AccordionSummary
-                    expandIcon={<AddIcon />}
-                    aria-controls={`panel${category.id}-content`}
-                    id={`panel${category.id}-header`}
+                <>
+                  <Accordion
+                    key={category.id}
                     style={{
-                      fontSize: "18px",
-                      color: "#3F5163",
-                      lineHeight: "18px",
-                      fontWeight: "400",
-                    }}
-                    sx={{
-                      "& .MuiAccordionSummary-content": {
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      },
+                      marginBottom: "10px",
+                      backgroundColor: "transparent",
+                      boxShadow: "none",
+                      border: "1px solid #DCDCDC",
+                      borderRadius: "10px",
+                      marginTop: "25px",
                     }}
                   >
-                    {category?.name}
-                    {/* Display the selected subcategory's name */}
-                    {selectedCard[category.id] && (
-                      <Typography sx={{ marginLeft: "10px" }}>
-                        {selectedCard[category.id].subCatName}
-                      </Typography>
-                    )}
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Grid container spacing={2}>
-                      {category?.subCategories?.map((subCat) => (
-                        <Grid item xs={6} key={subCat.id}>
-                          <Paper
-                            elevation={3}
-                            sx={{
-                              padding: 1,
-                              textAlign: "center",
-                              border:
-                                selectedCard[category.id]?.id === subCat.id
-                                  ? "2px solid"
-                                  : "none",
-                              borderColor:
-                                selectedCard[category.id]?.id === subCat.id
-                                  ? "#ff9900"
-                                  : "none",
-                              cursor: "pointer",
-                            }}
-                            onClick={() => handleCardClick(category.id, subCat)}
-                          >
-                            <Typography
-                              variant="body1"
-                              sx={{ fontWeight: "bold" }}
-                            >
-                              {subCat.subCatName}
-                            </Typography>
-                            <img
-                              src={`${process.env.REACT_APP_API_BASE_URL}${subCat.image}`}
-                              alt={subCat.subCatName}
-                              style={{ width: "100%", marginTop: "10px" }}
-                            />
-                          </Paper>
-                        </Grid>
-                      ))}
-                    </Grid>
-                  </AccordionDetails>
-                </Accordion>
+                    <AccordionSummary
+                      expandIcon={<AddIcon />}
+                      aria-controls={`panel${category.id}-content`}
+                      id={`panel${category.id}-header`}
+                      style={{
+                        fontSize: "18px",
+                        color: "#3F5163",
+                        lineHeight: "18px",
+                        fontWeight: "400",
+                      }}
+                      sx={{
+                        "& .MuiAccordionSummary-content": {
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        },
+                      }}
+                    >
+                      {category?.name}
+                      {/* Display the selected subcategory's name */}
+                      {selectedCard[category.id] && (
+                        <Typography sx={{ marginLeft: "10px" }}>{selectedCard[category.id].subCatName}</Typography>
+                      )}
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Grid container spacing={2}>
+                        {category?.subCategories?.map((subCat) => {
+                          //console.log("iddddd", selectedCard[category.id]?.id);
+                          return (
+                            <Grid item xs={6} key={subCat.id}>
+                              <Paper
+                                elevation={3}
+                                sx={{
+                                  padding: 1,
+                                  textAlign: "center",
+                                  border: selectedCard[category.id]?.id === subCat.id ? "2px solid" : "none",
+                                  borderColor: selectedCard[category.id]?.id === subCat.id ? "#ff9900" : "none",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => handleCardClick(category.id, subCat)}
+                              >
+                                <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                                  {subCat.subCatName}
+                                </Typography>
+                                <img
+                                  src={`${process.env.REACT_APP_API_BASE_URL}${subCat.image}`}
+                                  alt={subCat.subCatName}
+                                  style={{ width: "100%", marginTop: "10px" }}
+                                />
+                              </Paper>
+                            </Grid>
+                          );
+                        })}
+                      </Grid>
+                    </AccordionDetails>
+                  </Accordion>
+                </>
               ))}
               <Divider />
               <Button
@@ -705,9 +546,7 @@ const Product = (props) => {
               >
                 Add to Cart
               </Button>
-              <Typography
-                sx={{ color: "#868686", fontSize: "18px", marginTop: "30px" }}
-              >
+              <Typography sx={{ color: "#868686", fontSize: "18px", marginTop: "30px" }}>
                 Category <span className="rigidsign">Rigid Signs</span>
               </Typography>
             </Box>
