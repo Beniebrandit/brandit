@@ -6,15 +6,10 @@ import {
   Typography,
   Rating,
   Divider,
-  TextField,
   Button,
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  AccordionActions,
-  hexToRgb,
-  FormHelperText,
-  InputLabel,
   Paper,
 } from "@mui/material";
 import "swiper/css";
@@ -45,29 +40,36 @@ const Product = (props) => {
   const [selectedCard, setSelectedCard] = useState({});
 
   // New state to store selected width, height, and subCat ids
-  const [selectedWidthId, setSelectedWidthId] = useState("");
-  const [selectedHeightId, setSelectedHeightId] = useState("");
-  const [selectedSubCatId, setSelectedSubCatId] = useState(null);
+  const [selectedWidth, setSelectedWidth] = useState("");
+  const [selectedHeight, setSelectedHeight] = useState("");
+  const [selectedSubCatId, setSelectedSubCatId] = useState([]);
 
-  // Payload for API or other actions
-  const [payload, setPayload] = useState({
-    widthId: "",
-    heightId: "",
-    subCatId: "",
-  });
+const [payload, setPayload] = useState({
+  productId: null, // Assuming `id` is the unique identifier for the product
+  width: "",
+  height: "",
+  subCatId: [],
+});
 
-  // Use effect to set the initial selected card after the data is available
+  // Use effect to set initial selected subcategory and capture their IDs
   useEffect(() => {
     if (alldata?.categories?.length > 0) {
       const initialSelection = {};
+      const initialSubCatIds = [];
+
       alldata?.categories?.forEach((category) => {
         if (category?.subCategories?.length > 0) {
           // Set the first subcategory as the default selected card
-          initialSelection[category.id] = category.subCategories[0];
-          setSelectedSubCatId(category.subCategories[0]?.id); // Set initial subCatId
+          const firstSubCat = category.subCategories[0];
+          initialSelection[category.id] = firstSubCat.id;
+
+          // Add the initially selected subcategory ID to the array
+          initialSubCatIds.push(firstSubCat.id);
         }
       });
+
       setSelectedCard(initialSelection); // Update the state with initial selections
+      setSelectedSubCatId(initialSubCatIds); // Set the initially selected subcategory IDs
     }
   }, [alldata]);
 
@@ -79,46 +81,61 @@ const Product = (props) => {
     ?.filter((val) => val.size_type === "H")
     ?.map((val) => ({ size: val.size, id: val.id }));
 
-  const [state, setState] = useState({
-    width: widthSizes?.[0]?.size || "",
-    height: heightSizes?.[0]?.size || "",
-  });
+const [state, setState] = useState({
+  width: "",
+  height: "",
+});
 
+useEffect(() => {
+  if (alldata) {
+    const firstWidth = widthSizes?.[0]?.size || "";
+    const firstHeight = heightSizes?.[0]?.size || "";
+    setState({
+      width: firstWidth,
+      height: firstHeight,
+    });
+    setSelectedWidth(firstWidth);
+    setSelectedHeight(firstHeight);
+  }
+}, [alldata]);
+
+
+ console.log(widthSizes?.[0]?.size,"qqqqqqq");
   useEffect(() => {
-    // Ensure the state is set with the first item from the arrays initially
-    if (widthSizes?.length > 0 && !state.width) {
-      setState((prevState) => ({
-        ...prevState,
-        width: widthSizes[0].size,
-      }));
-      setSelectedWidthId(widthSizes[0].id);
+    if (alldata?.categories?.length > 0) {
+      const initialSelection = {};
+      const initialSubCatIds = [];
+      alldata?.categories?.forEach((category) => {
+        if (category?.subCategories?.length > 0) {
+          const firstSubCat = category.subCategories[0];
+          initialSelection[category.id] = firstSubCat.id; // Store the subCat ID
+          initialSubCatIds.push(firstSubCat.id); // Push the initial subCat ID
+        }
+      });
+      setSelectedCard(initialSelection);
+      setSelectedSubCatId(initialSubCatIds);
     }
-    if (heightSizes?.length > 0 && !state.height) {
-      setState((prevState) => ({
-        ...prevState,
-        height: heightSizes[0].size,
-      }));
-      setSelectedHeightId(heightSizes[0].id);
-    }
-  }, [widthSizes, heightSizes]);
+  }, [alldata]);
 
   // Monitor width, height, and subCat changes to update the payload
   useEffect(() => {
     setPayload({
-      widthId: selectedWidthId,
-      heightId: selectedHeightId,
+      width: selectedWidth,
+      height: selectedHeight,
       subCatId: selectedSubCatId,
+      productId: alldata?.id || null,
     });
-  }, [selectedWidthId, selectedHeightId, selectedSubCatId]);
+  }, [selectedWidth, selectedHeight, selectedSubCatId, alldata]);
 
   const handleCardClick = (categoryId, subCat) => {
-    // Update the selected card for the specific category
-    setSelectedCard((prevSelectedCards) => ({
-      ...prevSelectedCards,
-      [categoryId]: subCat, // Store the selected subcategory object
-    }));
-    setSelectedSubCatId(subCat?.id); // Update selected subCat id
+    setSelectedCard((prevSelectedCards) => {
+      const updatedCards = { ...prevSelectedCards, [categoryId]: subCat.id }; // Store only the subCat ID
+      const subCatIdsArray = Object.values(updatedCards).filter((value) => value !== undefined); // Update subCat IDs
+      setSelectedSubCatId(subCatIdsArray); // Update state
+      return updatedCards;
+    });
   };
+
 
   const swiperRef = useRef(null);
 
@@ -133,24 +150,25 @@ const Product = (props) => {
       ...prev,
       [name]: value,
     }));
-     if (name === "width") {
-       const selectedWidth = widthSizes.find((size) => size.size === value);
-       setSelectedWidthId(selectedWidth?.id);
-     } else if (name === "height") {
-       const selectedHeight = heightSizes.find((size) => size.size === value);
-       setSelectedHeightId(selectedHeight?.id);
-     }
+    if (name === "width") {
+      const selectedWidth = widthSizes.find((size) => size.size === value);
+      setSelectedWidth(selectedWidth?.size);
+    } else if (name === "height") {
+      const selectedHeight = heightSizes.find((size) => size.size === value);
+      setSelectedHeight(selectedHeight?.size);
+    }
   };
 
   // const data = {
   //   name: ProductData[0].title,
   //   description: ProductData[0].description,
   // };
+  
   const getApi = async () => {
     ProductService.product().then((res) => {
       const response = res.data;
       setAllData(response);
-      console.log(alldata, "alldata");
+      console.log(response, "response");
     });
 
     // const res = await axios.get(`${url}/product/2`, {
@@ -164,23 +182,25 @@ const Product = (props) => {
     getApi();
   }, []);
 
-  const handleClick = async (e) => {
-    // let response = await axios(`${url}/product`, {
-    //   method: "POST", //not needed here declare above
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "Authorization": `Bearer ${token}`
-    //   },
-    //   data: { ...data }
-    // });
-    // console.log("selectId",selectedCard[category.id]?.id === subCat.id);
+  const handleClick = async () => {
+        //ProductService.Dataprice(payload).then((res) => {
+        //  if (res.code === "0000") {
+        //    console.log("done");
+        //  }
+        //});
   };
 
-useEffect(() => {
-  console.log("Payload:", payload);
-  // Example API call
-  // await axios.post('/your-endpoint', payload);
-}, [payload]);
+  //useEffect(() => {
+  //  ProductService.Dataprice(payload).then((res) => {
+  //    if (res.code === "0000") {
+  //    console.log("done");
+  //    }
+  //  });
+  //}, [payload]);
+
+  useEffect(() => {
+    console.log("Selected SubCategory IDs:", selectedSubCatId); // This array will contain selected subcategory IDs
+  }, [selectedSubCatId]);
 
   return (
     <Box className="product_box">
@@ -487,7 +507,13 @@ useEffect(() => {
                       {category?.name}
                       {/* Display the selected subcategory's name */}
                       {selectedCard[category.id] && (
-                        <Typography sx={{ marginLeft: "10px" }}>{selectedCard[category.id].subCatName}</Typography>
+                        <Typography sx={{ marginLeft: "10px" }}>
+                          {
+                            alldata.categories
+                              .find((cat) => cat.id === category.id)
+                              ?.subCategories.find((sub) => sub.id === selectedCard[category.id])?.subCatName
+                          }
+                        </Typography>
                       )}
                     </AccordionSummary>
                     <AccordionDetails>
@@ -501,8 +527,7 @@ useEffect(() => {
                                 sx={{
                                   padding: 1,
                                   textAlign: "center",
-                                  border: selectedCard[category.id]?.id === subCat.id ? "2px solid" : "none",
-                                  borderColor: selectedCard[category.id]?.id === subCat.id ? "#ff9900" : "none",
+                                  border: selectedCard[category.id] === subCat.id ? "2px solid #ff9900" : "none",
                                   cursor: "pointer",
                                 }}
                                 onClick={() => handleCardClick(category.id, subCat)}
