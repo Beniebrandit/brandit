@@ -10,6 +10,10 @@ import {
   Drawer,
   List,
   ListItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
@@ -21,11 +25,48 @@ import twitter_logo from "../asset/images/twitter_logo.svg";
 import linkedin_logo from "../asset/images/linkedin_logo.svg";
 import youtube_logo from "../asset/images/youtube_logo.svg";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+console.log("API_BASE_URL:", API_BASE_URL);
+
 const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [deviceName, setDeviceName] = useState("Iphone");
+
+  const handleClickOpen = () => {
+    setLoginOpen(true);
+  };
+
+  const handleClose = () => {
+    setLoginOpen(false);
+  };
 
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
+  };
+
+  const handleLogin = async () => {
+    try {
+      const response = await fetch("https://flagg.devlopix.com/api/getToken", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password, device_name: deviceName }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const token = await response.text();
+      localStorage.setItem("authToken", token);
+      handleClose();
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -57,11 +98,8 @@ const Header = () => {
                 <Grid item>
                   <Typography variant="body2" sx={{ color: "white" }}>
                     Email:{" "}
-                    <a
-                      href="mailto:sales@brandt.net"
-                      style={{ color: "white", textDecoration: "none" }}
-                    >
-                      sales@brandt.net
+                    <a href="mailto:sales@brandt.net" style={{ color: "white", textDecoration: "none" }}>
+                      mailto:sales@brandt.net
                     </a>
                   </Typography>
                 </Grid>
@@ -125,11 +163,7 @@ const Header = () => {
       <Container className="inner_header">
         <Grid container alignItems="center" justifyContent="space-between" spacing={2}>
           <Grid item xs={12} sm="auto" container justifyContent="center">
-            <img
-              alt="main_logo"
-              src={main_logo}
-              style={{ width: "50%", height: "auto", maxWidth: "200px" }}
-            />
+            <img alt="main_logo" src={main_logo} style={{ width: "50%", height: "auto", maxWidth: "200px" }} />
           </Grid>
 
           <Grid item xs={12} sm="auto" sx={{ display: { xs: "none", md: "block" } }}>
@@ -150,9 +184,9 @@ const Header = () => {
           </Grid>
 
           <Grid item xs={12} sm="auto" container justifyContent="center">
-            <Box sx={{ position: "relative",display:"flex" }}>
-            <Grid item>
-                <Button variant="contained" className="header_btn">
+            <Box sx={{ position: "relative", display: "flex" }}>
+              <Grid item>
+                <Button onClick={handleClickOpen} variant="contained" className="header_btn">
                   Login
                 </Button>
               </Grid>
@@ -165,11 +199,7 @@ const Header = () => {
           </Grid>
           <Grid item xs={12} sm="auto" container justifyContent="center">
             <Box sx={{ position: "relative" }}>
-              <img
-                alt="cart_logo"
-                src={cart_logo}
-                style={{ width: "30px", height: "auto" }}
-              />
+              <img alt="cart_logo" src={cart_logo} style={{ width: "30px", height: "auto" }} />
             </Box>
           </Grid>
 
@@ -196,6 +226,41 @@ const Header = () => {
           </Grid>
         </Grid>
       </Container>
+
+      <Dialog open={loginOpen} onClose={handleClose}>
+        <DialogContent>
+          <Typography variant="h4" component="h1" gutterBottom>
+            Login
+          </Typography>
+          <TextField
+            label="Email"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            label="Password"
+            type="password"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            fullWidth
+            style={{ marginTop: "16px" }}
+            onClick={handleLogin}
+          >
+            Login
+          </Button>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

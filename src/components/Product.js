@@ -123,7 +123,7 @@ useEffect(() => {
       width: selectedWidth,
       height: selectedHeight,
       subCatId: selectedSubCatId,
-      productId: alldata?.id || null,
+      ProductId: alldata?.id || null,
     });
   }, [selectedWidth, selectedHeight, selectedSubCatId, alldata]);
 
@@ -190,13 +190,9 @@ useEffect(() => {
         //});
   };
 
-  //useEffect(() => {
-  //  ProductService.Dataprice(payload).then((res) => {
-  //    if (res.code === "0000") {
-  //    console.log("done");
-  //    }
-  //  });
-  //}, [payload]);
+  useEffect(() => {
+console.log(payload, "payload");
+  }, [payload]);
 
   useEffect(() => {
     console.log("Selected SubCategory IDs:", selectedSubCatId); // This array will contain selected subcategory IDs
