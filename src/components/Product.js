@@ -43,6 +43,7 @@ const Product = (props) => {
   const [selectedWidth, setSelectedWidth] = useState("");
   const [selectedHeight, setSelectedHeight] = useState("");
   const [selectedSubCatId, setSelectedSubCatId] = useState([]);
+  const [price, setPrice] = useState();
 
 const [payload, setPayload] = useState({
   productId: null, // Assuming `id` is the unique identifier for the product
@@ -100,7 +101,7 @@ useEffect(() => {
 }, [alldata]);
 
 
- console.log(widthSizes?.[0]?.size,"qqqqqqq");
+// console.log(widthSizes?.[0]?.size,"qqqqqqq");
   useEffect(() => {
     if (alldata?.categories?.length > 0) {
       const initialSelection = {};
@@ -119,11 +120,13 @@ useEffect(() => {
 
   // Monitor width, height, and subCat changes to update the payload
   useEffect(() => {
+    const jsonString = JSON.stringify(selectedSubCatId); 
     setPayload({
       width: selectedWidth,
       height: selectedHeight,
-      subCatId: selectedSubCatId,
-      ProductId: alldata?.id || null,
+      subCatId: jsonString,
+      ProductId: 10,
+      //ProductId: alldata?.id || null,
     });
   }, [selectedWidth, selectedHeight, selectedSubCatId, alldata]);
 
@@ -168,7 +171,7 @@ useEffect(() => {
     ProductService.product().then((res) => {
       const response = res.data;
       setAllData(response);
-      console.log(response, "response");
+      //console.log(response, "response");
     });
 
     // const res = await axios.get(`${url}/product/2`, {
@@ -184,19 +187,45 @@ useEffect(() => {
 
   const handleClick = async () => {
         //ProductService.Dataprice(payload).then((res) => {
-        //  if (res.code === "0000") {
-        //    console.log("done");
-        //  }
+        //    console.log(res.data.totalPrice, "totalPrice");
+        //    setPrice(res.data.totalPrice)
         //});
   };
 
-  useEffect(() => {
-console.log(payload, "payload");
-  }, [payload]);
+//  useEffect(() => {
+//console.log(payload, "payload");
+//  }, [payload]);
 
   useEffect(() => {
-    console.log("Selected SubCategory IDs:", selectedSubCatId); // This array will contain selected subcategory IDs
-  }, [selectedSubCatId]);
+  if (!selectedWidth || !selectedHeight || selectedSubCatId.length === 0) {
+    console.error("Payload is incomplete. Ensure width, height, and subcategory are selected.");
+    //setError("Please select all required options before proceeding.");
+  } else {
+    const payload = {
+      width: selectedWidth,
+      height: selectedHeight,
+      subCatId: JSON.stringify(selectedSubCatId),
+      ProductId: 10,
+    };
+
+    ProductService.Dataprice(payload)
+      .then((res) => {
+        if (res.data && res.data.totalPrice) {
+          setPrice(res.data.totalPrice);
+        } else {
+          setPrice(55);
+          //setError("Failed to fetch pricing information.");
+        }
+      })
+      .catch((error) => {
+        console.error("API call failed:", error);
+        //setError("Unable to fetch pricing. Please try again later.");
+      });
+  }
+
+  }, [payload]);
+  console.log("selectedCard", selectedCard);
+  console.log("state", state);
 
   return (
     <Box className="product_box">
@@ -546,27 +575,35 @@ console.log(payload, "payload");
                 </>
               ))}
               <Divider />
-              <Button
-                variant="contained"
-                onClick={handleClick}
-                sx={{
-                  backgroundColor: "#3F5163",
-                  color: "#FFFFFF",
-                  fontSize: "18px",
-                  lineHeight: "18px",
-                  fontWeight: "400",
-                  padding: "21px",
-                  marginTop: "10px",
-                  borderRadius: "10px",
-                  width: "100%",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "#3F5163 !important",
-                  },
-                }}
-              >
-                Add to Cart
-              </Button>
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Box>
+                  <Typography>
+                    <b>Price:</b>
+                  </Typography>
+                  <Typography sx={{ fontSize: "22px", color: "rgb(63, 81, 99)" }}>${price}</Typography>
+                </Box>
+                <Button
+                  variant="contained"
+                  onClick={handleClick}
+                  sx={{
+                    backgroundColor: "#3F5163",
+                    color: "#FFFFFF",
+                    fontSize: "18px",
+                    lineHeight: "18px",
+                    fontWeight: "400",
+                    padding: "21px",
+                    marginTop: "10px",
+                    borderRadius: "10px",
+                    width: "80%",
+                    textTransform: "none",
+                    "&:hover": {
+                      backgroundColor: "#3F5163 !important",
+                    },
+                  }}
+                >
+                  Add to Cart
+                </Button>
+              </Box>
               <Typography sx={{ color: "#868686", fontSize: "18px", marginTop: "30px" }}>
                 Category <span className="rigidsign">Rigid Signs</span>
               </Typography>
