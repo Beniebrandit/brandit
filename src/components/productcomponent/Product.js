@@ -22,7 +22,7 @@ import { Pagination, Navigation } from "swiper";
 import "./Product.css";
 import { Add } from "@mui/icons-material";
 import axios from "axios";
-import { ProductService } from "../services/Product.service";
+import { ProductService } from "../../services/Product.service";
 import { Theme, useTheme } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";

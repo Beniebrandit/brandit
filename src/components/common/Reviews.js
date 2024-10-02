@@ -12,13 +12,13 @@ import React, { useState } from "react";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import StarIcon from "@mui/icons-material/Star";
-import facebook1 from "../asset/images/facebook1.png";
-import facebook2 from "../asset/images/facebook2.png";
-import facebook3 from "../asset/images/facebook3.png";
-import facebook4 from "../asset/images/facebook4.png";
-import facebook5 from "../asset/images/facebook5.png";
-import facebook6 from "../asset/images/facebook6.png";
-import { ReactComponent as Customerreviewicon } from "../asset/images/customerreviewicon.svg";
+import facebook1 from "../../asset/images/facebook1.png";
+import facebook2 from "../../asset/images/facebook2.png";
+import facebook3 from "../../asset/images/facebook3.png";
+import facebook4 from "../../asset/images/facebook4.png";
+import facebook5 from "../../asset/images/facebook5.png";
+import facebook6 from "../../asset/images/facebook6.png";
+import { ReactComponent as Customerreviewicon } from "../../asset/images/customerreviewicon.svg";
 const Reviews = (props) => {
   const [value, setValue] = useState(5);
   return (

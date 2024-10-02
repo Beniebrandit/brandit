@@ -1,8 +1,8 @@
 import { Box, Button, Container, Typography } from "@mui/material";
 import React from "react";
-import whyBranditSignage from "../asset/images/whyBranditSignage.png";
-import Brandit_icon1 from "../asset/images/Brandit_icon1.svg";
-import Brandit_icon2 from "../asset/images/Brandit_icon2.svg";
+import whyBranditSignage from "../../asset/images/whyBranditSignage.png";
+import Brandit_icon1 from "../../asset/images/Brandit_icon1.svg";
+import Brandit_icon2 from "../../asset/images/Brandit_icon2.svg";
 
 const WhyBranditSignage = () => {
   return (

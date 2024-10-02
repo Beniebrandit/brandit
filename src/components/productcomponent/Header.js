@@ -18,12 +18,12 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PhoneInTalkOutlinedIcon from "@mui/icons-material/PhoneInTalkOutlined";
-import main_logo from "../asset/images/main_logo.png";
-import cart_logo from "../asset/images/cart_logo.svg";
-import facebook_logo from "../asset/images/facebook_logo.svg";
-import twitter_logo from "../asset/images/twitter_logo.svg";
-import linkedin_logo from "../asset/images/linkedin_logo.svg";
-import youtube_logo from "../asset/images/youtube_logo.svg";
+import main_logo from "../../asset/images/main_logo.png";
+import cart_logo from "../../asset/images/cart_logo.svg";
+import facebook_logo from "../../asset/images/facebook_logo.svg";
+import twitter_logo from "../../asset/images/twitter_logo.svg";
+import linkedin_logo from "../../asset/images/linkedin_logo.svg";
+import youtube_logo from "../../asset/images/youtube_logo.svg";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 console.log("API_BASE_URL:", API_BASE_URL);

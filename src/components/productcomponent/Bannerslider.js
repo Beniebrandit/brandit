@@ -2,9 +2,9 @@ import { Box, Container, Typography, IconButton, Grid } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
-import Bannerslider_img from "../asset/images/bannerslider_img.png";
-import Bannervideo from "../asset/images/bannervideo_2.png"
-import Bannervideo2 from "../asset/images/bannervideo_3.png"
+import Bannerslider_img from "../../asset/images/bannerslider_img.png";
+import Bannervideo from "../../asset/images/bannervideo_2.png"
+import Bannervideo2 from "../../asset/images/bannervideo_3.png"
 
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
@@ -13,14 +13,14 @@ import { Navigation, Pagination } from "swiper";
 import "./Bannerslider.css";
 
 const TestimonialsCarouselData9 = [
-  { thumbimg: require("../asset/images/product_1.png") },
-  { thumbimg: require("../asset/images/product_1.png") },
-  { thumbimg: require("../asset/images/product_1.png") },
-  { thumbimg: require("../asset/images/product_1.png") },
-  { thumbimg: require("../asset/images/product_1.png") },
-  { thumbimg: require("../asset/images/product_1.png") },
-  { thumbimg: require("../asset/images/product_1.png") },
-  { thumbimg: require("../asset/images/product_1.png") },
+  { thumbimg: require("../../asset/images/product_1.png") },
+  { thumbimg: require("../../asset/images/product_1.png") },
+  { thumbimg: require("../../asset/images/product_1.png") },
+  { thumbimg: require("../../asset/images/product_1.png") },
+  { thumbimg: require("../../asset/images/product_1.png") },
+  { thumbimg: require("../../asset/images/product_1.png") },
+  { thumbimg: require("../../asset/images/product_1.png") },
+  { thumbimg: require("../../asset/images/product_1.png") },
 ];
 
 const Bannerslider = (props) => {

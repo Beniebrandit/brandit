@@ -1,7 +1,7 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
 import React from "react";
-import installation_img from "../asset/images/installation_img.png";
-import care_img from "../asset/images/care_img.png";
+import installation_img from "../../asset/images/installation_img.png";
+import care_img from "../../asset/images/care_img.png";
 
 const Detail = () => {
   return (

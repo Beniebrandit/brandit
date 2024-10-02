@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Container, Tabs, Tab, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import "./Product.css";
-import { ProductService } from "../services/Product.service";
+import { ProductService } from "../../services/Product.service";
 
 // Styled TabPanel component
 const TabPanel = styled(({ children, value, index, ...other }) => (

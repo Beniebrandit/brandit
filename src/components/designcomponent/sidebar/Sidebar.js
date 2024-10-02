@@ -8,12 +8,12 @@ import {
   IconButton,
 } from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ReactComponent as Sidebarsetting } from "../asset/images/sidebar_setting.svg";
-import { ReactComponent as Sidebarupload } from "../asset/images/sidebar_upload.svg";
-import { ReactComponent as Sidebartext } from "../asset/images/sidebar_text.svg";
-import { ReactComponent as Sidebarshapes } from "../asset/images/sidebar_shapes.svg";
-import { ReactComponent as Sidebarbackground } from "../asset/images/sidebar_background.svg";
-import { ReactComponent as SidebarQRcode } from "../asset/images/sidebar_QRcode.svg";
+import { ReactComponent as Sidebarsetting } from "../../../asset/images/sidebar_setting.svg";
+import { ReactComponent as Sidebarupload } from "../../../asset/images/sidebar_upload.svg";
+import { ReactComponent as Sidebartext } from "../../../asset/images/sidebar_text.svg";
+import { ReactComponent as Sidebarshapes } from "../../../asset/images/sidebar_shapes.svg";
+import { ReactComponent as Sidebarbackground } from "../../../asset/images/sidebar_background.svg";
+import { ReactComponent as SidebarQRcode } from "../../../asset/images/sidebar_QRcode.svg";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 import PropTypes from "prop-types";

@@ -1,19 +1,9 @@
 import React from "react";
 import Modal from "@mui/material/Modal";
-import {
-  Box,
-  Button,
-  Divider,
-  Input,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileArrowUp } from "@fortawesome/free-solid-svg-icons";
-import DesignServicesIcon from "@mui/icons-material/DesignServices";
-import { ReactComponent as SearchTemplete } from "../asset/images/Vector.svg";
-import { ReactComponent as DesignOnline } from "../asset/images/DesignOnline.svg";
-import { ReactComponent as UploadFile } from "../asset/images/UploadFile.svg";
+import { Box, Button, Divider, TextField, Typography } from "@mui/material";
+import { ReactComponent as SearchTemplete } from "../../asset/images/Vector.svg";
+import { ReactComponent as DesignOnline } from "../../asset/images/DesignOnline.svg";
+import { ReactComponent as UploadFile } from "../../asset/images/UploadFile.svg";
 
 const style = {
   position: "absolute",
@@ -60,28 +50,16 @@ const Pop_Up = ({ open, handleClose }) => {
               backgroundColor: "#E0CE8F",
             }}
           >
-            <Typography
-              id="keep-mounted-modal-description"
-              sx={{ padding: "1rem" }}
-            >
+            <Typography id="keep-mounted-modal-description" sx={{ padding: "1rem" }}>
               Type: Banner
             </Typography>
-            <Typography
-              id="keep-mounted-modal-description"
-              sx={{ padding: "1rem" }}
-            >
+            <Typography id="keep-mounted-modal-description" sx={{ padding: "1rem" }}>
               Size: 72" W x 36" H
             </Typography>
-            <Typography
-              id="keep-mounted-modal-description"
-              sx={{ padding: "1rem" }}
-            >
+            <Typography id="keep-mounted-modal-description" sx={{ padding: "1rem" }}>
               QTY: 2
             </Typography>
-            <Typography
-              id="keep-mounted-modal-description"
-              sx={{ padding: "1rem" }}
-            >
+            <Typography id="keep-mounted-modal-description" sx={{ padding: "1rem" }}>
               Price: $39.02 sq/ft
             </Typography>
           </Box>
@@ -102,15 +80,14 @@ const Pop_Up = ({ open, handleClose }) => {
                 width: "250px",
                 height: "150px",
               }}
+              href="/design"
             >
               <Box sx={{ margin: "auto", display: "block" }}>
                 <Button>
                   <UploadFile />
                 </Button>
               </Box>
-              <Typography sx={{ textAlign: "center", color: "#3F5163" }}>
-                Upload File
-              </Typography>
+              <Typography sx={{ textAlign: "center", color: "#3F5163" }}>Upload File</Typography>
             </Button>
             <Button
               sx={{
@@ -122,6 +99,7 @@ const Pop_Up = ({ open, handleClose }) => {
                 width: "250px",
                 height: "150px",
               }}
+              href="/design"
             >
               <Box sx={{ margin: "auto", display: "block" }}>
                 <Button>
@@ -129,9 +107,7 @@ const Pop_Up = ({ open, handleClose }) => {
                 </Button>
               </Box>
 
-              <Typography sx={{ textAlign: "center", color: "#3F5163" }}>
-                Upload File
-              </Typography>
+              <Typography sx={{ textAlign: "center", color: "#3F5163" }}>Design Online</Typography>
             </Button>
             <Button
               sx={{
@@ -145,22 +121,15 @@ const Pop_Up = ({ open, handleClose }) => {
               }}
             >
               <Box sx={{ margin: "auto", display: "block" }}>
-
-                  <SearchTemplete />
-
+                <SearchTemplete />
               </Box>
 
-              <TextField
-                sx={{ color: "#3F5163", backgroundColor: "white" }}
-                placeholder="Search Template"
-              />
+              <TextField sx={{ color: "#3F5163", backgroundColor: "white" }} placeholder="Search Template" />
             </Button>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
             <Divider sx={{ flexGrow: 1 }} />
-            <Typography
-              sx={{ margin: "0 1rem", whiteSpace: "nowrap", fontSize: "20px" }}
-            >
+            <Typography sx={{ margin: "0 1rem", whiteSpace: "nowrap", fontSize: "20px" }}>
               <b>OR</b>
             </Typography>
             <Divider sx={{ flexGrow: 1 }} />
@@ -171,9 +140,8 @@ const Pop_Up = ({ open, handleClose }) => {
                 <h2>Lorem Ipsum is simply dummy text</h2>
               </Typography>
               <Typography sx={{ textAlign: "center", marginTop: "0.5rem" }}>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+                industry's standard dummy text ever since the 1500s
               </Typography>
               <Box sx={{ textAlign: "center", marginTop: "0.5rem" }}>
                 <Button
@@ -182,7 +150,11 @@ const Pop_Up = ({ open, handleClose }) => {
                     padding: "1rem",
                     color: "white",
                     fontSize: "13px",
+                    "&:hover": {
+                      backgroundColor: "#6888a7",
+                    },
                   }}
+                  href="/design-service"
                 >
                   Submit a Design Request
                 </Button>

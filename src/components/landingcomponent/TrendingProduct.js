@@ -1,14 +1,14 @@
 import { Box, Tab, Tabs, Typography } from '@mui/material'
 import React from 'react'
-import trending_icon1 from "../asset/images/trending_icon1.svg";
-import trending_icon2 from "../asset/images/trending_icon2.svg";
-import trending_icon3 from "../asset/images/trending_icon3.svg";
-import trending_icon4 from "../asset/images/trending_icon4.svg";
-import trending_icon5 from "../asset/images/trending_icon5.svg";
-import trending_image1 from "../asset/images/trending_image1.png";
-import trending_image2 from "../asset/images/trending_image2.png";
-import trending_image3 from "../asset/images/trending_image3.png";
-import trending_image4 from "../asset/images/trending_image4.png";
+import trending_icon1 from "../../asset/images/trending_icon1.svg";
+import trending_icon2 from "../../asset/images/trending_icon2.svg";
+import trending_icon3 from "../../asset/images/trending_icon3.svg";
+import trending_icon4 from "../../asset/images/trending_icon4.svg";
+import trending_icon5 from "../../asset/images/trending_icon5.svg";
+import trending_image1 from "../../asset/images/trending_image1.png";
+import trending_image2 from "../../asset/images/trending_image2.png";
+import trending_image3 from "../../asset/images/trending_image3.png";
+import trending_image4 from "../../asset/images/trending_image4.png";
 import PropTypes from "prop-types";
 
 

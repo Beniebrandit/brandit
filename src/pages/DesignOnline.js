@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Box } from "@mui/material";
-import Sidebar from "../components/Sidebar";
-import BannerSideSection from "../components/BannerSideSection";
+import Sidebar from "../components/designcomponent/sidebar/Sidebar";
+import BannerSideSection from "../components/designcomponent/BannerSideSection";
 import FilerobotImageEditor, { TABS, TOOLS } from "react-filerobot-image-editor";
-import HeaderDesign from "../components/HeaderDesign";
+import HeaderDesign from "../components/designcomponent/HeaderDesign";
+import Toolbar from "../components/designcomponent/Toolbar";
 
 const DesignOnline = () => {
   const [selectedFile, setSelectedFile] = useState([]);
@@ -104,6 +105,7 @@ const DesignOnline = () => {
               tools={[]}
             />
           )}
+          <Toolbar/>
         </Box>
       </Box>
     </>

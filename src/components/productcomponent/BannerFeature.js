@@ -1,7 +1,7 @@
 import { Box, Card, Container, Grid, Typography } from "@mui/material";
 import React from "react";
-import banner_image from "../asset/images/banner_image.png";
-import Bg from "../asset/images/Bg.png";
+import banner_image from "../../asset/images/banner_image.png";
+import Bg from "../../asset/images/Bg.png";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 // Sample data array

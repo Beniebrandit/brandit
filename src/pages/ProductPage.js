@@ -1,14 +1,14 @@
 import React from "react";
-import Header from "../components/Header";
-import Product from "../components/Product";
-import ProductDescription from "../components/ProductDescription";
-import Services from "../components/Services";
-import BannerFeature from "../components/BannerFeature";
-import Bannerslider from "../components/Bannerslider";
-import Detail from "../components/Detail";
-import Faq from "../components/Faq";
-import ReviewCard from "../components/ReviewCard";
-import Footer from "../components/Footer";
+import Header from "../components/productcomponent/Header";
+import ProductDescription from "../components/productcomponent/ProductDescription";
+import Services from "../components/productcomponent/Services";
+import BannerFeature from "../components/productcomponent/BannerFeature";
+import Bannerslider from "../components/productcomponent/Bannerslider";
+import Detail from "../components/productcomponent/Detail";
+import Faq from "../components/productcomponent/Faq";
+import ReviewCard from "../components/common/ReviewCard";
+import Footer from "../components/productcomponent/Footer";
+import Product from "../components/productcomponent/Product";
 
 const ProductPage = () => {
   return (

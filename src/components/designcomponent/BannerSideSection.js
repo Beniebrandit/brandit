@@ -6,7 +6,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { ReactComponent as Eye } from "../asset/images/Eye.svg";
+import { ReactComponent as Eye } from "../../asset/images/Eye.svg";
 
 const BannerSideSection = () => {
   return (

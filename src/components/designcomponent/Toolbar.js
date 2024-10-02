@@ -1,8 +1,8 @@
 import { Box, Button } from "@mui/material";
 import React from "react";
-import { ReactComponent as Menudesign } from "../asset/images/menu_design.svg";
-import { ReactComponent as Imogidesign } from "../asset/images/imogi_design.svg";
-import { ReactComponent as Redesign } from "../asset/images/re_design.svg";
+import { ReactComponent as Menudesign } from "../../asset/images/menu_design.svg";
+import { ReactComponent as Imogidesign } from "../../asset/images/imogi_design.svg";
+import { ReactComponent as Redesign } from "../../asset/images/re_design.svg";
 const Toolbar = () => {
   const toolbarStyle = {
     position: "fixed",

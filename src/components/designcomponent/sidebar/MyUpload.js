@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Button, CircularProgress } from "@mui/material";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
-import { ReactComponent as Microsoft } from "../asset/images/microsoft.svg";
-import { ReactComponent as Googledrive } from "../asset/images/googledrive.svg";
-import { ReactComponent as Dropbox } from "../asset/images/dropbox.svg";
+import { ReactComponent as Microsoft } from "../../../asset/images/microsoft.svg";
+import { ReactComponent as Googledrive } from "../../../asset/images/googledrive.svg";
+import { ReactComponent as Dropbox } from "../../../asset/images/dropbox.svg";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 import useDrivePicker from "react-google-drive-picker";
