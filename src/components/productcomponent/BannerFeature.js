@@ -9,22 +9,19 @@ const cardData = [
   {
     id: 1,
     title: "Lorem ipsum dolor",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     iconColor: "#E0CE8F",
   },
   {
     id: 2,
     title: "Lorem ipsum dolor",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     iconColor: "#E0CE8F",
   },
   {
     id: 3,
     title: "Lorem ipsum dolor",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     iconColor: "#E0CE8F",
   },
 ];
@@ -102,8 +99,8 @@ const BannerFeature = () => {
           sx={{
             alignItems: "center",
             marginBottom: "50px",
-            zIndex:"1",
-            position:"relative",
+            zIndex: "1",
+            position: "relative",
           }}
         >
           <Grid item md={6} xs={12}>
@@ -146,12 +143,10 @@ const BannerFeature = () => {
                   marginTop: "10px",
                 }}
               >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                irure dolor in reprehenderit in voluptate velit esse cillum
-                dolore eu fugiat nulla pariatur.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                fugiat nulla pariatur.
               </Typography>
               <Typography
                 sx={{
@@ -162,31 +157,30 @@ const BannerFeature = () => {
                   marginTop: "10px",
                 }}
               >
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                qui officia deserunt mollit anim id est laborum.
+                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+                laborum.
               </Typography>
             </Box>
           </Grid>
         </Grid>
 
         <Box
-            sx={{
-              
-              height: "600px",
-              width: "1000px",
-              position: "absolute",
-              zIndex: "0",
-              backgroundColor: "white",
-              marginTop:"-110px",
-              borderRadius:"10px",
-              display: {
-                xs: 'none', 
-                md: 'none', // Hide on medium screens (up to 960px)
-                lg: 'none', // Hide on large screens (up to 1050px)
-                xl: 'block', // Show on extra large screens (above 1050px)
-              },
-            }}
-          ></Box>
+          sx={{
+            height: "600px",
+            width: "1000px",
+            position: "absolute",
+            zIndex: "0",
+            backgroundColor: "white",
+            marginTop: "-110px",
+            borderRadius: "10px",
+            display: {
+              xs: "none",
+              md: "none", // Hide on medium screens (up to 960px)
+              lg: "none", // Hide on large screens (up to 1050px)
+              xl: "block", // Show on extra large screens (above 1050px)
+            },
+          }}
+        ></Box>
 
         <Grid
           container
@@ -194,12 +188,12 @@ const BannerFeature = () => {
           sx={{
             alignItems: "flex-start",
             marginBottom: "50px",
-            zIndex:"1",
-            position:"relative",
+            zIndex: "1",
+            position: "relative",
           }}
         >
           <Grid item md={6} xs={12}>
-            <Box sx={{ paddingLeft: { xs: "20px", md: "53px",marginTop:"4rem" } }}>
+            <Box sx={{ paddingLeft: { xs: "20px", md: "53px", marginTop: "4rem" } }}>
               <Typography
                 sx={{
                   color: "#3F5163",
@@ -220,12 +214,10 @@ const BannerFeature = () => {
                   marginTop: "10px",
                 }}
               >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                irure dolor in reprehenderit in voluptate velit esse cillum
-                dolore eu fugiat nulla pariatur.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                fugiat nulla pariatur.
               </Typography>
               <Typography
                 sx={{
@@ -236,8 +228,8 @@ const BannerFeature = () => {
                   marginTop: "10px",
                 }}
               >
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                qui officia deserunt mollit anim id est laborum.
+                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+                laborum.
               </Typography>
             </Box>
           </Grid>
@@ -254,30 +246,22 @@ const BannerFeature = () => {
                 alignItems: "center",
               }}
             >
-              <img
-                alt="Bg"
-                src={Bg}
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
+              <img alt="Bg" src={Bg} style={{ width: "100%", height: "100%" }} />
             </Box>
           </Grid>
         </Grid>
 
-        {/* <Box sx={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
+        <Box sx={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
           <Container>
-            <Grid container spacing={4} justifyContent="center">
+            <Grid container spacing={8} justifyContent="center">
               {cardData.map((card) => (
                 <Grid key={card.id} item xs={12} sm={6} md={4}>
-                  <CardComponent
-                    title={card.title}
-                    description={card.description}
-                    iconColor={card.iconColor}
-                  />
+                  <CardComponent title={card.title} description={card.description} iconColor={card.iconColor} />
                 </Grid>
               ))}
             </Grid>
           </Container>
-        </Box> */}
+        </Box>
       </Container>
     </Box>
   );

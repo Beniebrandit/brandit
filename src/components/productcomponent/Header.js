@@ -198,9 +198,9 @@ const Header = () => {
             </Box>
           </Grid>
           <Grid item xs={12} sm="auto" container justifyContent="center">
-            <Box sx={{ position: "relative" }}>
+            <Button sx={{ position: "relative" }} href="/cart">
               <img alt="cart_logo" src={cart_logo} style={{ width: "30px", height: "auto" }} />
-            </Box>
+            </Button>
           </Grid>
 
           <Grid item xs={12} sm="auto" sx={{ display: { md: "none" } }}>

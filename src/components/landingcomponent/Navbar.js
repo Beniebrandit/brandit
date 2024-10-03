@@ -140,29 +140,39 @@ const Navbar = () => {
               justifyContent: "space-around",
             }}
           >
-            <Box
+            <Button
               sx={{
                 position: "relative",
                 display: "flex",
                 alignItems: "center",
                 paddingLeft: "1rem",
+                textTransform: "none",
               }}
             >
               <img alt="Account" src={Account} style={{ width: "46px", height: "auto" }} />
-              <span>Account</span>
-            </Box>
-            <Box
+              <span style={{ color: "#3f5163" }}>
+                <b>Account</b>
+              </span>
+            </Button>
+            <Button
               sx={{
                 position: "relative",
                 display: "flex",
                 alignItems: "center",
                 paddingLeft: "1rem",
+                textTransform: "none",
+                "& :hover" : {
+                  backgroundColor:"transparent"
+                }
               }}
+             href="/cart"
             >
               <img alt="cart_logo" src={cart_logo} style={{ width: "36px", height: "auto" }} />
               &nbsp;
-              <span>Cart</span>
-            </Box>
+              <span style={{ color: "#3f5163" }}>
+                <b>Cart</b>
+              </span>
+            </Button>
           </Box>
 
           <IconButton

@@ -17,7 +17,6 @@ const data = [
     { image: trending_image2, title: " Lorem Ipsum", description: "Lorem Ipsum" },
     { image: trending_image3, title: " Lorem Ipsum", description: "Lorem Ipsum" },
     { image: trending_image4, title: " Lorem Ipsum", description: "Lorem Ipsum" },
-
   ];
   
   const tabData = [
@@ -31,7 +30,6 @@ const data = [
     },
     { icon: trending_icon5, alt: "trending_icon5", label: "Event Banners" },
   ];
-  console.log(tabData.icon,"icon")
   function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
   

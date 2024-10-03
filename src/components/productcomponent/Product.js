@@ -120,15 +120,16 @@ useEffect(() => {
 
   // Monitor width, height, and subCat changes to update the payload
   useEffect(() => {
-    const jsonString = JSON.stringify(selectedSubCatId); 
+    const jsonString = JSON.stringify(selectedSubCatId);
     setPayload({
       width: selectedWidth,
       height: selectedHeight,
       subCatId: jsonString,
       ProductId: 10,
+      quantity: count,
       //ProductId: alldata?.id || null,
     });
-  }, [selectedWidth, selectedHeight, selectedSubCatId, alldata]);
+  }, [selectedWidth, selectedHeight, selectedSubCatId, alldata, count]);
 
   const handleCardClick = (categoryId, subCat) => {
     setSelectedCard((prevSelectedCards) => {
@@ -206,6 +207,7 @@ useEffect(() => {
       height: selectedHeight,
       subCatId: JSON.stringify(selectedSubCatId),
       ProductId: 10,
+      quantity: count,
     };
 
     ProductService.Dataprice(payload)
@@ -224,8 +226,6 @@ useEffect(() => {
   }
 
   }, [payload]);
-  console.log("selectedCard", selectedCard);
-  console.log("state", state);
 
   return (
     <Box className="product_box">
