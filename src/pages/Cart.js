@@ -4,6 +4,7 @@ import InventoryRoundedIcon from '@mui/icons-material/InventoryRounded';
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import Navbar from "../components/landingcomponent/Navbar";
+import { DesignServiceFooter } from "../components/designservice/DesignServiceFooter";
 
 const products = [
   {
@@ -114,7 +115,7 @@ const Cart = () => {
       </Grid>
 
       {/* Why Signs.com Section */}
-      {/*<Box textAlign="center" mt={6} mb={4}>
+      <Box textAlign="center" mt={6} mb={4}>
         <Typography variant="h5" gutterBottom>
           Why Signs.com?
         </Typography>
@@ -159,8 +160,9 @@ const Cart = () => {
             </CardContent>
           </Card>
         </Grid>
-      </Grid>*/}
+      </Grid>
     </Container>
+    <DesignServiceFooter/>
    </>
   );
 };
