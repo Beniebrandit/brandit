@@ -11,14 +11,45 @@ import { Box, Container, Typography, IconButton, Button, TextField } from "@mui/
 import React, { useState } from "react";
 import { Drawer, List, ListItem, ListItemText } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import LoginModal from "../designcomponent/LoginModal";
+const theme = createMuiTheme({});
 
 const Navbar = () => {
-     const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [open, setOpen] = useState(false);
 
-     const toggleDrawer = (open) => () => {
-       setDrawerOpen(open);
-     };
+  const toggleDrawer = (open) => () => {
+    setDrawerOpen(open);
+  };
+
+  function handleClick(event) {
+    setAnchorEl(event.currentTarget);
+  }
+
+  function handleClose() {
+    setAnchorEl(null);
+  }
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClosemodal = () => {
+    setOpen(false);
+  };
+
+  theme.props = {
+    MuiList: {
+      onMouseLeave: (e) => {
+        handleClose(e);
+      },
+    },
+  };
+
   return (
     <>
       <Box className="header">
@@ -140,6 +171,45 @@ const Navbar = () => {
               justifyContent: "space-around",
             }}
           >
+            <ThemeProvider theme={theme}>
+              <Box
+                aria-owns={anchorEl ? "simple-menu" : undefined}
+                aria-haspopup="true"
+                //onClick={handleClick}
+                onMouseEnter={handleClick}
+                sx={{
+                  position: "relative",
+                  display: "flex",
+                  alignItems: "center",
+                  paddingLeft: "1rem",
+                  textTransform: "none",
+                }}
+              >
+                <img alt="Account" src={Account} style={{ width: "46px", height: "auto" }} />
+                <span style={{ color: "#3f5163" }}>
+                  <b>Account</b>
+                </span>
+              </Box>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+                onMouseLeave={handleClose}
+                style={{ marginTop: "3rem" }}
+              >
+                <MenuItem onClick={handleClose}>My design</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                    handleClickOpen();
+                  }}
+                >
+                  Sign in
+                </MenuItem>
+                <MenuItem onClick={handleClose}>Create account</MenuItem>
+              </Menu>
+            </ThemeProvider>
             <Button
               sx={{
                 position: "relative",
@@ -147,25 +217,11 @@ const Navbar = () => {
                 alignItems: "center",
                 paddingLeft: "1rem",
                 textTransform: "none",
+                "& :hover": {
+                  backgroundColor: "transparent",
+                },
               }}
-            >
-              <img alt="Account" src={Account} style={{ width: "46px", height: "auto" }} />
-              <span style={{ color: "#3f5163" }}>
-                <b>Account</b>
-              </span>
-            </Button>
-            <Button
-              sx={{
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-                paddingLeft: "1rem",
-                textTransform: "none",
-                "& :hover" : {
-                  backgroundColor:"transparent"
-                }
-              }}
-             href="/cart"
+              href="/cart"
             >
               <img alt="cart_logo" src={cart_logo} style={{ width: "36px", height: "auto" }} />
               &nbsp;
@@ -203,8 +259,9 @@ const Navbar = () => {
           </List>
         </Drawer>
       </Box>
+      <LoginModal handleClose={handleClosemodal} open={open} setOpen={setOpen} />
     </>
   );
 };
 
-export default Navbar
+export default Navbar;

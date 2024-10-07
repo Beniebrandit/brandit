@@ -18,6 +18,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 const LoginModal = ({ open, setOpen, handleClose }) => {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [state, setState] = useState({
     fName: "",
     lName: "",
@@ -34,12 +35,10 @@ const LoginModal = ({ open, setOpen, handleClose }) => {
     confirmPassword: "",
   });
 
-    const [showPassword, setShowPassword] = useState(false);
-
-  let emailRegex = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
-  let fnameRegex = /([a-zA-Z]{3,30}s*)+/;
-  let lnameRegex = /[a-zA-Z]{3,30}/;
-  let passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+  const emailRegex = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
+  const fnameRegex = /([a-zA-Z]{3,30}s*)+/;
+  const lnameRegex = /[a-zA-Z]{3,30}/;
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
   const handleClose0 = () => {
     setOpen(false);
@@ -48,9 +47,9 @@ const LoginModal = ({ open, setOpen, handleClose }) => {
     handleClose();
   };
 
-    const handleClickShowPassword = () => {
-      setShowPassword(!showPassword);
-    };
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleForgotPassword = () => {
     setIsForgotPassword(true);
@@ -77,7 +76,6 @@ const LoginModal = ({ open, setOpen, handleClose }) => {
 
   const validateField = (name, value) => {
     let error = "";
-
     switch (name) {
       case "fName":
         error = !fnameRegex.test(value) && value ? "First name is invalid" : "";
@@ -125,7 +123,6 @@ const LoginModal = ({ open, setOpen, handleClose }) => {
   const createAccount = () => {
     if (isFormValid()) {
       console.log("Form is valid, proceed with account creation");
-      // Perform sign-up logic here
     } else {
       console.log("Form has errors, fix them before submitting");
     }
@@ -133,7 +130,20 @@ const LoginModal = ({ open, setOpen, handleClose }) => {
 
   return (
     <div>
-      <Dialog open={open} onClose={handleClose0} maxWidth="xs" fullWidth>
+      <Dialog
+        open={open}
+        onClose={handleClose0}
+        maxWidth="xs"
+        fullWidth
+        PaperProps={{
+          sx: {
+            padding: 4,
+            background: "linear-gradient(135deg, #e0f7fa 30%, #80deea 100%)",
+            borderRadius: "20px",
+            boxShadow: "0 15px 30px rgba(0, 0, 0, 0.1)",
+          },
+        }}
+      >
         <IconButton
           aria-label="close"
           onClick={handleClose0}
@@ -145,12 +155,12 @@ const LoginModal = ({ open, setOpen, handleClose }) => {
         >
           <CloseIcon />
         </IconButton>
-        <DialogContent>
+        <DialogContent sx={{ padding: 3 }}>
           {/* Login Form */}
           {!isForgotPassword && !isSignUp && (
             <>
-              <Typography variant="h6" gutterBottom>
-                Log In
+              <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold" }}>
+                Log In to Your Account
               </Typography>
               <TextField
                 fullWidth
@@ -163,6 +173,7 @@ const LoginModal = ({ open, setOpen, handleClose }) => {
                 helperText={errors.Email}
                 error={!!errors.Email}
                 onChange={handleChange}
+                sx={{ borderRadius: "10px" }}
               />
               <TextField
                 fullWidth
@@ -184,19 +195,33 @@ const LoginModal = ({ open, setOpen, handleClose }) => {
                 helperText={errors.Password}
                 error={!!errors.Password}
                 onChange={handleChange}
+                sx={{ borderRadius: "10px" }}
               />
               <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 <Link
                   href="#"
                   variant="body2"
                   onClick={handleForgotPassword}
-                  sx={{ display: "inline-block", marginBottom: 2 }}
+                  sx={{ marginBottom: 2, color: "#007bff", cursor: "pointer" }}
                 >
-                  Forgot password??????
+                  Forgot password?
                 </Link>
               </Box>
-              <Button fullWidth variant="contained" color="primary" sx={{ backgroundColor: "#007bff" }}>
-                LOG IN
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                sx={{
+                  backgroundColor: "#007bff",
+                  padding: "12px",
+                  borderRadius: "10px",
+                  textTransform: "none",
+                  "&:hover": {
+                    backgroundColor: "#005bb5",
+                  },
+                }}
+              >
+                Log In
               </Button>
             </>
           )}
@@ -204,11 +229,11 @@ const LoginModal = ({ open, setOpen, handleClose }) => {
           {/* Forgot Password Form */}
           {isForgotPassword && (
             <>
-              <Typography variant="h6" gutterBottom>
-                Forgot Password
+              <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold" }}>
+                Forgot Password?
               </Typography>
               <Typography variant="body2" gutterBottom>
-                Enter your email address and we will send you instructions to reset your password.
+                Enter your email to receive reset instructions.
               </Typography>
               <TextField
                 fullWidth
@@ -221,9 +246,23 @@ const LoginModal = ({ open, setOpen, handleClose }) => {
                 helperText={errors.Email}
                 error={!!errors.Email}
                 onChange={handleChange}
+                sx={{ borderRadius: "10px" }}
               />
-              <Button fullWidth variant="contained" color="primary" sx={{ backgroundColor: "#007bff", marginTop: 2 }}>
-                SEND RESET LINK
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                sx={{
+                  backgroundColor: "#007bff",
+                  padding: "12px",
+                  marginTop: 2,
+                  borderRadius: "10px",
+                  "&:hover": {
+                    backgroundColor: "#005bb5",
+                  },
+                }}
+              >
+                Send Reset Link
               </Button>
               <Button fullWidth variant="text" color="primary" onClick={handleBackToLogin} sx={{ marginTop: 1 }}>
                 Back to Log In
@@ -234,11 +273,11 @@ const LoginModal = ({ open, setOpen, handleClose }) => {
           {/* Sign-Up Form */}
           {isSignUp && (
             <>
-              <Typography variant="h6" gutterBottom>
-                First Time Here?
+              <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold" }}>
+                Create a New Account
               </Typography>
               <Typography variant="body2" gutterBottom>
-                Create an account to get updates on your order.
+                Stay updated with your orders by creating an account.
               </Typography>
               <TextField
                 fullWidth
@@ -250,6 +289,7 @@ const LoginModal = ({ open, setOpen, handleClose }) => {
                 helperText={errors.fName}
                 error={!!errors.fName}
                 onChange={handleChange}
+                sx={{ borderRadius: "10px" }}
               />
               <TextField
                 fullWidth
@@ -261,6 +301,7 @@ const LoginModal = ({ open, setOpen, handleClose }) => {
                 helperText={errors.lName}
                 error={!!errors.lName}
                 onChange={handleChange}
+                sx={{ borderRadius: "10px" }}
               />
               <TextField
                 fullWidth
@@ -273,6 +314,7 @@ const LoginModal = ({ open, setOpen, handleClose }) => {
                 helperText={errors.Email}
                 error={!!errors.Email}
                 onChange={handleChange}
+                sx={{ borderRadius: "10px" }}
               />
               <TextField
                 fullWidth
@@ -294,6 +336,7 @@ const LoginModal = ({ open, setOpen, handleClose }) => {
                 helperText={errors.Password}
                 error={!!errors.Password}
                 onChange={handleChange}
+                sx={{ borderRadius: "10px" }}
               />
               <TextField
                 fullWidth
@@ -306,16 +349,25 @@ const LoginModal = ({ open, setOpen, handleClose }) => {
                 helperText={errors.confirmPassword}
                 error={!!errors.confirmPassword}
                 onChange={handleChange}
+                sx={{ borderRadius: "10px" }}
               />
               <Button
                 fullWidth
                 variant="contained"
                 color="primary"
                 onClick={createAccount}
-                sx={{ backgroundColor: "#007bff", marginTop: 2 }}
-                disabled={!isFormValid()} // Disable if form is invalid
+                sx={{
+                  backgroundColor: "#007bff",
+                  padding: "12px",
+                  marginTop: 2,
+                  borderRadius: "10px",
+                  "&:hover": {
+                    backgroundColor: "#005bb5",
+                  },
+                }}
+                disabled={!isFormValid()}
               >
-                CREATE MY ACCOUNT
+                Create My Account
               </Button>
               <Typography variant="body2" align="center" sx={{ marginTop: 2 }}>
                 By creating an account, you agree to our Terms of Service and Privacy Policy.
@@ -327,10 +379,25 @@ const LoginModal = ({ open, setOpen, handleClose }) => {
           )}
         </DialogContent>
         {!isForgotPassword && !isSignUp && (
-          <DialogActions sx={{ justifyContent: "center" }}>
+          <DialogActions sx={{ justifyContent: "center", paddingTop: 2 }}>
             <Typography variant="body2">New to Signs?</Typography>
-            <Button variant="outlined" fullWidth onClick={handleSignUp}>
-              CREATE A NEW SIGNS ACCOUNT
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={handleSignUp}
+              sx={{
+                borderColor: "#007bff",
+                color: "#007bff",
+                padding: "10px",
+                borderRadius: "10px",
+                textTransform: "none",
+                "&:hover": {
+                  borderColor: "#005bb5",
+                  color: "#005bb5",
+                },
+              }}
+            >
+              Create a New Signs Account
             </Button>
           </DialogActions>
         )}

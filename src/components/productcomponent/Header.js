@@ -24,6 +24,8 @@ import facebook_logo from "../../asset/images/facebook_logo.svg";
 import twitter_logo from "../../asset/images/twitter_logo.svg";
 import linkedin_logo from "../../asset/images/linkedin_logo.svg";
 import youtube_logo from "../../asset/images/youtube_logo.svg";
+import { useEffect } from "react";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 console.log("API_BASE_URL:", API_BASE_URL);
@@ -34,6 +36,7 @@ const Header = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [deviceName, setDeviceName] = useState("Iphone");
+  const [currentUser, setCurrentUser] = useState("");
 
   const handleClickOpen = () => {
     setLoginOpen(true);
@@ -64,10 +67,50 @@ const Header = () => {
       const token = await response.text();
       localStorage.setItem("authToken", token);
       handleClose();
+
+      // Fetch user data after successful login
+      await fetchUserData(token);
     } catch (error) {
       console.error("Error:", error);
     }
   };
+
+  const fetchUserData = async (token) => {
+    try {
+      const response = await fetch("https://flagg.devlopix.com/api/user", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+
+      const data = await response.json();
+      setCurrentUser(data.name);
+      localStorage.setItem("currentUser", data.name); // Store user name in local storage
+      console.log(data, "getUser");
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+
+    if (token) {
+      fetchUserData(token);
+    } else {
+      // Check if currentUser exists in local storage and set state
+      const storedUser = localStorage.getItem("currentUser");
+      if (storedUser) {
+        setCurrentUser(storedUser);
+      }
+    }
+  }, []); // Empty dependency array to run once on mount
 
   return (
     <>
@@ -182,21 +225,34 @@ const Header = () => {
               </Grid>
             </Grid>
           </Grid>
-
-          <Grid item xs={12} sm="auto" container justifyContent="center">
-            <Box sx={{ position: "relative", display: "flex" }}>
-              <Grid item>
-                <Button onClick={handleClickOpen} variant="contained" className="header_btn">
-                  Login
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button variant="contained" className="header_btn">
-                  Register
-                </Button>
-              </Grid>
-            </Box>
-          </Grid>
+          {currentUser ? (
+            <Grid item xs={12} sm="auto" container justifyContent="center">
+              <Box sx={{ position: "relative", display: "flex" }}>
+                <Grid item>
+                  <AccountCircleIcon sx={{ fontSize: "36px", color: "#3f5163" }} />
+                </Grid>
+                &nbsp;
+                <Grid item sx={{ display: "flex", margin: "auto" }}>
+                  <Typography variant="contained">{currentUser}</Typography>
+                </Grid>
+              </Box>
+            </Grid>
+          ) : (
+            <Grid item xs={12} sm="auto" container justifyContent="center">
+              <Box sx={{ position: "relative", display: "flex" }}>
+                <Grid item>
+                  <Button onClick={handleClickOpen} variant="contained" className="header_btn">
+                    Login
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button variant="contained" className="header_btn">
+                    Register
+                  </Button>
+                </Grid>
+              </Box>
+            </Grid>
+          )}
           <Grid item xs={12} sm="auto" container justifyContent="center">
             <Button sx={{ position: "relative" }} href="/cart">
               <img alt="cart_logo" src={cart_logo} style={{ width: "30px", height: "auto" }} />
