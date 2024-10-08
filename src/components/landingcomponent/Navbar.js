@@ -7,15 +7,21 @@ import facebook_logo from "../../asset/images/facebook_logo.svg";
 import twitter_logo from "../../asset/images/twitter_logo.svg";
 import linkedin_logo from "../../asset/images/linkedin_logo.svg";
 import youtube_logo from "../../asset/images/youtube_logo.svg";
-import { Box, Container, Typography, IconButton, Button, TextField } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  IconButton,
+  Button,
+  ThemeProvider,
+  Menu,
+  MenuItem,
+  createTheme,
+} from "@mui/material";
 import React, { useState } from "react";
 import { Drawer, List, ListItem, ListItemText } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import LoginModal from "../designcomponent/LoginModal";
-const theme = createMuiTheme({});
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -42,13 +48,18 @@ const Navbar = () => {
     setOpen(false);
   };
 
-  theme.props = {
-    MuiList: {
-      onMouseLeave: (e) => {
-        handleClose(e);
+  const theme = createTheme({
+    components: {
+      MuiList: {
+        defaultProps: {
+          onMouseLeave: (e) => {
+            handleClose(e);
+          },
+        },
       },
     },
-  };
+  });
+
 
   return (
     <>
