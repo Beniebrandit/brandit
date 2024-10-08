@@ -38,7 +38,8 @@ const LoginModal = ({ open, setOpen, handleClose }) => {
   const emailRegex = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
   const fnameRegex = /([a-zA-Z]{3,30}s*)+/;
   const lnameRegex = /[a-zA-Z]{3,30}/;
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+  //const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+  const passwordRegex = /[a-zA-Z]{3,30}/;
 
   const handleClose0 = () => {
     setOpen(false);

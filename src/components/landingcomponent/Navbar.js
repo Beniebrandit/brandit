@@ -207,7 +207,6 @@ const Navbar = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
                 onMouseLeave={handleClose}
-                style={{ marginTop: "3rem" }}
               >
                 <MenuItem onClick={handleClose}>My design</MenuItem>
                 <MenuItem

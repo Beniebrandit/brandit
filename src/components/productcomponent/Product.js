@@ -118,7 +118,6 @@ useEffect(() => {
     }
   }, [alldata]);
 
-  // Monitor width, height, and subCat changes to update the payload
   useEffect(() => {
     const jsonString = JSON.stringify(selectedSubCatId);
     setPayload({
@@ -126,16 +125,16 @@ useEffect(() => {
       height: selectedHeight,
       subCatId: jsonString,
       ProductId: 10,
-      quantity: count,
+      quantity: count < 1 ? 1 : count,
       //ProductId: alldata?.id || null,
     });
   }, [selectedWidth, selectedHeight, selectedSubCatId, alldata, count]);
 
   const handleCardClick = (categoryId, subCat) => {
     setSelectedCard((prevSelectedCards) => {
-      const updatedCards = { ...prevSelectedCards, [categoryId]: subCat.id }; // Store only the subCat ID
-      const subCatIdsArray = Object.values(updatedCards).filter((value) => value !== undefined); // Update subCat IDs
-      setSelectedSubCatId(subCatIdsArray); // Update state
+      const updatedCards = { ...prevSelectedCards, [categoryId]: subCat.id };
+      const subCatIdsArray = Object.values(updatedCards).filter((value) => value !== undefined); 
+      setSelectedSubCatId(subCatIdsArray); 
       return updatedCards;
     });
   };
@@ -143,10 +142,9 @@ useEffect(() => {
 
   const swiperRef = useRef(null);
 
-  // Function to handle thumbnail click
-  const handleThumbClick = (index) => {
-    swiperRef.current.swiper.slideTo(index);
-  };
+const handleThumbClick = (index) => {
+  swiperRef.current.swiper.slideTo(index + 1); 
+};
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -207,7 +205,7 @@ useEffect(() => {
       height: selectedHeight,
       subCatId: JSON.stringify(selectedSubCatId),
       ProductId: 10,
-      quantity: count,
+      quantity: count < 1 ? 1 : count,
     };
 
     ProductService.Dataprice(payload)
@@ -487,7 +485,7 @@ useEffect(() => {
                           color: "#868686",
                         }}
                       >
-                        {count}
+                        {count < 1 ? 1 : count}
                       </span>
                       <Typography onClick={() => setCount(count + 1)} sx={{ color: "#868686", cursor: "pointer" }}>
                         +
