@@ -11,7 +11,9 @@ import {
   List,
   ListItem,
   Dialog,
+  DialogTitle,
   DialogContent,
+  DialogActions,
   InputAdornment,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -29,32 +31,33 @@ import CloseIcon from "@mui/icons-material/Close";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
+
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 console.log("API_BASE_URL:", API_BASE_URL);
 
 const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
-  const [openSignUp, setOpenSignUp] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [state, setState] = useState({
-    fName: "",
-    lName: "",
-    Email: "",
-    Password: "",
-    confirmPassword: "",
-  });
-
-  const [errors, setErrors] = useState({
-    fName: "",
-    lName: "",
-    Email: "",
-    Password: "",
-    confirmPassword: "",
-  });
-
+    const [openSignUp, setOpenSignUp] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [deviceName, setDeviceName] = useState("Iphone");
   const [currentUser, setCurrentUser] = useState("");
+    const [state, setState] = useState({
+      fName: "",
+      lName: "",
+      Email: "",
+      Password: "",
+      confirmPassword: "",
+    });
+    const [errors, setErrors] = useState({
+      fName: "",
+      lName: "",
+      Email: "",
+      Password: "",
+      confirmPassword: "",
+    });
+      const [showPassword, setShowPassword] = useState(false);
 
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
@@ -69,80 +72,81 @@ const Header = () => {
     setOpenSignUp(false);
   };
 
-  const handleOpenSignUp = () => {
-    setOpenSignUp(true);
-  };
+    const handleOpenSignUp = () => {
+      setOpenSignUp(true);
+      setLoginOpen(false); // Close login dialog when opening sign-up
+    };
 
-  const emailRegex = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
-  const fnameRegex = /([a-zA-Z]{3,30}s*)+/;
-  const lnameRegex = /[a-zA-Z]{3,30}/;
-  //const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-  const passwordRegex = /[a-zA-Z]{3,30}/;
+    const emailRegex = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
+    const fnameRegex = /([a-zA-Z]{3,30}s*)+/;
+    const lnameRegex = /[a-zA-Z]{3,30}/;
+    //const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    const passwordRegex = /[a-zA-Z]{3,30}/;
 
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
+    const handleClickShowPassword = () => {
+      setShowPassword(!showPassword);
+    };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setState((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setState((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
 
-    validateField(name, value);
-  };
+      validateField(name, value);
+    };
 
-  const validateField = (name, value) => {
-    let error = "";
-    switch (name) {
-      case "fName":
-        error = !fnameRegex.test(value) && value ? "First name is invalid" : "";
-        break;
-      case "lName":
-        error = !lnameRegex.test(value) && value ? "Last name is invalid" : "";
-        break;
-      case "Email":
-        error = !emailRegex.test(value) && value ? "Enter a valid email address" : "";
-        break;
-      case "Password":
-        error = !passwordRegex.test(value) && value ? "Password must be valid" : "";
-        break;
-      case "confirmPassword":
-        error = value !== state.Password ? "Passwords do not match" : "";
-        break;
-      default:
-        break;
-    }
+    const validateField = (name, value) => {
+      let error = "";
+      switch (name) {
+        case "fName":
+          error = !fnameRegex.test(value) && value ? "First name is invalid" : "";
+          break;
+        case "lName":
+          error = !lnameRegex.test(value) && value ? "Last name is invalid" : "";
+          break;
+        case "Email":
+          error = !emailRegex.test(value) && value ? "Enter a valid email address" : "";
+          break;
+        case "Password":
+          error = !passwordRegex.test(value) && value ? "Password must be valid" : "";
+          break;
+        case "confirmPassword":
+          error = value !== state.Password ? "Passwords do not match" : "";
+          break;
+        default:
+          break;
+      }
 
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: error,
-    }));
-  };
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: error,
+      }));
+    };
 
-  const isFormValid = () => {
-    return (
-      !errors.fName &&
-      !errors.lName &&
-      !errors.Email &&
-      !errors.Password &&
-      !errors.confirmPassword &&
-      state.fName &&
-      state.lName &&
-      state.Email &&
-      state.Password &&
-      state.confirmPassword
-    );
-  };
+    const isFormValid = () => {
+      return (
+        !errors.fName &&
+        !errors.lName &&
+        !errors.Email &&
+        !errors.Password &&
+        !errors.confirmPassword &&
+        state.fName &&
+        state.lName &&
+        state.Email &&
+        state.Password &&
+        state.confirmPassword
+      );
+    };
 
-  const createAccount = () => {
-    if (isFormValid()) {
-      console.log("Form is valid, proceed with account creation");
-    } else {
-      console.log("Form has errors, fix them before submitting");
-    }
-  };
+    const createAccount = () => {
+      if (isFormValid()) {
+        console.log("Form is valid, proceed with account creation");
+      } else {
+        console.log("Form has errors, fix them before submitting");
+      }
+    };
 
   const handleLogin = async () => {
     try {
@@ -151,7 +155,7 @@ const Header = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ Email: state.Email, Password: state.Password, device_name: deviceName }),
+        body: JSON.stringify({ email, password, device_name: deviceName }),
       });
 
       if (!response.ok) {
@@ -204,7 +208,8 @@ const Header = () => {
         setCurrentUser(storedUser);
       }
     }
-  }, []);
+  }, []); // Empty dependency array to run once on mount
+
 
   return (
     <>
@@ -407,47 +412,33 @@ const Header = () => {
             Log In to Your Account
           </Typography>
           <TextField
-            fullWidth
             label="Email"
-            name="Email"
             variant="outlined"
             margin="normal"
-            value={state.Email}
-            onChange={handleChange}
+            fullWidth
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             sx={{ borderRadius: "10px" }}
           />
           <TextField
-            fullWidth
             label="Password"
-            name="Password"
             type="password"
             variant="outlined"
             margin="normal"
-            value={state.Password}
-            onChange={handleChange}
+            fullWidth
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             sx={{ borderRadius: "10px" }}
           />
-          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Typography variant="body2" sx={{ color: "#007bff", cursor: "pointer", marginBottom: 2 }}>
-              Forgot password?
-            </Typography>
-          </Box>
           <Button
             variant="contained"
             color="primary"
+            size="large"
             fullWidth
-            sx={{
-              backgroundColor: "#007bff",
-              padding: "12px",
-              borderRadius: "10px",
-              textTransform: "none",
-              "&:hover": {
-                backgroundColor: "#005bb5",
-              },
-            }}
+            style={{ marginTop: "16px" }}
             onClick={handleLogin}
           >
-            Log In
+            Login
           </Button>
         </DialogContent>
       </Dialog>
