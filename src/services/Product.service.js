@@ -6,6 +6,8 @@ import { authHeader } from "../library/authHeader";
 export const ProductService = {
   product,
   Dataprice,
+  registers,
+  image,
 };
 
 const token = localStorage.getItem("authToken");
@@ -42,4 +44,31 @@ function product(){
      return res.data;
    }
    return {};
+ }
+
+function registers(data) {
+  return axios
+    .post(apiEndpoint.register, data, {
+      headers: { "Content-Type": "application/json" },
+    })
+    .then((res) => {
+      if (res && res.status === 200) {
+        return res.data;
+      }
+    });
+}
+
+ function image() {
+   return axios
+     .get(apiEndpoint.image, {
+       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+       // params: {
+       //   email
+       // }
+     })
+     .then((res) => {
+       if (res && res.status === 200) {
+         return res.data;
+       }
+     });
  }

@@ -4,6 +4,8 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 let endpoints = {
   product: "api/product/1?with[]=images&with[]=productSizes&with[]=categories.subCategories.image",
   selectedproductdata: "api/getPrice",
+  register: "api/register",
+  image: "api/premium-images-category?with[]=images",
 };
 let API_ENDPOINTS = {};
 

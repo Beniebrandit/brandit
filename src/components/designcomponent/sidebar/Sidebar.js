@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-} from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ReactComponent as Sidebarsetting } from "../../../asset/images/sidebar_setting.svg";
 import { ReactComponent as Sidebarupload } from "../../../asset/images/sidebar_upload.svg";
@@ -66,13 +58,7 @@ function a11yProps(index) {
   };
 }
 
-const Sidebar = ({
-  handleImageChange,
-  selectedFile,
-  onDeleteImage,
-  selectImage,
-  onStyleChange,
-}) => {
+const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, onStyleChange, images }) => {
   const [value, setValue] = React.useState(1);
   const [open, setOpen] = React.useState(false);
   const [delopen, setDelOpen] = React.useState(false);
@@ -80,12 +66,14 @@ const Sidebar = ({
   const [expandimage, setExpandImage] = useState();
   const [isTabOpen, setIsTabOpen] = useState(false);
   const [expandedImageIndex, setExpandedImageIndex] = useState(null); // New state for tracking expanded image
-
+  const [selectedImages, setSelectedImages] = useState(null);
   const tabRef = useRef(null);
   const dialogRef = useRef(null); // Create a ref for the modal
 
   // console.log(selectImage, "selectImage");
-
+  const handleCategoryClick = (images) => {
+    setSelectedImages(images);
+  };
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -121,7 +109,6 @@ const Sidebar = ({
     setExpandImage(Expand);
     setExpandedImageIndex(index); // Set the currently expanded image index
     handleClickOpen(); // Open the dialog
-    console.log(Expand, "Expand");
   };
 
   const handleDeleteConfirm = () => {
@@ -147,7 +134,7 @@ const Sidebar = ({
       setIsTabOpen(false); // Close the TabPanel if clicked outside
     }
   };
-  
+
   useEffect(() => {
     // Add the event listener when the component is mounted
     document.addEventListener("mousedown", handleClickOutside);
@@ -210,9 +197,7 @@ const Sidebar = ({
             {...a11yProps(4)}
           />
           <Tab
-            icon={
-              <Sidebarbackground style={{ width: "20px", height: "auto" }} />
-            }
+            icon={<Sidebarbackground style={{ width: "20px", height: "auto" }} />}
             label={<span style={{ color: "#3F5163" }}>background</span>}
             {...a11yProps(5)}
           />
@@ -245,8 +230,59 @@ const Sidebar = ({
                 />
               </TabPanel>
               <TabPanel value={value} index={2}>
-                Premium images
+                {/* Wrapper for category names */}
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, 1fr)", // Two names per row
+                    gap: 2,
+                    marginBottom: "20px",
+                  }}
+                >
+                  {images?.map((category) => (
+                    <Box
+                      key={category.id}
+                      onClick={() => handleCategoryClick(category.images)}
+                      sx={{
+                        padding: "10px",
+                        textAlign: "center",
+                        backgroundColor: "#f0f0f0",
+                        cursor: "pointer",
+                        borderRadius: "8px",
+                        "&:hover": {
+                          backgroundColor: "#e0e0e0",
+                        },
+                      }}
+                    >
+                      {category.name}
+                    </Box>
+                  ))}
+                </Box>
+
+                {selectedImages && (
+                  <Box sx={{ marginTop: "20px" }}>
+                    {/* Wrapper for images */}
+                    <Box
+                      sx={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(2, 1fr)", // Two images per row
+                        gap: "16px",
+                      }}
+                    >
+                      {selectedImages.map((image) => (
+                        <Box key={image.id}>
+                          <img
+                            src={`${process.env.REACT_APP_API_BASE_URL}/${image.path}`}
+                            alt={`Image ${image.id}`}
+                            style={{ height: "150px", width: "150px", borderRadius: "8px" }}
+                          />
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+                )}
               </TabPanel>
+
               <TabPanel value={value} index={3}>
                 <Text onStyleChange={onStyleChange} />
               </TabPanel>
@@ -322,7 +358,6 @@ const Sidebar = ({
             onClick={() => {
               if (expandedImageIndex !== null) {
                 selectImage(expandedImageIndex);
-                console.log(expandedImageIndex, "adding");
                 handleClose(); // Optionally close the dialog after adding
               }
             }}
@@ -354,17 +389,11 @@ const Sidebar = ({
         }}
       >
         <DialogTitle sx={{ p: 0, position: "relative" }}>
-          <Typography sx={{ textAlign: "center", padding: "1rem" }}>
-            Are you sure you want to delete this?
-          </Typography>
+          <Typography sx={{ textAlign: "center", padding: "1rem" }}>Are you sure you want to delete this?</Typography>
         </DialogTitle>
 
         <DialogActions sx={{ justifyContent: "center", padding: "16px" }}>
-          <Button
-            variant="contained"
-            color="success"
-            onClick={handleDeleteConfirm}
-          >
+          <Button variant="contained" color="success" onClick={handleDeleteConfirm}>
             Yes
           </Button>
           <Button variant="contained" color="success" onClick={handledelClose}>

@@ -35,33 +35,36 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CloseIcon from "@mui/icons-material/Close";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { ProductService } from "../../services/Product.service";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-      const [loginOpen, setLoginOpen] = useState(false);
-    const [openSignUp, setOpenSignUp] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
-    const [state, setState] = useState({
-      fName: "",
-      lName: "",
-      Email: "",
-      Password: "",
-      confirmPassword: "",
-    });
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [openSignUp, setOpenSignUp] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [state, setState] = useState({
+    name: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+  });
 
-    const [errors, setErrors] = useState({
-      fName: "",
-      lName: "",
-      Email: "",
-      Password: "",
-      confirmPassword: "",
-    });
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+  });
 
-    const [deviceName, setDeviceName] = useState("Iphone");
-    const [currentUser, setCurrentUser] = useState("");
+  const [deviceName, setDeviceName] = useState("Iphone");
+  const [currentUser, setCurrentUser] = useState("");
+  const [mailMessage,setMailMessage] = useState(false);
+
   const toggleDrawer = (open0) => () => {
     setDrawerOpen(open0);
   };
@@ -74,7 +77,6 @@ const Navbar = () => {
     setAnchorEl(null);
   }
 
-
   const handleClickOpen = () => {
     setLoginOpen(true);
   };
@@ -84,10 +86,10 @@ const Navbar = () => {
     setOpenSignUp(false);
   };
 
-    const handleOpenSignUp = () => {
-      setOpenSignUp(true);
-      setLoginOpen(false); // Close login dialog when opening sign-up
-    };
+  const handleOpenSignUp = () => {
+    setOpenSignUp(true);
+    setLoginOpen(false); // Close login dialog when opening sign-up
+  };
 
   const theme = createTheme({
     components: {
@@ -101,138 +103,166 @@ const Navbar = () => {
     },
   });
 
-    const emailRegex = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
-    const fnameRegex = /([a-zA-Z]{3,30}s*)+/;
-    const lnameRegex = /[a-zA-Z]{3,30}/;
-    //const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-    const passwordRegex = /[a-zA-Z]{3,30}/;
+  const nameRegex = /([a-zA-Z]{3,30}s*)+/;
+  const emailRegex = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
+  //const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+  const passwordRegex = /[a-zA-Z]{3,30}/;
 
-    const handleClickShowPassword = () => {
-      setShowPassword(!showPassword);
-    };
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setState((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
 
-      validateField(name, value);
-    };
+    validateField(name, value);
+  };
 
-    const validateField = (name, value) => {
-      let error = "";
-      switch (name) {
-        case "fName":
-          error = !fnameRegex.test(value) && value ? "First name is invalid" : "";
-          break;
-        case "lName":
-          error = !lnameRegex.test(value) && value ? "Last name is invalid" : "";
-          break;
-        case "Email":
-          error = !emailRegex.test(value) && value ? "Enter a valid email address" : "";
-          break;
-        case "Password":
-          error = !passwordRegex.test(value) && value ? "Password must be valid" : "";
-          break;
-        case "confirmPassword":
-          error = value !== state.Password ? "Passwords do not match" : "";
-          break;
-        default:
-          break;
-      }
+  const validateField = (name, value) => {
+    let error = "";
+    switch (name) {
+      case "name":
+        error = !nameRegex.test(value) && value ? "Name is invalid" : "";
+        break;
+      case "email":
+        error = (!emailRegex.test(value) && value) ? "Enter a valid email address" : "";
+        break;
+      case "password":
+        error = !passwordRegex.test(value) && value ? "Password must be valid" : "";
+        break;
+      case "password_confirmation":
+        error = value !== state.password ? "Passwords do not match" : "";
+        break;
+      default:
+        break;
+    }
 
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [name]: error,
-      }));
-    };
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: error,
+    }));
+  };
 
-    const isFormValid = () => {
-      return (
-        !errors.fName &&
-        !errors.lName &&
-        !errors.Email &&
-        !errors.Password &&
-        !errors.confirmPassword &&
-        state.fName &&
-        state.lName &&
-        state.Email &&
-        state.Password &&
-        state.confirmPassword
-      );
-    };
+  const isFormValid = () => {
+    return (
+      !errors.name &&
+      !errors.email &&
+      !errors.password &&
+      !errors.password_confirmation &&
+      state.name &&
+      state.email &&
+      state.password &&
+      state.password_confirmation
+    );
+  };
 
-    const createAccount = () => {
-      if (isFormValid()) {
-        console.log("Form is valid, proceed with account creation");
-      } else {
-        console.log("Form has errors, fix them before submitting");
-      }
-    };
+  console.log("state", state);
+  const createAccount = () => {
+    if (isFormValid()) {
+      console.log("Form is valid, proceed with account creation");
+      ProductService.registers(state)
+        .then((res) => {
+          console.log("registers", res);
+          // Handle success here, e.g., redirecting or updating UI
+          setCurrentUser(res?.user.name);
+          localStorage.setItem("currentUser", res?.user.name); // Store user name in local storage
+          const token = res.access_token;
+          localStorage.setItem("authToken", token);
+          handleClose();
+          toast("registered successfully");
+          setState({ name: "", email: "", password: "", password_confirmation: "" });
+        })
+        .catch((error) => {
+          // Handle error here
+          if (error.response) {
+            console.error("Error response data:", error.response.data);
 
-    const handleLogin = async () => {
-      try {
-        const response = await fetch("https://flagg.devlopix.com/api/getToken", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password, device_name: deviceName }),
+            if (error.response.status === 422) {
+              const emailError = emailRegex.test(state.email)
+                ? "Enter a valid email address"
+                : "";
+              setErrors((prevErrors) => ({
+                ...prevErrors,
+                email: emailError, // Update email field with the error message
+              }));
+              toast.error(`${error.response.data.email}`); // Show toast with the error message
+            }
+          } else if (error.request) {
+              toast.error(`${error.request}`);
+          } else {
+              toast.error(`${error.message}`);
+          }
         });
+    } else {
+      console.log("Form has errors, fix them before submitting");
+    }
+  };
 
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
+  const handleLogin = async () => {
+    try {
+      const response = await fetch("https://flagg.devlopix.com/api/getToken", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password, device_name: deviceName }),
+      });
 
-        const token = await response.text();
-        localStorage.setItem("authToken", token);
-        handleClose();
-
-        // Fetch user data after successful login
-        await fetchUserData(token);
-      } catch (error) {
-        console.error("Error:", error);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
-    };
 
-    const fetchUserData = async (token) => {
-      try {
-        const response = await fetch("https://flagg.devlopix.com/api/user", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+      const token = await response.text();
+      localStorage.setItem("authToken", token);
+      handleClose();
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch user data");
-        }
+      // Fetch user data after successful login
+      await fetchUserData(token);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
-        const data = await response.json();
-        setCurrentUser(data.name);
-        localStorage.setItem("currentUser", data.name); // Store user name in local storage
-        console.log(data, "getUser");
-      } catch (error) {
-        console.error("Error:", error);
+  const fetchUserData = async (token) => {
+    try {
+      const response = await fetch("https://flagg.devlopix.com/api/user", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
       }
-    };
 
-    useEffect(() => {
-      const token = localStorage.getItem("authToken");
+      const data = await response.json();
+      setCurrentUser(data.name);
+      localStorage.setItem("currentUser", data.name); // Store user name in local storage
+      console.log(data, "getUser");
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
-      if (token) {
-        fetchUserData(token);
-      } else {
-        // Check if currentUser exists in local storage and set state
-        const storedUser = localStorage.getItem("currentUser");
-        if (storedUser) {
-          setCurrentUser(storedUser);
-        }
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+
+    if (token) {
+      fetchUserData(token);
+    } else {
+      // Check if currentUser exists in local storage and set state
+      const storedUser = localStorage.getItem("currentUser");
+      if (storedUser) {
+        setCurrentUser(storedUser);
       }
-    }, []);
+    }
+  }, []);
 
   return (
     <>
@@ -319,7 +349,6 @@ const Navbar = () => {
           </Box>
         </Container>
       </Box>
-
       <Box className="inner_header">
         <Container
           maxWidth="lg"
@@ -371,7 +400,8 @@ const Navbar = () => {
               >
                 <img alt="Account" src={Account} style={{ width: "46px", height: "auto" }} />
                 <span style={{ color: "#3f5163" }}>
-                  <b>Account {`(${currentUser})`}</b>
+                  <b>Account </b>
+                  <span style={{ fontSize: "12px" }}>{currentUser && `(${currentUser})`}</span>
                 </span>
               </Box>
               <Menu
@@ -547,45 +577,34 @@ const Navbar = () => {
           </Typography>
           <TextField
             fullWidth
-            name="fName"
-            value={state.fName}
+            name="name"
+            value={state.name}
             variant="outlined"
             label="First Name"
             margin="normal"
-            helperText={errors.fName}
-            error={!!errors.fName}
+            helperText={errors.name}
+            error={!!errors.name}
             onChange={handleChange}
             sx={{ borderRadius: "10px" }}
           />
           <TextField
             fullWidth
-            name="lName"
-            value={state.lName}
-            variant="outlined"
-            label="Last Name"
-            margin="normal"
-            helperText={errors.lName}
-            error={!!errors.lName}
-            onChange={handleChange}
-            sx={{ borderRadius: "10px" }}
-          />
-          <TextField
-            fullWidth
-            name="Email"
-            value={state.Email}
+            name="email"
+            value={state.email}
             variant="outlined"
             label="Email Address"
             margin="normal"
             type="email"
-            helperText={errors.Email}
-            error={!!errors.Email}
+            helperText={errors.email}
+            error={!!errors.email}
             onChange={handleChange}
             sx={{ borderRadius: "10px" }}
           />
+          {/*{mailMessage && <Typography sx={{color:"red"}}>use another mail or login</Typography>}*/}
           <TextField
             fullWidth
-            name="Password"
-            value={state.Password}
+            name="password"
+            value={state.password}
             variant="outlined"
             label="Password"
             type={showPassword ? "text" : "password"}
@@ -599,21 +618,21 @@ const Navbar = () => {
                 </InputAdornment>
               ),
             }}
-            helperText={errors.Password}
-            error={!!errors.Password}
+            helperText={errors.password}
+            error={!!errors.password}
             onChange={handleChange}
             sx={{ borderRadius: "10px" }}
           />
           <TextField
             fullWidth
-            name="confirmPassword"
-            value={state.confirmPassword}
+            name="password_confirmation"
+            value={state.password_confirmation}
             variant="outlined"
             label="Confirm Password"
             type="password"
             margin="normal"
-            helperText={errors.confirmPassword}
-            error={!!errors.confirmPassword}
+            helperText={errors.password_confirmation}
+            error={!!errors.password_confirmation}
             onChange={handleChange}
             sx={{ borderRadius: "10px" }}
           />
@@ -640,6 +659,7 @@ const Navbar = () => {
           </Typography>
         </DialogContent>
       </Dialog>
+      <ToastContainer />
     </>
   );
 };

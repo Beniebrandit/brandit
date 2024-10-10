@@ -1,16 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import Sidebar from "../components/designcomponent/sidebar/Sidebar";
 import BannerSideSection from "../components/designcomponent/BannerSideSection";
 import FilerobotImageEditor, { TABS, TOOLS } from "react-filerobot-image-editor";
 import HeaderDesign from "../components/designcomponent/HeaderDesign";
 import Toolbar from "../components/designcomponent/Toolbar";
-
+import { ProductService } from "../services/Product.service";
 const DesignOnline = () => {
   const [selectedFile, setSelectedFile] = useState([]);
   const [addimage, AddImage] = useState("");
+  const [images, setImages] = useState();
   const [isImgEditorShown, setIsImgEditorShown] = useState(false);
+  useEffect(() => {
+    getImages();
+  }, []);
 
+  const getImages = async () => {
+    ProductService.image().then((res) => {
+      const response = res.data;
+      setImages(response);
+
+      //console.log(response, "response");
+    });
+  };
   const [tabs, setTabs] = useState([]);
 
   const handleTabChange = (newTabs) => {
@@ -75,6 +87,7 @@ const DesignOnline = () => {
           onDeleteImage={handleDeleteImage}
           selectImage={selectImage}
           onTabChange={handleTabChange}
+          images={images}
         />
         <Box
           style={{
@@ -105,7 +118,7 @@ const DesignOnline = () => {
               tools={[]}
             />
           )}
-          <Toolbar/>
+          <Toolbar />
         </Box>
       </Box>
     </>
