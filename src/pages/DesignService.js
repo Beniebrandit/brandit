@@ -109,6 +109,9 @@ const DesignService = () => {
             borderBottomWidth: 2,
           }}
         />
+        <DesignRequestForm/>
+        <CustomerFeedback/>
+        <DesignServiceFooter/>
       </Container>
     </>
   );

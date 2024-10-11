@@ -38,32 +38,15 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { ProductService } from "../../services/Product.service";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LoginDialog from "../common/LoginDialog";
+import CreateAccountDialog from "../common/CreateAccountDialog";
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loginOpen, setLoginOpen] = useState(false);
   const [openSignUp, setOpenSignUp] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [state, setState] = useState({
-    name: "",
-    email: "",
-    password: "",
-    password_confirmation: "",
-  });
-
-  const [errors, setErrors] = useState({
-    name: "",
-    email: "",
-    password: "",
-    password_confirmation: "",
-  });
-
-  const [deviceName, setDeviceName] = useState("Iphone");
   const [currentUser, setCurrentUser] = useState("");
-  const [mailMessage,setMailMessage] = useState(false);
 
   const toggleDrawer = (open0) => () => {
     setDrawerOpen(open0);
@@ -77,19 +60,15 @@ const Navbar = () => {
     setAnchorEl(null);
   }
 
-  const handleClickOpen = () => {
-    setLoginOpen(true);
-  };
+  const handleClickOpenLogin = () => setLoginOpen(true);
+  const handleCloseLogin = () => setLoginOpen(false);
 
-  const handleClose = () => {
-    setLoginOpen(false);
-    setOpenSignUp(false);
-  };
-
-  const handleOpenSignUp = () => {
+  const handleClickOpenSignUp = () => {
     setOpenSignUp(true);
-    setLoginOpen(false); // Close login dialog when opening sign-up
+    setLoginOpen(false);
   };
+
+  const handleCloseSignUp = () => setOpenSignUp(false);
 
   const theme = createTheme({
     components: {
@@ -103,166 +82,37 @@ const Navbar = () => {
     },
   });
 
-  const nameRegex = /([a-zA-Z]{3,30}s*)+/;
-  const emailRegex = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
-  //const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-  const passwordRegex = /[a-zA-Z]{3,30}/;
-
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setState((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-
-    validateField(name, value);
-  };
-
-  const validateField = (name, value) => {
-    let error = "";
-    switch (name) {
-      case "name":
-        error = !nameRegex.test(value) && value ? "Name is invalid" : "";
-        break;
-      case "email":
-        error = (!emailRegex.test(value) && value) ? "Enter a valid email address" : "";
-        break;
-      case "password":
-        error = !passwordRegex.test(value) && value ? "Password must be valid" : "";
-        break;
-      case "password_confirmation":
-        error = value !== state.password ? "Passwords do not match" : "";
-        break;
-      default:
-        break;
-    }
-
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: error,
-    }));
-  };
-
-  const isFormValid = () => {
-    return (
-      !errors.name &&
-      !errors.email &&
-      !errors.password &&
-      !errors.password_confirmation &&
-      state.name &&
-      state.email &&
-      state.password &&
-      state.password_confirmation
-    );
-  };
-
-  console.log("state", state);
-  const createAccount = () => {
-    if (isFormValid()) {
-      console.log("Form is valid, proceed with account creation");
-      ProductService.registers(state)
-        .then((res) => {
-          console.log("registers", res);
-          // Handle success here, e.g., redirecting or updating UI
-          setCurrentUser(res?.user.name);
-          localStorage.setItem("currentUser", res?.user.name); // Store user name in local storage
-          const token = res.access_token;
-          localStorage.setItem("authToken", token);
-          handleClose();
-          toast("registered successfully");
-          setState({ name: "", email: "", password: "", password_confirmation: "" });
-        })
-        .catch((error) => {
-          // Handle error here
-          if (error.response) {
-            console.error("Error response data:", error.response.data);
-
-            if (error.response.status === 422) {
-              const emailError = emailRegex.test(state.email)
-                ? "Enter a valid email address"
-                : "";
-              setErrors((prevErrors) => ({
-                ...prevErrors,
-                email: emailError, // Update email field with the error message
-              }));
-              toast.error(`${error.response.data.email}`); // Show toast with the error message
-            }
-          } else if (error.request) {
-              toast.error(`${error.request}`);
-          } else {
-              toast.error(`${error.message}`);
-          }
-        });
-    } else {
-      console.log("Form has errors, fix them before submitting");
-    }
-  };
-
-  const handleLogin = async () => {
-    try {
-      const response = await fetch("https://flagg.devlopix.com/api/getToken", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password, device_name: deviceName }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const token = await response.text();
-      localStorage.setItem("authToken", token);
-      handleClose();
-
-      // Fetch user data after successful login
-      await fetchUserData(token);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
   const fetchUserData = async (token) => {
-    try {
-      const response = await fetch("https://flagg.devlopix.com/api/user", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch user data");
-      }
-
-      const data = await response.json();
-      setCurrentUser(data.name);
-      localStorage.setItem("currentUser", data.name); // Store user name in local storage
-      console.log(data, "getUser");
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    const response = await fetch("https://flagg.devlopix.com/api/user", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    setCurrentUser(data.name);
+    localStorage.setItem("currentUser", data.name);
   };
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
+    const storedUser = localStorage.getItem("currentUser");
+
+    if (storedUser) {
+      setCurrentUser(storedUser);
+    }
 
     if (token) {
       fetchUserData(token);
-    } else {
-      // Check if currentUser exists in local storage and set state
-      const storedUser = localStorage.getItem("currentUser");
-      if (storedUser) {
-        setCurrentUser(storedUser);
-      }
     }
   }, []);
+
+  const Logout = () => {
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("authToken");
+    window.location.reload();
+  };
 
   return (
     <>
@@ -414,22 +264,34 @@ const Navbar = () => {
                 <MenuItem onClick={handleDropdownClose} component={Link} to="/saved-design">
                   My design
                 </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    handleDropdownClose();
-                    handleClickOpen();
-                  }}
-                >
-                  Sign in
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    handleDropdownClose();
-                    handleOpenSignUp();
-                  }}
-                >
-                  Create account
-                </MenuItem>
+                {!currentUser ? (
+                  <>
+                    <MenuItem
+                      onClick={() => {
+                        handleDropdownClose();
+                        handleClickOpenLogin();
+                      }}
+                    >
+                      Sign in
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        handleDropdownClose();
+                        handleClickOpenSignUp();
+                      }}
+                    >
+                      Create account
+                    </MenuItem>
+                  </>
+                ) : (
+                  <MenuItem
+                    onClick={() => {
+                      Logout();
+                    }}
+                  >
+                    Log out
+                  </MenuItem>
+                )}
               </Menu>
             </ThemeProvider>
             <Button
@@ -481,184 +343,14 @@ const Navbar = () => {
           </List>
         </Drawer>
       </Box>
-      {/*<LoginModal handleClose={handleClosemodal} open={open} setOpen={setOpen} />*/}
-      <Dialog
-        open={loginOpen}
-        onClose={handleClose}
-        maxWidth="xs"
-        fullWidth
-        PaperProps={{
-          sx: {
-            padding: 4,
-            background: "linear-gradient(135deg, #e0f7fa 30%, #80deea 100%)",
-            borderRadius: "20px",
-            boxShadow: "0 15px 30px rgba(0, 0, 0, 0.1)",
-          },
-        }}
-      >
-        <IconButton
-          aria-label="close"
-          onClick={handleClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-        <DialogContent sx={{ padding: 3 }}>
-          <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold" }}>
-            Log In to Your Account
-          </Typography>
-          <TextField
-            label="Email"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            sx={{ borderRadius: "10px" }}
-          />
-          <TextField
-            label="Password"
-            type="password"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            sx={{ borderRadius: "10px" }}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            fullWidth
-            style={{ marginTop: "16px" }}
-            onClick={handleLogin}
-          >
-            Login
-          </Button>
-        </DialogContent>
-      </Dialog>
 
-      <Dialog
-        open={openSignUp}
-        onClose={handleClose}
-        maxWidth="xs"
-        fullWidth
-        PaperProps={{
-          sx: {
-            padding: 4,
-            background: "linear-gradient(135deg, #e0f7fa 30%, #80deea 100%)",
-            borderRadius: "20px",
-            boxShadow: "0 15px 30px rgba(0, 0, 0, 0.1)",
-          },
-        }}
-      >
-        <IconButton
-          aria-label="close"
-          onClick={handleClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-        <DialogContent sx={{ padding: 3 }}>
-          <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold" }}>
-            Create a New Account
-          </Typography>
-          <Typography variant="body2" gutterBottom>
-            Stay updated with your orders by creating an account.
-          </Typography>
-          <TextField
-            fullWidth
-            name="name"
-            value={state.name}
-            variant="outlined"
-            label="First Name"
-            margin="normal"
-            helperText={errors.name}
-            error={!!errors.name}
-            onChange={handleChange}
-            sx={{ borderRadius: "10px" }}
-          />
-          <TextField
-            fullWidth
-            name="email"
-            value={state.email}
-            variant="outlined"
-            label="Email Address"
-            margin="normal"
-            type="email"
-            helperText={errors.email}
-            error={!!errors.email}
-            onChange={handleChange}
-            sx={{ borderRadius: "10px" }}
-          />
-          {/*{mailMessage && <Typography sx={{color:"red"}}>use another mail or login</Typography>}*/}
-          <TextField
-            fullWidth
-            name="password"
-            value={state.password}
-            variant="outlined"
-            label="Password"
-            type={showPassword ? "text" : "password"}
-            margin="normal"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleClickShowPassword}>
-                    {showPassword ? <RemoveRedEyeIcon /> : <VisibilityOffIcon />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            helperText={errors.password}
-            error={!!errors.password}
-            onChange={handleChange}
-            sx={{ borderRadius: "10px" }}
-          />
-          <TextField
-            fullWidth
-            name="password_confirmation"
-            value={state.password_confirmation}
-            variant="outlined"
-            label="Confirm Password"
-            type="password"
-            margin="normal"
-            helperText={errors.password_confirmation}
-            error={!!errors.password_confirmation}
-            onChange={handleChange}
-            sx={{ borderRadius: "10px" }}
-          />
-          <Button
-            fullWidth
-            variant="contained"
-            color="primary"
-            onClick={createAccount}
-            sx={{
-              backgroundColor: "#007bff",
-              padding: "12px",
-              marginTop: 2,
-              borderRadius: "10px",
-              "&:hover": {
-                backgroundColor: "#005bb5",
-              },
-            }}
-            disabled={!isFormValid()}
-          >
-            Create My Account
-          </Button>
-          <Typography variant="body2" align="center" sx={{ marginTop: 2 }}>
-            By creating an account, you agree to our Terms of Service and Privacy Policy.
-          </Typography>
-        </DialogContent>
-      </Dialog>
+      <LoginDialog
+        open={loginOpen}
+        handleClose={handleCloseLogin}
+        handleOpenSignUp={handleClickOpenSignUp}
+        fetchUserData={fetchUserData}
+      />
+      <CreateAccountDialog open={openSignUp} handleClose={handleCloseSignUp} setCurrentUser={setCurrentUser} />
       <ToastContainer />
     </>
   );
