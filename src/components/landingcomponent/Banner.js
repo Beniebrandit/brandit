@@ -12,8 +12,7 @@ import React, { useState } from "react";
 import PopUp from "./Pop_Up";
 import Navbar from "./Navbar";
 
-const HeaderHome = () => {
-
+const HeaderHome = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -22,7 +21,7 @@ const HeaderHome = () => {
     <>
       <PopUp open={open} handleClose={handleClose} />
       <Box className="background">
-        <Navbar/>
+        <Navbar handleClickOpenSignUp={handleClickOpenSignUp} handleClickOpenLogin={handleClickOpenLogin} />
         <Box
           sx={{
             marginLeft: {

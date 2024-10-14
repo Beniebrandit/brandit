@@ -8,7 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 
-const CreateAccountDialog = ({ open, handleClose, setCurrentUser }) => {
+const CreateAccountDialog = ({ open, handleClose, setCurrentUser, handleOpenLogin }) => {
   const [state, setState] = useState({
     name: "",
     email: "",
@@ -22,16 +22,15 @@ const CreateAccountDialog = ({ open, handleClose, setCurrentUser }) => {
     password: "",
     password_confirmation: "",
   });
-    const [showPassword, setShowPassword] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
 
   const nameRegex = /([a-zA-Z]{3,30}s*)+/;
   const emailRegex = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
   const passwordRegex = /[a-zA-Z]{3,30}/;
 
-    const handleClickShowPassword = () => {
-      setShowPassword(!showPassword);
-    };
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -120,125 +119,131 @@ const CreateAccountDialog = ({ open, handleClose, setCurrentUser }) => {
   };
 
   return (
-   <>
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      maxWidth="xs"
-      fullWidth
-      PaperProps={{
-        sx: {
-          padding: 4,
-          background: "linear-gradient(135deg, #e0f7fa 30%, #80deea 100%)",
-          borderRadius: "20px",
-          boxShadow: "0 15px 30px rgba(0, 0, 0, 0.1)",
-        },
-      }}
-    >
-      <IconButton
-        aria-label="close"
-        onClick={handleClose}
-        sx={{
-          position: "absolute",
-          right: 8,
-          top: 8,
+    <>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        maxWidth="xs"
+        fullWidth
+        PaperProps={{
+          sx: {
+            padding: 4,
+            background: "linear-gradient(135deg, #e0f7fa 30%, #80deea 100%)",
+            borderRadius: "20px",
+            boxShadow: "0 15px 30px rgba(0, 0, 0, 0.1)",
+          },
         }}
       >
-        <CloseIcon />
-      </IconButton>
-      <DialogContent sx={{ padding: 3 }}>
-        <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold" }}>
-          Create a New Account
-        </Typography>
-        <Typography variant="body2" gutterBottom>
-          Stay updated with your orders by creating an account.
-        </Typography>
-        <TextField
-          fullWidth
-          name="name"
-          value={state.name}
-          variant="outlined"
-          label="First Name"
-          margin="normal"
-          helperText={errors.name}
-          error={!!errors.name}
-          onChange={handleChange}
-          sx={{ borderRadius: "10px" }}
-        />
-        <TextField
-          fullWidth
-          name="email"
-          value={state.email}
-          variant="outlined"
-          label="Email Address"
-          margin="normal"
-          type="email"
-          helperText={errors.email}
-          error={!!errors.email}
-          onChange={handleChange}
-          sx={{ borderRadius: "10px" }}
-        />
-        {/*{mailMessage && <Typography sx={{color:"red"}}>use another mail or login</Typography>}*/}
-        <TextField
-          fullWidth
-          name="password"
-          value={state.password}
-          variant="outlined"
-          label="Password"
-          type={showPassword ? "text" : "password"}
-          margin="normal"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={handleClickShowPassword}>
-                  {showPassword ? <RemoveRedEyeIcon /> : <VisibilityOffIcon />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-          helperText={errors.password}
-          error={!!errors.password}
-          onChange={handleChange}
-          sx={{ borderRadius: "10px" }}
-        />
-        <TextField
-          fullWidth
-          name="password_confirmation"
-          value={state.password_confirmation}
-          variant="outlined"
-          label="Confirm Password"
-          type="password"
-          margin="normal"
-          helperText={errors.password_confirmation}
-          error={!!errors.password_confirmation}
-          onChange={handleChange}
-          sx={{ borderRadius: "10px" }}
-        />
-        <Button
-          fullWidth
-          variant="contained"
-          color="primary"
-          onClick={createAccount}
+        <IconButton
+          aria-label="close"
+          onClick={handleClose}
           sx={{
-            backgroundColor: "#007bff",
-            padding: "12px",
-            marginTop: 2,
-            borderRadius: "10px",
-            "&:hover": {
-              backgroundColor: "#005bb5",
-            },
+            position: "absolute",
+            right: 8,
+            top: 8,
           }}
-          disabled={!isFormValid()}
         >
-          Create My Account
-        </Button>
-        <Typography variant="body2" align="center" sx={{ marginTop: 2 }}>
-          By creating an account, you agree to our Terms of Service and Privacy Policy.
-        </Typography>
-      </DialogContent>
-    </Dialog>
-    <ToastContainer/>
-   </>
+          <CloseIcon />
+        </IconButton>
+        <DialogContent sx={{ padding: 3 }}>
+          <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold" }}>
+            Create a New Account
+          </Typography>
+          <Typography variant="h7" sx={{ marginBottom: "10px" }}>
+            Already have an account?{" "}
+            <span style={{ color: "blue" }} onClick={handleOpenLogin}>
+              Sign In
+            </span>
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            Stay updated with your orders by creating an account.
+          </Typography>
+          <TextField
+            fullWidth
+            name="name"
+            value={state.name}
+            variant="outlined"
+            label="First Name"
+            margin="normal"
+            helperText={errors.name}
+            error={!!errors.name}
+            onChange={handleChange}
+            sx={{ borderRadius: "10px" }}
+          />
+          <TextField
+            fullWidth
+            name="email"
+            value={state.email}
+            variant="outlined"
+            label="Email Address"
+            margin="normal"
+            type="email"
+            helperText={errors.email}
+            error={!!errors.email}
+            onChange={handleChange}
+            sx={{ borderRadius: "10px" }}
+          />
+          {/*{mailMessage && <Typography sx={{color:"red"}}>use another mail or login</Typography>}*/}
+          <TextField
+            fullWidth
+            name="password"
+            value={state.password}
+            variant="outlined"
+            label="Password"
+            type={showPassword ? "text" : "password"}
+            margin="normal"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={handleClickShowPassword}>
+                    {showPassword ? <RemoveRedEyeIcon /> : <VisibilityOffIcon />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            helperText={errors.password}
+            error={!!errors.password}
+            onChange={handleChange}
+            sx={{ borderRadius: "10px" }}
+          />
+          <TextField
+            fullWidth
+            name="password_confirmation"
+            value={state.password_confirmation}
+            variant="outlined"
+            label="Confirm Password"
+            type="password"
+            margin="normal"
+            helperText={errors.password_confirmation}
+            error={!!errors.password_confirmation}
+            onChange={handleChange}
+            sx={{ borderRadius: "10px" }}
+          />
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            onClick={createAccount}
+            sx={{
+              backgroundColor: "#007bff",
+              padding: "12px",
+              marginTop: 2,
+              borderRadius: "10px",
+              "&:hover": {
+                backgroundColor: "#005bb5",
+              },
+            }}
+            disabled={!isFormValid()}
+          >
+            Create My Account
+          </Button>
+          <Typography variant="body2" align="center" sx={{ marginTop: 2 }}>
+            By creating an account, you agree to our Terms of Service and Privacy Policy.
+          </Typography>
+        </DialogContent>
+      </Dialog>
+      <ToastContainer />
+    </>
   );
 };
 

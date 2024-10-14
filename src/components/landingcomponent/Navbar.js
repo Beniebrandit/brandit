@@ -16,36 +16,20 @@ import {
   Menu,
   MenuItem,
   createTheme,
-  Grid,
   Button,
-  TextField,
   Drawer,
   List,
   ListItem,
-  Dialog,
-  DialogContent,
-  InputAdornment,
   ListItemText,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import React, { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import CloseIcon from "@mui/icons-material/Close";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { ProductService } from "../../services/Product.service";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import LoginDialog from "../common/LoginDialog";
-import CreateAccountDialog from "../common/CreateAccountDialog";
 
-const Navbar = () => {
+const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [loginOpen, setLoginOpen] = useState(false);
-  const [openSignUp, setOpenSignUp] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
 
   const toggleDrawer = (open0) => () => {
@@ -60,16 +44,6 @@ const Navbar = () => {
     setAnchorEl(null);
   }
 
-  const handleClickOpenLogin = () => setLoginOpen(true);
-  const handleCloseLogin = () => setLoginOpen(false);
-
-  const handleClickOpenSignUp = () => {
-    setOpenSignUp(true);
-    setLoginOpen(false);
-  };
-
-  const handleCloseSignUp = () => setOpenSignUp(false);
-
   const theme = createTheme({
     components: {
       MuiList: {
@@ -82,32 +56,19 @@ const Navbar = () => {
     },
   });
 
-  const fetchUserData = async (token) => {
-    const response = await fetch("https://flagg.devlopix.com/api/user", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    setCurrentUser(data.name);
-    localStorage.setItem("currentUser", data.name);
-  };
-
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    //const token = localStorage.getItem("authToken");
     const storedUser = localStorage.getItem("currentUser");
 
     if (storedUser) {
       setCurrentUser(storedUser);
     }
 
-    if (token) {
-      fetchUserData(token);
-    }
+    //if (token) {
+    //  fetchUserData(token);
+    //}
   }, []);
-
+  //
   const Logout = () => {
     localStorage.removeItem("currentUser");
     localStorage.removeItem("authToken");
@@ -251,7 +212,7 @@ const Navbar = () => {
                 <img alt="Account" src={Account} style={{ width: "46px", height: "auto" }} />
                 <span style={{ color: "#3f5163" }}>
                   <b>Account </b>
-                  <span style={{ fontSize: "12px" }}>{currentUser && `(${currentUser})`}</span>
+                  <span style={{ fontSize: "12px" }}>{currentUser ? `(${currentUser})` : "(Sign In)"}</span>
                 </span>
               </Box>
               <Menu
@@ -261,37 +222,40 @@ const Navbar = () => {
                 onClose={handleDropdownClose}
                 onMouseLeave={handleDropdownClose}
               >
-                <MenuItem onClick={handleDropdownClose} component={Link} to="/saved-design">
+                <MenuItem key="my-design" onClick={handleDropdownClose} component={Link} to="/saved-design">
                   My design
                 </MenuItem>
-                {!currentUser ? (
-                  <>
-                    <MenuItem
-                      onClick={() => {
-                        handleDropdownClose();
-                        handleClickOpenLogin();
-                      }}
-                    >
-                      Sign in
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        handleDropdownClose();
-                        handleClickOpenSignUp();
-                      }}
-                    >
-                      Create account
-                    </MenuItem>
-                  </>
-                ) : (
-                  <MenuItem
-                    onClick={() => {
-                      Logout();
-                    }}
-                  >
-                    Log out
-                  </MenuItem>
-                )}
+                {!currentUser
+                  ? [
+                      <MenuItem
+                        key="signin"
+                        onClick={() => {
+                          handleDropdownClose();
+                          handleClickOpenLogin();
+                        }}
+                      >
+                        Sign in
+                      </MenuItem>,
+                      <MenuItem
+                        key="create-account"
+                        onClick={() => {
+                          handleDropdownClose();
+                          handleClickOpenSignUp();
+                        }}
+                      >
+                        Create account
+                      </MenuItem>,
+                    ]
+                  : [
+                      <MenuItem
+                        key="logout"
+                        onClick={() => {
+                          Logout();
+                        }}
+                      >
+                        Log out
+                      </MenuItem>,
+                    ]}
               </Menu>
             </ThemeProvider>
             <Button
@@ -344,14 +308,14 @@ const Navbar = () => {
         </Drawer>
       </Box>
 
-      <LoginDialog
+      {/*<LoginDialog
         open={loginOpen}
         handleClose={handleCloseLogin}
         handleOpenSignUp={handleClickOpenSignUp}
         fetchUserData={fetchUserData}
       />
-      <CreateAccountDialog open={openSignUp} handleClose={handleCloseSignUp} setCurrentUser={setCurrentUser} />
-      <ToastContainer />
+      <CreateAccountDialog open={openSignUp} handleClose={handleCloseSignUp} setCurrentUser={setCurrentUser} />*/}
+      {/*<ToastContainer />*/}
     </>
   );
 };
