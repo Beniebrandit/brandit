@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import LoginDialog from "../components/common/LoginDialog";
-import CreateAccountDialog from "../components/common/CreateAccountDialog";
-import Navbar from "../components/landingcomponent/Navbar";
-import { DesignServiceFooter } from "../components/designservice/DesignServiceFooter";
-import Brandit_image from "../asset/images/Brandit.png";
+import LoginDialog from "../../components/common/LoginDialog";
+import CreateAccountDialog from "../../components/common/CreateAccountDialog";
+import Navbar from "../../components/landingcomponent/Navbar";
+import { DesignServiceFooter } from "../../components/designservice/DesignServiceFooter";
+import Brandit_image from "../../asset/images/Brandit.png";
 import {
   AppBar,
   Tabs,
@@ -22,6 +22,9 @@ import {
 import usePagination from "@mui/material/usePagination";
 import { styled } from "@mui/material/styles";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import OrderPage from "./OrderPage";
+import Quotes from "./Quotes";
+import AccountSetting from "./AccountSetting";
 // Sample data array
 const savedDesigns = [
   {
@@ -286,7 +289,7 @@ const SavedDesign = () => {
 
                 {/* Create new design link on the right */}
                 <Link
-                  href="#"
+                  href="/design"
                   sx={{
                     color: "#3FA9F5",
                     textDecoration: "none",
@@ -488,14 +491,14 @@ const SavedDesign = () => {
               </TabPanel>
 
               <TabPanel value={tabValue} index={0}>
-                {/*<OrderPage />*/}
+                <OrderPage />
                 {/* <Typography variant="body1">No saved designs available.</Typography> */}
               </TabPanel>
               <TabPanel value={tabValue} index={2}>
-                {/*<Quotes />*/}
+                <Quotes />
               </TabPanel>
               <TabPanel value={tabValue} index={3}>
-                {/*<AccountSetting />*/}
+                <AccountSetting />
               </TabPanel>
             </Box>
           </Container>

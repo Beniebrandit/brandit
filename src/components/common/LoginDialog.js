@@ -69,7 +69,7 @@ const LoginDialog = ({ open, handleClose, handleOpenSignUp, fetchUserData }) => 
 
 const handleLogin = async () => {
       if (!isFormValid()) {
-        toast.error("Please fill empty fields before submitting");
+        toast.error("Invalid inputs");
         return;
       }
   try {
@@ -96,10 +96,13 @@ const handleLogin = async () => {
     // If token is valid, store it and proceed with login success
     localStorage.setItem("authToken", token);
     setState({ email: "", password: "" });
-    handleClose();
-
-    // Display success message
-    toast("Login successful");
+    
+       toast("Login successful", {
+         autoClose: 3000, // 3 seconds auto-close delay
+         onClose: () => {
+           handleClose(); // Close dialog only after toast finishes
+         },
+       });
 
     // Fetch user data after successful login
     await fetchUserData(token);

@@ -5,7 +5,7 @@ import ProductPage from "./pages/ProductPage";
 import DesignOnline from "./pages/DesignOnline";
 import DesignService from "./pages/DesignService";
 import Cart from "./pages/Cart";
-import SavedDesign from "./pages/SavedDesign";
+import SavedDesign from "./pages/SavedDesign/SavedDesign";
 function App() {
   //console.log("base_url", process.env.REACT_APP_API_BASE_URL);
   return (
