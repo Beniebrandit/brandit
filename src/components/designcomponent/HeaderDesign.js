@@ -12,9 +12,9 @@ import Select from "@mui/material/Select";
 import MenuIcon from "@mui/icons-material/Menu";
 import LoginModal from "./LoginModal";
 
-const HeaderDesign = () => {
+const HeaderDesign = ({ handleClickOpenLogin }) => {
   const [File, setFile] = React.useState("");
-  const [open, setOpen] = useState(false);
+  //const [open, setOpen] = useState(false);
 
   const handleChange = (event) => {
     setFile(event.target.value);
@@ -26,13 +26,13 @@ const HeaderDesign = () => {
     setDrawerOpen(open);
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  //const handleClickOpenLogin = () => {
+  //  setOpen(true);
+  //};
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  //const handleClose = () => {
+  //  setOpen(false);
+  //};
   return (
     <>
       <Box className="inner_header" sx={{ width: "100%", position: "fixed" }}>
@@ -94,11 +94,7 @@ const HeaderDesign = () => {
                 </Select>
               </FormControl>
             </Box>
-            {/* <Typography
-              sx={{ color: "black", fontWeight: "600", fontSize: "20px" }}
-            >
-              Subscribe
-            </Typography> */}
+
             <Box>
               <TextField
                 variant="outlined"
@@ -169,9 +165,10 @@ const HeaderDesign = () => {
                 alignItems: "center",
                 gap: "0.5rem",
               }}
+              onClick={handleClickOpenLogin}
             >
               <Save sx={{ width: "20px", height: "auto" }} />
-              <Typography onClick={handleClickOpen} variant="body2">
+              <Typography variant="body2" style={{ textTransform: "none", color: "black" }}>
                 Save
               </Typography>
             </Button>
@@ -192,7 +189,6 @@ const HeaderDesign = () => {
                 }}
               />
             </Box>
-            {/* </Box> */}
           </Box>
           <Grid item xs={12} sm="auto" sx={{ display: { md: "none" } }}>
             <IconButton onClick={toggleDrawer(true)}>
@@ -201,16 +197,44 @@ const HeaderDesign = () => {
             <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
               <List>
                 <ListItem>
-                  <Typography variant="body2">Large Format</Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <Help sx={{ width: "20px", height: "auto" }} />
+                    <Typography variant="body2">Get Design Help</Typography>
+                  </Box>
                 </ListItem>
                 <ListItem>
-                  <Typography variant="body2">Stickers and Labels</Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <Share sx={{ width: "20px", height: "auto" }} />
+                    <Typography variant="body2">Share</Typography>
+                  </Box>
                 </ListItem>
                 <ListItem>
-                  <Typography variant="body2">Fabrics</Typography>
-                </ListItem>
-                <ListItem>
-                  <Typography variant="body2">Accessories</Typography>
+                  <Button
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                      marginLeft: "-5px",
+                    }}
+                    onClick={handleClickOpenLogin}
+                  >
+                    <Save sx={{ width: "20px", height: "auto" }} />
+                    <Typography style={{ textTransform: "none", color: "black", paddingLeft: "4px" }} variant="body2">
+                      Save
+                    </Typography>
+                  </Button>
                 </ListItem>
               </List>
             </Drawer>
@@ -218,7 +242,7 @@ const HeaderDesign = () => {
         </Box>
       </Box>
 
-      <LoginModal handleClose={handleClose} open={open} setOpen={setOpen} />
+      {/*<LoginModal handleClose={handleClose} open={open} setOpen={setOpen} />*/}
     </>
   );
 };

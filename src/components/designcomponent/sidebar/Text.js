@@ -3,20 +3,19 @@ import { Box, Button } from '@mui/material';
 
 const Text = ({ onStyleChange }) => {
   const handleHeadingClick = () => {
-    onStyleChange({ text: 'Heading Text', fontSize: 24, fontWeight: 'bold' });
+    //onStyleChange({ text: 'Heading Text', fontSize: 24, fontWeight: 'bold' });
   };
 
   const handleItalicClick = () => {
-    onStyleChange({ text: 'Italic Text', fontStyle: 'italic' });
+    //onStyleChange({ text: 'Italic Text', fontStyle: 'italic' });
   };
 
   const handleBodyTextClick = () => {
-    onStyleChange({ text: 'Body Text', fontSize: 14, fontWeight: 'normal' });
+    //onStyleChange({ text: 'Body Text', fontSize: 14, fontWeight: 'normal' });
   };
 
   const handleCurvedTextClick = () => {
-    // For curved text, you'd need additional customization to reflect the curvature in Filerobot
-    onStyleChange({ text: 'Curved Text', fontSize: 18, fontWeight: 'bold' });
+    //onStyleChange({ text: 'Curved Text', fontSize: 18, fontWeight: 'bold' });
   };
 
   return (

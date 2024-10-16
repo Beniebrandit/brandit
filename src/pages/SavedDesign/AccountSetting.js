@@ -1,6 +1,21 @@
 import React, { useState } from "react";
-import { Box, TextField, InputAdornment, Typography, Grid, AppBar, Tabs, Tab, Button } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Typography,
+  Grid,
+  AppBar,
+  Tabs,
+  Tab,
+  Button,
+  Card,
+  CardContent,
+  IconButton,
+  Input,
+  Pagination,
+} from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -12,11 +27,42 @@ function TabPanel(props) {
 }
 
 export default function AccountSetting() {
+  const addressList = [
+    {
+      name: "John Doe",
+      address: "1234 Elm St, Springfield, IL 62704",
+      country: "United States",
+      phone: "(555) 555-5555",
+    },
+    {
+      name: "Jane Smith",
+      address: "5678 Oak St, Springfield, IL 62704",
+      country: "United States",
+      phone: "(555) 555-5556",
+    },
+    {
+      name: "Alex Brown",
+      address: "7890 Maple St, Springfield, IL 62704",
+      country: "United States",
+      phone: "(555) 555-5557",
+    },
+  ];
+
+  const [page, setPage] = useState(1);
   const [tabValue, setTabValue] = useState(0);
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
+
+  const addressesPerPage = 2;
+  const totalPages = Math.ceil(addressList.length / addressesPerPage);
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
+
+  const paginatedAddresses = addressList.slice((page - 1) * addressesPerPage, page * addressesPerPage);
 
   return (
     <>
@@ -49,7 +95,7 @@ export default function AccountSetting() {
               >
                 {[
                   "Personal Information",
-                  "Change Password",
+                  "Reset Password",
                   "Address Book",
                   "Save Payment Methods",
                   "Tax Exempt Status",
@@ -140,22 +186,107 @@ export default function AccountSetting() {
             </Box>
           </TabPanel>
           <TabPanel value={tabValue} index={1}>
-            <Typography variant="body1">No Ready Quotes.</Typography>
+            <Box sx={{ p: 4, border: "1px solid #e0e0e0", borderRadius: 2, maxWidth: 600, margin: "0 auto" }}>
+              <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+                Reset Password
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField fullWidth label="Current Password" type="password" variant="outlined" size="small" />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField fullWidth label="New Password" type="password" variant="outlined" size="small" />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField fullWidth label="Confirm New Password" type="password" variant="outlined" size="small" />
+                </Grid>
+              </Grid>
+              <Button variant="contained" sx={{ mt: 3, px: 5 }} color="primary">
+                Update
+              </Button>
+            </Box>
           </TabPanel>
           <TabPanel value={tabValue} index={2}>
-            <Typography variant="body1">No On Hold Quotes.</Typography>
+            <Box sx={{ p: 2 }}>
+              <Button variant="contained" sx={{ mb: 2, backgroundColor: "#4CAF50", color: "#fff" }}>
+                Add New Address
+              </Button>
+              {paginatedAddresses.map((address, index) => (
+                <Card key={index} sx={{ mb: 2, border: "1px solid #e0e0e0" }}>
+                  <CardContent>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                      {address.name}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      {address.address}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      {address.country}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      Phone: {address.phone}
+                    </Typography>
+                    <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
+                      <Button variant="contained" color="primary" sx={{ backgroundColor: "#4CAF50" }}>
+                        Edit
+                      </Button>
+                      <IconButton color="error">
+                        <DeleteIcon />
+                      </IconButton>
+                    </Box>
+                  </CardContent>
+                </Card>
+              ))}
+
+              {/* Pagination Controls */}
+              <Grid container justifyContent="center">
+                <Pagination count={totalPages} page={page} onChange={handlePageChange} color="primary" sx={{ mt: 2 }} />
+              </Grid>
+            </Box>
           </TabPanel>
           <TabPanel value={tabValue} index={3}>
-            <Typography variant="body1">No Ordered Quotes.</Typography>
+            <Box sx={{ p: 4, border: "1px solid #e0e0e0", borderRadius: 2, maxWidth: 600, margin: "0 auto" }}>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                Save Payment Methods
+              </Typography>
+              <Typography variant="h8">Add New Payment Methods at Checkout.</Typography>
+            </Box>
           </TabPanel>
           <TabPanel value={tabValue} index={4}>
-            <Typography variant="body1">No Ordered Quotes.</Typography>
+            <Box sx={{ p: 4, border: "1px solid #e0e0e0", borderRadius: 2, maxWidth: 600, margin: "0 auto" }}>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                Tax Exempt Status
+              </Typography>
+              <Typography variant="h8">Tax Exemption Requests Status</Typography>
+              <br></br>
+              <Button variant="contained" sx={{ mt: 3, px: 5 }} color="primary">
+                Request Tax Exemption
+              </Button>
+            </Box>
           </TabPanel>
           <TabPanel value={tabValue} index={5}>
-            <Typography variant="body1">No Ordered Quotes.</Typography>
+            <Box sx={{ p: 4, border: "1px solid #e0e0e0", borderRadius: 2, maxWidth: 600, margin: "0 auto" }}>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                Email Preferences
+              </Typography>
+              <Box sx={{ display: "flex" }}>
+                <Input type="checkbox" />
+                &nbsp;&nbsp;
+                <Typography>Receive special offers & promos from Signs</Typography>
+              </Box>
+              <br></br>
+            </Box>
           </TabPanel>
           <TabPanel value={tabValue} index={6}>
-            <Typography variant="body1">No Ordered Quotes.</Typography>
+            <Box sx={{ p: 4, border: "1px solid #e0e0e0", borderRadius: 2, maxWidth: 600, margin: "0 auto" }}>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                Text Notifications
+              </Typography>
+              <Typography>
+                You are not signed up to receive text notifications about the status of your orders.
+              </Typography>
+              <Typography>You will have the opportunity to sign up when you place your next order.</Typography>
+            </Box>
           </TabPanel>
         </Grid>
       </Grid>

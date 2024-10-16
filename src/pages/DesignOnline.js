@@ -6,11 +6,18 @@ import FilerobotImageEditor, { TABS, TOOLS } from "react-filerobot-image-editor"
 import HeaderDesign from "../components/designcomponent/HeaderDesign";
 import Toolbar from "../components/designcomponent/Toolbar";
 import { ProductService } from "../services/Product.service";
+import LoginDialog from "../components/common/LoginDialog";
+import CreateAccountDialog from "../components/common/CreateAccountDialog";
+
 const DesignOnline = () => {
   const [selectedFile, setSelectedFile] = useState([]);
   const [addimage, AddImage] = useState("");
   const [images, setImages] = useState();
   const [isImgEditorShown, setIsImgEditorShown] = useState(false);
+    const [loginOpen, setLoginOpen] = useState(false);
+    const [openSignUp, setOpenSignUp] = useState(false);
+    const [currentUser, setCurrentUser] = useState("");
+
   useEffect(() => {
     getImages();
   }, []);
@@ -77,9 +84,69 @@ const DesignOnline = () => {
   console.log(selectedFile, "selectedFile");
   console.log(addimage, "addimage");
 
+  const handleClickOpenLogin = () => {
+    setLoginOpen(true);
+    setOpenSignUp(false);
+  };
+  const handleCloseLogin = () => setLoginOpen(false);
+
+  const handleClickOpenSignUp = () => {
+    setOpenSignUp(true);
+    setLoginOpen(false);
+  };
+
+  const handleCloseSignUp = () => setOpenSignUp(false);
+
+  const fetchUserData = async (token) => {
+    if (!token) {
+      console.warn("Token is null or undefined, skipping fetch.");
+      return; // Exit the function if the token is null
+    }
+
+    console.log("Fetching user data from: https://flagg.devlopix.com/api/user");
+
+    try {
+      const response = await fetch("https://flagg.devlopix.com/api/user", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        console.error("Failed to fetch user data:", response.status);
+        return;
+      }
+
+      const data = await response.json();
+      setCurrentUser(data.name);
+      localStorage.setItem("currentUser", data.name);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    const storedUser = localStorage.getItem("currentUser");
+
+    if (storedUser) {
+      setCurrentUser(storedUser);
+    } else {
+      // Open login dialog if no current user is found
+      setLoginOpen(true);
+    }
+
+    if (token) {
+      fetchUserData(token);
+    }
+  }, []);
+
+
   return (
     <>
-      <HeaderDesign />
+      <HeaderDesign handleClickOpenLogin={handleClickOpenLogin} />
       <Box style={{ display: "flex" }}>
         <Sidebar
           handleImageChange={handleImageChange}
@@ -91,7 +158,7 @@ const DesignOnline = () => {
         />
         <Box
           style={{
-            height: "100%",
+            height: "46.3rem",
             width: "100%",
             marginLeft: "210px",
             marginRight: "265px",
@@ -120,6 +187,18 @@ const DesignOnline = () => {
           )}
           <Toolbar />
         </Box>
+        <LoginDialog
+          open={loginOpen}
+          handleClose={handleCloseLogin}
+          handleOpenSignUp={handleClickOpenSignUp}
+          fetchUserData={fetchUserData}
+        />
+        <CreateAccountDialog
+          open={openSignUp}
+          handleClose={handleCloseSignUp}
+          setCurrentUser={setCurrentUser}
+          handleOpenLogin={handleClickOpenLogin}
+        />
       </Box>
     </>
   );
