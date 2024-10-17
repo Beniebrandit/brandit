@@ -7,6 +7,7 @@ import { ReactComponent as Sidebarshapes } from "../../../asset/images/sidebar_s
 import { ReactComponent as Sidebarbackground } from "../../../asset/images/sidebar_background.svg";
 import { ReactComponent as SidebarQRcode } from "../../../asset/images/sidebar_QRcode.svg";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import Qrcode from "./Qrcode";
 
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
@@ -58,7 +59,7 @@ function a11yProps(index) {
   };
 }
 
-const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, onStyleChange, images }) => {
+const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, onStyleChange, images, setImage }) => {
   const [value, setValue] = React.useState(1);
   const [open, setOpen] = React.useState(false);
   const [delopen, setDelOpen] = React.useState(false);
@@ -288,6 +289,9 @@ const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, 
               </TabPanel>
               <TabPanel value={value} index={4}>
                 Item Five
+              </TabPanel>
+              <TabPanel value={value} index={6}>
+                <Qrcode setImage={setImage} />
               </TabPanel>
             </>
           )}

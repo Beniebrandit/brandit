@@ -1,5 +1,19 @@
 import React, { useState } from "react";
-import { Box, Button, Divider, Drawer, Grid, IconButton, List, ListItem, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  Drawer,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  TextField,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+} from "@mui/material";
 import main_logo from "../../asset/images/main_logo.png";
 import { ReactComponent as Help } from "../../asset/images/help.svg";
 import { ReactComponent as Share } from "../../asset/images/share.svg";
@@ -10,29 +24,54 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import MenuIcon from "@mui/icons-material/Menu";
-import LoginModal from "./LoginModal";
+import ReCAPTCHA from "react-google-recaptcha";
+import CloseIcon from "@mui/icons-material/Close";
 
 const HeaderDesign = ({ handleClickOpenLogin }) => {
   const [File, setFile] = React.useState("");
-  //const [open, setOpen] = useState(false);
-
-  const handleChange = (event) => {
-    setFile(event.target.value);
-  };
-
+  const [designhelpdialog, setdesignhelpdialog] = useState(false);
+  const [fileUpload, setFileUpload] = useState(null); // State for file upload
+  const [printedSides, setPrintedSides] = useState("");
+  const [thickness, setThickness] = useState("");
+  const [edgeFinish, setEdgeFinish] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
   };
 
-  //const handleClickOpenLogin = () => {
-  //  setOpen(true);
-  //};
+  function helpDialogOpen() {
+    setdesignhelpdialog(true);
+  }
+  function helpDialogClose() {
+    setdesignhelpdialog(false);
+  }
 
-  //const handleClose = () => {
-  //  setOpen(false);
-  //};
+    const handleChangeFile = (event) => {
+      setFile(event.target.value);
+    };
+
+    const handleFileUpload = (e) => {
+      setFileUpload(e.target.files[0]); // Store selected file
+    };
+
+
+  const handleChangePrintedSides = (event) => {
+    setPrintedSides(event.target.value);
+  };
+
+  const handleChangeThickness = (event) => {
+    setThickness(event.target.value);
+  };
+
+  const handleChangeEdgeFinish = (event) => {
+    setEdgeFinish(event.target.value);
+  };
+
+  function onChange(value) {
+    console.log("Captcha value:", value);
+  }
+
   return (
     <>
       <Box className="inner_header" sx={{ width: "100%", position: "fixed" }}>
@@ -69,7 +108,7 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
                   id="demo-simple-select"
                   value={File}
                   label="File"
-                  onChange={handleChange}
+                  onChange={handleChangeFile}
                   sx={{
                     "& .MuiOutlinedInput-notchedOutline": {
                       border: "none",
@@ -147,7 +186,9 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
               }}
             >
               <Help sx={{ width: "20px", height: "auto" }} />
-              <Typography variant="body2">Get Design Help</Typography>
+              <Button variant="body2" onClick={helpDialogOpen}>
+                Get Design Help
+              </Button>
             </Box>
             <Box
               sx={{
@@ -242,7 +283,114 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
         </Box>
       </Box>
 
-      {/*<LoginModal handleClose={handleClose} open={open} setOpen={setOpen} />*/}
+      <Dialog
+        open={designhelpdialog}
+        onClose={() => setdesignhelpdialog(false)}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          sx: {
+            padding: 4,
+            background: "linear-gradient(135deg, #e0f7fa 30%, #80deea 100%)",
+            borderRadius: "20px",
+            boxShadow: "0 15px 30px rgba(0, 0, 0, 0.1)",
+          },
+        }}
+      >
+        <IconButton
+          aria-label="close"
+          onClick={() => setdesignhelpdialog(false)}
+          sx={{
+            position: "absolute",
+            right: 8,
+            top: 8,
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+        <DialogContent sx={{ padding: 3 }}>
+          <Box sx={{ border: "1px solid #cfd4d9", width: "100%" }}>
+            <Box
+              sx={{
+                borderBottom: "1px solid #cfd4d9",
+                padding: "8px 16px",
+                backgroundColor: "#f3f3f3",
+                color: "#333",
+                fontWeight: 400,
+              }}
+            >
+              Design request details
+            </Box>
+
+            <Grid container sx={{ padding: "21px 32px" }}>
+              <Grid item xs={12} md={6}>
+                <Box sx={{ mt: 2 }}>
+                  <Typography sx={{ color: "#333", fontWeight: 700, fontSize: "16px" }}>Printed Sides</Typography>
+                  <FormControl fullWidth required>
+                    <Select value={printedSides} onChange={handleChangePrintedSides}>
+                      <MenuItem value="single_sided">Single Sided</MenuItem>
+                      <MenuItem value="double_sided">Double Sided</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+
+                <Box sx={{ mt: 2 }}>
+                  <Typography sx={{ color: "#333", fontWeight: 700, fontSize: "16px" }}>Thickness</Typography>
+                  <FormControl fullWidth required>
+                    <Select value={thickness} onChange={handleChangeThickness}>
+                      <MenuItem value="thin">Thin</MenuItem>
+                      <MenuItem value="thick">Thick</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+
+                <Box sx={{ mt: 2 }}>
+                  <Typography sx={{ color: "#333", fontWeight: 700, fontSize: "16px" }}>Edge Finish</Typography>
+                  <FormControl fullWidth required>
+                    <Select value={edgeFinish} onChange={handleChangeEdgeFinish}>
+                      <MenuItem value="glossy">Glossy</MenuItem>
+                      <MenuItem value="matte">Matte</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} md={6} sx={{ paddingLeft: "30px" }}>
+                <Typography sx={{ color: "#333", fontWeight: 700, fontSize: "16px" }}>File Upload</Typography>
+                <Box sx={{ mt: 3 }}>
+                  <input type="file" onChange={handleFileUpload} />
+                  {fileUpload && <Typography>Uploaded file: {fileUpload.name}</Typography>}
+                </Box>
+
+                <Box sx={{ background: "#f4fde8", padding: "20px", mt: 2 }}>
+                  <Typography sx={{ color: "#8CC53F", fontSize: "30px", fontWeight: "500" }}>$10.00</Typography>
+                  <Typography>Applied as a full credit to your product order.</Typography>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+            <ReCAPTCHA sitekey="Your client site key" onChange={onChange} />
+          </Box>
+
+          <Button
+            sx={{
+              border: "1px solid #8CC53F",
+              color: "#fff",
+              background: "#8CC53F",
+              cursor: "pointer",
+              fontWeight: "600",
+              mt: 3,
+              width: "35%",
+              display: "block",
+              margin: "0 auto",
+            }}
+          >
+            Continue to Cart
+          </Button>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

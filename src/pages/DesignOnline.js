@@ -8,15 +8,18 @@ import Toolbar from "../components/designcomponent/Toolbar";
 import { ProductService } from "../services/Product.service";
 import LoginDialog from "../components/common/LoginDialog";
 import CreateAccountDialog from "../components/common/CreateAccountDialog";
+import { Rnd } from "react-rnd";
 
 const DesignOnline = () => {
   const [selectedFile, setSelectedFile] = useState([]);
   const [addimage, AddImage] = useState("");
   const [images, setImages] = useState();
   const [isImgEditorShown, setIsImgEditorShown] = useState(false);
-    const [loginOpen, setLoginOpen] = useState(false);
-    const [openSignUp, setOpenSignUp] = useState(false);
-    const [currentUser, setCurrentUser] = useState("");
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [openSignUp, setOpenSignUp] = useState(false);
+  const [currentUser, setCurrentUser] = useState("");
+  const [qrimage, setQrImage] = useState(null);
+  const [qrSize, setQrSize] = useState({ width: 150, height: 150 });
 
   useEffect(() => {
     getImages();
@@ -143,7 +146,6 @@ const DesignOnline = () => {
     }
   }, []);
 
-
   return (
     <>
       <HeaderDesign handleClickOpenLogin={handleClickOpenLogin} />
@@ -155,6 +157,7 @@ const DesignOnline = () => {
           selectImage={selectImage}
           onTabChange={handleTabChange}
           images={images}
+          setImage={setQrImage}
         />
         <Box
           style={{
@@ -184,6 +187,34 @@ const DesignOnline = () => {
               tabsIds={[]}
               tools={[]}
             />
+          )}
+          {/* Display the generated QR code image */}
+          {qrimage && (
+            <Box sx={{ mt: 4, height: "40rem", width: "auto" }}>
+              {/*<Typography variant="h6" sx={{ mb: 2 }}>
+                Generated QR Code (Drag and Resize):
+              </Typography>*/}
+
+              <Rnd
+                size={{ width: qrSize.width, height: qrSize.height }}
+                onResizeStop={(e, direction, ref, delta, position) => {
+                  setQrSize({
+                    width: ref.style.width,
+                    height: ref.style.height,
+                  });
+                }}
+                bounds="parent"
+                lockAspectRatio={true} // Maintain aspect ratio
+                style={{
+                  border: "1px solid #ddd",
+                  display: "inline-block",
+                  padding: 10,
+                  background: "white",
+                }}
+              >
+                <img src={qrimage} alt="Generated QR Code" style={{ width: "100%", height: "100%" }} />
+              </Rnd>
+            </Box>
           )}
           <Toolbar />
         </Box>
