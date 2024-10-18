@@ -5,6 +5,8 @@ import Navbar from "../components/landingcomponent/Navbar";
 import DesignRequestForm from "../components/designservice/DesignRequestForm";
 import CustomerFeedback from "../components/designservice/CustomerFeedback";
 import { DesignServiceFooter } from "../components/designservice/DesignServiceFooter";
+import LoginDialog from "../components/common/LoginDialog";
+import CreateAccountDialog from "../components/common/CreateAccountDialog";
 
 // Styled button for uploading files
 const UploadButton = styled(Button)({
@@ -20,17 +22,51 @@ const UploadButton = styled(Button)({
 });
 
 const DesignService = () => {
-  const [signType, setSignType] = useState("");
-  const [thickness, setThickness] = useState("");
-  const [printedSides, setPrintedSides] = useState("");
-  const [edgeFinish, setEdgeFinish] = useState("");
-  const [grommets, setGrommets] = useState("");
-  const [polePockets, setPolePockets] = useState("");
-  const [accessories, setAccessories] = useState("");
+    const [loginOpen, setLoginOpen] = useState(false);
+    const [openSignUp, setOpenSignUp] = useState(false);
+    const [currentUser, setCurrentUser] = useState("");
+
+    const handleClickOpenLogin = () => setLoginOpen(true);
+    const handleCloseLogin = () => setLoginOpen(false);
+
+    const handleClickOpenSignUp = () => {
+      setOpenSignUp(true);
+      setLoginOpen(false);
+    };
+
+    const handleCloseSignUp = () => setOpenSignUp(false);
+
+    const fetchUserData = async (token) => {
+      if (!token) {
+        console.warn("Token is null or undefined, skipping fetch.");
+        return; // Exit the function if the token is null
+      }
+
+      try {
+        const response = await fetch("https://flagg.devlopix.com/api/user", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          console.error("Failed to fetch user data:", response.status);
+          return;
+        }
+
+        const data = await response.json();
+        setCurrentUser(data.name);
+        localStorage.setItem("currentUser", data.name);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
 
   return (
     <>
-      <Navbar />
+      <Navbar handleClickOpenLogin={handleClickOpenLogin} handleClickOpenSignUp={handleClickOpenSignUp} />
       <Container maxWidth="lg" sx={{ mt: 4 }}>
         <Typography variant="h4" align="center" gutterBottom>
           Design Service Request
@@ -109,10 +145,22 @@ const DesignService = () => {
             borderBottomWidth: 2,
           }}
         />
-        <DesignRequestForm/>
-        <CustomerFeedback/>
-        <DesignServiceFooter/>
+        <DesignRequestForm />
+        <CustomerFeedback />
+        <DesignServiceFooter />
       </Container>
+      <LoginDialog
+        open={loginOpen}
+        handleClose={handleCloseLogin}
+        handleOpenSignUp={handleClickOpenSignUp}
+        fetchUserData={fetchUserData}
+      />
+      <CreateAccountDialog
+        open={openSignUp}
+        handleClose={handleCloseSignUp}
+        setCurrentUser={setCurrentUser}
+        handleOpenLogin={handleClickOpenLogin}
+      />
     </>
   );
 };

@@ -13,7 +13,6 @@ import {
   Paper,
 } from "@mui/material";
 import "swiper/css";
-// Libraries
 import EastIcon from "@mui/icons-material/East";
 import AddIcon from "@mui/icons-material/Add";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";

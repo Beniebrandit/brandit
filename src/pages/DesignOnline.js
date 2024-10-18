@@ -130,22 +130,6 @@ const DesignOnline = () => {
     }
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    const storedUser = localStorage.getItem("currentUser");
-
-    if (storedUser) {
-      setCurrentUser(storedUser);
-    } else {
-      // Open login dialog if no current user is found
-      setLoginOpen(true);
-    }
-
-    if (token) {
-      fetchUserData(token);
-    }
-  }, []);
-
   return (
     <>
       <HeaderDesign handleClickOpenLogin={handleClickOpenLogin} />
