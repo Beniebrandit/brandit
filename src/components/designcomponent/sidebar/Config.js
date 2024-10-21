@@ -18,39 +18,12 @@ import AddIcon from "@mui/icons-material/Add";
 import { ProductService } from "../../../services/Product.service";
 import FormControl from "@mui/material/FormControl";
 
-const data = [
-  {
-    header: "Printed Sides:",
-    title1: "Single Sided",
-    title2: "Double Sided",
-    accordionId: "accordion1",
-  },
-  {
-    header: "Poles:",
-    title1: "Pole Set",
-    title2: "None",
-    accordionId: "accordion2",
-  },
-  {
-    header: "Base:",
-    title1: "Ground Stake",
-    title2: "Square Base",
-    title3: "Cross Base",
-    title4: "Cross Base & Water Bag",
-    accordionId: "accordion3",
-  },
-  {
-    header: "Accessories:",
-    title1: "No Carry Bag",
-    title2: "Carring Case",
-    accordionId: "accordion4",
-  },
-];
 
 const Config = () => {
   const [count, setCount] = useState(1);
   const [value, setValue] = useState(2);
   const [alldata, setAllData] = useState();
+  const [allproduct, setAllProduct] = useState();
 
   const [selectedCard, setSelectedCard] = useState({});
 
@@ -175,11 +148,17 @@ const Config = () => {
       const response = res.data;
       setAllData(response);
     });
-
+  };
+  const Allproducts = async () => {
+    ProductService.Allproduct().then((res) => {
+      const response = res.data;
+      setAllProduct(response);
+    });
   };
 
   useEffect(() => {
     getApi();
+    Allproducts();
   }, []);
 
   useEffect(() => {
@@ -217,12 +196,14 @@ const Config = () => {
         <Box className="custom-scrollbar custom-scrollbar-container">
           <Box sx={{ height: "38rem" }}>
             <Typography>Select product :</Typography>
-            <Select fullWidth defaultValue="Feather Flag Banner">
-              <MenuItem value="Feather Flag Banner">Feather Flag Banner</MenuItem>
-              <MenuItem value="3 Sided table Cover">3 Sided table Cover</MenuItem>
-              <MenuItem value="A-Frame Sign">A-Frame Sign</MenuItem>
-              <MenuItem value="Acrylic Photo print">Acrylic Photo print</MenuItem>
-              {/* Add more products as needed */}
+            <Select fullWidth value={allproduct && allproduct.length > 0 ? allproduct[0].name : ""}>
+              {allproduct?.map((product) => {
+                return (
+                  <MenuItem key={product.id} value={product.name}>
+                    {product.name}
+                  </MenuItem>
+                );
+              })}
             </Select>
             <Divider sx={{ marginTop: "1rem", marginBottom: "0.5rem" }} />
             <Typography>Size (in Inches)</Typography>
@@ -302,7 +283,7 @@ const Config = () => {
             <Box
               sx={{
                 border: "1px solid #868686",
-                width: "50%",
+                width: "45%",
                 marginTop: "20px",
                 height: "auto",
                 borderRadius: "10px",
@@ -465,81 +446,6 @@ const Config = () => {
                               </Grid>
                             );
                           })}
-                          {/*<Grid item xs={6}>
-                            <Paper
-                              //   elevation={1}
-                              sx={{
-                                padding: 1,
-                                textAlign: "center",
-                                border: selectedCard[val.accordionId] === val.title2 ? "2px solid" : "none",
-                                borderColor: selectedCard[val.accordionId] === val.title2 && "#ff9900",
-
-                                cursor: "pointer",
-                              }}
-                              onClick={() => handleCardClick(val.accordionId, val.title2)}
-                            >
-                              <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                                {val.title2}
-                              </Typography>
-                              <img
-                                src="double-sided-image-url"
-                                alt="Double Sided"
-                                style={{ width: "100%", marginTop: "10px" }}
-                              />
-                            </Paper>
-                          </Grid>
-                          {val.title3 && (
-                            <>
-                              <Grid item xs={6}>
-                                <Paper
-                                  elevation={1}
-                                  sx={{
-                                    padding: 1,
-                                    textAlign: "center",
-                                    border: selectedCard[val.accordionId] === val.title3 ? "2px solid" : "none",
-                                    borderColor: selectedCard[val.accordionId] === val.title3 && "#ff9900",
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={() => handleCardClick(val.accordionId, val.title3)}
-                                >
-                                  <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                                    {val.title3}
-                                  </Typography>
-                                  <img
-                                    src="double-sided-image-url"
-                                    alt="Double Sided"
-                                    style={{ width: "100%", marginTop: "10px" }}
-                                  />
-                                </Paper>
-                              </Grid>
-                            </>
-                          )}
-                          {val.title4 && (
-                            <>
-                              <Grid item xs={6}>
-                                <Paper
-                                  elevation={1}
-                                  sx={{
-                                    padding: 1,
-                                    textAlign: "center",
-                                    border: selectedCard[val.accordionId] === val.title4 ? "2px solid" : "none",
-                                    borderColor: selectedCard[val.accordionId] === val.title4 && "#ff9900",
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={() => handleCardClick(val.accordionId, val.title4)}
-                                >
-                                  <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                                    {val.title4}
-                                  </Typography>
-                                  <img
-                                    src="double-sided-image-url"
-                                    alt="Double Sided"
-                                    style={{ width: "100%", marginTop: "10px" }}
-                                  />
-                                </Paper>
-                              </Grid>
-                            </>
-                          )}*/}
                         </Grid>
                       </AccordionDetails>
                     </Accordion>
@@ -559,7 +465,7 @@ const Config = () => {
           }}
         >
           <Typography variant="h6" sx={{ color: "#1976d2" }}>
-            ${price} <br />
+            ${price * count} <br />
             each
           </Typography>
           <Typography variant="body2">
