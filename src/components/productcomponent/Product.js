@@ -577,7 +577,7 @@ const handleThumbClick = (index) => {
                   <Typography>
                     <b>Price:</b>
                   </Typography>
-                  <Typography sx={{ fontSize: "22px", color: "rgb(63, 81, 99)" }}>${price}</Typography>
+                  <Typography sx={{ fontSize: "22px", color: "rgb(63, 81, 99)" }}>${price * count}</Typography>
                 </Box>
                 <Button
                   variant="contained"

@@ -6,9 +6,13 @@ import { ReactComponent as Sidebartext } from "../../../asset/images/sidebar_tex
 import { ReactComponent as Sidebarshapes } from "../../../asset/images/sidebar_shapes.svg";
 import { ReactComponent as Sidebarbackground } from "../../../asset/images/sidebar_background.svg";
 import { ReactComponent as SidebarQRcode } from "../../../asset/images/sidebar_QRcode.svg";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import Qrcode from "./Qrcode";
-
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
+import CancelIcon from "@mui/icons-material/Cancel";
+import SearchIcon from "@mui/icons-material/Search";
+import HelpIcon from "@mui/icons-material/Help";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -69,12 +73,28 @@ const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, 
   const [expandedImageIndex, setExpandedImageIndex] = useState(null); // New state for tracking expanded image
   const [selectedImages, setSelectedImages] = useState(null);
   const tabRef = useRef(null);
+    const [imageName, setImageName] = useState("");
   const dialogRef = useRef(null); // Create a ref for the modal
 
-  // console.log(selectImage, "selectImage");
-  const handleCategoryClick = (images) => {
-    setSelectedImages(images);
+  const [valuePremium, setValuePremium] = useState(0);
+
+  console.log("selexted imgage", selectImage);
+
+  const handleChangePremium = (event, newValue) => {
+    setValuePremium(newValue);
   };
+
+  const handleCancelSearch = () => {
+    setSelectedImages("");
+    setImageName("");
+  };
+  
+  // console.log(selectImage, "selectImage");
+  const handleCategoryClick = (images, name) => {
+    setSelectedImages(images);
+    setImageName(name);
+  };
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -135,6 +155,14 @@ const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, 
       setIsTabOpen(false); // Close the TabPanel if clicked outside
     }
   };
+
+    const handlePremiumImage = (index, img) => {
+      images = `${process.env.REACT_APP_API_BASE_URL}/${img}`;
+      console.log("index", img);
+      setExpandImage(images);
+      setExpandedImageIndex(index);
+      handleClickOpen();
+    };
 
   useEffect(() => {
     // Add the event listener when the component is mounted
@@ -230,8 +258,7 @@ const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, 
                   handleExpand={handleExpand}
                 />
               </TabPanel>
-              <TabPanel value={value} index={2}>
-                {/* Wrapper for category names */}
+              {/*<TabPanel value={value} index={2}>
                 <Box
                   sx={{
                     display: "grid",
@@ -262,7 +289,6 @@ const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, 
 
                 {selectedImages && (
                   <Box sx={{ marginTop: "20px" }}>
-                    {/* Wrapper for images */}
                     <Box
                       sx={{
                         display: "grid",
@@ -282,8 +308,194 @@ const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, 
                     </Box>
                   </Box>
                 )}
-              </TabPanel>
+              </TabPanel>*/}
+              <TabPanel value={value} index={2} style={{ width: "24rem" }}>
+                <Box sx={{ padding: "0px !important", margin: "0px" }}>
+                  {/* Title */}
+                  <Typography variant="h6" fontWeight="bold" mb={2}>
+                    Explore premium images <HelpIcon sx={{ justifyContent: "center" }} />
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary" mb={3}>
+                    Enhance your designs with exclusive, licensed images. Image licenses are just a flat fee of $5.99.
+                  </Typography>
 
+                  {/* Tabs for Photos and Vectors */}
+                  <Tabs
+                    value={valuePremium}
+                    onChange={handleChangePremium}
+                    aria-label="basic tabs"
+                    sx={{ mb: 2 }}
+                    classes={{ flexContainer: "flex-container-custom" }}
+                  >
+                    <Tab
+                      label="Photos"
+                      sx={{
+                        fontWeight: valuePremium === 0 ? "bold" : "normal",
+                      }}
+                    />
+                    <Tab
+                      label="Vectors"
+                      sx={{
+                        fontWeight: valuePremium === 1 ? "bold" : "normal",
+                      }}
+                    />
+                  </Tabs>
+                  <Box sx={{ display: "flex", alignItems: "center", mb: 4, position: "relative", width: "100%" }}>
+                    <input
+                      type="text"
+                      value={imageName ? imageName : ""}
+                      onChange={(e) => setImageName(e.target.value)}
+                      placeholder="Search..."
+                      style={{
+                        width: "100%",
+                        padding: "10px 40px 10px 20px", // Space for close icon and search button
+                        borderRadius: "20px",
+                        border: "1px solid #ccc",
+                        outline: "none",
+                      }}
+                    />
+                    {imageName && (
+                      <CancelIcon
+                        onClick={handleCancelSearch}
+                        style={{
+                          position: "absolute",
+                          right: "80px", // Adjust the position relative to the search button
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          cursor: "pointer",
+                          color: "#aaa",
+                          height: "20px",
+                          width: "20px",
+                        }}
+                      />
+                    )}
+                    <Box
+                      sx={{
+                        backgroundColor: "#0066cc", // Blue color similar to the image
+                        borderRadius: "20px",
+                        marginLeft: "-30px",
+                        width: "80px",
+                        padding: "8px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        position: "relative", // So that the search button sits next to the input
+                      }}
+                      onClick={() => console.log("Search triggered")} // Replace with your search logic
+                    >
+                      <SearchIcon style={{ color: "#fff" }} />
+                    </Box>
+                  </Box>
+                  {valuePremium === 0 && (
+                    <Box>
+                      {selectedImages ? (
+                        ""
+                      ) : (
+                        <Typography variant="subtitle1" mb={2}>
+                          Popular searches
+                        </Typography>
+                      )}
+                      <ul
+                        style={{
+                          margin: 0,
+                          paddingBottom: "16px",
+                          paddingLeft: 0,
+                          display: "grid",
+                          gridTemplateColumns: "1fr 1fr",
+                          listStyleType: "none",
+                          textAlign: "left",
+                          lineHeight: "125%",
+                          fontSize: "14px",
+                          letterSpacing: ".25px",
+                          listStylePosition: "inside",
+                        }}
+                      >
+                        {selectedImages
+                          ? selectedImages.map((image, index) => (
+                              <>
+                                <li key={index} style={{}}>
+                                  <img
+                                    src={`${process.env.REACT_APP_API_BASE_URL}/${image.path}`}
+                                    alt={`Image ${image.id}`}
+                                    onClick={() => handlePremiumImage(index, image.path)}
+                                    style={{
+                                      margin: "2px",
+                                      height: "130px",
+                                      width: "130px",
+                                      borderRadius: "8px",
+                                    }}
+                                  />
+                                </li>
+                                <Box
+                                  sx={{
+                                    position: "absolute",
+                                    top: "0", // Position it over the image
+                                    marginTop: "5px",
+                                    left: "21%",
+                                    transform: "translateX(-50%)",
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    width: "70px",
+                                    opacity: 0, // Initially hide icons
+                                    transition: "top 0.3s ease-in-out, opacity 0.3s ease-in-out", // Smooth transition
+                                  }}
+                                  className="icon-box"
+                                >
+                                  <Button>
+                                    <DeleteOutlinedIcon
+                                      sx={{
+                                        backgroundColor: "whitesmoke",
+                                        padding: "3px",
+                                        borderRadius: "5px",
+                                      }}
+                                    />
+                                  </Button>
+                                  <Button onClick={() => handleExpand(index)}>
+                                    <OpenInFullOutlinedIcon
+                                      sx={{
+                                        backgroundColor: "whitesmoke",
+                                        padding: "3px",
+                                        borderRadius: "5px",
+                                      }}
+                                    />
+                                  </Button>
+                                </Box>
+                              </>
+                            ))
+                          : images.map((image, index) => (
+                              <li
+                                key={index}
+                                style={{ margin: "4px" }}
+                                onClick={() => handleCategoryClick(image.images, image.name)}
+                              >
+                                {image.name}
+                              </li>
+                            ))}
+                      </ul>
+                    </Box>
+                  )}
+
+                  {valuePremium === 1 && (
+                    <Box>
+                      <Typography variant="subtitle1" mb={2}>
+                        Popular searches for Vectors
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: "grid",
+                          gridTemplateColumns: "repeat(2, 1fr)",
+                          gap: "12px",
+                        }}
+                      >
+                        <Box sx={popularSearchStyle}>Vector Image 1</Box>
+                        <Box sx={popularSearchStyle}>Abstract Vector</Box>
+                      </Box>
+                    </Box>
+                  )}
+                </Box>
+              </TabPanel>
               <TabPanel value={value} index={3}>
                 <Text onStyleChange={onStyleChange} />
               </TabPanel>
@@ -361,8 +573,8 @@ const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, 
             color="success"
             onClick={() => {
               if (expandedImageIndex !== null) {
-                selectImage(expandedImageIndex);
-                handleClose(); // Optionally close the dialog after adding
+                //selectImage(expandedImageIndex);
+                handleClose(); 
               }
             }}
           >
@@ -410,3 +622,15 @@ const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, 
 };
 
 export default Sidebar;
+const popularSearchStyle = {
+  padding: "12px 20px",
+  textAlign: "center",
+  backgroundColor: "#f0f0f0",
+  cursor: "pointer",
+  borderRadius: "8px",
+  fontSize: "16px",
+  color: "#333",
+  "&:hover": {
+    backgroundColor: "#e0e0e0",
+  },
+};
