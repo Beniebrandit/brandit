@@ -145,7 +145,7 @@ const DesignOnline = () => {
         />
         <Box
           style={{
-            height: "46.3rem",
+            height: "100%",
             width: "100%",
             marginLeft: "210px",
             marginRight: "265px",
