@@ -20,19 +20,36 @@ const DesignOnline = () => {
   const [currentUser, setCurrentUser] = useState("");
   const [qrimage, setQrImage] = useState(null);
   const [qrSize, setQrSize] = useState({ width: 150, height: 150 });
+    const [premiumimg, setPremiumimg] = useState();
 
   useEffect(() => {
     getImages();
   }, []);
 
-  const getImages = async () => {
-    ProductService.image().then((res) => {
-      const response = res.data;
-      setImages(response);
+const getImages = async () => {
+  try {
+    const res = await ProductService.image();
+    const response = res.data;
 
-      //console.log(response, "response");
+    // Assuming your base URL is something like this
+    const baseURL = `${process.env.REACT_APP_API_BASE_URL}`;
+
+    // Fix image URLs by prepending the base URL
+    const fixedImages = response.map((image) => {
+      const imageUrl = image?.path || ""; // Ensure using the 'path' field
+      return {
+        ...image,
+        url: imageUrl.startsWith("http") ? imageUrl : baseURL + imageUrl,
+      };
     });
-  };
+
+    setImages(fixedImages);
+    console.log(fixedImages, "Fixed image URLs");
+  } catch (error) {
+    console.error("Failed to fetch images:", error);
+  }
+};
+
   const [tabs, setTabs] = useState([]);
 
   const handleTabChange = (newTabs) => {
@@ -79,13 +96,39 @@ const DesignOnline = () => {
     console.log(index, "index");
   };
 
-  const selectImage = (index) => {
-    AddImage(selectedFile[index]);
-    openImgEditor();
-  };
+const selectImage = (index, source) => {
+  let selectedImageUrl = "";
 
-  console.log(selectedFile, "selectedFile");
-  console.log(addimage, "addimage");
+  if (source === "premium" && premiumimg && premiumimg.length > 0) {
+    const selectedImage = premiumimg[index];
+
+    if (selectedImage?.path) {
+      // Construct the full URL for the premium image
+      selectedImageUrl = `${process.env.REACT_APP_API_BASE_URL}${selectedImage.path}`;
+      AddImage(selectedImageUrl); // Use the full URL here
+      openImgEditor();
+    } else {
+      console.error("No valid premium image at index", index);
+    }
+  } else if (source === "upload" && selectedFile && selectedFile.length > 0) {
+    const selectedImage = selectedFile[index];
+    if (selectedImage) {
+      AddImage(selectedImage);
+      openImgEditor();
+    } else {
+      console.error("No valid uploaded image at index", index);
+    }
+  } else {
+    console.error("No valid image found at the selected index or source");
+  }
+  console.log("Selected premium image URL:", selectedImageUrl);
+
+};
+
+
+
+  console.log("selectedFile", selectedFile);
+  console.log("addimage", addimage);
 
   const handleClickOpenLogin = () => {
     setLoginOpen(true);
@@ -130,6 +173,10 @@ const DesignOnline = () => {
     }
   };
 
+console.log(
+  `${process.env.REACT_APP_API_BASE_URL}/${addimage}`,
+  "`${process.env.REACT_APP_API_BASE_URL}${premiumimg}`"
+);
   return (
     <>
       <HeaderDesign handleClickOpenLogin={handleClickOpenLogin} />
@@ -142,6 +189,7 @@ const DesignOnline = () => {
           onTabChange={handleTabChange}
           images={images}
           setImage={setQrImage}
+          setPremiumimg={setPremiumimg}
         />
         <Box
           style={{
@@ -162,16 +210,17 @@ const DesignOnline = () => {
           <h1>Your Content Here</h1>
           <p>This is your main content area.</p>
           <BannerSideSection />
-          {isImgEditorShown && (
+          {isImgEditorShown && addimage && (
             <FilerobotImageEditor
               source={addimage || null}
               onSave={handleSave}
               onClose={closeImgEditor}
               onError={handleError}
-              tabsIds={[]}
-              tools={[]}
+              tabsIds={[]} // Define any tabs if necessary
+              tools={[]} // Define any tools if necessary
             />
           )}
+
           {/* Display the generated QR code image */}
           {qrimage && (
             <Box sx={{ mt: 4, height: "40rem", width: "auto" }}>

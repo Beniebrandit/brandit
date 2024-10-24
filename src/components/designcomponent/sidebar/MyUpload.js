@@ -382,7 +382,7 @@ const MyUpload = ({ handleImageChange, selectedFile, handleDeleteClick, selectIm
                 }}
                 alt="img"
                 onClick={() => {
-                  selectImage(index);
+                  selectImage(index, "upload");
                 }}
               />
               {loading[index] && (

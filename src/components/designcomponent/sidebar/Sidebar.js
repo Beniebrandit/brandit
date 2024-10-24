@@ -21,15 +21,6 @@ import Config from "./Config";
 import MyUpload from "./MyUpload";
 import Text from "./Text";
 
-// const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-//   "& .MuiDialogContent-root": {
-//     padding: theme.spacing(2),
-//   },
-//   "& .MuiDialogActions-root": {
-//     padding: theme.spacing(1),
-//   },
-// }));
-
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -63,7 +54,16 @@ function a11yProps(index) {
   };
 }
 
-const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, onStyleChange, images, setImage }) => {
+const Sidebar = ({
+  handleImageChange,
+  selectedFile,
+  onDeleteImage,
+  selectImage,
+  onStyleChange,
+  images,
+  setImage,
+  setPremiumimg,
+}) => {
   const [value, setValue] = React.useState(1);
   const [open, setOpen] = React.useState(false);
   const [delopen, setDelOpen] = React.useState(false);
@@ -73,7 +73,7 @@ const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, 
   const [expandedImageIndex, setExpandedImageIndex] = useState(null); // New state for tracking expanded image
   const [selectedImages, setSelectedImages] = useState(null);
   const tabRef = useRef(null);
-    const [imageName, setImageName] = useState("");
+  const [imageName, setImageName] = useState("");
   const dialogRef = useRef(null); // Create a ref for the modal
 
   const [valuePremium, setValuePremium] = useState(0);
@@ -88,12 +88,17 @@ const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, 
     setSelectedImages("");
     setImageName("");
   };
-  
+
   // console.log(selectImage, "selectImage");
   const handleCategoryClick = (images, name) => {
     setSelectedImages(images);
+    setPremiumimg(images);
+
+    console.log(images, "images");
+
     setImageName(name);
   };
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -125,10 +130,11 @@ const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, 
     setDelOpen(true); // Open the delete confirmation dialog
   };
 
-  const handleExpand = (index) => {
+  const handleExpand = (index, id) => {
     const Expand = selectedFile[index];
     setExpandImage(Expand);
-    setExpandedImageIndex(index); // Set the currently expanded image index
+    setExpandedImageIndex(id); // Set the currently expanded image index
+    console.log("id", id);
     handleClickOpen(); // Open the dialog
   };
 
@@ -156,13 +162,13 @@ const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, 
     }
   };
 
-    const handlePremiumImage = (index, img) => {
-      images = `${process.env.REACT_APP_API_BASE_URL}/${img}`;
-      console.log("index", img);
-      setExpandImage(images);
-      setExpandedImageIndex(index);
-      handleClickOpen();
-    };
+  const handlePremiumImage = (index, img) => {
+    images = `${process.env.REACT_APP_API_BASE_URL}/${img}`;
+    console.log("index", img);
+    setExpandImage(images);
+    setExpandedImageIndex(index);
+    handleClickOpen();
+  };
 
   useEffect(() => {
     // Add the event listener when the component is mounted
@@ -258,57 +264,6 @@ const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, 
                   handleExpand={handleExpand}
                 />
               </TabPanel>
-              {/*<TabPanel value={value} index={2}>
-                <Box
-                  sx={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(2, 1fr)", // Two names per row
-                    gap: 2,
-                    marginBottom: "20px",
-                  }}
-                >
-                  {images?.map((category) => (
-                    <Box
-                      key={category.id}
-                      onClick={() => handleCategoryClick(category.images)}
-                      sx={{
-                        padding: "10px",
-                        textAlign: "center",
-                        backgroundColor: "#f0f0f0",
-                        cursor: "pointer",
-                        borderRadius: "8px",
-                        "&:hover": {
-                          backgroundColor: "#e0e0e0",
-                        },
-                      }}
-                    >
-                      {category.name}
-                    </Box>
-                  ))}
-                </Box>
-
-                {selectedImages && (
-                  <Box sx={{ marginTop: "20px" }}>
-                    <Box
-                      sx={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(2, 1fr)", // Two images per row
-                        gap: "16px",
-                      }}
-                    >
-                      {selectedImages.map((image) => (
-                        <Box key={image.id}>
-                          <img
-                            src={`${process.env.REACT_APP_API_BASE_URL}/${image.path}`}
-                            alt={`Image ${image.id}`}
-                            style={{ height: "150px", width: "150px", borderRadius: "8px" }}
-                          />
-                        </Box>
-                      ))}
-                    </Box>
-                  </Box>
-                )}
-              </TabPanel>*/}
               <TabPanel value={value} index={2} style={{ width: "24rem" }}>
                 <Box sx={{ padding: "0px !important", margin: "0px" }}>
                   {/* Title */}
@@ -412,9 +367,10 @@ const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, 
                         }}
                       >
                         {selectedImages
-                          ? selectedImages.map((image, index) => (
-                              <>
-                                <li key={index} style={{}}>
+                          ? selectedImages.map((image, index) => {
+                            //console.log("indexxxx",index);
+                            //console.log("image00", image);
+                              return <> <li key={index} style={{}}>
                                   <img
                                     src={`${process.env.REACT_APP_API_BASE_URL}/${image.path}`}
                                     alt={`Image ${image.id}`}
@@ -427,7 +383,7 @@ const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, 
                                     }}
                                   />
                                 </li>
-                                <Box
+                                {/*<Box
                                   sx={{
                                     position: "absolute",
                                     top: "0", // Position it over the image
@@ -452,7 +408,7 @@ const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, 
                                       }}
                                     />
                                   </Button>
-                                  <Button onClick={() => handleExpand(index)}>
+                                  <Button onClick={() => handleExpand(index, image.id)}>
                                     <OpenInFullOutlinedIcon
                                       sx={{
                                         backgroundColor: "whitesmoke",
@@ -461,9 +417,9 @@ const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, 
                                       }}
                                     />
                                   </Button>
-                                </Box>
-                              </>
-                            ))
+                                </Box>*/}
+                              </>;
+                            })
                           : images.map((image, index) => (
                               <li
                                 key={index}
@@ -573,8 +529,8 @@ const Sidebar = ({ handleImageChange, selectedFile, onDeleteImage, selectImage, 
             color="success"
             onClick={() => {
               if (expandedImageIndex !== null) {
-                //selectImage(expandedImageIndex);
-                handleClose(); 
+                selectImage(expandedImageIndex, "premium");
+                handleClose();
               }
             }}
           >
