@@ -31,12 +31,11 @@ const getImages = async () => {
     const res = await ProductService.image();
     const response = res.data;
 
-    // Assuming your base URL is something like this
     const baseURL = `${process.env.REACT_APP_API_BASE_URL}`;
 
     // Fix image URLs by prepending the base URL
     const fixedImages = response.map((image) => {
-      const imageUrl = image?.path || ""; // Ensure using the 'path' field
+      const imageUrl = image?.path || ""; 
       return {
         ...image,
         url: imageUrl.startsWith("http") ? imageUrl : baseURL + imageUrl,
@@ -44,7 +43,7 @@ const getImages = async () => {
     });
 
     setImages(fixedImages);
-    console.log(fixedImages, "Fixed image URLs");
+    //console.log(fixedImages, "Fixed image URLs");
   } catch (error) {
     console.error("Failed to fetch images:", error);
   }
@@ -103,7 +102,6 @@ const selectImage = (index, source) => {
     const selectedImage = premiumimg[index];
 
     if (selectedImage?.path) {
-      // Construct the full URL for the premium image
       selectedImageUrl = `${process.env.REACT_APP_API_BASE_URL}${selectedImage.path}`;
       AddImage(selectedImageUrl); // Use the full URL here
       openImgEditor();
@@ -121,7 +119,7 @@ const selectImage = (index, source) => {
   } else {
     console.error("No valid image found at the selected index or source");
   }
-  console.log("Selected premium image URL:", selectedImageUrl);
+  //console.log("Selected premium image URL:", selectedImageUrl);
 
 };
 
@@ -173,10 +171,10 @@ const selectImage = (index, source) => {
     }
   };
 
-console.log(
-  `${process.env.REACT_APP_API_BASE_URL}/${addimage}`,
-  "`${process.env.REACT_APP_API_BASE_URL}${premiumimg}`"
-);
+//console.log(
+//  `${process.env.REACT_APP_API_BASE_URL}/${addimage}`,
+//  "`${process.env.REACT_APP_API_BASE_URL}${premiumimg}`"
+//);
   return (
     <>
       <HeaderDesign handleClickOpenLogin={handleClickOpenLogin} />
@@ -216,18 +214,14 @@ console.log(
               onSave={handleSave}
               onClose={closeImgEditor}
               onError={handleError}
-              tabsIds={[]} // Define any tabs if necessary
-              tools={[]} // Define any tools if necessary
+              tabsIds={[]} 
+              tools={[]} 
             />
           )}
 
           {/* Display the generated QR code image */}
           {qrimage && (
             <Box sx={{ mt: 4, height: "40rem", width: "auto" }}>
-              {/*<Typography variant="h6" sx={{ mb: 2 }}>
-                Generated QR Code (Drag and Resize):
-              </Typography>*/}
-
               <Rnd
                 size={{ width: qrSize.width, height: qrSize.height }}
                 onResizeStop={(e, direction, ref, delta, position) => {
@@ -237,7 +231,7 @@ console.log(
                   });
                 }}
                 bounds="parent"
-                lockAspectRatio={true} // Maintain aspect ratio
+                lockAspectRatio={true}
                 style={{
                   border: "1px solid #ddd",
                   display: "inline-block",
