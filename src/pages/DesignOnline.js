@@ -20,34 +20,39 @@ const DesignOnline = () => {
   const [currentUser, setCurrentUser] = useState("");
   const [qrimage, setQrImage] = useState(null);
   const [qrSize, setQrSize] = useState({ width: 150, height: 150 });
-    const [premiumimg, setPremiumimg] = useState();
+  const [premiumimg, setPremiumimg] = useState();
+    const [isAccordionOpen, setIsAccordionOpen] = useState(true);
+
+    const handleAccordionToggle = (isOpen) => {
+      setIsAccordionOpen(isOpen);
+    };
 
   useEffect(() => {
     getImages();
   }, []);
 
-const getImages = async () => {
-  try {
-    const res = await ProductService.image();
-    const response = res.data;
+  const getImages = async () => {
+    try {
+      const res = await ProductService.image();
+      const response = res.data;
 
-    const baseURL = `${process.env.REACT_APP_API_BASE_URL}`;
+      const baseURL = `${process.env.REACT_APP_API_BASE_URL}`;
 
-    // Fix image URLs by prepending the base URL
-    const fixedImages = response.map((image) => {
-      const imageUrl = image?.path || ""; 
-      return {
-        ...image,
-        url: imageUrl.startsWith("http") ? imageUrl : baseURL + imageUrl,
-      };
-    });
+      // Fix image URLs by prepending the base URL
+      const fixedImages = response.map((image) => {
+        const imageUrl = image?.path || "";
+        return {
+          ...image,
+          url: imageUrl.startsWith("http") ? imageUrl : baseURL + imageUrl,
+        };
+      });
 
-    setImages(fixedImages);
-    //console.log(fixedImages, "Fixed image URLs");
-  } catch (error) {
-    console.error("Failed to fetch images:", error);
-  }
-};
+      setImages(fixedImages);
+      //console.log(fixedImages, "Fixed image URLs");
+    } catch (error) {
+      console.error("Failed to fetch images:", error);
+    }
+  };
 
   const [tabs, setTabs] = useState([]);
 
@@ -95,35 +100,32 @@ const getImages = async () => {
     console.log(index, "index");
   };
 
-const selectImage = (index, source) => {
-  let selectedImageUrl = "";
+  const selectImage = (index, source) => {
+    let selectedImageUrl = "";
 
-  if (source === "premium" && premiumimg && premiumimg.length > 0) {
-    const selectedImage = premiumimg[index];
+    if (source === "premium" && premiumimg && premiumimg.length > 0) {
+      const selectedImage = premiumimg[index];
 
-    if (selectedImage?.path) {
-      selectedImageUrl = `${process.env.REACT_APP_API_BASE_URL}${selectedImage.path}`;
-      AddImage(selectedImageUrl); // Use the full URL here
-      openImgEditor();
+      if (selectedImage?.path) {
+        selectedImageUrl = `${process.env.REACT_APP_API_BASE_URL}${selectedImage.path}`;
+        AddImage(selectedImageUrl); // Use the full URL here
+        openImgEditor();
+      } else {
+        console.error("No valid premium image at index", index);
+      }
+    } else if (source === "upload" && selectedFile && selectedFile.length > 0) {
+      const selectedImage = selectedFile[index];
+      if (selectedImage) {
+        AddImage(selectedImage);
+        openImgEditor();
+      } else {
+        console.error("No valid uploaded image at index", index);
+      }
     } else {
-      console.error("No valid premium image at index", index);
+      console.error("No valid image found at the selected index or source");
     }
-  } else if (source === "upload" && selectedFile && selectedFile.length > 0) {
-    const selectedImage = selectedFile[index];
-    if (selectedImage) {
-      AddImage(selectedImage);
-      openImgEditor();
-    } else {
-      console.error("No valid uploaded image at index", index);
-    }
-  } else {
-    console.error("No valid image found at the selected index or source");
-  }
-  //console.log("Selected premium image URL:", selectedImageUrl);
-
-};
-
-
+    //console.log("Selected premium image URL:", selectedImageUrl);
+  };
 
   console.log("selectedFile", selectedFile);
   console.log("addimage", addimage);
@@ -171,14 +173,14 @@ const selectImage = (index, source) => {
     }
   };
 
-//console.log(
-//  `${process.env.REACT_APP_API_BASE_URL}/${addimage}`,
-//  "`${process.env.REACT_APP_API_BASE_URL}${premiumimg}`"
-//);
+  //console.log(
+  //  `${process.env.REACT_APP_API_BASE_URL}/${addimage}`,
+  //  "`${process.env.REACT_APP_API_BASE_URL}${premiumimg}`"
+  //);
   return (
     <>
       <HeaderDesign handleClickOpenLogin={handleClickOpenLogin} />
-      <Box style={{ display: "flex" }}>
+      <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" } }}>
         <Sidebar
           handleImageChange={handleImageChange}
           selectedFile={selectedFile}
@@ -188,18 +190,24 @@ const selectImage = (index, source) => {
           images={images}
           setImage={setQrImage}
           setPremiumimg={setPremiumimg}
+          sx={{
+            width: { xs: "110px", sm: "100%" }, // Full width on xs, fixed width on sm and up
+            position: { xs: "relative", sm: "fixed" },
+            left: { sm: 0 },
+            top: { xs: 0, sm: "5rem" },
+          }}
         />
         <Box
-          style={{
+          sx={{
             height: "100%",
-            width: "100%",
+            width: { xs: "100%", sm: isAccordionOpen ? "calc(100% - 210px)" : "100%" },
             marginLeft: "210px",
-            marginRight: "265px",
-            padding: "20px",
+            marginRight: { sm: isAccordionOpen ? "265px" : "0px" },
+            padding: { xs: "10px", sm: "20px" },
             position: "relative",
-            boxShadow: "0px 5px 30px -15px",
+            boxShadow: { sm: "0px 5px 30px -15px" },
             alignItems: "flex-start",
-            top: "5rem",
+            top: { xs: "2rem", sm: "5rem" },
             color: "#3F5163",
             borderRadius: "6px",
             zIndex: "1",
@@ -207,21 +215,41 @@ const selectImage = (index, source) => {
         >
           <h1>Your Content Here</h1>
           <p>This is your main content area.</p>
-          <BannerSideSection />
-          {isImgEditorShown && addimage && (
-            <FilerobotImageEditor
-              source={addimage || null}
-              onSave={handleSave}
-              onClose={closeImgEditor}
-              onError={handleError}
-              tabsIds={[]} 
-              tools={[]} 
-            />
-          )}
+          <BannerSideSection onToggleAccordion={handleAccordionToggle} />
 
-          {/* Display the generated QR code image */}
+          <Box
+            sx={{
+              maxWidth: {
+                xs: "100%",
+                sm: "32rem",
+                md: isAccordionOpen ? "30rem" : "45rem",
+                lg: isAccordionOpen ? "56rem" : "70rem",
+                xl: "85rem",
+              },
+            }}
+          >
+            {isImgEditorShown && addimage && (
+              <FilerobotImageEditor
+                source={addimage || null}
+                onSave={handleSave}
+                onClose={closeImgEditor}
+                onError={handleError}
+                annotationsCommon={{
+                  fill: "#ff0000",
+                }}
+                Text={{ text: "Filerobot..." }}
+                Rotate={{ angle: 90, componentType: "slider" }}
+                defaultTabId={TABS.ANNOTATE}
+                defaultToolId={TOOLS.TEXT}
+                sx={{
+                  width: { xs: "100%", sm: "20rem" }, // Ensure FilerobotImageEditor resizes on small screens
+                }}
+              />
+            )}
+          </Box>
+
           {qrimage && (
-            <Box sx={{ mt: 4, height: "40rem", width: "auto" }}>
+            <Box sx={{ mt: 4, height: { xs: "20rem", sm: "40rem" }, width: "auto" }}>
               <Rnd
                 size={{ width: qrSize.width, height: qrSize.height }}
                 onResizeStop={(e, direction, ref, delta, position) => {
@@ -245,6 +273,7 @@ const selectImage = (index, source) => {
           )}
           <Toolbar />
         </Box>
+
         <LoginDialog
           open={loginOpen}
           handleClose={handleCloseLogin}
