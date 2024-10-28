@@ -13,18 +13,15 @@ import {
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import React, { useState, useRef, useEffect } from "react";
-import EastIcon from "@mui/icons-material/East";
-import AddIcon from "@mui/icons-material/Add";
 import { ProductService } from "../../../services/Product.service";
 import FormControl from "@mui/material/FormControl";
 
-
 const Config = () => {
   const [count, setCount] = useState(1);
-  const [value, setValue] = useState(2);
   const [alldata, setAllData] = useState();
   const [allproduct, setAllProduct] = useState();
 
+  const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedCard, setSelectedCard] = useState({});
 
   // New state to store selected width, height, and subCat ids
@@ -79,14 +76,16 @@ const Config = () => {
     if (alldata) {
       const firstWidth = widthSizes?.[0]?.size || "";
       const firstHeight = heightSizes?.[0]?.size || "";
+      const firstproduct = allproduct[0]?.name || "";
       setState({
         width: firstWidth,
         height: firstHeight,
       });
+      setSelectedProduct(firstproduct);
       setSelectedWidth(firstWidth);
       setSelectedHeight(firstHeight);
     }
-  }, [alldata]);
+  }, [alldata, allproduct]);
 
   // console.log(widthSizes?.[0]?.size,"qqqqqqq");
   useEffect(() => {
@@ -127,6 +126,10 @@ const Config = () => {
   };
 
   const swiperRef = useRef(null);
+
+  const handleProductChange = (event) => {
+    setSelectedProduct(event.target.value);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -196,14 +199,16 @@ const Config = () => {
         <Box className="custom-scrollbar custom-scrollbar-container">
           <Box sx={{ height: "38rem" }}>
             <Typography>Select product :</Typography>
-            <Select fullWidth value={allproduct && allproduct.length > 0 ? allproduct[0].name : ""}>
-              {allproduct?.map((product) => {
-                return (
-                  <MenuItem key={product.id} value={product.name}>
-                    {product.name}
-                  </MenuItem>
-                );
-              })}
+            <Select
+              fullWidth
+              value={selectedProduct}
+              onChange={handleProductChange} // Add onChange to update the state
+            >
+              {allproduct?.map((product) => (
+                <MenuItem key={product.id} value={product.name}>
+                  {product.name}
+                </MenuItem>
+              ))}
             </Select>
             <Divider sx={{ marginTop: "1rem", marginBottom: "0.5rem" }} />
             <Typography>Size (in Inches)</Typography>
@@ -234,7 +239,7 @@ const Config = () => {
                     >
                       {widthSizes?.map((size) => (
                         <MenuItem key={size.id} value={size.size}>
-                          <em>{size.size}</em>
+                          {size.size}
                         </MenuItem>
                       ))}
                     </Select>
@@ -409,7 +414,15 @@ const Config = () => {
                         {category?.name}
                         {/* Display the selected subcategory's name */}
                         {selectedCard[category.id] && (
-                          <Typography sx={{ marginLeft: "10px" }}>
+                          <Typography
+                            sx={{
+                              marginLeft: "10px",
+                              display: "flex",
+                              flexWrap: "wrap",
+                              justifyContent: "center",
+                              fontSize: "12px",
+                            }}
+                          >
                             {
                               alldata.categories
                                 .find((cat) => cat.id === category.id)
@@ -431,10 +444,17 @@ const Config = () => {
                                     textAlign: "center",
                                     border: selectedCard[category.id] === subCat.id ? "2px solid #ff9900" : "none",
                                     cursor: "pointer",
+                                    fontSize: "10px",
                                   }}
                                   onClick={() => handleCardClick(category.id, subCat)}
                                 >
-                                  <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                                  <Typography
+                                    variant="body1"
+                                    sx={{
+                                      fontWeight: "bold",
+                                      fontSize: "10px",
+                                    }}
+                                  >
                                     {subCat.subCatName}
                                   </Typography>
                                   <img

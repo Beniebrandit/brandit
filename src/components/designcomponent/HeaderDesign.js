@@ -203,18 +203,19 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
             }}
             sm="auto"
           >
-            <Box
+            <Button
               sx={{
                 display: "flex",
                 alignItems: "center",
                 gap: "0.5rem",
               }}
+              onClick={helpDialogOpen}
             >
               <Help sx={{ width: "20px", height: "auto" }} />
-              <Button variant="body2" onClick={helpDialogOpen}>
+              <Typography variant="body2" style={{ textTransform: "none", color: "black" }}>
                 Get Design Help
-              </Button>
-            </Box>
+              </Typography>
+            </Button>
             <Box
               sx={{
                 display: "flex",

@@ -1,20 +1,29 @@
-import { Box, Button, Accordion, AccordionSummary, AccordionDetails, Typography, Divider } from "@mui/material";
+import {
+  Box,
+  Button,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  Divider,
+  useTheme,
+} from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import React, { useState } from "react";
 import { ReactComponent as Eye } from "../../asset/images/Eye.svg";
 
 const BannerSideSection = ({ onToggleAccordion }) => {
   const [isAccordionOpen, setIsAccordionOpen] = useState(true);
+  const theme = useTheme();
 
   const handleAccordionChange = () => {
-    const newAccordionState = !isAccordionOpen;
-    setIsAccordionOpen(newAccordionState);
-    onToggleAccordion(newAccordionState); // Notify parent of accordion state
+    setIsAccordionOpen((prevState) => !prevState); // Toggles the state
+    onToggleAccordion(!isAccordionOpen); // Notify parent of the new state
   };
 
   return (
     <Box
-      style={{
+      sx={{
         height: isAccordionOpen ? "76vh" : "auto",
         width: "15rem",
         boxShadow: "0px 5px 30px -15px",
@@ -25,9 +34,16 @@ const BannerSideSection = ({ onToggleAccordion }) => {
         position: "fixed",
         right: "0.5rem",
         top: "5rem",
-        color: !isAccordionOpen ? "transparent" : { sx: "transparent",sm:"transparent", md: "#3F5163" },
+        color: isAccordionOpen
+          ? {
+              xs: "transparent",
+              sm: "transparent",
+              md: "#3F5163",
+              lg: "#3F5163",
+            }
+          : "transparent", // fully transparent when accordion is closed
         borderRadius: "6px",
-        zIndex:"1000"
+        zIndex: "1000",
       }}
     >
       <Accordion expanded={isAccordionOpen} onChange={handleAccordionChange} sx={{ width: "96%" }}>

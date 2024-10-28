@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from "@mui/material";
+import { Box, Button, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ReactComponent as Sidebarsetting } from "../../../asset/images/sidebar_setting.svg";
 import { ReactComponent as Sidebarupload } from "../../../asset/images/sidebar_upload.svg";
@@ -141,8 +141,19 @@ const Sidebar = ({
     };
   }, []);
 
+const handleClickAway = () => {
+  if (open) return;
+  setIsTabOpen(false);
+};
+
   return (
     <>
+    <ClickAwayListener
+        mouseEvent="onMouseDown"
+        touchEvent="onTouchStart"
+        onClickAway={handleClickAway}
+      >
+
       <Box
         // className="custom-scrollbar custom-scrollbar-container"
         sx={{
@@ -158,7 +169,7 @@ const Sidebar = ({
           borderRadius: "6px",
           zIndex: "2",
         }}
-        ref={tabRef} // Reference to the entire box that holds the tabs and panel
+        //ref={tabRef} // Reference to the entire box that holds the tabs and panel
       >
         <Tabs
           orientation="vertical"
@@ -237,13 +248,14 @@ const Sidebar = ({
               <TabPanel value={value} index={3}>
                 <Text onStyleChange={onStyleChange} />
               </TabPanel>
-              <TabPanel value={value} index={6}>
+              <TabPanel value={value} index={6} style={{height:"15rem"}}>
                 <Qrcode setImage={setImage} />
               </TabPanel>
             </>
           )}
         </Box>
       </Box>
+      </ClickAwayListener>
 
       {/* Single Expand Image Dialog */}
       <Dialog
