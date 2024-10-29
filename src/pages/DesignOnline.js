@@ -23,6 +23,10 @@ const DesignOnline = () => {
   const [premiumimg, setPremiumimg] = useState();
     const [isAccordionOpen, setIsAccordionOpen] = useState(true);
 
+  const [alldata, setAllData] = useState();
+  const [allproduct, setAllProduct] = useState();
+
+
     const handleAccordionToggle = (isOpen) => {
       setIsAccordionOpen(isOpen);
     };
@@ -177,6 +181,23 @@ const DesignOnline = () => {
   //  `${process.env.REACT_APP_API_BASE_URL}/${addimage}`,
   //  "`${process.env.REACT_APP_API_BASE_URL}${premiumimg}`"
   //);
+    const getApi = async () => {
+      ProductService.product().then((res) => {
+        const response = res.data;
+        setAllData(response);
+      });
+    };
+    const Allproducts = async () => {
+      ProductService.Allproduct().then((res) => {
+        const response = res.data;
+        setAllProduct(response);
+      });
+    };
+
+    useEffect(() => {
+      getApi();
+      Allproducts();
+    }, []);
   return (
     <>
       <HeaderDesign handleClickOpenLogin={handleClickOpenLogin} />
@@ -190,6 +211,8 @@ const DesignOnline = () => {
           images={images}
           setImage={setQrImage}
           setPremiumimg={setPremiumimg}
+          alldata={alldata}
+          allproduct={allproduct}
           sx={{
             width: { xs: "110px", sm: "100%" }, // Full width on xs, fixed width on sm and up
             position: { xs: "relative", sm: "fixed" },

@@ -3,6 +3,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
+  Button,
   Divider,
   Grid,
   MenuItem,
@@ -16,10 +17,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { ProductService } from "../../../services/Product.service";
 import FormControl from "@mui/material/FormControl";
 
-const Config = () => {
+const Config = ({ allproduct, alldata }) => {
   const [count, setCount] = useState(1);
-  const [alldata, setAllData] = useState();
-  const [allproduct, setAllProduct] = useState();
 
   const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedCard, setSelectedCard] = useState({});
@@ -36,6 +35,12 @@ const Config = () => {
     height: "",
     subCatId: [],
   });
+
+  const decrement = () => {
+    if (count > 1) {
+      setCount(count - 1);
+    }
+  };
 
   // Use effect to set initial selected subcategory and capture their IDs
   useEffect(() => {
@@ -111,7 +116,7 @@ const Config = () => {
       height: selectedHeight,
       subCatId: jsonString,
       ProductId: 10,
-      quantity: count < 1 ? 1 : count,
+      quantity: count,
       //ProductId: alldata?.id || null,
     });
   }, [selectedWidth, selectedHeight, selectedSubCatId, alldata, count]);
@@ -146,23 +151,23 @@ const Config = () => {
     }
   };
 
-  const getApi = async () => {
-    ProductService.product().then((res) => {
-      const response = res.data;
-      setAllData(response);
-    });
-  };
-  const Allproducts = async () => {
-    ProductService.Allproduct().then((res) => {
-      const response = res.data;
-      setAllProduct(response);
-    });
-  };
-
-  useEffect(() => {
-    getApi();
-    Allproducts();
-  }, []);
+//  const getApi = async () => {
+//    ProductService.product().then((res) => {
+//      const response = res.data;
+//      setAllData(response);
+//    });
+//  };
+//  const Allproducts = async () => {
+//    ProductService.Allproduct().then((res) => {
+//      const response = res.data;
+//      setAllProduct(response);
+//    });
+//  };
+//
+//  useEffect(() => {
+//    getApi();
+//    Allproducts();
+//  }, []);
 
   useEffect(() => {
     if (!selectedWidth || !selectedHeight || selectedSubCatId.length === 0) {
@@ -174,7 +179,7 @@ const Config = () => {
         height: selectedHeight,
         subCatId: JSON.stringify(selectedSubCatId),
         ProductId: 10,
-        quantity: count < 1 ? 1 : count,
+        quantity: count,
       };
 
       ProductService.Dataprice(payload)
@@ -297,7 +302,7 @@ const Config = () => {
                 justifyContent: "space-around",
               }}
             >
-              <Typography onClick={() => setCount(count - 1)} sx={{ color: "#868686", cursor: "pointer" }}>
+              <Typography onClick={decrement} disabled={count === 1} sx={{ color: "#868686", cursor: "pointer" }}>
                 -
               </Typography>
               <span
@@ -307,7 +312,7 @@ const Config = () => {
                   color: "#868686",
                 }}
               >
-                {count < 1 ? 1 : count}
+                {count}
               </span>
               <Typography onClick={() => setCount(count + 1)} sx={{ color: "#868686", cursor: "pointer" }}>
                 +
@@ -485,7 +490,7 @@ const Config = () => {
           }}
         >
           <Typography variant="h6" sx={{ color: "#1976d2" }}>
-            ${price * count} <br />
+            ${price} <br />
             each
           </Typography>
           <Typography variant="body2">

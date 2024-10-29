@@ -6,13 +6,12 @@ import HelpIcon from "@mui/icons-material/Help";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 
-
 const PremiumImg = ({ selectImage, images, setPremiumimg, handlePremiumImage }) => {
   const [selectedImages, setSelectedImages] = useState(null);
   const [imageName, setImageName] = useState("");
   const [valuePremium, setValuePremium] = useState(0);
 
-//  console.log("selexted imgage", selectImage);
+  //  console.log("selexted imgage", selectImage);
 
   const handleChangePremium = (event, newValue) => {
     setValuePremium(newValue);
@@ -116,46 +115,51 @@ const PremiumImg = ({ selectImage, images, setPremiumimg, handlePremiumImage }) 
             {selectedImages ? (
               ""
             ) : (
-              <Typography variant="subtitle1" mb={2}>
+              <Typography variant="subtitle1" mb={2} style={{textAlign:"center"}}>
                 Popular searches
               </Typography>
             )}
-            <ul
-              style={{
-                margin: 0,
-                paddingBottom: "16px",
-                paddingLeft: 0,
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                listStyleType: "none",
-                textAlign: "left",
-                lineHeight: "125%",
-                fontSize: "14px",
-                letterSpacing: ".25px",
-                listStylePosition: "inside",
-              }}
+            <Box
+              className="custom-scrollbar custom-scrollbar-container"
+              style={{ maxHeight: "29rem", overflowY: "auto" }}
             >
-              {selectedImages
-                ? selectedImages.map((image, index) => {
-                    //console.log("indexxxx",index);
-                    //console.log("image00", image);
-                    return (
-                      <>
-                        {" "}
-                        <li key={index} style={{}}>
-                          <img
-                            src={`${process.env.REACT_APP_API_BASE_URL}/${image.path}`}
-                            alt={`Image ${image.id}`}
-                            onClick={() => handlePremiumImage(index, image.path)}
-                            style={{
-                              margin: "2px",
-                              height: "130px",
-                              width: "130px",
-                              borderRadius: "8px",
-                            }}
-                          />
-                        </li>
-                        {/*<Box
+              <ul
+                style={{
+                  margin: 0,
+                  paddingBottom: "16px",
+                  paddingLeft: 0,
+                  display: "grid",
+                  rowGap: 4,
+                  gridTemplateColumns: "1fr 1fr",
+                  listStyleType: "none",
+                  textAlign: "left",
+                  lineHeight: "125%",
+                  fontSize: "14px",
+                  letterSpacing: ".25px",
+                  listStylePosition: "inside",
+                }}
+              >
+                {selectedImages
+                  ? selectedImages.map((image, index) => {
+                      //console.log("indexxxx",index);
+                      //console.log("image00", image);
+                      return (
+                        <>
+                          {" "}
+                          <Box key={index} style={{ display: "flex", justifyContent: "center" }}>
+                            <img
+                              src={`${process.env.REACT_APP_API_BASE_URL}/${image.path}`}
+                              alt={`Image ${image.id}`}
+                              onClick={() => handlePremiumImage(index, image.path)}
+                              style={{
+                                margin: "2px",
+                                height: "130px",
+                                width: "130px",
+                                borderRadius: "8px",
+                              }}
+                            />
+                          </Box>
+                          {/*<Box
                                   sx={{
                                     position: "absolute",
                                     top: "0", // Position it over the image
@@ -190,19 +194,20 @@ const PremiumImg = ({ selectImage, images, setPremiumimg, handlePremiumImage }) 
                                     />
                                   </Button>
                                 </Box>*/}
-                      </>
-                    );
-                  })
-                : images.map((image, index) => (
-                    <li
-                      key={index}
-                      style={{ margin: "4px" }}
-                      onClick={() => handleCategoryClick(image.images, image.name)}
-                    >
-                      {image.name}
-                    </li>
-                  ))}
-            </ul>
+                        </>
+                      );
+                    })
+                  : images.map((image, index) => (
+                      <Box
+                        key={index}
+                        style={{ padding: "4px", justifyContent: "center", display: "flex", marginBottom: "7px" }}
+                        onClick={() => handleCategoryClick(image.images, image.name)}
+                      >
+                        <li style={{ textAlign: "left", width: "5rem" }}>{image.name}</li>
+                      </Box>
+                    ))}
+              </ul>
+            </Box>
           </Box>
         )}
 

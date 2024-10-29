@@ -51,6 +51,11 @@ const [payload, setPayload] = useState({
   subCatId: [],
 });
 
+  const decrement = () => {
+    if (count > 1) {
+      setCount(count - 1);
+    }
+  };
   // Use effect to set initial selected subcategory and capture their IDs
   useEffect(() => {
     if (alldata?.categories?.length > 0) {
@@ -124,7 +129,7 @@ useEffect(() => {
       height: selectedHeight,
       subCatId: jsonString,
       ProductId: 10,
-      quantity: count < 1 ? 1 : count,
+      quantity: count,
       //ProductId: alldata?.id || null,
     });
   }, [selectedWidth, selectedHeight, selectedSubCatId, alldata, count]);
@@ -204,7 +209,7 @@ const handleThumbClick = (index) => {
       height: selectedHeight,
       subCatId: JSON.stringify(selectedSubCatId),
       ProductId: 10,
-      quantity: count < 1 ? 1 : count,
+      quantity: count,
     };
 
     ProductService.Dataprice(payload)
@@ -474,7 +479,11 @@ const handleThumbClick = (index) => {
                         justifyContent: "space-around",
                       }}
                     >
-                      <Typography onClick={() => setCount(count - 1)} sx={{ color: "#868686", cursor: "pointer" }}>
+                      <Typography
+                        onClick={decrement}
+                        disabled={count === 1}
+                        sx={{ color: "#868686", cursor: "pointer" }}
+                      >
                         -
                       </Typography>
                       <span
@@ -484,7 +493,7 @@ const handleThumbClick = (index) => {
                           color: "#868686",
                         }}
                       >
-                        {count < 1 ? 1 : count}
+                        {count}
                       </span>
                       <Typography onClick={() => setCount(count + 1)} sx={{ color: "#868686", cursor: "pointer" }}>
                         +
@@ -577,7 +586,7 @@ const handleThumbClick = (index) => {
                   <Typography>
                     <b>Price:</b>
                   </Typography>
-                  <Typography sx={{ fontSize: "22px", color: "rgb(63, 81, 99)" }}>${price * count}</Typography>
+                  <Typography sx={{ fontSize: "22px", color: "rgb(63, 81, 99)" }}>${price}</Typography>
                 </Box>
                 <Button
                   variant="contained"

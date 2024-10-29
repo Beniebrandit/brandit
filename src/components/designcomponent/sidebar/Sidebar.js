@@ -59,6 +59,8 @@ const Sidebar = ({
   images,
   setImage,
   setPremiumimg,
+  allproduct,
+  alldata,
 }) => {
   const [value, setValue] = React.useState(1);
   const [open, setOpen] = React.useState(false);
@@ -66,10 +68,10 @@ const Sidebar = ({
   const [imageToDelete, setImageToDelete] = useState(null);
   const [expandimage, setExpandImage] = useState();
   const [isTabOpen, setIsTabOpen] = useState(false);
-  const [expandedImageIndex, setExpandedImageIndex] = useState(null); 
+  const [expandedImageIndex, setExpandedImageIndex] = useState(null);
   const tabRef = useRef(null);
-  const dialogRef = useRef(null); 
-  
+  const dialogRef = useRef(null);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -97,7 +99,7 @@ const Sidebar = ({
     setExpandImage(Expand);
     setExpandedImageIndex(index); // Set the currently expanded image index
     //console.log("index", index);
-    handleClickOpen(); 
+    handleClickOpen();
   };
 
   const handleDeleteConfirm = () => {
@@ -110,7 +112,7 @@ const Sidebar = ({
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    setIsTabOpen(true); 
+    setIsTabOpen(true);
   };
 
   const handleClickOutside = (event) => {
@@ -141,120 +143,115 @@ const Sidebar = ({
     };
   }, []);
 
-const handleClickAway = () => {
-  if (open) return;
-  setIsTabOpen(false);
-};
+  const handleClickAway = () => {
+    if (open) return;
+    setIsTabOpen(false);
+  };
 
   return (
     <>
-    <ClickAwayListener
-        mouseEvent="onMouseDown"
-        touchEvent="onTouchStart"
-        onClickAway={handleClickAway}
-      >
-
-      <Box
-        // className="custom-scrollbar custom-scrollbar-container"
-        sx={{
-          flexGrow: 1,
-          display: "flex",
-          height: "82vh",
-          boxShadow: "0px 5px 30px -15px", // Background color of the sidebar
-          // padding: "20px 0",
-          position: "fixed",
-          left: "0.5rem",
-          top: "5rem",
-          color: "#3F5163",
-          borderRadius: "6px",
-          zIndex: "2",
-        }}
-        //ref={tabRef} // Reference to the entire box that holds the tabs and panel
-      >
-        <Tabs
-          orientation="vertical"
-          value={isTabOpen ? value : false}
-          onChange={handleChange}
-          aria-label="Vertical tabs example"
-          sx={{ borderRight: 1, borderColor: "divider", height: "80vh" }}
-        >
-          <Tab
-            icon={<Sidebarsetting style={{ width: "20px", height: "auto" }} />}
-            label={<span style={{ color: "#3F5163" }}>Config</span>}
-            sx={{ paddingX: "4rem" }}
-            {...a11yProps(0)}
-          />
-          <Tab
-            icon={<Sidebarupload sx={{ width: "20px", height: "auto" }} />}
-            label={<span style={{ color: "#3F5163" }}>My uploads</span>}
-            {...a11yProps(1)}
-          />
-          <Tab
-            icon={<Sidebarsetting style={{ width: "20px", height: "auto" }} />}
-            label={<span style={{ color: "#3F5163" }}>Premium images</span>}
-            {...a11yProps(2)}
-          />
-          <Tab
-            icon={<Sidebartext style={{ width: "20px", height: "auto" }} />}
-            label={<span style={{ color: "#3F5163" }}>Text</span>}
-            {...a11yProps(3)}
-          />
-          <Tab
-            icon={<Sidebarshapes style={{ width: "20px", height: "auto" }} />}
-            label={<span style={{ color: "#3F5163" }}>Shapes</span>}
-            {...a11yProps(4)}
-          />
-          <Tab
-            icon={<Sidebarbackground style={{ width: "20px", height: "auto" }} />}
-            label={<span style={{ color: "#3F5163" }}>background</span>}
-            {...a11yProps(5)}
-          />
-          <Tab
-            icon={<SidebarQRcode style={{ width: "20px", height: "auto" }} />}
-            label={<span style={{ color: "#3F5163" }}>QR Code</span>}
-            {...a11yProps(6)}
-          />
-        </Tabs>
+      <ClickAwayListener mouseEvent="onMouseDown" touchEvent="onTouchStart" onClickAway={handleClickAway}>
         <Box
+          // className="custom-scrollbar custom-scrollbar-container"
           sx={{
-            position: "relative",
-            backgroundColor: "whitesmoke",
             flexGrow: 1,
-            // width:"24rem"
+            display: "flex",
+            height: "82vh",
+            boxShadow: "0px 5px 30px -15px", // Background color of the sidebar
+            // padding: "20px 0",
+            position: "fixed",
+            left: "0.5rem",
+            top: "5rem",
+            color: "#3F5163",
+            borderRadius: "6px",
+            zIndex: "2",
           }}
+          //ref={tabRef} // Reference to the entire box that holds the tabs and panel
         >
-          {isTabOpen && (
-            <>
-              <TabPanel value={value} index={0} style={{ width: "22rem" }}>
-                <Config />
-              </TabPanel>
-              <TabPanel value={value} index={1} style={{ width: "24rem" }}>
-                <MyUpload
-                  handleImageChange={handleImageChange}
-                  selectedFile={selectedFile}
-                  handleDeleteClick={handleDeleteClick}
-                  selectImage={selectImage}
-                  handleExpand={handleExpand}
-                />
-              </TabPanel>
-              <TabPanel value={value} index={2} style={{ width: "24rem" }}>
-                <PremiumImg
-                  selectImage={selectImage}
-                  images={images}
-                  setPremiumimg={setPremiumimg}
-                  handlePremiumImage={handlePremiumImage}
-                />
-              </TabPanel>
-              <TabPanel value={value} index={3}>
-                <Text onStyleChange={onStyleChange} />
-              </TabPanel>
-              <TabPanel value={value} index={6} style={{height:"15rem"}}>
-                <Qrcode setImage={setImage} />
-              </TabPanel>
-            </>
-          )}
+          <Tabs
+            orientation="vertical"
+            value={isTabOpen ? value : false}
+            onChange={handleChange}
+            aria-label="Vertical tabs example"
+            sx={{ borderRight: 1, borderColor: "divider", height: "80vh" }}
+          >
+            <Tab
+              icon={<Sidebarsetting style={{ width: "20px", height: "auto" }} />}
+              label={<span style={{ color: "#3F5163" }}>Config</span>}
+              sx={{ paddingX: "4rem" }}
+              {...a11yProps(0)}
+            />
+            <Tab
+              icon={<Sidebarupload sx={{ width: "20px", height: "auto" }} />}
+              label={<span style={{ color: "#3F5163" }}>My uploads</span>}
+              {...a11yProps(1)}
+            />
+            <Tab
+              icon={<Sidebarsetting style={{ width: "20px", height: "auto" }} />}
+              label={<span style={{ color: "#3F5163" }}>Premium images</span>}
+              {...a11yProps(2)}
+            />
+            <Tab
+              icon={<Sidebartext style={{ width: "20px", height: "auto" }} />}
+              label={<span style={{ color: "#3F5163" }}>Text</span>}
+              {...a11yProps(3)}
+            />
+            <Tab
+              icon={<Sidebarshapes style={{ width: "20px", height: "auto" }} />}
+              label={<span style={{ color: "#3F5163" }}>Shapes</span>}
+              {...a11yProps(4)}
+            />
+            <Tab
+              icon={<Sidebarbackground style={{ width: "20px", height: "auto" }} />}
+              label={<span style={{ color: "#3F5163" }}>background</span>}
+              {...a11yProps(5)}
+            />
+            <Tab
+              icon={<SidebarQRcode style={{ width: "20px", height: "auto" }} />}
+              label={<span style={{ color: "#3F5163" }}>QR Code</span>}
+              {...a11yProps(6)}
+            />
+          </Tabs>
+          <Box
+            sx={{
+              position: "relative",
+              backgroundColor: "whitesmoke",
+              flexGrow: 1,
+              // width:"24rem"
+            }}
+          >
+            {isTabOpen && (
+              <>
+                <TabPanel value={value} index={0} style={{ width: "22rem" }}>
+                  <Config allproduct={allproduct} alldata={alldata} />
+                </TabPanel>
+                <TabPanel value={value} index={1} style={{ width: "24rem" }}>
+                  <MyUpload
+                    handleImageChange={handleImageChange}
+                    selectedFile={selectedFile}
+                    handleDeleteClick={handleDeleteClick}
+                    selectImage={selectImage}
+                    handleExpand={handleExpand}
+                  />
+                </TabPanel>
+                <TabPanel value={value} index={2} style={{ width: "24rem" }}>
+                  <PremiumImg
+                    selectImage={selectImage}
+                    images={images}
+                    setPremiumimg={setPremiumimg}
+                    handlePremiumImage={handlePremiumImage}
+                  />
+                </TabPanel>
+                <TabPanel value={value} index={3}>
+                  <Text onStyleChange={onStyleChange} />
+                </TabPanel>
+                <TabPanel value={value} index={6} style={{ height: "15rem" }}>
+                  <Qrcode setImage={setImage} />
+                </TabPanel>
+              </>
+            )}
+          </Box>
         </Box>
-      </Box>
       </ClickAwayListener>
 
       {/* Single Expand Image Dialog */}
