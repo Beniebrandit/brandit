@@ -57,6 +57,7 @@ const Sidebar = ({
   selectImage,
   onStyleChange,
   images,
+  vectorimage,
   setImage,
   setPremiumimg,
   allproduct,
@@ -238,6 +239,7 @@ const Sidebar = ({
                   <PremiumImg
                     selectImage={selectImage}
                     images={images}
+                    vectorimage={vectorimage}
                     setPremiumimg={setPremiumimg}
                     handlePremiumImage={handlePremiumImage}
                   />

@@ -8,7 +8,6 @@ export const ProductService = {
   Allproduct,
   Dataprice,
   registers,
-  image,
 };
 
 const token = localStorage.getItem("authToken");
@@ -73,18 +72,3 @@ function registers(data) {
       }
     });
 }
-
- function image() {
-   return axios
-     .get(apiEndpoint.image, {
-       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-       // params: {
-       //   email
-       // }
-     })
-     .then((res) => {
-       if (res && res.status === 200) {
-         return res.data;
-       }
-     });
- }

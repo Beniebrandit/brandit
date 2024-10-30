@@ -9,11 +9,13 @@ import { ProductService } from "../services/Product.service";
 import LoginDialog from "../components/common/LoginDialog";
 import CreateAccountDialog from "../components/common/CreateAccountDialog";
 import { Rnd } from "react-rnd";
+import { PremiumImage } from "../services/PremiumImage.service";
 
 const DesignOnline = () => {
   const [selectedFile, setSelectedFile] = useState([]);
   const [addimage, AddImage] = useState("");
   const [images, setImages] = useState();
+  const [vectorimage, setVectorImg] = useState();
   const [isImgEditorShown, setIsImgEditorShown] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [openSignUp, setOpenSignUp] = useState(false);
@@ -33,11 +35,12 @@ const DesignOnline = () => {
 
   useEffect(() => {
     getImages();
+    getVectorimage();
   }, []);
 
   const getImages = async () => {
     try {
-      const res = await ProductService.image();
+      const res = await PremiumImage.image();
       const response = res.data;
 
       const baseURL = `${process.env.REACT_APP_API_BASE_URL}`;
@@ -52,6 +55,29 @@ const DesignOnline = () => {
       });
 
       setImages(fixedImages);
+      //console.log(fixedImages, "Fixed image URLs");
+    } catch (error) {
+      console.error("Failed to fetch images:", error);
+    }
+  };
+
+  const getVectorimage = async () => {
+    try {
+      const res = await PremiumImage.vectorimage();
+      const response = res.data;
+
+      const baseURL = `${process.env.REACT_APP_API_BASE_URL}`;
+
+      // Fix image URLs by prepending the base URL
+      const fixedImages = response.map((image) => {
+        const imageUrl = image?.path || "";
+        return {
+          ...image,
+          url: imageUrl.startsWith("http") ? imageUrl : baseURL + imageUrl,
+        };
+      });
+
+      setVectorImg(fixedImages);
       //console.log(fixedImages, "Fixed image URLs");
     } catch (error) {
       console.error("Failed to fetch images:", error);
@@ -209,6 +235,7 @@ const DesignOnline = () => {
           selectImage={selectImage}
           onTabChange={handleTabChange}
           images={images}
+          vectorimage={vectorimage}
           setImage={setQrImage}
           setPremiumimg={setPremiumimg}
           alldata={alldata}

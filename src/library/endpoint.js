@@ -6,7 +6,8 @@ let endpoints = {
   product: "api/product/1?with[]=images&with[]=productSizes&with[]=categories.subCategories.image",
   selectedproductdata: "api/getPrice",
   register: "api/register",
-  image: "api/premium-images-category?with[]=images",
+  image: "api/premium-images-category?with[]=images&where[type]=1",
+  vectorimage: "api/premium-images-category?with[]=images&where[type]=2",
 };
 let API_ENDPOINTS = {};
 
