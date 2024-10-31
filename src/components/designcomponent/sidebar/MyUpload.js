@@ -8,13 +8,22 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 import useDrivePicker from "react-google-drive-picker";
 import DropboxChooser from "react-dropbox-chooser";
-const MyUpload = ({ handleImageChange, selectedFile, handleDeleteClick, selectImage, handleExpand }) => {
+const MyUpload = ({
+  handleImageChange,
+  selectedFile,
+  handleDeleteClick,
+  selectImage,
+  handleExpand,
+  handleDeleteDropboxFile,
+  handleSuccess,
+  dropdata,
+}) => {
   const [loading, setLoading] = useState([]);
   const [openPicker, data, authResponse] = useDrivePicker();
   const [accessToken, setAccessToken] = useState(null);
   const [drivedata, setDriveData] = useState();
   let [thumbnail, setThbumnail] = React.useState("");
-  let [dropdata, setDropData] = React.useState([]);
+  //let [dropdata, setDropData] = React.useState([]);
   // Function to refresh access token
   const APP_KEY = "3astslwrlzfkcvc";
   const refreshAccessToken = async () => {
@@ -51,20 +60,20 @@ const MyUpload = ({ handleImageChange, selectedFile, handleDeleteClick, selectIm
       console.error("Failed to refresh access token:", error.message);
     }
   };
-  const handleSuccess = (files) => {
-    console.log("Dropbox Files:", files);
-    if (files && files.length > 0) {
-      const updatedFiles = files.map((file) => {
-        const imageUrl = file.link.replace("&dl=0", "&dl=1");
-        return {
-          name: file.name,
-          link: imageUrl,
-          thumbnail: file.thumbnailLink,
-        };
-      });
-      setDropData(updatedFiles);
-    }
-  };
+  //const handleSuccess = (files) => {
+  //  console.log("Dropbox Files:", files);
+  //  if (files && files.length > 0) {
+  //    const updatedFiles = files.map((file) => {
+  //      const imageUrl = file.link.replace("&dl=0", "&dl=1");
+  //      return {
+  //        name: file.name,
+  //        link: imageUrl,
+  //        thumbnail: file.thumbnailLink,
+  //      };
+  //    });
+  //    setDropData(updatedFiles);
+  //  }
+  //};
 
   // const handleOpenPicker = async () => {
   //   // Refresh access token before opening the picker
@@ -178,18 +187,18 @@ const MyUpload = ({ handleImageChange, selectedFile, handleDeleteClick, selectIm
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
-    const newLoadingState = files.map(() => true); // Set loader true for each file
-    setLoading([...loading, ...newLoadingState]);
+
+    // Create a loading state array: existing files are false, new files are true
+    const newLoadingState = Array(selectedFile.length).fill(false).concat(Array(files.length).fill(true));
+    setLoading(newLoadingState);
 
     handleImageChange(event); // Call parent function to handle file input
 
     files.forEach((file, index) => {
-      // Simulate the loading process
       setTimeout(() => {
         setLoading((prev) => {
           const newState = [...prev];
-          newState[selectedFile.length + index] = false; // Disable loader for specific image
-          console.log(newState, "newState");
+          newState[selectedFile.length + index] = false; // Set loading to false for each new image
           return newState;
         });
       }, 2000); // Simulate 2-second loading for each image
@@ -197,15 +206,18 @@ const MyUpload = ({ handleImageChange, selectedFile, handleDeleteClick, selectIm
   };
 
   const handleDeleteImage = (index) => {
-    // Remove the image from the parent component's selectedFile state
-    handleDeleteClick(index);
+    handleDeleteClick(index); // Remove the image from selectedFile in the parent component
 
-    // Update the loading state to remove the corresponding loader entry
-    setLoading((prev) => prev.filter((_, i) => i !== index));
+    // Remove loader for the deleted image and reset the loading state
+    setLoading((prev) => {
+      const updatedLoading = prev.filter((_, i) => i !== index);
+      return updatedLoading.map((_, idx) => (idx < selectedFile.length ? false : true)); // Reset loaders
+    });
   };
-  const handleDeleteDropboxFile = (index) => {
-    setDropData(dropdata.filter((_, i) => i !== index));
-  };
+
+  //const handleDeleteDropboxFile = (index) => {
+  //  setDropData(dropdata.filter((_, i) => i !== index));
+  //};
   return (
     <>
       <Box
@@ -447,7 +459,7 @@ const MyUpload = ({ handleImageChange, selectedFile, handleDeleteClick, selectIm
           return (
             <img
               key={index}
-              src={file?.embedUrl} // Use embedUrl for image preview
+              src={file?.embedUrl || null} // Use embedUrl for image preview
               style={{
                 height: "500px",
                 width: "600px",
@@ -459,7 +471,7 @@ const MyUpload = ({ handleImageChange, selectedFile, handleDeleteClick, selectIm
         })}
       </Box>
 
-      {dropdata.length > 0 &&
+      {/*{dropdata.length > 0 &&
         dropdata.map((file, index) => (
           <div key={index}>
             <img
@@ -472,7 +484,99 @@ const MyUpload = ({ handleImageChange, selectedFile, handleDeleteClick, selectIm
             />
             <Button onClick={() => handleDeleteDropboxFile(index)}>Delete</Button>
           </div>
-        ))}
+        ))}*/}
+
+      {dropdata && (
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            gap: 2,
+          }}
+        >
+          {dropdata?.map((image, index) => (
+            <Box
+              key={index}
+              sx={{
+                position: "relative",
+                width: "100px",
+                height: "100px",
+                margin: "auto",
+                "&:hover .icon-box": {
+                  top: "0", // Move icons into view on hover
+                  opacity: 1, // Make icons visible on hover
+                },
+              }}
+            >
+              <img
+                src={image.link}
+                style={{
+                  height: "100px",
+                  width: "100px",
+                  display: "block",
+                  opacity: loading[index] ? 0.5 : 1,
+                }}
+                alt="img"
+                onClick={() => {
+                  selectImage(index, "upload");
+                }}
+              />
+              {loading[index] && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "rgba(255, 255, 255, 0.7)", // Semi-transparent overlay
+                  }}
+                >
+                  <CircularProgress size={24} />
+                </Box>
+              )}
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "0", // Position it over the image
+                  marginTop: "5px",
+                  left: "21%",
+                  transform: "translateX(-50%)",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "70px",
+                  opacity: 0, // Initially hide icons
+                  transition: "top 0.3s ease-in-out, opacity 0.3s ease-in-out", // Smooth transition
+                }}
+                className="icon-box"
+              >
+                <Button onClick={() => handleDeleteImage(index)}>
+                  <DeleteOutlinedIcon
+                    sx={{
+                      backgroundColor: "whitesmoke",
+                      padding: "3px",
+                      borderRadius: "5px",
+                    }}
+                  />
+                </Button>
+                <Button onClick={() => handleExpand(index)}>
+                  <OpenInFullOutlinedIcon
+                    sx={{
+                      backgroundColor: "whitesmoke",
+                      padding: "3px",
+                      borderRadius: "5px",
+                    }}
+                  />
+                </Button>
+              </Box>
+            </Box>
+          ))}
+        </Box>
+      )}
     </>
   );
 };

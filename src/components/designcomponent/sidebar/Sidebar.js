@@ -62,6 +62,9 @@ const Sidebar = ({
   setPremiumimg,
   allproduct,
   alldata,
+  handleDeleteDropboxFile,
+  handleSuccess,
+  dropdata,
 }) => {
   const [value, setValue] = React.useState(1);
   const [open, setOpen] = React.useState(false);
@@ -233,6 +236,9 @@ const Sidebar = ({
                     handleDeleteClick={handleDeleteClick}
                     selectImage={selectImage}
                     handleExpand={handleExpand}
+                    handleDeleteDropboxFile={handleDeleteDropboxFile}
+                    handleSuccess={handleSuccess}
+                    dropdata={dropdata}
                   />
                 </TabPanel>
                 <TabPanel value={value} index={2} style={{ width: "24rem" }}>

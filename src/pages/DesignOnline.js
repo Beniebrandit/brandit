@@ -24,10 +24,12 @@ const DesignOnline = () => {
   const [qrSize, setQrSize] = useState({ width: 150, height: 150 });
   const [premiumimg, setPremiumimg] = useState();
     const [isAccordionOpen, setIsAccordionOpen] = useState(true);
+      let [dropdata, setDropData] = React.useState([]);
 
   const [alldata, setAllData] = useState();
   const [allproduct, setAllProduct] = useState();
 
+        const APP_KEY = "3astslwrlzfkcvc";
 
     const handleAccordionToggle = (isOpen) => {
       setIsAccordionOpen(isOpen);
@@ -224,6 +226,26 @@ const DesignOnline = () => {
       getApi();
       Allproducts();
     }, []);
+
+
+      const handleSuccess = (files) => {
+        console.log("Dropbox Files:", files);
+        if (files && files.length > 0) {
+          const updatedFiles = files.map((file) => {
+            const imageUrl = file.link.replace("&dl=0", "&dl=1");
+            return {
+              name: file.name,
+              link: imageUrl,
+              thumbnail: file.thumbnailLink,
+            };
+          });
+          setDropData(updatedFiles);
+        }
+      };
+
+        const handleDeleteDropboxFile = (index) => {
+          setDropData(dropdata.filter((_, i) => i !== index));
+        };
   return (
     <>
       <HeaderDesign handleClickOpenLogin={handleClickOpenLogin} />
@@ -240,6 +262,9 @@ const DesignOnline = () => {
           setPremiumimg={setPremiumimg}
           alldata={alldata}
           allproduct={allproduct}
+          handleDeleteDropboxFile={handleDeleteDropboxFile}
+          handleSuccess={handleSuccess}
+          dropdata={dropdata}
           sx={{
             width: { xs: "110px", sm: "100%" }, // Full width on xs, fixed width on sm and up
             position: { xs: "relative", sm: "fixed" },
