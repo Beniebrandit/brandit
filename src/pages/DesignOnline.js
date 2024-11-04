@@ -143,7 +143,7 @@ const DesignOnline = () => {
         AddImage(selectedImageUrl); // Use the full URL here
         openImgEditor();
       } else {
-        console.error("No valid premium image at index", index);
+        console.error("No valid premium image at premium index", index);
       }
     } else if (source === "upload" && selectedFile && selectedFile.length > 0) {
       const selectedImage = selectedFile[index];
@@ -151,7 +151,17 @@ const DesignOnline = () => {
         AddImage(selectedImage);
         openImgEditor();
       } else {
-        console.error("No valid uploaded image at index", index);
+        console.error("No valid uploaded image at upload index", index);
+      }
+    } else if (source === "dropdata" && dropdata && dropdata.length > 0) {
+      const DropImage = dropdata[index];
+      console.log("DropImage", DropImage);
+      console.log("dropdata".dropdata);
+      if (DropImage) {
+        AddImage(DropImage.link);
+        openImgEditor();
+      } else {
+        console.error("No valid uploaded image at dropdata index", index);
       }
     } else {
       console.error("No valid image found at the selected index or source");
@@ -228,20 +238,21 @@ const DesignOnline = () => {
     }, []);
 
 
-      const handleSuccess = (files) => {
-        console.log("Dropbox Files:", files);
-        if (files && files.length > 0) {
-          const updatedFiles = files.map((file) => {
-            const imageUrl = file.link.replace("&dl=0", "&dl=1");
-            return {
-              name: file.name,
-              link: imageUrl,
-              thumbnail: file.thumbnailLink,
-            };
-          });
-          setDropData(updatedFiles);
-        }
-      };
+  const handleSuccess = (files) => {
+    console.log("Dropbox Files:", files);
+    if (files && files.length > 0) {
+      const updatedFiles = files.map((file) => {
+        const imageUrl = file.link.replace("&dl=0", "&dl=1");
+        return {
+          name: file.name,
+          link: imageUrl,
+          thumbnail: file.thumbnailLink,
+        };
+      });
+      setDropData(updatedFiles);
+      console.log("se", updatedFiles);
+    }
+  };
 
         const handleDeleteDropboxFile = (index) => {
           setDropData(dropdata.filter((_, i) => i !== index));

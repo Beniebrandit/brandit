@@ -98,13 +98,13 @@ const Sidebar = ({
     setDelOpen(true); // Open the delete confirmation dialog
   };
 
-  const handleExpand = (index) => {
-    const Expand = selectedFile[index];
-    setExpandImage(Expand);
-    setExpandedImageIndex(index); // Set the currently expanded image index
-    //console.log("index", index);
-    handleClickOpen();
-  };
+ const handleExpand = (index, source) => {
+   const image = source === "upload" ? selectedFile[index] : dropdata[index].link;
+   setExpandImage(image);
+   setExpandedImageIndex(index);
+   console.log("Expanded image index:", index, "Source:", source);
+   handleClickOpen();
+ };
 
   const handleDeleteConfirm = () => {
     if (imageToDelete !== null) {

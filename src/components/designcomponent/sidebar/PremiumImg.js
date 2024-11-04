@@ -138,8 +138,8 @@ const PremiumImg = ({ selectImage, images, vectorimage, setPremiumimg, handlePre
                   gridTemplateColumns: "1fr 1fr",
                 }}
               >
-                {selectedImages.premium
-                  ? selectedImages.premium.map((image, index) => (
+                {selectedImages?.premium
+                  ? selectedImages?.premium?.map((image, index) => (
                       <Box key={index} style={{ display: "flex", justifyContent: "center" }}>
                         <img
                           src={`${process.env.REACT_APP_API_BASE_URL}/${image.path}`}

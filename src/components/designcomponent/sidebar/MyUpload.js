@@ -370,87 +370,92 @@ const MyUpload = ({
             gap: 2,
           }}
         >
-          {selectedFile?.map((image, index) => (
-            <Box
-              key={index}
-              sx={{
-                position: "relative",
-                width: "100px",
-                height: "100px",
-                margin: "auto",
-                "&:hover .icon-box": {
-                  top: "0", // Move icons into view on hover
-                  opacity: 1, // Make icons visible on hover
-                },
-              }}
-            >
-              <img
-                src={image}
-                style={{
-                  height: "100px",
+          {selectedFile.map(
+            (
+              image,
+              selectedIndex // Changed to selectedIndex
+            ) => (
+              <Box
+                key={selectedIndex}
+                sx={{
+                  position: "relative",
                   width: "100px",
-                  display: "block",
-                  opacity: loading[index] ? 0.5 : 1,
+                  height: "100px",
+                  margin: "auto",
+                  "&:hover .icon-box": {
+                    top: "0", // Move icons into view on hover
+                    opacity: 1, // Make icons visible on hover
+                  },
                 }}
-                alt="img"
-                onClick={() => {
-                  selectImage(index, "upload");
-                }}
-              />
-              {loading[index] && (
+              >
+                <img
+                  src={image}
+                  style={{
+                    height: "100px",
+                    width: "100px",
+                    display: "block",
+                    opacity: loading[selectedIndex] ? 0.5 : 1,
+                  }}
+                  alt="img"
+                  onClick={() => {
+                    selectImage(selectedIndex, "upload");
+                  }}
+                />
+                {loading[selectedIndex] && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      backgroundColor: "rgba(255, 255, 255, 0.7)", // Semi-transparent overlay
+                    }}
+                  >
+                    <CircularProgress size={24} />
+                  </Box>
+                )}
                 <Box
                   sx={{
                     position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
+                    top: "0", // Position it over the image
+                    marginTop: "5px",
+                    left: "21%",
+                    transform: "translateX(-50%)",
                     display: "flex",
-                    justifyContent: "center",
+                    justifyContent: "space-between",
                     alignItems: "center",
-                    backgroundColor: "rgba(255, 255, 255, 0.7)", // Semi-transparent overlay
+                    width: "70px",
+                    opacity: 0, // Initially hide icons
+                    transition: "top 0.3s ease-in-out, opacity 0.3s ease-in-out", // Smooth transition
                   }}
+                  className="icon-box"
                 >
-                  <CircularProgress size={24} />
+                  <Button onClick={() => handleDeleteImage(selectedIndex)}>
+                    <DeleteOutlinedIcon
+                      sx={{
+                        backgroundColor: "whitesmoke",
+                        padding: "3px",
+                        borderRadius: "5px",
+                      }}
+                    />
+                  </Button>
+                  <Button onClick={() => handleExpand(selectedIndex, "upload")}>
+                    <OpenInFullOutlinedIcon
+                      sx={{
+                        backgroundColor: "whitesmoke",
+                        padding: "3px",
+                        borderRadius: "5px",
+                      }}
+                    />
+                  </Button>
                 </Box>
-              )}
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: "0", // Position it over the image
-                  marginTop: "5px",
-                  left: "21%",
-                  transform: "translateX(-50%)",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "70px",
-                  opacity: 0, // Initially hide icons
-                  transition: "top 0.3s ease-in-out, opacity 0.3s ease-in-out", // Smooth transition
-                }}
-                className="icon-box"
-              >
-                <Button onClick={() => handleDeleteImage(index)}>
-                  <DeleteOutlinedIcon
-                    sx={{
-                      backgroundColor: "whitesmoke",
-                      padding: "3px",
-                      borderRadius: "5px",
-                    }}
-                  />
-                </Button>
-                <Button onClick={() => handleExpand(index)}>
-                  <OpenInFullOutlinedIcon
-                    sx={{
-                      backgroundColor: "whitesmoke",
-                      padding: "3px",
-                      borderRadius: "5px",
-                    }}
-                  />
-                </Button>
               </Box>
-            </Box>
-          ))}
+            )
+          )}
         </Box>
       )}
       <Box>
@@ -471,21 +476,6 @@ const MyUpload = ({
         })}
       </Box>
 
-      {/*{dropdata.length > 0 &&
-        dropdata.map((file, index) => (
-          <div key={index}>
-            <img
-              src={file.link}
-              alt={file.name}
-              style={{
-                height: "40%",
-                width: "40%",
-              }}
-            />
-            <Button onClick={() => handleDeleteDropboxFile(index)}>Delete</Button>
-          </div>
-        ))}*/}
-
       {dropdata && (
         <Box
           sx={{
@@ -494,87 +484,92 @@ const MyUpload = ({
             gap: 2,
           }}
         >
-          {dropdata?.map((image, index) => (
-            <Box
-              key={index}
-              sx={{
-                position: "relative",
-                width: "100px",
-                height: "100px",
-                margin: "auto",
-                "&:hover .icon-box": {
-                  top: "0", // Move icons into view on hover
-                  opacity: 1, // Make icons visible on hover
-                },
-              }}
-            >
-              <img
-                src={image.link}
-                style={{
-                  height: "100px",
+          {dropdata.map(
+            (
+              image,
+              dropIndex // Changed to dropIndex
+            ) => (
+              <Box
+                key={dropIndex}
+                sx={{
+                  position: "relative",
                   width: "100px",
-                  display: "block",
-                  opacity: loading[index] ? 0.5 : 1,
+                  height: "100px",
+                  margin: "auto",
+                  "&:hover .icon-box": {
+                    top: "0", // Move icons into view on hover
+                    opacity: 1, // Make icons visible on hover
+                  },
                 }}
-                alt="img"
-                onClick={() => {
-                  selectImage(index, "upload");
-                }}
-              />
-              {loading[index] && (
+              >
+                <img
+                  src={image.link}
+                  style={{
+                    height: "100px",
+                    width: "100px",
+                    display: "block",
+                    opacity: loading[dropIndex] ? 0.5 : 1,
+                  }}
+                  alt="img"
+                  onClick={() => {
+                    selectImage(dropIndex, "dropdata");
+                  }}
+                />
+                {loading[dropIndex] && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      backgroundColor: "rgba(255, 255, 255, 0.7)", // Semi-transparent overlay
+                    }}
+                  >
+                    <CircularProgress size={24} />
+                  </Box>
+                )}
                 <Box
                   sx={{
                     position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
+                    top: "0", // Position it over the image
+                    marginTop: "5px",
+                    left: "21%",
+                    transform: "translateX(-50%)",
                     display: "flex",
-                    justifyContent: "center",
+                    justifyContent: "space-between",
                     alignItems: "center",
-                    backgroundColor: "rgba(255, 255, 255, 0.7)", // Semi-transparent overlay
+                    width: "70px",
+                    opacity: 0, // Initially hide icons
+                    transition: "top 0.3s ease-in-out, opacity 0.3s ease-in-out", // Smooth transition
                   }}
+                  className="icon-box"
                 >
-                  <CircularProgress size={24} />
+                  <Button onClick={() => handleDeleteImage(dropIndex)}>
+                    <DeleteOutlinedIcon
+                      sx={{
+                        backgroundColor: "whitesmoke",
+                        padding: "3px",
+                        borderRadius: "5px",
+                      }}
+                    />
+                  </Button>
+                  <Button onClick={() => handleExpand(dropIndex, "dropdata")}>
+                    <OpenInFullOutlinedIcon
+                      sx={{
+                        backgroundColor: "whitesmoke",
+                        padding: "3px",
+                        borderRadius: "5px",
+                      }}
+                    />
+                  </Button>
                 </Box>
-              )}
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: "0", // Position it over the image
-                  marginTop: "5px",
-                  left: "21%",
-                  transform: "translateX(-50%)",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "70px",
-                  opacity: 0, // Initially hide icons
-                  transition: "top 0.3s ease-in-out, opacity 0.3s ease-in-out", // Smooth transition
-                }}
-                className="icon-box"
-              >
-                <Button onClick={() => handleDeleteImage(index)}>
-                  <DeleteOutlinedIcon
-                    sx={{
-                      backgroundColor: "whitesmoke",
-                      padding: "3px",
-                      borderRadius: "5px",
-                    }}
-                  />
-                </Button>
-                <Button onClick={() => handleExpand(index)}>
-                  <OpenInFullOutlinedIcon
-                    sx={{
-                      backgroundColor: "whitesmoke",
-                      padding: "3px",
-                      borderRadius: "5px",
-                    }}
-                  />
-                </Button>
               </Box>
-            </Box>
-          ))}
+            )
+          )}
         </Box>
       )}
     </>
