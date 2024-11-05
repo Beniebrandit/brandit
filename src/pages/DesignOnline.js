@@ -127,14 +127,21 @@ const DesignOnline = () => {
     }
   };
 
-  const handleDeleteImage = (index) => {
-    setSelectedFile((prevFiles) => prevFiles.filter((_, i) => i !== index));
-    console.log(index, "index");
-  };
+const onDeleteImage = (index, source) => {
+  if (source === "upload") {
+    // Remove image from selectedFile
+    setSelectedFile((prev) => prev.filter((_, i) => i !== index));
+  } else if (source === "dropdata") {
+    // Remove image from dropdata
+    handleDeleteDropboxFile(dropdata[index].id); // Assume you have a function to delete from Dropbox
+  }
+};
+
 
   const selectImage = (index, source) => {
     let selectedImageUrl = "";
-
+    console.log("selectImageIndex", index);
+    console.log("source", source);
     if (source === "premium" && premiumimg && premiumimg.length > 0) {
       const selectedImage = premiumimg[index];
 
@@ -264,7 +271,7 @@ const DesignOnline = () => {
         <Sidebar
           handleImageChange={handleImageChange}
           selectedFile={selectedFile}
-          onDeleteImage={handleDeleteImage}
+          onDeleteImage={onDeleteImage}
           selectImage={selectImage}
           onTabChange={handleTabChange}
           images={images}

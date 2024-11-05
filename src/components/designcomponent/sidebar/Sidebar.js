@@ -75,10 +75,13 @@ const Sidebar = ({
   const [expandedImageIndex, setExpandedImageIndex] = useState(null);
   const tabRef = useRef(null);
   const dialogRef = useRef(null);
+const [selectedSource, setSelectedSource] = useState(null);
+ const [selectedSourceToDelete, setSelectedSourceToDelete] = useState(null);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
+
   const handleClose = () => {
     setOpen(false);
     setExpandedImageIndex(null); // Reset the index when the dialog is closed
@@ -93,25 +96,46 @@ const Sidebar = ({
     setImageToDelete(null); // Reset the index when the dialog is closed
   };
 
-  const handleDeleteClick = (index) => {
+  const handleDeleteClick = (index, source) => {
     setImageToDelete(index); // Set the correct image index
+    setSelectedSourceToDelete(source); // Set the source for the image to delete
     setDelOpen(true); // Open the delete confirmation dialog
   };
+  
+const handleExpand = (index, source) => {
+  let image;
+  console.log("selectImageIndex", index);
+  console.log("source", source);
+  setSelectedSource(source); // Set the source state here
 
- const handleExpand = (index, source) => {
-   const image = source === "upload" ? selectedFile[index] : dropdata[index].link;
-   setExpandImage(image);
-   setExpandedImageIndex(index);
-   console.log("Expanded image index:", index, "Source:", source);
-   handleClickOpen();
- };
+  if (source === "upload") {
+    image = selectedFile[index]; // My Uploads
+  } else if (source === "premium") {
+    image = `${process.env.REACT_APP_API_BASE_URL}/${vectorimage[index]}`; // Premium Images
+  } else if (source === "dropdata") {
+    image = dropdata[index].link; // Dropbox Data
+  }
+  setExpandImage(image);
+  setExpandedImageIndex(index);
+  console.log("Expanded image index:", index, "Source:", source);
+  handleClickOpen();
+};
+
+// When calling selectImage
+const handleSelectImage = () => {
+  if (expandedImageIndex !== null && selectedSource) {
+    selectImage(expandedImageIndex, selectedSource); // Pass the stored source here
+  }
+};
 
   const handleDeleteConfirm = () => {
-    if (imageToDelete !== null) {
-      onDeleteImage(imageToDelete); // Delete the image using the passed prop function
-      setDelOpen(false);
-      setImageToDelete(null); // Reset the index after deletion
-    }
+    console.log("imageToDelete", imageToDelete);
+   if (imageToDelete !== null) {
+     onDeleteImage(imageToDelete, selectedSourceToDelete); // Pass the source to the delete function
+     setDelOpen(false);
+     setImageToDelete(null); // Reset the index after deletion
+     setSelectedSourceToDelete(null); // Reset the source after deletion
+   }
   };
 
   const handleChange = (event, newValue) => {
@@ -146,11 +170,14 @@ const Sidebar = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  
+const handleClickAway = () => {
+  // Only close the tab if neither dialog is open
+  if (open || delopen) return;
+  setIsTabOpen(false);
+};
 
-  const handleClickAway = () => {
-    if (open) return;
-    setIsTabOpen(false);
-  };
+  
 
   return (
     <>
@@ -324,10 +351,8 @@ const Sidebar = ({
             variant="contained"
             color="success"
             onClick={() => {
-              if (expandedImageIndex !== null) {
-                selectImage(expandedImageIndex, value === 1 ? "upload" : "premium");
-                handleClose();
-              }
+              handleSelectImage();
+              handleClose();
             }}
           >
             Add Image
@@ -340,7 +365,12 @@ const Sidebar = ({
         PaperProps={{
           ref: dialogRef, // Assign ref to the dialog for outside click detection
         }}
-        onClose={handledelClose}
+        onClose={(event, reason) => {
+          // Only handle the dialog close, do not affect the tab
+          if (reason !== "backdropClick") {
+            handledelClose(event); // This will only close the dialog
+          }
+        }}
         aria-labelledby="customized-dialog-title"
         open={delopen}
         maxWidth="md"
@@ -358,13 +388,28 @@ const Sidebar = ({
       >
         <DialogTitle sx={{ p: 0, position: "relative" }}>
           <Typography sx={{ textAlign: "center", padding: "1rem" }}>Are you sure you want to delete this?</Typography>
+          {/* Close icon */}
+          <IconButton onClick={handledelClose} sx={{ position: "absolute", top: 8, right: 8 }}>
+            <CloseOutlinedIcon />
+          </IconButton>
         </DialogTitle>
 
         <DialogActions sx={{ justifyContent: "center", padding: "16px" }}>
-          <Button variant="contained" color="success" onClick={handleDeleteConfirm}>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => {
+              handleDeleteConfirm(); // Confirm action logic
+              // Keep the tab open, only close the dialog
+            }}
+          >
             Yes
           </Button>
-          <Button variant="contained" color="success" onClick={handledelClose}>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={handledelClose} // This only closes the dialog, not the tab
+          >
             No
           </Button>
         </DialogActions>

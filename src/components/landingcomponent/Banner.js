@@ -65,7 +65,7 @@ const HeaderHome = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
           </Box>
         </Box>
 
-        <Box>
+        {/*<Box>
           <Box
             sx={{
               display: "flex",
@@ -114,7 +114,7 @@ const HeaderHome = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
               </Box>
             </Box>
           </Box>
-        </Box>
+        </Box>*/}
       </Box>
       <Box sx={{ margin: "auto", marginTop: "-3rem", position: "relative" }}>
         <Container

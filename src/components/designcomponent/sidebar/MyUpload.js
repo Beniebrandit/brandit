@@ -205,16 +205,14 @@ const MyUpload = ({
     });
   };
 
-  const handleDeleteImage = (index) => {
-    handleDeleteClick(index); // Remove the image from selectedFile in the parent component
-
-    // Remove loader for the deleted image and reset the loading state
+  const handleDeleteImage = (index, source) => {
+    console.log("handleDeleteImage",source);
+    handleDeleteClick(index, source); // Call parent function to delete image
     setLoading((prev) => {
       const updatedLoading = prev.filter((_, i) => i !== index);
       return updatedLoading.map((_, idx) => (idx < selectedFile.length ? false : true)); // Reset loaders
     });
   };
-
   //const handleDeleteDropboxFile = (index) => {
   //  setDropData(dropdata.filter((_, i) => i !== index));
   //};
@@ -434,7 +432,7 @@ const MyUpload = ({
                   }}
                   className="icon-box"
                 >
-                  <Button onClick={() => handleDeleteImage(selectedIndex)}>
+                  <Button onClick={() => handleDeleteImage(selectedIndex, "upload")}>
                     <DeleteOutlinedIcon
                       sx={{
                         backgroundColor: "whitesmoke",
@@ -548,7 +546,7 @@ const MyUpload = ({
                   }}
                   className="icon-box"
                 >
-                  <Button onClick={() => handleDeleteImage(dropIndex)}>
+                  <Button onClick={() => handleDeleteImage(dropIndex, "dropdata")}>
                     <DeleteOutlinedIcon
                       sx={{
                         backgroundColor: "whitesmoke",
