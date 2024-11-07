@@ -1,5 +1,5 @@
 import { Box, Container, Typography, Button, TextField } from "@mui/material";
-import banner1 from "../../asset/images/banner1.png";
+import banner1 from "../../asset/images/banner1.jpg";
 import MaskGroup from "../../asset/images/Mask Group.png";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import React, { useState } from "react";
