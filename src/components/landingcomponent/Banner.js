@@ -67,7 +67,7 @@ const HeaderHome = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                 },
               }}
             >
-              CREAT <br />
+              CREATE <br />
               SIGN IN MINUTES!
             </Typography>
             <Box sx={{ display: "flex", alignItems: "center", paddingTop: "5px" }}>
@@ -198,7 +198,7 @@ const HeaderHome = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
           >
             <Box sx={{ margin: "auto" }}>
               <Typography>Material</Typography>
-              <TextField placeholder="Stickers and Decals" />
+              <TextField placeholder="Stickers and Decals" sx={{ padding: "6.5px 14px !important" }} />
             </Box>
             <Box sx={{ margin: "auto" }}>
               <Typography>Size</Typography>
