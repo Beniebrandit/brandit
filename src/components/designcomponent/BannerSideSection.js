@@ -9,6 +9,7 @@ import {
   useTheme,
 } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { ReactComponent as Sidebarsetting } from "../../asset/images/sidebar_setting.svg";
 import React, { useState } from "react";
 import { ReactComponent as Eye } from "../../asset/images/Eye.svg";
 
@@ -66,7 +67,20 @@ const BannerSideSection = ({ onToggleAccordion }) => {
               }}
             >
               <Box>
-                <Typography>Material</Typography>
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Typography>Material</Typography>
+                  <Box sx={{ display: "flex", gap: "5px", paddingLeft: "2px" }}>
+                    <Sidebarsetting
+                      style={{
+                        borderLeft: "1.5px dashed #b8b8b8",
+                        height: "18px",
+                        paddingLeft: "5px",
+                      }}
+                    />
+                    <Typography sx={{ fontSize: "10px" }}>Config</Typography>
+                  </Box>
+                </Box>
+
                 <Typography sx={{ fontSize: "12px" }}>Stickers and Decals</Typography>
               </Box>
               <Box>

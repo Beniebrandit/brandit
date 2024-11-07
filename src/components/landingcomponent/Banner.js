@@ -1,11 +1,5 @@
-import {
-  Box,
-  Container,
-  Typography,
-  Button,
-  TextField,
-} from "@mui/material";
-import star from "../../asset/images/Star.png";
+import { Box, Container, Typography, Button, TextField } from "@mui/material";
+import banner1 from "../../asset/images/banner1.png";
 import MaskGroup from "../../asset/images/Mask Group.png";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import React, { useState } from "react";
@@ -20,51 +14,108 @@ const HeaderHome = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
   return (
     <>
       <PopUp open={open} handleClose={handleClose} />
-      <Box className="background">
+
+      <Box>
         <Navbar handleClickOpenSignUp={handleClickOpenSignUp} handleClickOpenLogin={handleClickOpenLogin} />
-        <Box
-          sx={{
-            marginLeft: {
-              lg: "10rem",
-              md: "8rem",
-            },
-            marginTop: "1rem",
-            padding: "2rem",
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+
+        <div style={{ position: "relative" }}>
+          <div
+            style={{
+              position: "absolute",
+              top: "0",
+              left: "0",
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <img
+              src={banner1}
+              width="100%"
+              height="100%"
+              style={{ objectFit: "cover", height: "100%", width: "100%" }}
+            />
+          </div>
+
+          <Box
+            sx={{
+              position: "relative",
+              zIndex: 99,
+              padding: "70px 50px 130px",
+              marginLeft: {
+                lg: "10rem",
+                md: "8rem",
+              },
+              marginTop: "1rem",
+            }}
+          >
+            {/*<Box sx={{ display: "flex", alignItems: "center" }}>
             <img src={star} alt="star" />
             <Typography sx={{ fontSize: { xs: "13px", sm: "16px" }, padding: "1rem" }}>
               Rated By Hundreds Of Satisfied Customers
             </Typography>
-          </Box>
-          <Typography sx={{ fontSize: { xs: "25px", sm: "35px" } }}>
-            Create <span style={{ color: "#E0CE8F" }}>Custom</span> <br />
-            Sign in Minutes!
-          </Typography>
-          <Box sx={{ display: "flex", alignItems: "center", paddingTop: "5px" }}>
-            <CheckCircleIcon sx={{ fontSize: { xs: "18px", sm: "24px" } }} />
-
-            <Typography sx={{ fontSize: { xs: "13px", sm: "16px" } }}>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
+          </Box>*/}
+            <Typography
+              sx={{
+                fontSize: {
+                  xs: "40px",
+                  sm: "35px",
+                  color: " white",
+                  fontWeight: "600",
+                  lineHeight: "52.8px",
+                  margin: 0,
+                  //fontSize: "40px",
+                },
+              }}
+            >
+              CREAT <br />
+              SIGN IN MINUTES!
             </Typography>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center", paddingTop: "5px" }}>
-            <CheckCircleIcon sx={{ fontSize: { xs: "18px", sm: "24px" } }} />
+            <Box sx={{ display: "flex", alignItems: "center", paddingTop: "5px" }}>
+              <CheckCircleIcon sx={{ fontSize: { xs: "18px", sm: "24px" }, color: "white" }} />
+              <Typography
+                sx={{
+                  color: "white",
+                  fontWeight: "400",
+                  //margin: "16px 0 0 0",
+                  fontSize: { xl: "20px", sm: "16px" },
+                  lineHeight: "30px",
+                }}
+                // sx={{ fontSize: { xs: "13px", sm: "16px" } }}
+              >
+                High-quality materials and printing
+              </Typography>
+            </Box>
+            <Box sx={{ display: "flex", alignItems: "center", paddingTop: "5px" }}>
+              <CheckCircleIcon sx={{ fontSize: { xs: "18px", sm: "24px" }, color: "white" }} />
 
-            <Typography sx={{ fontSize: { xs: "13px", sm: "16px" } }}>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center", paddingTop: "5px" }}>
-            <CheckCircleIcon sx={{ fontSize: { xs: "18px", sm: "24px" } }} />
+              <Typography
+                sx={{
+                  color: "white",
+                  fontWeight: "400",
 
-            <Typography sx={{ fontSize: { xs: "13px", sm: "16px" } }}>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-            </Typography>
-          </Box>
-        </Box>
+                  fontSize: { xl: "20px", sm: "16px" },
+                  lineHeight: "30px",
+                }}
+              >
+                Fast and easy online customization
+              </Typography>
+            </Box>
+            <Box sx={{ display: "flex", alignItems: "center", paddingTop: "5px" }}>
+              <CheckCircleIcon sx={{ fontSize: { xs: "18px", sm: "24px" }, color: "white" }} />
 
+              <Typography
+                sx={{
+                  color: "white",
+                  fontWeight: "400",
+                  fontSize: { xl: "20px", sm: "16px" },
+                  lineHeight: "30px",
+                }}
+              >
+                Perfect for events, promotions, and branding
+              </Typography>
+            </Box>
+          </Box>
+        </div>
         {/*<Box>
           <Box
             sx={{
@@ -120,7 +171,7 @@ const HeaderHome = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
         <Container
           sx={{
             width: {
-              lg: "50rem",
+              lg: "1200px",
               md: "40rem",
               sm: "35rem",
             },
@@ -139,7 +190,7 @@ const HeaderHome = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
               },
               gap: "1rem",
               backgroundColor: "white",
-              padding: "1rem",
+              padding: "1.5rem",
               borderRadius: "1rem",
               // border:"1px solid gray",
               boxShadow: "10px 10px 35px -15px",

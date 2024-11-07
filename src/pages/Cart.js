@@ -7,6 +7,7 @@ import Navbar from "../components/landingcomponent/Navbar";
 import { DesignServiceFooter } from "../components/designservice/DesignServiceFooter";
 import LoginDialog from "../components/common/LoginDialog";
 import CreateAccountDialog from "../components/common/CreateAccountDialog";
+import Cartform from "../components/cartcomponent/Cartform";
 
 const products = [
   {
@@ -91,6 +92,7 @@ const Cart = () => {
   return (
     <>
       <Navbar handleClickOpenLogin={handleClickOpenLogin} handleClickOpenSignUp={handleClickOpenSignUp} />
+      <Cartform/>
       <Container maxWidth="lg" sx={{ mt: 4, mb: 6 }}>
         {/* Shopping Cart Heading */}
         <Box textAlign="center" mb={4}>
