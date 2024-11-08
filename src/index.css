@@ -121,6 +121,19 @@ code {
   max-width: 100%; /* Ensures the container doesn't exceed the screen width */
 }
 
+.basic_tabs_example .css-heg063-MuiTabs-flexContainer {
+  justify-content: space-between !important;
+}
+.basic_tabs_example .css-heg063-MuiTabs-flexContainer button{
+  font-weight: 400 !important;
+  color:#868686 !important;
+}
+.basic_tabs_example .css-heg063-MuiTabs-flexContainer button.Mui-selected{
+  color: #3F5163 !important;
+}
+.basic_tabs_example span.MuiTabs-indicator{
+  background-color: #3F5163 !important;
+}
 
 /*.background {
   background-image: url("./asset/images/banner1.png");
@@ -235,4 +248,27 @@ html .pintura-editor {
 }
 .pintura-editor {
   height: 600px;
+}
+.product-image{
+  position: relative;
+}
+.category-img{
+  width: 100%;
+    aspect-ratio: 1 / 0.8;
+    object-fit: cover;
+    object-position: center center;
+    /*height: "18rem", */
+    /*width: "18rem"*/
+}
+.product-image .cust_arrow {
+    width: 61px !important;
+    height: 61px !important;
+    top: 100% !important;
+    right: 30px !important;
+    margin: 0px !important;
+    position: absolute;
+    transform: translateY(-50%);
+    box-shadow: 0px 0px 50px rgba(11, 58, 86, 0.1);
+    border-radius: 50%;
+    overflow: hidden;
 }

@@ -1,4 +1,4 @@
-import { Box, Container, Typography, Button, TextField } from "@mui/material";
+import { Box, Container, Typography, Button, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import banner1 from "../../asset/images/banner1.jpg";
 import MaskGroup from "../../asset/images/Mask Group.png";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -180,6 +180,101 @@ const HeaderHome = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
           <Box
             sx={{
               display: "grid",
+              gridTemplateColumns: {
+                xl: "3fr 2fr 1fr 1fr 1.5fr",
+                lg: "3fr 2fr 1fr 1fr 1.5fr",
+                md: "repeat(3, 1fr)",
+                sm: "repeat(2 ,1fr)",
+                xs: "repeat(1 ,1fr)",
+              },
+              gap: "1rem",
+              backgroundColor: "white",
+              padding: "1.5rem",
+              borderRadius: "1rem",
+              boxShadow: "10px 10px 35px -15px",
+            }}
+          >
+            {/* Material Field */}
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <Typography sx={{ fontSize: "16px", color: "#3F5163", fontWeight: 400 }}>Material</Typography>
+              <TextField placeholder="Stickers and Decals" variant="outlined" fullWidth size="small" />
+            </Box>
+
+            {/* Size Field */}
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <Typography sx={{ fontSize: "16px", color: "#3F5163", fontWeight: 400 }}>Size</Typography>
+              <FormControl sx={{ minWidth: 120 }} size="small" fullWidth>
+                <Select labelId="size-select-label" id="size-select" defaultValue="" displayEmpty>
+                  <MenuItem value="" disabled>
+                    6" x 24"
+                  </MenuItem>
+                  <MenuItem value={10}>6" x 24"</MenuItem>
+                  <MenuItem value={20}>12" x 24"</MenuItem>
+                  <MenuItem value={30}>18" x 24"</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+
+            {/* Quantity Field */}
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <Typography sx={{ fontSize: "16px", color: "#3F5163", fontWeight: 400 }}>Qty</Typography>
+              <TextField
+                placeholder="1"
+                variant="outlined"
+                fullWidth
+                size="small"
+                type="number"
+                inputProps={{ min: 1 }}
+              />
+            </Box>
+
+            {/* Price Section */}
+            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+              <Typography sx={{ fontSize: "26px", color: "#3F5163", fontWeight: 700 }}>$10.65</Typography>
+              <Box sx={{display:'flex',alignItems:'center',justifyContent:'space-around',width:'100%'}}>
+                <Typography sx={{ fontSize: "16px", color: "#E0CE8F", textDecoration: "line-through" }}>
+                  $13.31
+                </Typography>
+                <Typography sx={{ fontSize: "20px", color: "#3F5163", fontWeight:500 }}>each</Typography>
+              </Box>
+            </Box>
+
+            {/* Design Now Button */}
+            <Button
+              onClick={handleOpen}
+              sx={{
+                margin:"10px 0px 0px 0px",
+                //width: "7rem",
+                height:'60px',
+                //margin: "auto",
+                backgroundColor: "#3F5163",
+                color: "white",
+                fontWeight: 500,
+                borderRadius: "8px",
+                "&:hover": {
+                  backgroundColor: "#2E4053",
+                },
+              }}
+            >
+              Design Now
+            </Button>
+          </Box>
+        </Container>
+      </Box>
+
+      {/*<Box sx={{ margin: "auto", marginTop: "-3rem", position: "relative" }}>
+        <Container
+          sx={{
+            width: {
+              lg: "1200px",
+              md: "40rem",
+              sm: "35rem",
+            },
+          }}
+        >
+          <Box
+            sx={{
+              display: "grid",
               // gridTemplateColumns: "3fr 2fr 1fr 1fr 1.5fr",
               gridTemplateColumns: {
                 xl: "repeat(5, 1fr)", //
@@ -196,16 +291,32 @@ const HeaderHome = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
               boxShadow: "10px 10px 35px -15px",
             }}
           >
-            <Box sx={{ margin: "auto" }}>
-              <Typography>Material</Typography>
-              <TextField placeholder="Stickers and Decals" sx={{ padding: "6.5px 14px !important" }} />
+            <Box sx={{ margin: "auto", padding: "auto", display: "flex", flexWrap: "wrap", gap: "8px" }}>
+              <Typography sx={{ fontSize: "20px", color: "#3F5163", fontWeight: 400 }}>Material</Typography>
+              <TextField placeholder="Stickers and Decals" />
             </Box>
-            <Box sx={{ margin: "auto" }}>
-              <Typography>Size</Typography>
-              <TextField placeholder="6 x 24" />
+            <Box sx={{ margin: "auto", flexWrap: "wrap", gap: "8px" }}>
+              <Typography sx={{ fontSize: "20px", color: "#3F5163", fontWeight: 400 }}>Size</Typography>
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <InputLabel id="demo-select-large-label">"6 x 24"</InputLabel>
+                <Select
+                  labelId="demo-select-large-label"
+                  id="demo-select-large"
+                  //value="6 x 24"
+                  label="Age"
+                  //onChange={handleChange}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
-            <Box sx={{ margin: "auto" }}>
-              <Typography>Qty</Typography>
+            <Box sx={{ margin: "auto", display: "flex", flexWrap: "wrap", gap: "8px" }}>
+              <Typography sx={{ fontSize: "20px", color: "#3F5163", fontWeight: 400 }}>Qty</Typography>
               <TextField placeholder="1" />
             </Box>
             <Box sx={{ margin: "auto" }}>
@@ -229,7 +340,7 @@ const HeaderHome = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
             </Button>
           </Box>
         </Container>
-      </Box>
+      </Box>*/}
     </>
   );
 };
