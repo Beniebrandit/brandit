@@ -23,7 +23,7 @@ const Reviews = (props) => {
   const [value, setValue] = useState(5);
   return (
     <>
-      <Box sx={{ marginTop: "130px" }}>
+      <Box id="customerreviews" sx={{ marginTop: "130px" }}>
         <Container>
           <Typography
             sx={{
@@ -39,9 +39,8 @@ const Reviews = (props) => {
 
           <Grid
             container
-            sx={{ marginTop: "40px", marginBottom: "40px",gridTemplateColumns:"1.5fr 2fr 3fr 3fr" }}
+            sx={{ marginTop: "40px", marginBottom: "40px", gridTemplateColumns: "1.5fr 2fr 3fr 3fr" }}
             spacing={2}
-
           >
             <Grid item md={3} sm={12} xs={12}>
               <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -55,17 +54,15 @@ const Reviews = (props) => {
                   4.8
                 </Typography>
                 <Rating
-                style={{ color: "#FCB20F !important" }}
-                name="simple-controlled"
-                value={value}
-                onChange={(event, newValue) => {
-                  setValue(newValue);
-                }}
-              />
+                  style={{ color: "#FCB20F !important" }}
+                  name="simple-controlled"
+                  value={value}
+                  onChange={(event, newValue) => {
+                    setValue(newValue);
+                  }}
+                />
               </Box>
-              <Typography sx={{ color: "#868686", fontSize: "15px" }}>
-                Based on 695 reviews
-              </Typography>
+              <Typography sx={{ color: "#868686", fontSize: "15px" }}>Based on 695 reviews</Typography>
             </Grid>
             <Grid item md={3} sm={12} xs={12}>
               <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -106,53 +103,23 @@ const Reviews = (props) => {
             <Grid item md={3} sm={12} xs={12}>
               <Grid container>
                 <Grid item md={4}>
-                  <img
-                    alt="facebook1"
-                    src={facebook1}
-                    width="70%"
-                    height="70%"
-                  />
+                  <img alt="facebook1" src={facebook1} width="70%" height="70%" />
                 </Grid>
                 <Grid item md={4}>
                   {" "}
-                  <img
-                    alt="facebook2"
-                    src={facebook2}
-                    width="70%"
-                    height="70%"
-                  />
+                  <img alt="facebook2" src={facebook2} width="70%" height="70%" />
                 </Grid>
                 <Grid item md={4}>
-                  <img
-                    alt="facebook3"
-                    src={facebook3}
-                    width="70%"
-                    height="70%"
-                  />
+                  <img alt="facebook3" src={facebook3} width="70%" height="70%" />
                 </Grid>
                 <Grid item md={4}>
-                  <img
-                    alt="facebook4"
-                    src={facebook4}
-                    width="70%"
-                    height="70%"
-                  />
+                  <img alt="facebook4" src={facebook4} width="70%" height="70%" />
                 </Grid>
                 <Grid item md={4}>
-                  <img
-                    alt="facebook5"
-                    src={facebook5}
-                    width="70%"
-                    height="70%"
-                  />
+                  <img alt="facebook5" src={facebook5} width="70%" height="70%" />
                 </Grid>
                 <Grid item md={4}>
-                  <img
-                    alt="facebook6"
-                    src={facebook6}
-                    width="70%"
-                    height="70%"
-                  />
+                  <img alt="facebook6" src={facebook6} width="70%" height="70%" />
                 </Grid>
               </Grid>
             </Grid>
@@ -224,7 +191,7 @@ const Reviews = (props) => {
                                 display: "flex",
                                 alignItems: "flex-start",
                                 flexDirection: "column",
-                                paddingLeft:"10px",
+                                paddingLeft: "10px",
                                 marginBottom: "5px",
                               }}
                             >
@@ -263,16 +230,11 @@ const Reviews = (props) => {
                                   justifyContent: "flex-start",
                                 }}
                               >
-                                <Box
-                                  sx={{ display: "flex", alignItems: "center" }}
-                                >
+                                <Box sx={{ display: "flex", alignItems: "center" }}>
                                   {Array(5)
                                     .fill("")
                                     .map((_, i) => (
-                                      <StarIcon
-                                        key={i}
-                                        sx={{ color: "black" }}
-                                      />
+                                      <StarIcon key={i} sx={{ color: "black" }} />
                                     ))}
                                 </Box>
                               </Box>
@@ -342,9 +304,7 @@ const Reviews = (props) => {
                           </Typography>
                           <ThumbUpIcon sx={{ color: "black" }} />
                           &nbsp; 0
-                          <ThumbDownAltIcon
-                            sx={{ marginLeft: "10px", color: "black" }}
-                          />
+                          <ThumbDownAltIcon sx={{ marginLeft: "10px", color: "black" }} />
                           &nbsp;0
                         </Box>
                       </Box>

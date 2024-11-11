@@ -8,6 +8,7 @@ let endpoints = {
   register: "api/register",
   image: "api/premium-images-category?with[]=images&where[type]=1",
   vectorimage: "api/premium-images-category?with[]=images&where[type]=2",
+  review: "api/review?where[product_id]=1",
 };
 let API_ENDPOINTS = {};
 

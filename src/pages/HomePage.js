@@ -79,7 +79,7 @@ const HomePage = () => {
       <TrendingProducts />
       <WhyBranditSignage />
       <ReviewCard />
-      <Box sx={{ marginTop: "5rem" }}>
+      {/*<Box sx={{ marginTop: "5rem" }}>
         <Container>
           <Typography
             sx={{
@@ -102,7 +102,7 @@ const HomePage = () => {
           </Typography>
           <img src={Brandit_image} alt="" style={{ margin: "auto", height: "100%", width: "100%" }} />
         </Container>
-      </Box>
+      </Box>*/}
       <HomeFooter />
 
       {isVisible && (

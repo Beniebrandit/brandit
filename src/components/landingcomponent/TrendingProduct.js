@@ -69,110 +69,116 @@ const TrendingProducts = () => {
 
   return (
     <>
-    <Box className="background1" sx={{position:"absolute",zIndex:"-1"}}></Box>
-     <Box sx={{ marginTop: "1rem" }}>
-     <Typography sx={{fontSize:{xs:"30px",sm:"50px"},paddingTop:"4rem",paddingLeft:{xs:"1.5rem",sm:"8rem"}}}>Trending products</Typography>
-            <Box className="custom-scrollbar custom-scrollbar-container" sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                // className="basic tabs example"
-                sx={{
-                  display: "grid",
-                  // gridTemplateColumns: {
-                  //   xl: "repeat(1, 1fr)",
-                  //   lg: "repeat(1, 1fr)",
-                  //   md: "repeat(2, 1fr)",
-                  //   sm: "repeat(3, 1fr)",
-                  //   xs: "repeat(6, 1fr)",
-                  // },
-                  gap: "1rem",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "800px"
-                }}
-              >
-                {tabData?.map((tab, index) => (
-                  <Tab
-                    key={index}
-                    label={tab.label}
-                    sx={{ height: "7rem" }}
-                    {...a11yProps(index)}
-                  >
-                    <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          height: "7rem",
-                        }}
-                      >
-                        <img
-                          src={tab.icon}
-                          alt={tab.alt}
-                          style={{ height: "46px", width: "43px" }}
-                        />
-                        <Typography variant="body2" sx={{ marginTop: "1rem" }}>
-                          {tab.label}
-                        </Typography>
-                      </Box>
-                  </Tab>
-                ))}
-              </Tabs>
-            </Box>
-            <CustomTabPanel value={value} index={0}>
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: {
-                    xl: "repeat(4, 1fr)", // For large screens, create 3 equal columns
-                    lg: "repeat(4, 1fr)", // For large screens, create 3 equal columns
-                    md: "repeat(2, 1fr)", // For large screens, create 3 equal columns
-                    sm: "repeat(1, 1fr)", // For large screens, create 3 equal columns
-                  },
-                  gap: "1rem",
-                  justifyContent: "center",
-                }}
-              >
-                {data?.map((val) => {
-                  return (
-                    <Box sx={{margin:"auto",backgroundColor:"white",padding:"1rem",borderRadius:"7px"}}>
-                      <img
-                        src={val.image}
-                        style={{ height: "18rem", width: "18rem" }}
-                        alt=""
-                      />
+      <Box className="background1" sx={{ position: "absolute", zIndex: "-1" }}></Box>
+      <Box sx={{ padding: { sx: "1rem", sm: "8rem" } }}>
+        <Typography
+          sx={{
+            fontSize: { xs: "30px", sm: "50px" },
+            paddingLeft: {xs:"1rem",sm:"0rem"},
+            marginTop: { xs: "5rem", sm: "0rem" },
+            color: "white",
+            fontFamily: "Avenir LT Std",
+          }}
+        >
+          Trending products
+        </Typography>
+        <Box
+          className="custom-scrollbar custom-scrollbar-container"
+          sx={{ borderBottom: 1, borderColor: "divider", marginTop: "1rem" }}
+        >
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            className="basic tabs example"
+            sx={{
+              "& .MuiTabs-flexContainer": {
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: { xs: "left",sm:"space-between" },
+                alignItems: "center",
+              },
+              width: "1450px",
+            }}
+          >
+            {tabData?.map((tab, index) => (
+              <Tab
+                key={index}
+                sx={{ height: "185px" }}
+                {...a11yProps(index)}
+                label={
+                  <Box>
+                    <img src={tab.icon} alt={tab.alt} style={{ height: "113px", width: "113px" }} />
+                    <Typography
+                      variant="body2"
+                      sx={{ marginTop: "1rem", textTransform: "none", fontFamily: "Avenir LT Std" }}
+                    >
+                      {tab.label}
+                    </Typography>
+                  </Box>
+                }
+              />
+            ))}
+          </Tabs>
+        </Box>
+        <CustomTabPanel
+          sx={{
+            "& .19kzrtu": {
+              padding: "0px",
+            },
+          }}
+          value={value}
+          index={0}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: "3rem",
+            }}
+          >
+            {data?.map((val) => {
+              return (
+                <Box
+                  sx={{
+                    margin: { xs: "auto", sm: "auto", md: "0px" },
+                    backgroundColor:"white",
+                    padding: { xs: "0.5rem", sm: "1rem" }, 
+                    borderRadius: "7px",
+                    marginBottom: { xs: "5px", sm: "10px" , md:"2rem" }, 
+                    width: { xs: "100%", sm: "auto" }, 
+                  }}
+                  py={10}
+                >
+                  <img src={val.image} style={{ height: "18rem", width: "18rem" }} alt="" />
 
-                      <Typography>{val.title}</Typography>
-                      <Typography sx={{ fontSize: "20px" }}>
-                        {val.description}
-                      </Typography>
-                    </Box>
-                  );
-                })}
-              </Box>
-            </CustomTabPanel>
-
-
-            <CustomTabPanel value={value} index={1}>
-              Large Format
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={2}>
-              Small Format
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={3}>
-              Stickers and Decals
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={4}>
-              Flags
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={5}>
-              Sign Holders
-            </CustomTabPanel>
+                  <Typography>{val.title}</Typography>
+                  <Typography sx={{ fontSize: "20px" }}>{val.description}</Typography>
+                </Box>
+              );
+            })}
           </Box>
+        </CustomTabPanel>
+
+        <CustomTabPanel value={value} index={1}>
+          Large Format
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+          Small Format
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={3}>
+          Stickers and Decals
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={4}>
+          Flags
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={5}>
+          Sign Holders
+        </CustomTabPanel>
+      </Box>
     </>
-  )
+  );
 }
 
 export default TrendingProducts

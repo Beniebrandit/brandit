@@ -69,7 +69,7 @@ const HomeFooter = () => {
                   lineHeight: "17px",
                 }}
               >
-                About Us
+                Shop
               </Typography>
               <Typography
                 sx={{
@@ -80,7 +80,7 @@ const HomeFooter = () => {
                   marginTop: "30px",
                 }}
               >
-                Lorem Ipsum{" "}
+                Shop apparel
               </Typography>
               <Typography
                 sx={{
@@ -88,10 +88,10 @@ const HomeFooter = () => {
                   lineHeight: "27px",
                   color: "#545454",
                   fontWeight: "600",
-                  marginTop: "30px",
+                  marginTop: "10px",
                 }}
               >
-                Lorem Ipsum{" "}
+                Shop Promo/Gifts
               </Typography>
               <Typography
                 sx={{
@@ -99,10 +99,10 @@ const HomeFooter = () => {
                   lineHeight: "27px",
                   color: "#545454",
                   fontWeight: "600",
-                  marginTop: "30px",
+                  marginTop: "10px",
                 }}
               >
-                Lorem Ipsum{" "}
+                Brandit.net
               </Typography>
             </Grid>
 
@@ -193,7 +193,7 @@ const HomeFooter = () => {
             </Grid>
           </Grid>
 
-          <Grid container sx={{ marginTop: "30px" }} spacing={8}>
+          {/*<Grid container sx={{ marginTop: "30px" }} spacing={8}>
             <Grid item md={3} sm={12} xs={12}>
               <Typography
                 sx={{
@@ -348,7 +348,7 @@ const HomeFooter = () => {
                 <Button sx={{ color: "#545454", border: "1px solid #545454", margin: "3px" }}>MEGA</Button>
               </Box>
             </Grid>
-          </Grid>
+          </Grid>*/}
 
           <Box sx={{ padding: "90px 0px 90px 0px" }}>
             <Container>

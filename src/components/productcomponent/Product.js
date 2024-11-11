@@ -33,7 +33,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 const Product = (props) => {
   const [count, setCount] = useState(1);
-  const [value, setValue] = useState(2);
+  const [value, setValue] = useState(0);
   const [alldata, setAllData] = useState();
 
   const [selectedCard, setSelectedCard] = useState({});
@@ -176,16 +176,21 @@ const handleThumbClick = (index) => {
       setAllData(response);
       //console.log(response, "response");
     });
-
-    // const res = await axios.get(`${url}/product/2`, {
-    //   headers: {
-    //     "Authorization": `Bearer ${token}`
-    //   }
-    // });
+  };
+  const getReview = async () => {
+    try {
+      const res = await ProductService.Reviews();
+      const response = res.data;
+      setValue(response[0].stars); // Assuming `response.stars` is the value you want
+      console.log(value, "response");
+    } catch (error) {
+      console.error("Error fetching review:", error);
+    }
   };
 
   useEffect(() => {
     getApi();
+    getReview();
   }, []);
 
   const handleClick = async () => {
@@ -228,6 +233,14 @@ const handleThumbClick = (index) => {
   }
 
   }, [payload]);
+
+
+  const scrollToReviews = (event) => {
+    event.preventDefault();
+    document.getElementById("customerreviews")?.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
 
   return (
     <Box className="product_box">
@@ -339,14 +352,16 @@ const handleThumbClick = (index) => {
               >
                 {alldata?.name}
               </Typography>
-              <Rating
-                style={{ color: "#F6AA03 !important" }}
-                name="simple-controlled"
-                value={value}
-                onChange={(event, newValue) => {
-                  setValue(newValue);
-                }}
-              />
+              <a href="#customerreviews" onClick={scrollToReviews}>
+                <Rating
+                  style={{ color: "#F6AA03" }}
+                  name="simple-controlled"
+                  value={value}
+                  // onChange={(event, newValue) => {
+                  //   setValue(newValue);
+                  // }}
+                />
+              </a>
               <Typography
                 style={{
                   fontSize: "30px",

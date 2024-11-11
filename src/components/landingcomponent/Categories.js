@@ -110,34 +110,29 @@ const Categories = () => {
         }}
       >
         <Container>
-          <h1>Categories</h1>
+          <h1 style={{marginBottom:"1rem"}}>Categories</h1>
           {/* <Box sx={{ marginTop: "1.5rem" }}> */}
-          <Box className="custom-scrollbar custom-scrollbar-container" >
+          <Box className="custom-scrollbar custom-scrollbar-container">
             <Tabs
               value={value}
               onChange={handleChange}
               className="basic_tabs_example"
               sx={{
-                display: "grid",
-                 gridTemplateColumns: {
-                   xl: "repeat(1, 1fr)",
-                   lg: "repeat(1, 1fr)",
-                   md: "repeat(2, 1fr)",
-                   sm: "repeat(3, 1fr)",
-                   xs: "repeat(6, 1fr)",
-                 },
-                gap: "1rem",
-                //display:'flex',
-                //justifyContent:'space-between',
-                //alignItems: "center",
+                "& .MuiTabs-flexContainer": {
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "1rem",
+                  justifyContent: { xs: "left", sm: "space-between" },
+                  alignItems: "center",
+                },
+                width: "1050px",
               }}
             >
               {tabData.map((tab, index) => (
                 <Tab
                   key={index}
                   label={
-                    <Box
-                    >
+                    <Box>
                       <img src={tab.icon} alt={tab.alt} style={{ height: "46px", width: "43px" }} />
                       <Typography variant="body2" sx={{ marginTop: "1rem" }}>
                         {tab.label}
@@ -162,17 +157,16 @@ const Categories = () => {
                 },
                 gap: "1.5rem",
                 justifyContent: "center",
-
               }}
             >
               {categories?.categories?.map((val) => {
                 return (
                   <Box sx={{ padding: "24px 0px !important" }}>
                     <Box className="product-image">
-                    <img src={category_image1}  className="category-img" alt="" />
-                    <img src={ArrowIcon} className="cust_arrow" />
+                      <img src={category_image1} className="category-img" alt="" />
+                      <img src={ArrowIcon} className="cust_arrow" />
                     </Box>
-                    <Typography sx={{paddingTop:'1rem'}}>{val?.name}</Typography>
+                    <Typography sx={{ paddingTop: "1rem" }}>{val?.name}</Typography>
                     <Typography sx={{ fontSize: "20px", color: "#3F5163" }}>
                       {val?.description ? val?.description : "null"}
                     </Typography>
