@@ -8,7 +8,6 @@ export const ProductService = {
   Allproduct,
   Dataprice,
   registers,
-  Reviews
 };
 
 const token = localStorage.getItem("authToken");
@@ -66,18 +65,6 @@ function registers(data) {
   return axios
     .post(apiEndpoint.register, data, {
       headers: { "Content-Type": "application/json" },
-    })
-    .then((res) => {
-      if (res && res.status === 200) {
-        return res.data;
-      }
-    });
-}
-
-function Reviews() {
-  return axios
-    .get(apiEndpoint.review, {
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
     })
     .then((res) => {
       if (res && res.status === 200) {

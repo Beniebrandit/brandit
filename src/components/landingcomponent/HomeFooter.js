@@ -355,7 +355,7 @@ const HomeFooter = () => {
               <Grid container spacing={8}>
                 <Grid item md={6} sm={12} xs={12}>
                   <Typography
-                    sx={{ color: "#FFFFFF", fontWeight: "600", fontSize: "20px", margin: "auto", textAlign: "center" }}
+                    sx={{ color: "black", fontWeight: "600", fontSize: "20px", margin: "auto", textAlign: "center" }}
                   >
                     PAYMENT OPTIONS
                   </Typography>
@@ -373,7 +373,7 @@ const HomeFooter = () => {
                   xs={12}
                   sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}
                 >
-                  <Typography sx={{ color: "#FFFFFF", fontWeight: "600", fontSize: "20px" }}>Subscribe</Typography>
+                  <Typography sx={{ color: "black", fontWeight: "600", fontSize: "20px",width:"53%" }}>Subscribe</Typography>
                   <Box>
                     <TextField
                       placeholder="Email address"
@@ -381,9 +381,19 @@ const HomeFooter = () => {
                         borderRadius: "0px",
                         marginTop: "10px",
                         backgroundColor: "white",
+                        "& .MuiInputBase-input": { padding: "6.5px 14px !important" },
                       }}
                     />
-                    <Button sx={{ backgroundColor: "#3F5163", marginTop: "10px", color: "white" }}>
+                    <Button
+                      sx={{
+                        backgroundColor: "#3F5163",
+                        marginTop: "10px",
+                        color: "white",
+                        "&:hover": {
+                          backgroundColor: "#3F5163",
+                        },
+                      }}
+                    >
                       <ArrowForwardIosOutlinedIcon />
                     </Button>
                   </Box>

@@ -22,6 +22,7 @@ import "./Product.css";
 import { Add } from "@mui/icons-material";
 import axios from "axios";
 import { ProductService } from "../../services/Product.service";
+import { ReviewService } from "../../services/Review.service";
 import { Theme, useTheme } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
@@ -43,6 +44,7 @@ const Product = (props) => {
   const [selectedHeight, setSelectedHeight] = useState("");
   const [selectedSubCatId, setSelectedSubCatId] = useState([]);
   const [price, setPrice] = useState();
+  const [rating, setRating] = useState();
 
 const [payload, setPayload] = useState({
   productId: null, // Assuming `id` is the unique identifier for the product
@@ -179,9 +181,10 @@ const handleThumbClick = (index) => {
   };
   const getReview = async () => {
     try {
-      const res = await ProductService.Reviews();
+      const res = await ReviewService.Reviews();
       const response = res.data;
       setValue(response[0].stars); // Assuming `response.stars` is the value you want
+      setRating(response.length);
       console.log(value, "response");
     } catch (error) {
       console.error("Error fetching review:", error);
@@ -352,7 +355,11 @@ const handleThumbClick = (index) => {
               >
                 {alldata?.name}
               </Typography>
-              <a href="#customerreviews" onClick={scrollToReviews}>
+              <a
+                href="#customerreviews"
+                style={{ textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "left" }}
+                onClick={scrollToReviews}
+              >
                 <Rating
                   style={{ color: "#F6AA03" }}
                   name="simple-controlled"
@@ -361,6 +368,8 @@ const handleThumbClick = (index) => {
                   //   setValue(newValue);
                   // }}
                 />
+                &nbsp;&nbsp;&nbsp;
+                <Typography sx={{ color: "#3F5163", display: "inline-block",paddingTop:"2px" }}>{`(${rating || " "})`}</Typography>
               </a>
               <Typography
                 style={{

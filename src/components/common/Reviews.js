@@ -7,8 +7,17 @@ import {
   Button,
   LinearProgress,
   Rating,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  Link,
+  IconButton,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import StarIcon from "@mui/icons-material/Star";
@@ -19,8 +28,62 @@ import facebook4 from "../../asset/images/facebook4.png";
 import facebook5 from "../../asset/images/facebook5.png";
 import facebook6 from "../../asset/images/facebook6.png";
 import { ReactComponent as Customerreviewicon } from "../../asset/images/customerreviewicon.svg";
+import CloseIcon from "@mui/icons-material/Close";
+import { ReviewService } from "../../services/Review.service";
+
 const Reviews = (props) => {
   const [value, setValue] = useState(5);
+    const [open, setOpen] = useState(false);
+    const [emailNotification, setEmailNotification] = useState(true);
+    const [termsAccepted, setTermsAccepted] = useState(false);
+    const [question, setQuestion] = useState("");
+    const [rating, setRating] = useState(0);
+
+    const [payload, setPayload] = useState({
+      user_id: "", 
+      product_id: "",
+      stars: "",
+      review: "",
+    });
+
+    const handleOpen = () => {
+      setOpen(true);
+    };
+
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+  useEffect(() => {
+    setPayload({
+      user_id: 2,
+      product_id: 1,
+      stars: rating,
+      review: question,
+    });
+  }, [rating, question]);
+ console.log("payload", payload);
+
+function handleClick() {
+  
+    ReviewService.Postreview(payload)
+      .then((res) => {
+       console.log("Postreview",res)
+      })
+      .catch((error) => {
+        console.error("API call failed:", error);
+        //setError("Unable to fetch pricing. Please try again later.");
+      });
+      setPayload({
+        user_id: "", 
+        product_id: "",
+        stars: "",
+        review: "",
+      });
+}
+
+
+      
   return (
     <>
       <Box id="customerreviews" sx={{ marginTop: "130px" }}>
@@ -142,6 +205,7 @@ const Reviews = (props) => {
                   color: "#868686",
                   fontSize: "12px",
                 }}
+                onClick={handleOpen}
               >
                 Write a Review
               </Button>
@@ -325,6 +389,78 @@ const Reviews = (props) => {
           </Box>
         </Container>
       </Box>
+
+      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+        <DialogTitle>
+          Review product
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers>
+          <Typography variant="subtitle1" gutterBottom>
+            Vinyl Banners
+          </Typography>
+          {/* Rating Field */}
+          <Typography variant="body2" gutterBottom>
+            Your Rating:
+          </Typography>
+          <Rating value={rating} onChange={(event, newValue) => setRating(newValue)} />
+          <TextField
+            multiline
+            rows={4}
+            variant="outlined"
+            fullWidth
+            placeholder="Write your review..."
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            inputProps={{ maxLength: 255 }}
+            helperText={`${question.length}/255 characters`}
+          />
+          <FormControlLabel
+            control={<Checkbox checked={emailNotification} onChange={(e) => setEmailNotification(e.target.checked)} />}
+            label="You will be able to receive emails in connection with this review (eg if others comment on your review). All emails contain the option to unsubscribe. We can use the text and star rating from your review in other marketing."
+          />
+          <FormControlLabel
+            control={<Checkbox checked={termsAccepted} onChange={(e) => setTermsAccepted(e.target.checked)} />}
+            label={
+              <>
+                I accept the{" "}
+                <Link href="#" underline="always">
+                  Terms & Conditions
+                </Link>
+              </>
+            }
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} variant="text" color="inherit">
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              // Submit action here
+              console.log("Submitted");
+              handleClose();
+              handleClick();
+            }}
+            variant="contained"
+            color="success"
+            disabled={!termsAccepted || question.length === 0}
+          >
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
