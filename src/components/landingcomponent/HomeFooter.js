@@ -355,11 +355,12 @@ const HomeFooter = () => {
               <Grid container spacing={8}>
                 <Grid item md={6} sm={12} xs={12}>
                   <Typography
-                    sx={{ color: "black", fontWeight: "600", fontSize: "20px", margin: "auto", textAlign: "center" }}
+                    className="calibri-font"
+                    sx={{ color: "black", fontWeight: "600", fontSize: "20px" }}
                   >
                     PAYMENT OPTIONS
                   </Typography>
-                  <Box sx={{ margin: "auto", textAlign: "center" }}>
+                  <Box sx={{  }}>
                     <img src={visa} alt="" />
                     &nbsp;&nbsp;
                     <img src={paypal} alt="" />
@@ -373,8 +374,10 @@ const HomeFooter = () => {
                   xs={12}
                   sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}
                 >
-                  <Typography sx={{ color: "black", fontWeight: "600", fontSize: "20px",width:"53%" }}>Subscribe</Typography>
-                  <Box>
+                  <Typography sx={{ color: "black", fontWeight: "600", fontSize: "20px", width: "53%",paddingLeft:"100px" }}>
+                    Subscribe
+                  </Typography>
+                  <Box sx={{paddingLeft:"100px"}}>
                     <TextField
                       placeholder="Email address"
                       sx={{
@@ -420,7 +423,7 @@ const HomeFooter = () => {
               </Typography>
             </Grid>
             <Grid item md={4} sm={12} xs={12}>
-              <Box sx={{ marginTop: "40px" }}>
+              <Box sx={{ display:"flex",margin:"auto", justifyContent:"center" ,height:"100%" }}>
                 <Button
                   variant="contained"
                   sx={{
@@ -429,10 +432,13 @@ const HomeFooter = () => {
                     borderRadius: "8px",
                     fontWeight: "400",
                     padding: "9px",
+                    textTransform:"none",
                     "&:hover": {
                       backgroundColor: "#E0CE8F",
                     },
                     margin: "auto",
+                    width:"174px",
+                    height:"60px"
                   }}
                 >
                   Contact Us{" "}

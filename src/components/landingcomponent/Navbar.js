@@ -95,9 +95,13 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
               }}
             >
               <EmailOutlinedIcon sx={{ color: "#E0CE8F", marginRight: "10px", fontSize: { xs: "16px", sm: "24px" } }} />
-              <Typography variant="body2" sx={{ fontSize: { xs: "12px", sm: "15px" } }}>
+              <Typography className="verdana-font" variant="body2" sx={{ fontSize: { xs: "12px", sm: "15px" } }}>
                 Email:{" "}
-                <a href="mailto:sales@brandt.net" style={{ color: "white", textDecoration: "none" }}>
+                <a
+                  className="verdana-font"
+                  href="mailto:sales@brandt.net"
+                  style={{ color: "white", textDecoration: "none" }}
+                >
                   sales@brandt.net
                 </a>
               </Typography>
@@ -114,7 +118,7 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
               <PhoneInTalkOutlinedIcon
                 sx={{ color: "#E0CE8F", marginRight: "10px", fontSize: { xs: "16px", sm: "24px" } }}
               />
-              <Typography variant="body2" sx={{ fontSize: { xs: "12px", sm: "15px" } }}>
+              <Typography className="verdana-font" variant="body2" sx={{ fontSize: { xs: "12px", sm: "15px" } }}>
                 Phone: 800-935-8231
               </Typography>
             </Box>
@@ -158,8 +162,8 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                 variant="body2"
                 style={{
                   paddingRight: "10px",
-                  fontSize:'16px',
-                  fontWeight:'400',
+                  fontSize: "16px",
+                  fontWeight: "400",
                   color: activeItem === text ? "#3F5163" : "#8C8E8F", // Set color based on active status
                   textDecoration: activeItem === text ? "underline" : "none", // Add underline for active item
                   textUnderlineOffset: "4px", // Add space between text and underline
@@ -188,7 +192,7 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
               >
                 <img alt="Account" src={Account} style={{ width: "46px", height: "auto" }} />
                 <span style={{ color: "#3f5163" }}>
-                  <b style={{fontSize:'20px'}}>Account </b>
+                  <b style={{ fontSize: "20px" }}>Account </b>
                   <span style={{ fontSize: "12px" }}>{currentUser ? `(${currentUser})` : "(Sign In)"}</span>
                 </span>
               </Box>
@@ -248,7 +252,7 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
             >
               <img alt="cart_logo" src={cart_logo} style={{ width: "36px", height: "auto" }} />
               &nbsp;
-              <span style={{ color: "#3f5163" ,fontSize:'20px'}}>
+              <span style={{ color: "#3f5163", fontSize: "20px" }}>
                 <b>Cart</b>
               </span>
             </Button>

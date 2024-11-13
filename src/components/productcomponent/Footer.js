@@ -36,12 +36,7 @@ const Footer = () => {
         <Container sx={{ paddingTop: "90px" }}>
           <Grid container spacing={2}>
             <Grid item md={4} sm={12} xs={12}>
-              <img
-                alt="footer_logo"
-                src={footer_logo}
-                width="50%"
-                height="30%"
-              />
+              <img alt="footer_logo" src={footer_logo} width="50%" height="30%" />
               <Typography
                 sx={{
                   fontSize: "18px",
@@ -51,8 +46,7 @@ const Footer = () => {
                   marginTop: "10px",
                 }}
               >
-                Brandit brings your brand to life from the moment you get in
-                touch{" "}
+                Brandit brings your brand to life from the moment you get in touch{" "}
               </Typography>
               <Typography
                 sx={{
@@ -156,12 +150,7 @@ const Footer = () => {
               </Typography>
               <Grid container spacing={1}>
                 <Grid item md={3}>
-                  <img
-                    alt="facebook1"
-                    src={facebook1}
-                    width="100%"
-                    height="100%"
-                  />
+                  <img alt="facebook1" src={facebook1} width="100%" height="100%" />
                 </Grid>
                 <Grid item md={3}>
                   <img alt="facebook2" src={facebook2} />
@@ -188,8 +177,16 @@ const Footer = () => {
             </Grid>
           </Grid>
 
-          <Grid container sx={{ marginTop: "30px" }} spacing={8}>
-            <Grid item md={4} sm={12} xs={12}>
+          <Grid
+            container
+            style={{
+              marginTop: "30px",
+              marginLeft: "0px",
+              width: "auto",
+            }}
+            spacing={8}
+          >
+            <Grid className="customGridItem" sx={{ paddingLeft: "0px" }} item md={4} sm={12} xs={12}>
               <Typography
                 sx={{
                   color: "#000000",
@@ -207,15 +204,17 @@ const Footer = () => {
                   lineHeight: "27px",
                   color: "#545454",
                   fontWeight: "600",
-                  marginTop: "20px",
+                  marginTop: "40px",
+                  width: "22rem",
                 }}
               >
-                Need help? Just give us call at{" "}
-                <span style={{ color: "#E0CE8F" }}> 800-905-8851</span> or email us at <span style={{ color: "#E0CE8F" }}> contactus@brandit.net</span> and one of our associates will be happy to assist you
+                Need help? Just give us call at <span style={{ color: "#E0CE8F" }}> 800-905-8851</span> or email us at{" "}
+                <span style={{ color: "#E0CE8F" }}> contactus@brandit.net</span> and one of our associates will be happy
+                to assist you
               </Typography>
             </Grid>
 
-            <Grid item md={4} sm={12} xs={12}>
+            <Grid className="customGridItem" item md={4} sm={12} xs={12}>
               <Typography
                 sx={{
                   color: "#000000",
@@ -254,7 +253,7 @@ const Footer = () => {
               </Box>
             </Grid>
 
-            <Grid item md={4} sm={12} xs={12}>
+            <Grid className="customGridItem" item md={4} sm={12} xs={12}>
               <Typography
                 sx={{
                   color: "#000000",
@@ -276,33 +275,21 @@ const Footer = () => {
         <Container>
           <Grid container spacing={8}>
             <Grid item md={4} sm={12} xs={12}>
-              <Typography
-                sx={{ color: "#FFFFFF", fontWeight: "600", fontSize: "20px" }}
-              >
-                Address
-              </Typography>
-              <Typography
-                sx={{ color: "#FFFFFF", textAlign: "start", marginTop: "10px" }}
-              >
+              <Typography sx={{ color: "#FFFFFF", fontWeight: "600", fontSize: "20px" }}>Address</Typography>
+              <Typography sx={{ color: "#FFFFFF", textAlign: "start", marginTop: "10px" }}>
                 Graphics Sign Shop 2773 Jefferson Street Austell,GA 30168
               </Typography>
-              <Typography
-                sx={{ color: "#FFFFFF", textAlign: "start", marginTop: "40px" }}
-              >
-                Apparel and Corporate Office 1395 S. Marietta Parkway SE
-                Building 100,Suitte 116 Marietta,GA 30067
+              <Typography sx={{ color: "#FFFFFF", textAlign: "start", marginTop: "40px" }}>
+                Apparel and Corporate Office 1395 S. Marietta Parkway SE Building 100,Suitte 116 Marietta,GA 30067
               </Typography>
             </Grid>
             <Grid item md={4} sm={12} xs={12}>
-              <Typography
-                sx={{ color: "#FFFFFF", fontWeight: "600", fontSize: "20px" }}
-              >
+              <Typography sx={{ color: "#FFFFFF", fontWeight: "600", fontSize: "20px" }}>
                 Need a Helping Hand?
               </Typography>
               <Typography sx={{ color: "#FFFFFF", marginTop: "10px" }}>
-                Reach out and connect with the Brandit team and we'll bring your
-                vision to life without delay.when your brand is at stake ,why
-                wait?
+                Reach out and connect with the Brandit team and we'll bring your vision to life without delay.when your
+                brand is at stake ,why wait?
               </Typography>
               <Typography
                 sx={{
@@ -320,11 +307,7 @@ const Footer = () => {
               </Box>
             </Grid>
             <Grid item md={4} sm={12} xs={12}>
-              <Typography
-                sx={{ color: "#FFFFFF", fontWeight: "600", fontSize: "20px" }}
-              >
-                Subscribe
-              </Typography>
+              <Typography sx={{ color: "#FFFFFF", fontWeight: "600", fontSize: "20px" }}>Subscribe</Typography>
               <Box
                 sx={{
                   display: "flex",
@@ -347,18 +330,19 @@ const Footer = () => {
                   sx={{
                     backgroundColor: "#E0CE8F",
                     color: "#3F5163",
-                  
+
                     fontWeight: "400",
                     padding: "9px",
                     width: "100px",
                     height: "38px",
+                    textTransform: "none",
                     "&:hover": {
                       backgroundColor: "#E0CE8F",
                     },
 
                     "& .MuiButtonBase-root": {
-                      borderRadius:"0px !important"
-                    }
+                      borderRadius: "0px !important",
+                    },
                   }}
                 >
                   Send
@@ -373,6 +357,8 @@ const Footer = () => {
                     borderRadius: "8px",
                     fontWeight: "400",
                     padding: "9px",
+                    width:"7rem",
+                    textTransform: "none",
                     "&:hover": {
                       backgroundColor: "#E0CE8F",
                     },

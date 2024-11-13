@@ -7,6 +7,18 @@
   font-display: swap;
 }
 
+.avenir-font {
+  font-family: "Avenir LT Std", sans-serif !important;
+}
+
+.verdana-font {
+  font-family: Verdana, sans-serif !important;
+}
+
+.calibri-font {
+  font-family: Calibri, sans-serif !important;
+}
+
 body {
   margin: 0;
   font-family: "Avenir LT Std" !important;
@@ -271,4 +283,8 @@ html .pintura-editor {
     box-shadow: 0px 0px 50px rgba(11, 58, 86, 0.1);
     border-radius: 50%;
     overflow: hidden;
+}
+
+.customGridItem {
+  padding-left: 0px !important;
 }

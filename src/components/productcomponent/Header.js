@@ -207,7 +207,7 @@ const Header = () => {
         </Container>
       </Box>
       <Container className="inner_header">
-        <Grid container alignItems="center" justifyContent="space-between" spacing={2}>
+        <Grid sx={{ width: {xs:"auto",sm:"auto",md:"auto",lg:"1015px"} }} container alignItems="center" justifyContent="space-between" spacing={2}>
           <Grid item xs={12} sm="auto" container justifyContent="center">
             <img alt="main_logo" src={main_logo} style={{ width: "50%", height: "auto", maxWidth: "200px" }} />
           </Grid>

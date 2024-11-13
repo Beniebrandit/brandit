@@ -395,7 +395,7 @@ const handleThumbClick = (index) => {
               </Typography>
               <Divider style={{ width: "100%", marginTop: "40px" }} />
               <Box sx={{ marginTop: "30px" }}>
-                <Grid container spacing={4}>
+                <Grid container spacing={4} sx={{width:"100%"}}>
                   {/* Size (in Inches) Section */}
                   <Grid item lg={6} md={6} sm={12} xs={12}>
                     <Typography
@@ -435,7 +435,7 @@ const handleThumbClick = (index) => {
                             >
                               {widthSizes?.map((size) => (
                                 <MenuItem key={size.id} value={size.size}>
-                                  <em>{size.size}</em>
+                                 {size.size}
                                 </MenuItem>
                               ))}
                             </Select>
@@ -469,7 +469,7 @@ const handleThumbClick = (index) => {
                             >
                               {heightSizes?.map((size) => (
                                 <MenuItem key={size.id} value={size.size}>
-                                  <em>{size.size}</em>
+                                  {size.size}
                                 </MenuItem>
                               ))}
                             </Select>
