@@ -18,7 +18,6 @@
 .calibri-font {
   font-family: Calibri, sans-serif !important;
 }
-
 body {
   margin: 0;
   font-family: "Avenir LT Std" !important;
@@ -46,7 +45,15 @@ code {
 }
 
 .inner_header {
-  padding-top: 10px;
+  border-bottom: 1px solid lightgray;
+  position: fixed;
+  width: 100%;
+  padding: 10px 0px;
+  /* padding: 5px; */
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background-color: white;
 }
 
@@ -284,7 +291,10 @@ html .pintura-editor {
     border-radius: 50%;
     overflow: hidden;
 }
-
 .customGridItem {
   padding-left: 0px !important;
+}
+
+.konvajs-content{
+  height: 350px !important;
 }

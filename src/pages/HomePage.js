@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Categories from "../components/landingcomponent/Categories";
 import TrendingProducts from "../components/landingcomponent/TrendingProduct";
 import WhyBranditSignage from "../components/landingcomponent/WhyBranditSignage";
-import ReviewCard from "../components/common/ReviewCard";
 import Brandit_image from "../asset/images/Brandit.png";
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import HomeFooter from "../components/landingcomponent/HomeFooter";
@@ -12,6 +11,7 @@ import CreateAccountDialog from "../components/common/CreateAccountDialog";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import Reviews from "../components/common/Reviews";
 const HomePage = () => {
   const [loginOpen, setLoginOpen] = useState(false);
   const [openSignUp, setOpenSignUp] = useState(false);
@@ -78,7 +78,7 @@ const HomePage = () => {
       <Categories />
       <TrendingProducts />
       <WhyBranditSignage />
-      <ReviewCard />
+      <Reviews />
       {/*<Box sx={{ marginTop: "5rem" }}>
         <Container>
           <Typography

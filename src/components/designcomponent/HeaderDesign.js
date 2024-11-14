@@ -20,12 +20,14 @@ import { ReactComponent as Share } from "../../asset/images/share.svg";
 import { ReactComponent as Save } from "../../asset/images/save.svg";
 import { ReactComponent as Cart0 } from "../../asset/images/cart.svg";
 import InputLabel from "@mui/material/InputLabel";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import MenuIcon from "@mui/icons-material/Menu";
 import ReCAPTCHA from "react-google-recaptcha";
 import CloseIcon from "@mui/icons-material/Close";
+import cart from '../../asset/images/design_cart.svg'
 
 const HeaderDesign = ({ handleClickOpenLogin }) => {
   const [File, setFile] = React.useState("");
@@ -99,8 +101,8 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
   }
   return (
     <>
-      <Box className="inner_header" sx={{ width: "100%", position: "fixed" }}>
-        <Box
+      <Box className="inner_header">
+        {/* <Box
           // maxWidth="lg"
           style={{
             display: "flex",
@@ -109,7 +111,7 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
             width: "100%",
             marginX: "10rem",
           }}
-        >
+        > */}
           <Box className="header_box" sx={{ paddingLeft: { xs: "1rem", sm: "5rem" } }}>
             <img alt="main_logo" src={main_logo} style={{ width: "50px", height: "auto" }} />
           </Box>
@@ -125,10 +127,13 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
               // margin: "auto",
             }}
           >
-            <Box sx={{ minWidth: 80 }}>
+            <Box sx={{ minWidth: 80 }}className='search11'>
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">File</InputLabel>
+                <InputLabel id="demo-simple-select-label" sx={{color:'black'}}>File</InputLabel>
                 <Select
+                IconComponent={(props) => (
+                  <ExpandMoreIcon style={{color:'black'}}/>
+                  )}
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   value={File}
@@ -159,7 +164,7 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
               </FormControl>
             </Box>
 
-            <Box>
+            <Box className='search'>
               <TextField
                 variant="outlined"
                 placeholder="Name this Design"
@@ -192,6 +197,7 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
               >
                 Save
               </Button>
+            
             </Box>
           </Box>
 
@@ -212,7 +218,7 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
               onClick={helpDialogOpen}
             >
               <Help sx={{ width: "20px", height: "auto" }} />
-              <Typography variant="body2" style={{ textTransform: "none", color: "black" }}>
+              <Typography variant="body2" style={{ textTransform: "none", color: "#3F5163",fontSize:'14px' }}>
                 Get Design Help
               </Typography>
             </Button>
@@ -224,7 +230,7 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
               }}
             >
               <Share sx={{ width: "20px", height: "auto" }} />
-              <Typography variant="body2">Share</Typography>
+              <Typography variant="body2" sx={{color:'#3F5163',fontSize:'14px'}}>Share</Typography>
             </Box>
             <Button
               sx={{
@@ -235,29 +241,17 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
               onClick={handleClickOpenLogin}
             >
               <Save sx={{ width: "20px", height: "auto" }} />
-              <Typography variant="body2" style={{ textTransform: "none", color: "black" }}>
+              <Typography variant="body2" style={{ textTransform: "none", color: "#3F5163" ,fontSize:'14px'}}>
                 Save
               </Typography>
             </Button>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                paddingRight: "1.5rem",
-              }}
-            >
-              <Cart0
-                sx={{
-                  width: "20px",
-                  height: "auto",
-                  backgroundColor: "#3F5163",
-                  padding: "8px",
-                  borderRadius: "5px",
-                }}
-              />
-            </Box>
+            <Button  sx={{height:'50px', width:'50px'}}> 
+                  <img src={cart} alt="cart" width='100%' height="100%"/>
+                  </Button>
+       
           </Box>
           <Grid item xs={12} sm="auto" sx={{ display: { md: "none" } }}>
+          
             <IconButton onClick={toggleDrawer(true)}>
               <MenuIcon />
             </IconButton>
@@ -287,6 +281,7 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
                     <Typography variant="body2">Share</Typography>
                   </Box>
                 </ListItem>
+             
                 <ListItem>
                   <Button
                     sx={{
@@ -303,10 +298,12 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
                     </Typography>
                   </Button>
                 </ListItem>
+             
               </List>
+             
             </Drawer>
           </Grid>
-        </Box>
+        {/* </Box> */}
       </Box>
 
       <Dialog

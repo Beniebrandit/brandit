@@ -6,9 +6,9 @@ import BannerFeature from "../components/productcomponent/BannerFeature";
 import Bannerslider from "../components/productcomponent/Bannerslider";
 import Detail from "../components/productcomponent/Detail";
 import Faq from "../components/productcomponent/Faq";
-import ReviewCard from "../components/common/ReviewCard";
 import Footer from "../components/productcomponent/Footer";
 import Product from "../components/productcomponent/Product";
+import Reviews from "../components/common/Reviews";
 
 const ProductPage = () => {
   return (
@@ -22,7 +22,7 @@ const ProductPage = () => {
       <Bannerslider />
       <Detail />
       <Faq />
-      <ReviewCard />
+      <Reviews />
       <Footer />
     </>
   );

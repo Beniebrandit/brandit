@@ -34,7 +34,7 @@ const BannerSideSection = ({ onToggleAccordion }) => {
         padding: "20px 0",
         position: "fixed",
         right: "0.5rem",
-        top: "5rem",
+        top: "6.3rem",
         color: isAccordionOpen
           ? {
               xs: "transparent",

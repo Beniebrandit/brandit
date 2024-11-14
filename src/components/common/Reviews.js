@@ -33,57 +33,95 @@ import { ReviewService } from "../../services/Review.service";
 
 const Reviews = (props) => {
   const [value, setValue] = useState(5);
-    const [open, setOpen] = useState(false);
-    const [emailNotification, setEmailNotification] = useState(true);
-    const [termsAccepted, setTermsAccepted] = useState(false);
-    const [question, setQuestion] = useState("");
-    const [rating, setRating] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [emailNotification, setEmailNotification] = useState(true);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [question, setQuestion] = useState("");
+  const [rating, setRating] = useState(0);
+  const [productId, setProductId] = useState();
+  const [reviews, setReviews] = useState();
 
-    const [payload, setPayload] = useState({
-      user_id: "", 
-      product_id: "",
-      stars: "",
-      review: "",
+  const [payload, setPayload] = useState({
+    user_id: "",
+    product_id: "",
+    stars: "",
+    review: "",
+  });
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const fetchUserData = async (token) => {
+    const response = await fetch("https://flagg.devlopix.com/api/user", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
     });
+    const data = await response.json();
 
-    const handleOpen = () => {
-      setOpen(true);
-    };
+    if (data) {
+      setProductId(data.id);
+      console.log("productId", data.id);
+    }
+  };
 
-    const handleClose = () => {
-      setOpen(false);
-    };
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+
+    if (token) {
+      fetchUserData(token);
+    }
+  }, []);
 
   useEffect(() => {
     setPayload({
-      user_id: 2,
+      user_id: productId,
       product_id: 1,
       stars: rating,
       review: question,
     });
   }, [rating, question]);
- console.log("payload", payload);
+  console.log("payload", payload);
 
-function handleClick() {
-  
+  const getReview = async () => {
+    try {
+      const res = await ReviewService.Reviews();
+      const reviewss = res.data;
+      setReviews(reviewss);
+      console.log(reviewss, "reviewss");
+    } catch (error) {
+      console.error("Error fetching review:", error);
+    }
+  };
+
+  useEffect(() => {
+    getReview();
+  }, []);
+
+  function handleClick() {
     ReviewService.Postreview(payload)
       .then((res) => {
-       console.log("Postreview",res)
+        console.log("Postreview", res);
       })
       .catch((error) => {
         console.error("API call failed:", error);
         //setError("Unable to fetch pricing. Please try again later.");
       });
-      setPayload({
-        user_id: "", 
-        product_id: "",
-        stars: "",
-        review: "",
-      });
-}
+    setPayload({
+      user_id: "",
+      product_id: "",
+      stars: "",
+      review: "",
+    });
+  }
 
-
-      
   return (
     <>
       <Box id="customerreviews" sx={{ marginTop: "130px" }}>
@@ -222,8 +260,8 @@ function handleClick() {
             </Grid>
           </Grid>
           <Grid container spacing={2}>
-            {props?.carddata?.length > 0
-              ? props.carddata.map((item, index) => {
+            {reviews?.length > 0
+              ? reviews.map((item, index) => {
                   return (
                     <Grid item md={6} sm={12} xs={12} key={index}>
                       <Box
@@ -274,7 +312,7 @@ function handleClick() {
                                     // marginRight: "10px",
                                   }}
                                 >
-                                  John Doe
+                                  {item.user_name}
                                 </Typography>
                                 <Typography
                                   sx={{
@@ -295,11 +333,15 @@ function handleClick() {
                                 }}
                               >
                                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                                  {Array(5)
-                                    .fill("")
-                                    .map((_, i) => (
-                                      <StarIcon key={i} sx={{ color: "black" }} />
-                                    ))}
+                                  {Array.isArray(
+                                    Array.from({
+                                      length: Number.isInteger(item?.stars) && item.stars > 0 ? item.stars : 0,
+                                    })
+                                  )
+                                    ? Array.from({ length: item.stars }).map((_, i) => (
+                                        <StarIcon key={i} sx={{ color: "black" }} />
+                                      ))
+                                    : null}
                                 </Box>
                               </Box>
                             </Box>
@@ -325,7 +367,7 @@ function handleClick() {
                             fontWeight: "500",
                           }}
                         >
-                          {item.description}
+                          {item.review}
                         </Typography>
                         <Typography
                           sx={{
@@ -336,7 +378,7 @@ function handleClick() {
                             marginTop: "10px",
                           }}
                         >
-                          <b>ITEM TYPE: {item.itemtype}</b>
+                          <b>ITEM TYPE:</b>
                         </Typography>
                         <Typography
                           sx={{

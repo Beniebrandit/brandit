@@ -23,17 +23,23 @@ const DesignOnline = () => {
   const [qrimage, setQrImage] = useState(null);
   const [qrSize, setQrSize] = useState({ width: 150, height: 150 });
   const [premiumimg, setPremiumimg] = useState();
-    const [isAccordionOpen, setIsAccordionOpen] = useState(true);
-      let [dropdata, setDropData] = React.useState([]);
-
+  const [isAccordionOpen, setIsAccordionOpen] = useState(true);
+  let [dropdata, setDropData] = React.useState([]);
   const [alldata, setAllData] = useState();
   const [allproduct, setAllProduct] = useState();
+  const [showSection, setShowSection] = useState(true);
+  const [productDetails, setProductDetails] = useState({
+    width: "",
+    height: "",
+    quantity: 1,
+    price: null,
+  });
 
-        const APP_KEY = "3astslwrlzfkcvc";
+  const APP_KEY = "3astslwrlzfkcvc";
 
-    const handleAccordionToggle = (isOpen) => {
-      setIsAccordionOpen(isOpen);
-    };
+  const handleAccordionToggle = (isOpen) => {
+    setIsAccordionOpen(isOpen);
+  };
 
   useEffect(() => {
     getImages();
@@ -101,7 +107,6 @@ const DesignOnline = () => {
   };
 
   const handleSave = (editedImageObject, designState) => {
-    console.log("saved", editedImageObject, designState);
     setIsImgEditorShown(false);
   };
 
@@ -127,21 +132,18 @@ const DesignOnline = () => {
     }
   };
 
-const onDeleteImage = (index, source) => {
-  if (source === "upload") {
-    // Remove image from selectedFile
-    setSelectedFile((prev) => prev.filter((_, i) => i !== index));
-  } else if (source === "dropdata") {
-    // Remove image from dropdata
-    handleDeleteDropboxFile(dropdata[index].id); // Assume you have a function to delete from Dropbox
-  }
-};
-
+  const onDeleteImage = (index, source) => {
+    if (source === "upload") {
+      // Remove image from selectedFile
+      setSelectedFile((prev) => prev.filter((_, i) => i !== index));
+    } else if (source === "dropdata") {
+      // Remove image from dropdata
+      handleDeleteDropboxFile(dropdata[index].id); // Assume you have a function to delete from Dropbox
+    }
+  };
 
   const selectImage = (index, source) => {
     let selectedImageUrl = "";
-    console.log("selectImageIndex", index);
-    console.log("source", source);
     if (source === "premium" && premiumimg && premiumimg.length > 0) {
       const selectedImage = premiumimg[index];
 
@@ -162,8 +164,6 @@ const onDeleteImage = (index, source) => {
       }
     } else if (source === "dropdata" && dropdata && dropdata.length > 0) {
       const DropImage = dropdata[index];
-      console.log("DropImage", DropImage);
-      console.log("dropdata".dropdata);
       if (DropImage) {
         AddImage(DropImage.link);
         openImgEditor();
@@ -175,9 +175,6 @@ const onDeleteImage = (index, source) => {
     }
     //console.log("Selected premium image URL:", selectedImageUrl);
   };
-
-  console.log("selectedFile", selectedFile);
-  console.log("addimage", addimage);
 
   const handleClickOpenLogin = () => {
     setLoginOpen(true);
@@ -197,8 +194,6 @@ const onDeleteImage = (index, source) => {
       console.warn("Token is null or undefined, skipping fetch.");
       return; // Exit the function if the token is null
     }
-
-    console.log("Fetching user data from: https://flagg.devlopix.com/api/user");
 
     try {
       const response = await fetch("https://flagg.devlopix.com/api/user", {
@@ -222,31 +217,25 @@ const onDeleteImage = (index, source) => {
     }
   };
 
-  //console.log(
-  //  `${process.env.REACT_APP_API_BASE_URL}/${addimage}`,
-  //  "`${process.env.REACT_APP_API_BASE_URL}${premiumimg}`"
-  //);
-    const getApi = async () => {
-      ProductService.product().then((res) => {
-        const response = res.data;
-        setAllData(response);
-      });
-    };
-    const Allproducts = async () => {
-      ProductService.Allproduct().then((res) => {
-        const response = res.data;
-        setAllProduct(response);
-      });
-    };
+  const getApi = async () => {
+    ProductService.product().then((res) => {
+      const response = res.data;
+      setAllData(response);
+    });
+  };
+  const Allproducts = async () => {
+    ProductService.Allproduct().then((res) => {
+      const response = res.data;
+      setAllProduct(response);
+    });
+  };
 
-    useEffect(() => {
-      getApi();
-      Allproducts();
-    }, []);
-
+  useEffect(() => {
+    getApi();
+    Allproducts();
+  }, []);
 
   const handleSuccess = (files) => {
-    console.log("Dropbox Files:", files);
     if (files && files.length > 0) {
       const updatedFiles = files.map((file) => {
         const imageUrl = file.link.replace("&dl=0", "&dl=1");
@@ -257,44 +246,54 @@ const onDeleteImage = (index, source) => {
         };
       });
       setDropData(updatedFiles);
-      console.log("se", updatedFiles);
     }
   };
 
-        const handleDeleteDropboxFile = (index) => {
-          setDropData(dropdata.filter((_, i) => i !== index));
-        };
+  const handleDeleteDropboxFile = (index) => {
+    setDropData(dropdata.filter((_, i) => i !== index));
+  };
   return (
     <>
-      <HeaderDesign handleClickOpenLogin={handleClickOpenLogin} />
+      {showSection && <HeaderDesign handleClickOpenLogin={handleClickOpenLogin} />}
       <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" } }}>
-        <Sidebar
-          handleImageChange={handleImageChange}
-          selectedFile={selectedFile}
-          onDeleteImage={onDeleteImage}
-          selectImage={selectImage}
-          onTabChange={handleTabChange}
-          images={images}
-          vectorimage={vectorimage}
-          setImage={setQrImage}
-          setPremiumimg={setPremiumimg}
-          alldata={alldata}
-          allproduct={allproduct}
-          handleDeleteDropboxFile={handleDeleteDropboxFile}
-          handleSuccess={handleSuccess}
-          dropdata={dropdata}
-          sx={{
-            width: { xs: "110px", sm: "100%" }, // Full width on xs, fixed width on sm and up
-            position: { xs: "relative", sm: "fixed" },
-            left: { sm: 0 },
-            top: { xs: 0, sm: "5rem" },
-          }}
-        />
+        {showSection && (
+          <Sidebar
+            setProductDetails={setProductDetails}
+            productDetails={productDetails}
+            handleImageChange={handleImageChange}
+            selectedFile={selectedFile}
+            onDeleteImage={onDeleteImage}
+            selectImage={selectImage}
+            onTabChange={handleTabChange}
+            images={images}
+            vectorimage={vectorimage}
+            setImage={setQrImage}
+            setPremiumimg={setPremiumimg}
+            alldata={alldata}
+            allproduct={allproduct}
+            handleDeleteDropboxFile={handleDeleteDropboxFile}
+            handleSuccess={handleSuccess}
+            dropdata={dropdata}
+            sx={{
+              width: { xs: "100px", sm: "100%" }, // Full width on xs, fixed width on sm and up
+              position: { xs: "relative", sm: "fixed" },
+              left: { sm: 0 },
+              top: { xs: 0, sm: "5rem" },
+            }}
+          />
+        )}
+
         <Box
           sx={{
-            height: "100%",
-            width: { xs: "100%", sm: isAccordionOpen ? "calc(100% - 210px)" : "100%" },
-            marginLeft: "210px",
+            minHeight: "78vh",
+            width: {
+              xs: "100%",
+              xl: isAccordionOpen ? "calc(100% - 30%)" : "100%",
+              lg: isAccordionOpen ? "calc(100% - 30%)" : "100%",
+              sm: isAccordionOpen ? "calc(100% - 25%)" : "100%",
+            },
+            marginTop: "20px",
+            marginLeft: "197px",
             marginRight: { sm: isAccordionOpen ? "265px" : "0px" },
             padding: { xs: "10px", sm: "20px" },
             position: "relative",
@@ -306,10 +305,51 @@ const onDeleteImage = (index, source) => {
             zIndex: "1",
           }}
         >
+          {!showSection && (
+            <Box
+              sx={{
+                backgroundColor: "#e1e1e1",
+                borderRadius: "10px",
+                // margin: "10px 0px 0px 0px",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "40px",
+                display: "flex",
+                width: "40px",
+                float: "right",
+                cursor: "pointer",
+              }}
+              onClick={() => setShowSection(true)}
+            >
+              <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect
+                  x="5.75781"
+                  y="3.6001"
+                  width="21.8113"
+                  height="1.94744"
+                  transform="rotate(45 5.75781 3.6001)"
+                  fill="#333333"
+                ></rect>
+                <rect
+                  x="4.2002"
+                  y="19.0229"
+                  width="21.8113"
+                  height="1.94744"
+                  transform="rotate(-45 4.2002 19.0229)"
+                  fill="#333333"
+                ></rect>
+              </svg>
+            </Box>
+          )}
           <h1>Your Content Here</h1>
           <p>This is your main content area.</p>
-          <BannerSideSection onToggleAccordion={handleAccordionToggle} />
-
+          {showSection && (
+            <BannerSideSection
+              onToggleAccordion={handleAccordionToggle}
+              productDetails={productDetails}
+              setShowSection={setShowSection}
+            />
+          )}
           <Box
             sx={{
               maxWidth: {
@@ -342,7 +382,13 @@ const onDeleteImage = (index, source) => {
           </Box>
 
           {qrimage && (
-            <Box sx={{ mt: 4, height: { xs: "20rem", sm: "40rem" }, width: "auto" }}>
+            <Box
+              sx={{
+                mt: 4,
+                height: { xs: "20rem", sm: "40rem" },
+                width: "auto",
+              }}
+            >
               <Rnd
                 size={{ width: qrSize.width, height: qrSize.height }}
                 onResizeStop={(e, direction, ref, delta, position) => {

@@ -17,18 +17,18 @@ import React, { useState, useRef, useEffect } from "react";
 import { ProductService } from "../../../services/Product.service";
 import FormControl from "@mui/material/FormControl";
 
-const Config = ({ allproduct, alldata }) => {
+const Config = ({ allproduct, alldata , setProductDetails,
+  productDetails, }) => {
   const [count, setCount] = useState(1);
-
   const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedCard, setSelectedCard] = useState({});
-
+  const [selectedSubCatId, setSelectedSubCatId] = useState([]);
   // New state to store selected width, height, and subCat ids
   const [selectedWidth, setSelectedWidth] = useState("");
   const [selectedHeight, setSelectedHeight] = useState("");
-  const [selectedSubCatId, setSelectedSubCatId] = useState([]);
   const [price, setPrice] = useState();
-
+    console.log("productDetails",productDetails);
+    
   const [payload, setPayload] = useState({
     productId: null, // Assuming `id` is the unique identifier for the product
     width: "",
@@ -37,8 +37,12 @@ const Config = ({ allproduct, alldata }) => {
   });
 
   const decrement = () => {
-    if (count > 1) {
-      setCount(count - 1);
+    if (productDetails.quantity > 1) {
+      setProductDetails({
+        ...productDetails,
+        quantity:productDetails.quantity - 1
+      })
+      // setCount(count - 1);
     }
   };
 
@@ -72,23 +76,29 @@ const Config = ({ allproduct, alldata }) => {
     ?.filter((val) => val.size_type === "H")
     ?.map((val) => ({ size: val.size, id: val.id }));
 
-  const [state, setState] = useState({
-    width: "",
-    height: "",
-  });
+  // const [state, setState] = useState({
+  //   width: "",
+  //   height: "",
+  // });
 
   useEffect(() => {
     if (alldata) {
       const firstWidth = widthSizes?.[0]?.size || "";
       const firstHeight = heightSizes?.[0]?.size || "";
       const firstproduct = allproduct[0]?.name || "";
-      setState({
-        width: firstWidth,
-        height: firstHeight,
-      });
+
+      // setState({
+      //   width: firstWidth,
+      //   height: firstHeight,
+      // });
+      setProductDetails({
+        ...productDetails,
+        width:firstWidth,
+        height : firstHeight, 
+      })
       setSelectedProduct(firstproduct);
-      setSelectedWidth(firstWidth);
-      setSelectedHeight(firstHeight);
+      // setSelectedWidth(firstWidth);
+      // setSelectedHeight(firstHeight);
     }
   }, [alldata, allproduct]);
 
@@ -112,14 +122,14 @@ const Config = ({ allproduct, alldata }) => {
   useEffect(() => {
     const jsonString = JSON.stringify(selectedSubCatId);
     setPayload({
-      width: selectedWidth,
-      height: selectedHeight,
+      width: productDetails?.width,
+      height: productDetails?.height,
       subCatId: jsonString,
       ProductId: 10,
-      quantity: count,
+      quantity: productDetails.quantity,
       //ProductId: alldata?.id || null,
     });
-  }, [selectedWidth, selectedHeight, selectedSubCatId, alldata, count]);
+  }, [productDetails,selectedSubCatId, alldata, productDetails.quantity]);
 
   const handleCardClick = (categoryId, subCat) => {
     setSelectedCard((prevSelectedCards) => {
@@ -138,56 +148,58 @@ const Config = ({ allproduct, alldata }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setState((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setProductDetails((prev) =>(
+      {
+        ...prev,
+        [name]: value,
+      }
+    ));
+    // setState((prev) => ({
+    //   ...prev,
+    //   [name]: value,
+    // }));
     if (name === "width") {
       const selectedWidth = widthSizes.find((size) => size.size === value);
-      setSelectedWidth(selectedWidth?.size);
+      setProductDetails ({
+        ...productDetails,
+        width:selectedWidth?.size
+      });
     } else if (name === "height") {
-      const selectedHeight = heightSizes.find((size) => size.size === value);
-      setSelectedHeight(selectedHeight?.size);
+      const selectedHeights = heightSizes.find((size) => size.size === value);
+      console.log("selectedHeights",selectedHeights);
+      
+      setProductDetails ({
+        ...productDetails,
+        height:selectedHeights?.size
+      });
     }
   };
 
-//  const getApi = async () => {
-//    ProductService.product().then((res) => {
-//      const response = res.data;
-//      setAllData(response);
-//    });
-//  };
-//  const Allproducts = async () => {
-//    ProductService.Allproduct().then((res) => {
-//      const response = res.data;
-//      setAllProduct(response);
-//    });
-//  };
-//
-//  useEffect(() => {
-//    getApi();
-//    Allproducts();
-//  }, []);
 
   useEffect(() => {
-    if (!selectedWidth || !selectedHeight || selectedSubCatId.length === 0) {
+    if (!productDetails || selectedSubCatId.length === 0) {
       console.error("Payload is incomplete. Ensure width, height, and subcategory are selected.");
       //setError("Please select all required options before proceeding.");
     } else {
       const payload = {
-        width: selectedWidth,
-        height: selectedHeight,
+        width: productDetails?.width,
+        height: productDetails?.height,
         subCatId: JSON.stringify(selectedSubCatId),
         ProductId: 10,
-        quantity: count,
+        quantity: productDetails.quantity,
       };
-
       ProductService.Dataprice(payload)
         .then((res) => {
           if (res.data && res.data.totalPrice) {
-            setPrice(res.data.totalPrice);
+            setProductDetails({
+              ...productDetails,
+              price:res.data.totalPrice
+            })
           } else {
-            setPrice(55);
+            setProductDetails({
+              ...productDetails,
+              price:50
+            })
             //setError("Failed to fetch pricing information.");
           }
         })
@@ -196,8 +208,7 @@ const Config = ({ allproduct, alldata }) => {
           //setError("Unable to fetch pricing. Please try again later.");
         });
     }
-  }, [payload]);
-
+  }, [productDetails?.width,productDetails?.height,productDetails?.quantity ]);
   return (
     <>
       <Box>
@@ -226,7 +237,7 @@ const Config = ({ allproduct, alldata }) => {
                 <div className="right">
                   <FormControl sx={{ minWidth: 70 }}>
                     <Select
-                      value={state?.width}
+                      value={productDetails.width}
                       name="width"
                       onChange={handleChange}
                       displayEmpty
@@ -260,7 +271,7 @@ const Config = ({ allproduct, alldata }) => {
                 <div className="right">
                   <FormControl sx={{ minWidth: 70 }}>
                     <Select
-                      value={state?.height}
+                      value={productDetails.height}
                       name="height"
                       onChange={handleChange}
                       displayEmpty
@@ -302,7 +313,7 @@ const Config = ({ allproduct, alldata }) => {
                 justifyContent: "space-around",
               }}
             >
-              <Typography onClick={decrement} disabled={count === 1} sx={{ color: "#868686", cursor: "pointer" }}>
+              <Typography onClick={decrement} disabled={productDetails.quantity === 1} sx={{ color: "#868686", cursor: "pointer" }}>
                 -
               </Typography>
               <span
@@ -312,9 +323,12 @@ const Config = ({ allproduct, alldata }) => {
                   color: "#868686",
                 }}
               >
-                {count}
+                {productDetails.quantity}
               </span>
-              <Typography onClick={() => setCount(count + 1)} sx={{ color: "#868686", cursor: "pointer" }}>
+              <Typography onClick={() => setProductDetails({
+        ...productDetails,
+        quantity:productDetails.quantity + 1
+      })} sx={{ color: "#868686", cursor: "pointer" }}>
                 +
               </Typography>
             </Box>
@@ -490,7 +504,7 @@ const Config = ({ allproduct, alldata }) => {
           }}
         >
           <Typography variant="h6" sx={{ color: "#1976d2" }}>
-            ${price} <br />
+            ${productDetails?.price} <br />
             each
           </Typography>
           <Typography variant="body2">
