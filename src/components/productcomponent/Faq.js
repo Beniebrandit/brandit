@@ -1,11 +1,4 @@
-import {
-  Box,
-  Container,
-  Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-} from "@mui/material";
+import { Box, Container, Typography, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import React, { useState } from "react";
 
@@ -75,8 +68,7 @@ const Faq = () => {
                 borderRadius: "10px",
                 marginTop: "25px",
                 width: "100%",
-                lineHeight:"40px"
-              
+                lineHeight: "40px",
               }}
             >
               <AccordionSummary
@@ -87,7 +79,6 @@ const Faq = () => {
                       border: "2.4px solid #3F5163",
                       borderRadius: "5px",
                       fontSize: "20px",
-                      
                     }}
                   />
                 }
@@ -95,16 +86,14 @@ const Faq = () => {
                 id={`panel${index + 1}-header`}
                 sx={{
                   fontSize: "20px",
-                  color: "#868686",
-                
+                  color: expanded === index ? "#3F5163" : "#868686",
+
                   fontWeight: expanded === index ? "bold" : "normal", // Conditionally set font weight
                 }}
               >
                 {faq.question}
               </AccordionSummary>
-              <AccordionDetails sx={{ fontWeight: "normal" }}>
-                {faq.answer}
-              </AccordionDetails>
+              <AccordionDetails sx={{ fontWeight: "normal", color: "#868686" }}>{faq.answer}</AccordionDetails>
             </Accordion>
           ))}
         </Container>

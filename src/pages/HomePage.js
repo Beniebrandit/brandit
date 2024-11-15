@@ -10,8 +10,8 @@ import LoginDialog from "../components/common/LoginDialog";
 import CreateAccountDialog from "../components/common/CreateAccountDialog";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import Reviews from '../components/common/Reviews'
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
-import Reviews from "../components/common/Reviews";
 const HomePage = () => {
   const [loginOpen, setLoginOpen] = useState(false);
   const [openSignUp, setOpenSignUp] = useState(false);
@@ -78,31 +78,7 @@ const HomePage = () => {
       <Categories />
       <TrendingProducts />
       <WhyBranditSignage />
-      <Reviews />
-      {/*<Box sx={{ marginTop: "5rem" }}>
-        <Container>
-          <Typography
-            sx={{
-              position: "absolute",
-              textAlign: "left",
-              fontSize: {
-                xs: "12px", // Mobile
-                sm: "26px", // Small tablets
-                md: "30px", // Tablets and small laptops
-                lg: "40px", // Larger laptops and desktops
-              },
-              // width: "auto",
-              marginTop: "16%",
-              paddingLeft: { xs: "1rem", sm: "3rem" },
-              color: "white",
-            }}
-          >
-            Lorem ipsum dolor sit amet, <br />
-            consectetur adipiscing elit.
-          </Typography>
-          <img src={Brandit_image} alt="" style={{ margin: "auto", height: "100%", width: "100%" }} />
-        </Container>
-      </Box>*/}
+      <Reviews/>
       <HomeFooter />
 
       {isVisible && (

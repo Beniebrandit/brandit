@@ -42,19 +42,11 @@ code {
 .header_btn {
   background-color: #3f5163 !important;
   margin-right: 10px !important;
+  text-transform: none !important;
 }
 
 .inner_header {
-  border-bottom: 1px solid lightgray;
-  position: fixed;
-  width: 100%;
-  padding: 10px 0px;
-  /* padding: 5px; */
-  height: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: white;
+  padding-top: 10px;
 }
 
 .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
@@ -138,20 +130,26 @@ code {
   overflow-y: auto; /* Allows vertical scrolling if needed */
   white-space: nowrap; /* Prevents wrapping of content */
   max-width: 100%; /* Ensures the container doesn't exceed the screen width */
+  border: none !important;
 }
-
 .basic_tabs_example .css-heg063-MuiTabs-flexContainer {
   justify-content: space-between !important;
 }
-.basic_tabs_example .css-heg063-MuiTabs-flexContainer button{
+.basic_tabs_example  button{
   font-weight: 400 !important;
   color:#868686 !important;
 }
-.basic_tabs_example .css-heg063-MuiTabs-flexContainer button.Mui-selected{
+.basic_tabs_example  button.Mui-selected{
   color: #3F5163 !important;
 }
 .basic_tabs_example span.MuiTabs-indicator{
   background-color: #3F5163 !important;
+}
+.tabs-cust span.MuiTabs-indicator{
+  background-color: #E0CE8F !important;
+}
+.tabs-cust button.Mui-selected{
+  color: #E0CE8F !important;
 }
 
 /*.background {
@@ -297,4 +295,20 @@ html .pintura-editor {
 
 .konvajs-content{
   height: 350px !important;
+}
+.social-icon{
+  border-radius: 90%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    height: 48px;
+    width: 48px;
+    
+}
+.tabs-cust button.Mui-selected,.tabs-cust button.Mui-selected::after {
+  color: #E0CE8F !important;
+  content: url('../src//asset//images/treadingArrow.svg');
+  display: ruby;
+  vertical-align: middle; 
 }

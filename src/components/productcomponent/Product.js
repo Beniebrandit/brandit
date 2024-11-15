@@ -369,7 +369,9 @@ const handleThumbClick = (index) => {
                   // }}
                 />
                 &nbsp;&nbsp;&nbsp;
-                <Typography sx={{ color: "#3F5163", display: "inline-block",paddingTop:"2px" }}>{`(${rating || " "})`}</Typography>
+                <Typography sx={{ color: "#3F5163", display: "inline-block", paddingTop: "2px" }}>{`(${
+                  rating || " "
+                })`}</Typography>
               </a>
               <Typography
                 style={{
@@ -393,14 +395,32 @@ const handleThumbClick = (index) => {
               >
                 {alldata?.description}
               </Typography>
-              <Divider style={{ width: "100%", marginTop: "40px" }} />
+              <Divider style={{ marginTop: "30px", width: "100%" }} />
               <Box sx={{ marginTop: "30px" }}>
-                <Grid container spacing={4} sx={{width:"100%"}}>
+                <Grid
+                  container
+                  spacing={2}
+                  sx={{
+                    width: "100%",
+                    margin: 0,
+                    "& .MuiGrid-item": { padding: "0px !important" },
+                    "& .MuiGrid-container": { paddingLeft: "0px !important" },
+                  }}
+                >
                   {/* Size (in Inches) Section */}
-                  <Grid item lg={6} md={6} sm={12} xs={12}>
+                  <Grid
+                    item
+                    lg={6}
+                    md={6}
+                    sm={12}
+                    xs={12}
+                    sx={{
+                      padding: "0px !important",
+                    }}
+                  >
                     <Typography
                       sx={{
-                        fontSize: "22px",
+                        fontSize: { xs: "18px", sm: "20px", md: "22px" },
                         lineHeight: "32px",
                         fontWeight: "bold",
                       }}
@@ -435,7 +455,7 @@ const handleThumbClick = (index) => {
                             >
                               {widthSizes?.map((size) => (
                                 <MenuItem key={size.id} value={size.size}>
-                                 {size.size}
+                                  {size.size}
                                 </MenuItem>
                               ))}
                             </Select>
@@ -480,10 +500,10 @@ const handleThumbClick = (index) => {
                   </Grid>
 
                   {/* Quantity Section */}
-                  <Grid item lg={6} md={6} sm={12} xs={12}>
+                  <Grid item lg={6} md={6} sm={12} xs={12} sx={{ padding: "0px !important",display:"flex" , flexDirection:"column" , justifyContent:"center",alignItems:"flex-end" }}>
                     <Typography
                       sx={{
-                        fontSize: "22px",
+                        fontSize: { xs: "18px", sm: "20px", md: "22px" },
                         lineHeight: "32px",
                         fontWeight: "bold",
                       }}
@@ -494,7 +514,7 @@ const handleThumbClick = (index) => {
                     <Box
                       sx={{
                         border: "1px solid #868686",
-                        width: "50%",
+                        width: { xs: "100%", sm: "70%", md: "50%" },
                         marginTop: "20px",
                         height: "53%",
                         borderRadius: "10px",

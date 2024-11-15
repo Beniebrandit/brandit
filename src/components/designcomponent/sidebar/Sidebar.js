@@ -187,7 +187,7 @@ const handleClickAway = () => {
         <Box
           // className="custom-scrollbar custom-scrollbar-container"
           sx={{
-           marginTop:'20px',
+            marginTop: "20px",
             flexGrow: 1,
             display: "flex",
             height: "82vh",
@@ -207,68 +207,90 @@ const handleClickAway = () => {
             value={isTabOpen ? value : false}
             onChange={handleChange}
             aria-label="Vertical tabs example"
-            sx={{ borderRight: 1, borderColor: "divider", height: "80vh", 
-          '& .MuiTabs-indicator': {
-            display:'none !important'
-             }            
-  
-
+            sx={{
+              borderRight: 1,
+              borderColor: "divider",
+              height: "80vh",
+              "& .MuiTabs-indicator": {
+                display: "none !important",
+              },
             }}
           >
             <Tab
               icon={<Sidebarsetting style={{ width: "20px", height: "auto" }} />}
-              label={<span style={{ color: "#3F5163" ,textTransform:'capitalize'}}>Config</span>}
-              sx={{margin:'10px 15px 10px 15px' ,'&.Mui-selected': {
-              borderBottom: '1px solid gray !important',
-            },}}
+              label={<span style={{ color: "#3F5163", textTransform: "capitalize" }}>Config</span>}
+              sx={{
+                margin: "10px 15px 10px 15px",
+                "&.Mui-selected": {
+                  borderBottom: "1px solid gray !important",
+                },
+              }}
               {...a11yProps(0)}
             />
             <Tab
-            sx={{ margin:'0px 15px 10px 15px' ,'&.Mui-selected': {
-              borderBottom: '1px solid gray !important',
-            }}}
-              icon={<Sidebarupload sx={{ width: "20px", height: "auto" ,}} />}
-              label={<span style={{ color: "#3F5163" ,textTransform:'capitalize'}}>My uploads</span>}
+              sx={{
+                margin: "0px 15px 10px 15px",
+                "&.Mui-selected": {
+                  borderBottom: "1px solid gray !important",
+                },
+              }}
+              icon={<Sidebarupload sx={{ width: "20px", height: "auto" }} />}
+              label={<span style={{ color: "#3F5163", textTransform: "capitalize" }}>My uploads</span>}
               {...a11yProps(1)}
             />
             <Tab
-             sx={{ margin:'0px 15px 10px 15px' ,'&.Mui-selected': {
-              borderBottom: '1px solid gray !important',
-            }}}
+              sx={{
+                margin: "0px 15px 10px 15px",
+                "&.Mui-selected": {
+                  borderBottom: "1px solid gray !important",
+                },
+              }}
               icon={<Sidebarsetting style={{ width: "20px", height: "auto" }} />}
-              label={<span style={{ color: "#3F5163",textTransform:'capitalize' }}>Premium images</span>}
+              label={<span style={{ color: "#3F5163", textTransform: "capitalize" }}>Premium images</span>}
               {...a11yProps(2)}
             />
             <Tab
-             sx={{ margin:'0px 15px 10px 15px' ,'&.Mui-selected': {
-              borderBottom: '1px solid gray !important',
-            }}}
+              sx={{
+                margin: "0px 15px 10px 15px",
+                "&.Mui-selected": {
+                  borderBottom: "1px solid gray !important",
+                },
+              }}
               icon={<Sidebartext style={{ width: "20px", height: "auto" }} />}
-              label={<span style={{ color: "#3F5163" ,textTransform:'capitalize'}}>Text</span>}
+              label={<span style={{ color: "#3F5163", textTransform: "capitalize" }}>Text</span>}
               {...a11yProps(3)}
             />
             <Tab
-             sx={{ margin:'0px 15px 10px 15px' ,'&.Mui-selected': {
-              borderBottom: '1px solid gray !important',
-            }}}
+              sx={{
+                margin: "0px 15px 10px 15px",
+                "&.Mui-selected": {
+                  borderBottom: "1px solid gray !important",
+                },
+              }}
               icon={<Sidebarshapes style={{ width: "20px", height: "auto" }} />}
-              label={<span style={{ color: "#3F5163" ,textTransform:'capitalize'}}>Shapes</span>}
+              label={<span style={{ color: "#3F5163", textTransform: "capitalize" }}>Shapes</span>}
               {...a11yProps(4)}
             />
             <Tab
-             sx={{ margin:'0px 15px 10px 15px' ,'&.Mui-selected': {
-              borderBottom: '1px solid gray !important',
-            }}}
+              sx={{
+                margin: "0px 15px 10px 15px",
+                "&.Mui-selected": {
+                  borderBottom: "1px solid gray !important",
+                },
+              }}
               icon={<Sidebarbackground style={{ width: "20px", height: "auto" }} />}
-              label={<span style={{ color: "#3F5163" ,textTransform:'capitalize'}}>background</span>}
+              label={<span style={{ color: "#3F5163", textTransform: "capitalize" }}>background</span>}
               {...a11yProps(5)}
             />
             <Tab
-             sx={{ margin:'0px 15px 10px 15px' ,'&.Mui-selected': {
-              borderBottom: '1px solid gray !important',
-            }}}
+              sx={{
+                margin: "0px 15px 10px 15px",
+                "&.Mui-selected": {
+                  borderBottom: "1px solid gray !important",
+                },
+              }}
               icon={<SidebarQRcode style={{ width: "20px", height: "auto" }} />}
-              label={<span style={{ color: "#3F5163",textTransform:'capitalize' }}>QR Code</span>}
+              label={<span style={{ color: "#3F5163", textTransform: "capitalize" }}>QR Code</span>}
               {...a11yProps(6)}
             />
           </Tabs>
@@ -283,8 +305,12 @@ const handleClickAway = () => {
             {isTabOpen && (
               <>
                 <TabPanel value={value} index={0} style={{ width: "22rem" }}>
-                  <Config allproduct={allproduct} alldata={alldata} setProductDetails = {setProductDetails}
-  productDetails = {productDetails}/>
+                  <Config
+                    allproduct={allproduct}
+                    alldata={alldata}
+                    setProductDetails={setProductDetails}
+                    productDetails={productDetails}
+                  />
                 </TabPanel>
                 <TabPanel value={value} index={1} style={{ width: "24rem" }}>
                   <MyUpload
@@ -381,8 +407,18 @@ const handleClickAway = () => {
             variant="contained"
             color="success"
             onClick={() => {
-              handleSelectImage();
-              handleClose();
+              if (expandedImageIndex !== null) {
+                // Check if value is 1 for "upload" or a different condition for "dropdata"
+                if (value === 1) {
+                  selectImage(expandedImageIndex, "upload");
+                } else if (value === 1 && dropdata[expandedImageIndex]) {
+                  selectImage(expandedImageIndex, "dropdata");
+                } else {
+                  selectImage(expandedImageIndex, "premium");
+                }
+                handleSelectImage();
+                handleClose();
+              }
             }}
           >
             Add Image

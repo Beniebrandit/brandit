@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Container, Grid, TextField, Typography } from "@mui/material";
 import React from "react";
 import footer_logo from "../../asset/images/footer_logo.png";
 import blog1_img from "../../asset/images/blog1_img (1).png";
@@ -20,15 +13,17 @@ import facebook7 from "../../asset/images/facebook7.png";
 import facebook8 from "../../asset/images/facebook8.png";
 import visa from "../../asset/images/visa_image.svg";
 import paypal from "../../asset/images/paypal_image.svg";
-import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import twitter from "../../asset/images/twiiter1.svg";
+import facebook from "../../asset/images/facebook.svg";
+import youtube from "../../asset/images/youtube.svg";
+import linkedin_logo from "../../asset/images/linkedin_logo.svg";
+
 const Footer = () => {
   return (
     <>
       <Box
         sx={{
-          backgroundColor: "#CFE5F9",
+          backgroundColor: "#EFF7FC",
           marginTop: "100px",
           paddingBottom: "90px",
         }}
@@ -59,10 +54,28 @@ const Footer = () => {
               >
                 Follow Us{" "}
               </Typography>
-              <Box sx={{ marginTop: "20px" }}>
-                <FacebookOutlinedIcon sx={{ fontSize: "40px" }} />
-                <InstagramIcon sx={{ fontSize: "40px" }} />
-                <LinkedInIcon sx={{ fontSize: "40px" }} />
+              <Box sx={{ marginTop: "20px", display: "flex", gap: "1rem" }}>
+                <Box className="social-icon">
+                  <img src={facebook} alt="facebook" width="12px" height="22px" />
+                </Box>
+                <Box className="social-icon">
+                  <img src={twitter} alt="Twitter" height="16" width="21px" />
+                </Box>
+                <Box className="social-icon">
+                  <img
+                    src={linkedin_logo}
+                    alt="youtube"
+                    width="22px"
+                    height="15.46px"
+                    style={{
+                      backgroundColor: "#3F5163",
+                      height: "auto",
+                      width: "auto",
+                      padding: "3px",
+                      borderRadius: "3px",
+                    }}
+                  />
+                </Box>
               </Box>
             </Grid>
 
@@ -307,7 +320,15 @@ const Footer = () => {
               </Box>
             </Grid>
             <Grid item md={4} sm={12} xs={12}>
-              <Typography sx={{ color: "#FFFFFF", fontWeight: "600", fontSize: "20px" }}>Subscribe</Typography>
+              <Typography
+                sx={{
+                  color: "#FFFFFF",
+                  fontWeight: "600",
+                  fontSize: "20px",
+                }}
+              >
+                Subscribe
+              </Typography>
               <Box
                 sx={{
                   display: "flex",
@@ -323,6 +344,7 @@ const Footer = () => {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    "& .MuiInputBase-input": { padding: "7.5px 14px !important" },
                   }}
                 />
                 <Button
@@ -357,7 +379,7 @@ const Footer = () => {
                     borderRadius: "8px",
                     fontWeight: "400",
                     padding: "9px",
-                    width:"7rem",
+                    width: "7rem",
                     textTransform: "none",
                     "&:hover": {
                       backgroundColor: "#E0CE8F",

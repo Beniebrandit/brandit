@@ -1,10 +1,21 @@
-import { Box, Container, Typography, Button, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import banner1 from "../../asset/images/banner1.jpg";
 import MaskGroup from "../../asset/images/Mask Group.png";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import React, { useState } from "react";
 import PopUp from "./Pop_Up";
 import Navbar from "./Navbar";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const HeaderHome = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
   const [open, setOpen] = React.useState(false);
@@ -188,6 +199,8 @@ const HeaderHome = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                 xs: "repeat(1 ,1fr)",
               },
               gap: "1rem",
+              justifyContent: "center",
+              alignItems: "center",
               backgroundColor: "white",
               padding: "1.5rem",
               borderRadius: "1rem",
@@ -196,15 +209,32 @@ const HeaderHome = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
           >
             {/* Material Field */}
             <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              <Typography sx={{ fontSize: "16px", color: "#3F5163", fontWeight: 400 }}>Material</Typography>
-              <TextField placeholder="Stickers and Decals" variant="outlined" fullWidth size="small" />
+              <Typography sx={{ fontSize: "20px", color: "#3F5163", fontWeight: 400 }}>Material</Typography>
+              <TextField
+                placeholder="Stickers and Decals"
+                variant="outlined"
+                fullWidth
+                size="small"
+                InputProps={{
+                  sx: {
+                    height: "60px", // Adjust this value as needed
+                  },
+                }}
+              />
             </Box>
 
             {/* Size Field */}
             <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              <Typography sx={{ fontSize: "16px", color: "#3F5163", fontWeight: 400 }}>Size</Typography>
-              <FormControl sx={{ minWidth: 120 }} size="small" fullWidth>
-                <Select labelId="size-select-label" id="size-select" defaultValue="" displayEmpty>
+              <Typography sx={{ fontSize: "20px", color: "#3F5163", fontWeight: 400 }}>Size</Typography>
+              <FormControl sx={{ minWidth: 120, color: "#3F5163" }} size="small" fullWidth>
+                <Select
+                  labelId="size-select-label"
+                  id="size-select"
+                  defaultValue=""
+                  displayEmpty
+                  sx={{ color: "gray", height: "60px", padding: "0px 10px" }}
+                  IconComponent={(props) => <ExpandMoreIcon />}
+                >
                   <MenuItem value="" disabled>
                     6" x 24"
                   </MenuItem>
@@ -217,25 +247,50 @@ const HeaderHome = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
 
             {/* Quantity Field */}
             <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              <Typography sx={{ fontSize: "16px", color: "#3F5163", fontWeight: 400 }}>Qty</Typography>
+              <Typography sx={{ fontSize: "20px", color: "#3F5163", fontWeight: 400 }}>Qty</Typography>
               <TextField
                 placeholder="1"
                 variant="outlined"
                 fullWidth
                 size="small"
                 type="number"
-                inputProps={{ min: 1 }}
+                InputProps={{
+                  sx: {
+                    height: "60px", // Adjust this value as needed
+                  },
+                }}
               />
             </Box>
 
             {/* Price Section */}
-            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-              <Typography sx={{ fontSize: "26px", color: "#3F5163", fontWeight: 700 }}>$10.65</Typography>
-              <Box sx={{display:'flex',alignItems:'center',justifyContent:'space-around',width:'100%'}}>
-                <Typography sx={{ fontSize: "16px", color: "#E0CE8F", textDecoration: "line-through" }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                paddingTop: "10px",
+              }}
+            >
+              <Typography sx={{ fontSize: "28px", color: "#3F5163", fontWeight: 700 }}>$10.65</Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-around",
+                  width: "100%",
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: "18px",
+                    color: "#E0CE8F",
+                    textDecoration: "line-through",
+                  }}
+                >
                   $13.31
                 </Typography>
-                <Typography sx={{ fontSize: "20px", color: "#3F5163", fontWeight:500 }}>each</Typography>
+                <Typography sx={{ fontSize: "28px", color: "#3F5163", fontWeight: 500 }}>each</Typography>
               </Box>
             </Box>
 
@@ -243,14 +298,15 @@ const HeaderHome = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
             <Button
               onClick={handleOpen}
               sx={{
-                margin:"10px 0px 0px 0px",
+                margin: "25px 0px 0px 0px",
                 //width: "7rem",
-                height:'60px',
+                height: "60px",
                 //margin: "auto",
                 backgroundColor: "#3F5163",
                 color: "white",
                 fontWeight: 500,
                 borderRadius: "8px",
+                textTransform:"none",
                 "&:hover": {
                   backgroundColor: "#2E4053",
                 },

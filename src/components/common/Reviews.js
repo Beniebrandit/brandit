@@ -30,6 +30,7 @@ import facebook6 from "../../asset/images/facebook6.png";
 import { ReactComponent as Customerreviewicon } from "../../asset/images/customerreviewicon.svg";
 import CloseIcon from "@mui/icons-material/Close";
 import { ReviewService } from "../../services/Review.service";
+import CustomPagination from "./CustomPagination";
 
 const Reviews = (props) => {
   const [value, setValue] = useState(5);
@@ -40,6 +41,11 @@ const Reviews = (props) => {
   const [rating, setRating] = useState(0);
   const [productId, setProductId] = useState();
   const [reviews, setReviews] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+  const paginatedReviews = reviews?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+
 
   const [payload, setPayload] = useState({
     user_id: "",
@@ -47,6 +53,10 @@ const Reviews = (props) => {
     stars: "",
     review: "",
   });
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -260,15 +270,22 @@ const Reviews = (props) => {
             </Grid>
           </Grid>
           <Grid container spacing={2}>
-            {reviews?.length > 0
-              ? reviews.map((item, index) => {
-                  return (
-                    <Grid item md={6} sm={12} xs={12} key={index}>
+            {paginatedReviews?.length > 0
+              ? paginatedReviews?.map((item, index) => (
+                  <Grid item md={6} sm={12} xs={12} key={index}>
+                    <Box
+                      sx={{
+                        backgroundColor: "#F5F5F5",
+                        padding: "15px",
+                        borderRadius: "8px",
+                      }}
+                    >
                       <Box
                         sx={{
-                          backgroundColor: "#F5F5F5",
-                          padding: "15px",
-                          borderRadius: "8px",
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          marginBottom: "10px",
                         }}
                       >
                         <Box
@@ -279,156 +296,122 @@ const Reviews = (props) => {
                             marginBottom: "10px",
                           }}
                         >
+                          <Customerreviewicon />
                           <Box
                             sx={{
                               display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              marginBottom: "10px",
+                              alignItems: "flex-start",
+                              flexDirection: "column",
+                              paddingLeft: "10px",
+                              marginBottom: "5px",
                             }}
                           >
-                            <Customerreviewicon />
                             <Box
                               sx={{
                                 display: "flex",
-                                alignItems: "flex-start",
-                                flexDirection: "column",
-                                paddingLeft: "10px",
-                                marginBottom: "5px",
+                                alignItems: "center",
+                                flexDirection: "row",
                               }}
                             >
-                              <Box
+                              <Typography
                                 sx={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  flexDirection: "row",
+                                  fontSize: "16px",
+                                  fontWeight: "500",
+                                  color: "#000",
                                 }}
                               >
-                                <Typography
-                                  sx={{
-                                    fontSize: "16px",
-                                    fontWeight: "500",
-                                    color: "#000",
-                                    // marginRight: "10px",
-                                  }}
-                                >
-                                  {item.user_name}
-                                </Typography>
-                                <Typography
-                                  sx={{
-                                    fontSize: "16px",
-                                    lineHeight: "14px",
-                                    color: "#D4BA46",
-                                    marginLeft: "50px",
-                                  }}
-                                >
-                                  Verified Buyer
-                                </Typography>
-                              </Box>
-                              <Box
+                                {item.user_name}
+                              </Typography>
+                              <Typography
                                 sx={{
-                                  // margin: "auto",
-                                  display: "flex",
-                                  justifyContent: "flex-start",
+                                  fontSize: "16px",
+                                  lineHeight: "14px",
+                                  color: "#D4BA46",
+                                  marginLeft: "50px",
                                 }}
                               >
-                                <Box sx={{ display: "flex", alignItems: "center" }}>
-                                  {Array.isArray(
-                                    Array.from({
-                                      length: Number.isInteger(item?.stars) && item.stars > 0 ? item.stars : 0,
-                                    })
-                                  )
-                                    ? Array.from({ length: item.stars }).map((_, i) => (
-                                        <StarIcon key={i} sx={{ color: "black" }} />
-                                      ))
-                                    : null}
-                                </Box>
-                              </Box>
+                                Verified Buyer
+                              </Typography>
+                            </Box>
+                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                              {Array.from({ length: item.stars }).map((_, i) => (
+                                <StarIcon key={i} sx={{ color: "black" }} />
+                              ))}
                             </Box>
                           </Box>
-
-                          <Typography
-                            sx={{
-                              textAlign: "end",
-                              color: "#000000",
-                              fontWeight: "400",
-                              fontSize: "12px",
-                            }}
-                          >
-                            {item.date}
-                          </Typography>
                         </Box>
-
                         <Typography
                           sx={{
-                            color: "#868686",
-                            fontSize: "16px",
-                            lineHeight: "25px",
-                            fontWeight: "500",
-                          }}
-                        >
-                          {item.review}
-                        </Typography>
-                        <Typography
-                          sx={{
-                            color: "#4D4D4D",
+                            textAlign: "end",
+                            color: "#000000",
+                            fontWeight: "400",
                             fontSize: "12px",
-                            lineHeight: "20px",
-                            fontWeight: "500",
-                            marginTop: "10px",
                           }}
                         >
-                          <b>ITEM TYPE:</b>
+                          {item.date}
                         </Typography>
+                      </Box>
+
+                      <Typography
+                        sx={{
+                          color: "#868686",
+                          fontSize: "16px",
+                          lineHeight: "25px",
+                          fontWeight: "500",
+                        }}
+                      >
+                        {item.review}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          color: "#4D4D4D",
+                          fontSize: "12px",
+                          lineHeight: "20px",
+                          fontWeight: "500",
+                          marginTop: "10px",
+                        }}
+                      >
+                        <b>ITEM TYPE:</b>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          color: "#4D4D4D",
+                          fontSize: "16px",
+                          lineHeight: "20px",
+                          fontWeight: "500",
+                          marginTop: "10px",
+                        }}
+                      >
+                        Lorem Ipsum is simply dummy text
+                      </Typography>
+                      <Box sx={{ display: "flex", alignItems: "center", marginTop: "15px" }}>
                         <Typography
                           sx={{
-                            color: "#4D4D4D",
-                            fontSize: "16px",
-                            lineHeight: "20px",
-                            fontWeight: "500",
-                            marginTop: "10px",
+                            color: "#000000",
+                            fontSize: "15px",
+                            fontWeight: "400",
+                            marginRight: "10px",
                           }}
                         >
-                          Lorem Ipsum is simply dummy text
+                          Was this helpful?
                         </Typography>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            marginTop: "15px",
-                          }}
-                        >
-                          <Typography
-                            sx={{
-                              color: "#000000",
-                              fontSize: "15px",
-                              fontWeight: "400",
-                              marginRight: "10px",
-                            }}
-                          >
-                            Was this helpful?
-                          </Typography>
-                          <ThumbUpIcon sx={{ color: "black" }} />
-                          &nbsp; 0
-                          <ThumbDownAltIcon sx={{ marginLeft: "10px", color: "black" }} />
-                          &nbsp;0
-                        </Box>
+                        <ThumbUpIcon sx={{ color: "black" }} />
+                        &nbsp; 0
+                        <ThumbDownAltIcon sx={{ marginLeft: "10px", color: "black" }} />
+                        &nbsp;0
                       </Box>
-                    </Grid>
-                  );
-                })
+                    </Box>
+                  </Grid>
+                ))
               : "No reviews available"}
           </Grid>
 
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: "30px",
-            }}
-          >
-            <Pagination count={10} page={1} shape="rounded" />
-          </Box>
+          {/* Pagination Controls */}
+          <CustomPagination
+            totalItems={reviews?.length}
+            itemsPerPage={itemsPerPage} // Ensure itemsPerPage is set to a valid number, like 6
+            onPageChange={handlePageChange}
+          />
         </Container>
       </Box>
 

@@ -3,6 +3,7 @@ import React from "react";
 import banner_image from "../../asset/images/banner_image.png";
 import Bg from "../../asset/images/Bg.png";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import circleIcon from "../../asset/images/circleIcon.svg";
 
 // Sample data array
 const cardData = [
@@ -43,11 +44,12 @@ const CardComponent = ({ title, description, iconColor }) => (
       textAlign: "center",
     }}
   >
-    <CheckCircleIcon sx={{ color: iconColor, fontSize: "60px" }} />
+    <img src={circleIcon} alt="icon" />
+    {/* <CheckCircleIcon sx={{ color: iconColor, fontSize: "60px" }} /> */}
     <Typography
       sx={{
         color: "#000000",
-        fontSize: "20px",
+        fontSize: "26px",
         lineHeight: "30px",
         fontWeight: "600",
         marginTop: "15px",
@@ -58,7 +60,7 @@ const CardComponent = ({ title, description, iconColor }) => (
     <Typography
       sx={{
         color: "#868686",
-        fontSize: "14px",
+        fontSize: "16px",
         lineHeight: "24px",
         fontWeight: "400",
         marginTop: "10px",
@@ -73,6 +75,7 @@ const BannerFeature = () => {
   return (
     <Box
       sx={{
+        maxHeight: "1350px",
         backgroundColor: "#FAF8EE",
         padding: { xs: "60px 0px", md: "90px 0px 250px" },
         position: "relative",
@@ -108,7 +111,8 @@ const BannerFeature = () => {
               sx={{
                 backgroundColor: "#E0CE8F",
                 borderRadius: "30px",
-                width: "100%",
+                maxWidth: "499px",
+                minWidth: "auto",
                 height: "auto",
                 aspectRatio: "499 / 540",
                 overflow: "hidden",
@@ -166,7 +170,7 @@ const BannerFeature = () => {
 
         <Box
           sx={{
-            height: "600px",
+            height: "581px",
             width: "1000px",
             position: "absolute",
             zIndex: "0",
@@ -238,7 +242,8 @@ const BannerFeature = () => {
               sx={{
                 backgroundColor: "#E0CE8F",
                 borderRadius: "30px",
-                width: "100%",
+                maxWidth: "537px",
+                minWidth: "auto",
                 height: "auto",
                 aspectRatio: "499 / 540",
                 display: "flex",
@@ -251,11 +256,20 @@ const BannerFeature = () => {
           </Grid>
         </Grid>
 
-        <Box sx={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            alignItems: "center",
+            height: "305px",
+            paddingTop: "4rem",
+          }}
+        >
           <Container>
-            <Grid container spacing={8} justifyContent="center">
+            <Grid container spacing={8} justifyContent="center" sx={{ height: "305px" }}>
               {cardData.map((card) => (
-                <Grid key={card.id} item xs={12} sm={6} md={4}>
+                <Grid key={card.id} item xs={12} sm={6} md={4} sx={{ height: "100%" }}>
                   <CardComponent title={card.title} description={card.description} iconColor={card.iconColor} />
                 </Grid>
               ))}

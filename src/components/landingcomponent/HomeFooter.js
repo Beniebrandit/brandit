@@ -13,16 +13,20 @@ import facebook7 from "../../asset/images/facebook7.png";
 import facebook8 from "../../asset/images/facebook8.png";
 import visa from "../../asset/images/visa_image.svg";
 import paypal from "../../asset/images/paypal_image.svg";
-import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
+import logo from "../../asset/images/logo1.svg";
+import logo2 from "../../asset/images/logo2.svg";
+import twitter from "../../asset/images/twiiter1.svg";
+import printrest from "../../asset/images/printrest.svg";
+import facebook from "../../asset/images/facebook.svg";
+import youtube from "../../asset/images/youtube.svg";
+
 const HomeFooter = () => {
   return (
     <>
       <Box
         sx={{
-          backgroundColor: "#93CAEC",
+          backgroundColor: "#EFF7FC",
           marginTop: "100px",
           paddingBottom: "90px",
         }}
@@ -30,14 +34,16 @@ const HomeFooter = () => {
         <Container sx={{ paddingTop: "90px" }}>
           <Grid container spacing={2}>
             <Grid item md={4} sm={12} xs={12}>
-              <img alt="footer_logo" src={footer_logo} width="50%" height="30%" />
+              <Box sx={{ display: "flex", gap: "1rem", padding: "0rem 0rem 1rem 0rem" }}>
+                <img alt="footer_logo" src={logo} />
+                <img alt="footer_logo" src={logo2} />
+              </Box>
               <Typography
                 sx={{
                   fontSize: "18px",
                   lineHeight: "27px",
                   color: "#545454",
                   fontWeight: "600",
-                  marginTop: "10px",
                 }}
               >
                 Brandit brings your brand to life from the moment you get in touch{" "}
@@ -53,10 +59,19 @@ const HomeFooter = () => {
               >
                 Follow Us{" "}
               </Typography>
-              <Box sx={{ marginTop: "20px" }}>
-                <FacebookOutlinedIcon sx={{ fontSize: "40px" }} />
-                <InstagramIcon sx={{ fontSize: "40px" }} />
-                <LinkedInIcon sx={{ fontSize: "40px" }} />
+              <Box sx={{ marginTop: "20px", display: "flex", gap: "1rem" }}>
+                <Box className="social-icon">
+                  <img src={twitter} alt="Twitter" height="16" width="21px" />
+                </Box>
+                <Box className="social-icon" sx={{ backgroundColor: "#3F5163" }}>
+                  <img src={printrest} alt="Printrest" width="20px" height="23px" />
+                </Box>
+                <Box className="social-icon">
+                  <img src={facebook} alt="facebook" width="12px" height="22px" />
+                </Box>
+                <Box className="social-icon">
+                  <img src={youtube} alt="youtube" width="22px" height="15.46px" />
+                </Box>
               </Box>
             </Grid>
 
@@ -349,61 +364,49 @@ const HomeFooter = () => {
               </Box>
             </Grid>
           </Grid>*/}
+        </Container>
+      </Box>
+      <Box sx={{ backgroundColor: "#F9F9F9", height: "196px" }}>
+        <Container sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", height: "100%" }}>
+          <Grid item md={6} sm={12} xs={12}>
+            <Typography sx={{ color: "black", fontWeight: "600", fontSize: "20px", margin: "auto" }}>
+              PAYMENT OPTIONS
+            </Typography>
+            <Box sx={{ margin: "auto" }}>
+              <img src={visa} alt="" />
+              &nbsp;&nbsp;
+              <img src={paypal} alt="" />
+            </Box>
+          </Grid>
 
-          <Box sx={{ padding: "90px 0px 90px 0px" }}>
-            <Container>
-              <Grid container spacing={8}>
-                <Grid item md={6} sm={12} xs={12}>
-                  <Typography
-                    className="calibri-font"
-                    sx={{ color: "black", fontWeight: "600", fontSize: "20px" }}
-                  >
-                    PAYMENT OPTIONS
-                  </Typography>
-                  <Box sx={{  }}>
-                    <img src={visa} alt="" />
-                    &nbsp;&nbsp;
-                    <img src={paypal} alt="" />
-                  </Box>
-                </Grid>
-
-                <Grid
-                  item
-                  md={6}
-                  sm={12}
-                  xs={12}
-                  sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}
-                >
-                  <Typography sx={{ color: "black", fontWeight: "600", fontSize: "20px", width: "53%",paddingLeft:"100px" }}>
-                    Subscribe
-                  </Typography>
-                  <Box sx={{paddingLeft:"100px"}}>
-                    <TextField
-                      placeholder="Email address"
-                      sx={{
-                        borderRadius: "0px",
-                        marginTop: "10px",
-                        backgroundColor: "white",
-                        "& .MuiInputBase-input": { padding: "6.5px 14px !important" },
-                      }}
-                    />
-                    <Button
-                      sx={{
-                        backgroundColor: "#3F5163",
-                        marginTop: "10px",
-                        color: "white",
-                        "&:hover": {
-                          backgroundColor: "#3F5163",
-                        },
-                      }}
-                    >
-                      <ArrowForwardIosOutlinedIcon />
-                    </Button>
-                  </Box>
-                </Grid>
-              </Grid>
-            </Container>
-          </Box>
+          <Grid item md={6} sm={12} xs={12} sx={{ display: "flex", flexDirection: "column" }}>
+            <Typography sx={{ color: "black", fontWeight: "600", fontSize: "20px", width: "53%" }}>
+              Subscribe
+            </Typography>
+            <Box>
+              <TextField
+                placeholder="Email address"
+                sx={{
+                  borderRadius: "0px !important",
+                  marginTop: "10px",
+                  backgroundColor: "white",
+                  "& .MuiInputBase-input": { padding: "6.5px 14px !important" },
+                }}
+              />
+              <Button
+                sx={{
+                  backgroundColor: "#3F5163",
+                  marginTop: "10px",
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: "#3F5163",
+                  },
+                }}
+              >
+                <ArrowForwardIosOutlinedIcon />
+              </Button>
+            </Box>
+          </Grid>
         </Container>
       </Box>
       <Box sx={{ backgroundColor: "#3F5163", padding: "90px 0px 160px 0px" }}>
@@ -423,7 +426,7 @@ const HomeFooter = () => {
               </Typography>
             </Grid>
             <Grid item md={4} sm={12} xs={12}>
-              <Box sx={{ display:"flex",margin:"auto", justifyContent:"center" ,height:"100%" }}>
+              <Box sx={{ display: "flex", margin: "auto", justifyContent: "center", height: "100%" }}>
                 <Button
                   variant="contained"
                   sx={{
@@ -432,13 +435,13 @@ const HomeFooter = () => {
                     borderRadius: "8px",
                     fontWeight: "400",
                     padding: "9px",
-                    textTransform:"none",
+                    textTransform: "none",
                     "&:hover": {
                       backgroundColor: "#E0CE8F",
                     },
                     margin: "auto",
-                    width:"174px",
-                    height:"60px"
+                    width: "174px",
+                    height: "60px",
                   }}
                 >
                   Contact Us{" "}

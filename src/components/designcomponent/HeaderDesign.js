@@ -101,7 +101,17 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
   }
   return (
     <>
-      <Box className="inner_header">
+      <Box sx={{
+          borderBottom: "1px solid lightgray",
+  position: "fixed",
+  width: "100%",
+  padding: "10px 0px",
+  height: "auto",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  backgroundColor: "white",
+      }}>
         {/* <Box
           // maxWidth="lg"
           style={{
