@@ -69,6 +69,7 @@ const Faq = () => {
                 marginTop: "25px",
                 width: "100%",
                 lineHeight: "40px",
+                position: "static !important",
               }}
             >
               <AccordionSummary

@@ -284,7 +284,7 @@ const Footer = () => {
           </Grid>
         </Container>
       </Box>
-      <Box sx={{ backgroundColor: "#3F5163", padding: "90px 0px 90px 0px" }}>
+      <Box sx={{ backgroundColor: "#3F5163", padding: "90px 0px 150px 0px" }}>
         <Container>
           <Grid container spacing={8}>
             <Grid item md={4} sm={12} xs={12}>

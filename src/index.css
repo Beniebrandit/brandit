@@ -312,3 +312,7 @@ html .pintura-editor {
   display: ruby;
   vertical-align: middle; 
 }
+
+.MuiPaper {
+  position: static;
+}

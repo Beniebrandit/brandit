@@ -45,11 +45,10 @@ const CardComponent = ({ title, description, iconColor }) => (
     }}
   >
     <img src={circleIcon} alt="icon" />
-    {/* <CheckCircleIcon sx={{ color: iconColor, fontSize: "60px" }} /> */}
     <Typography
       sx={{
         color: "#000000",
-        fontSize: "26px",
+        fontSize: "20px",
         lineHeight: "30px",
         fontWeight: "600",
         marginTop: "15px",
@@ -60,7 +59,7 @@ const CardComponent = ({ title, description, iconColor }) => (
     <Typography
       sx={{
         color: "#868686",
-        fontSize: "16px",
+        fontSize: "14px",
         lineHeight: "24px",
         fontWeight: "400",
         marginTop: "10px",
@@ -75,7 +74,7 @@ const BannerFeature = () => {
   return (
     <Box
       sx={{
-        maxHeight: "1350px",
+        maxHeight: { xl: "1385px" },
         backgroundColor: "#FAF8EE",
         padding: { xs: "60px 0px", md: "90px 0px 250px" },
         position: "relative",
@@ -111,8 +110,7 @@ const BannerFeature = () => {
               sx={{
                 backgroundColor: "#E0CE8F",
                 borderRadius: "30px",
-                maxWidth: "499px",
-                minWidth: "auto",
+                width: "100%",
                 height: "auto",
                 aspectRatio: "499 / 540",
                 overflow: "hidden",
@@ -170,7 +168,7 @@ const BannerFeature = () => {
 
         <Box
           sx={{
-            height: "581px",
+            height: "600px",
             width: "1000px",
             position: "absolute",
             zIndex: "0",
@@ -242,8 +240,7 @@ const BannerFeature = () => {
               sx={{
                 backgroundColor: "#E0CE8F",
                 borderRadius: "30px",
-                maxWidth: "537px",
-                minWidth: "auto",
+                width: "100%",
                 height: "auto",
                 aspectRatio: "499 / 540",
                 display: "flex",
@@ -263,7 +260,6 @@ const BannerFeature = () => {
             flexDirection: "column",
             alignItems: "center",
             height: "305px",
-            paddingTop: "4rem",
           }}
         >
           <Container>

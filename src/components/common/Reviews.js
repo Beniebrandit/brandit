@@ -32,7 +32,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { ReviewService } from "../../services/Review.service";
 import CustomPagination from "./CustomPagination";
 
-const Reviews = (props) => {
+const Reviews = () => {
   const [value, setValue] = useState(5);
   const [open, setOpen] = useState(false);
   const [emailNotification, setEmailNotification] = useState(true);
@@ -40,12 +40,10 @@ const Reviews = (props) => {
   const [question, setQuestion] = useState("");
   const [rating, setRating] = useState(0);
   const [productId, setProductId] = useState();
-  const [reviews, setReviews] = useState();
+  const [allreviews, setAllReviews] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
-  const paginatedReviews = reviews?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
-
+  const paginatedReviews = allreviews?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const [payload, setPayload] = useState({
     user_id: "",
@@ -53,7 +51,6 @@ const Reviews = (props) => {
     stars: "",
     review: "",
   });
-
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -98,21 +95,25 @@ const Reviews = (props) => {
       review: question,
     });
   }, [rating, question]);
-  console.log("payload", payload);
+  //console.log("payload", payload);
 
-  const getReview = async () => {
+  const getallReview = async () => {
     try {
       const res = await ReviewService.Reviews();
-      const reviewss = res.data;
-      setReviews(reviewss);
-      console.log(reviewss, "reviewss");
+      const allreviewss = res.data;
+
+      //const totalStars = allreviewss.reduce((acc, review) => acc + review.stars, 0);
+      //const averageRating = allreviewss.length > 0 ? (totalStars / allreviewss.length).toFixed(1) : "0.0";
+      //setValue(averageRating);
+      setAllReviews(allreviewss);
+      //console.log(allreviewss, "allreviewss");
     } catch (error) {
       console.error("Error fetching review:", error);
     }
   };
 
   useEffect(() => {
-    getReview();
+    getallReview();
   }, []);
 
   function handleClick() {
@@ -162,6 +163,7 @@ const Reviews = (props) => {
                     fontWeight: "bold",
                   }}
                 >
+                  {/*{value}*/}
                   4.8
                 </Typography>
                 <Rating
@@ -171,9 +173,10 @@ const Reviews = (props) => {
                   onChange={(event, newValue) => {
                     setValue(newValue);
                   }}
+                  readOnly
                 />
               </Box>
-              <Typography sx={{ color: "#868686", fontSize: "15px" }}>Based on 695 reviews</Typography>
+              <Typography sx={{ color: "#868686", fontSize: "15px" }}>Based on {allreviews?.length} reviews</Typography>
             </Grid>
             <Grid item md={3} sm={12} xs={12}>
               <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -408,7 +411,7 @@ const Reviews = (props) => {
 
           {/* Pagination Controls */}
           <CustomPagination
-            totalItems={reviews?.length}
+            totalItems={allreviews?.length}
             itemsPerPage={itemsPerPage} // Ensure itemsPerPage is set to a valid number, like 6
             onPageChange={handlePageChange}
           />

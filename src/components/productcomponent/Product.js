@@ -46,12 +46,12 @@ const Product = (props) => {
   const [price, setPrice] = useState();
   const [rating, setRating] = useState();
 
-const [payload, setPayload] = useState({
-  productId: null, // Assuming `id` is the unique identifier for the product
-  width: "",
-  height: "",
-  subCatId: [],
-});
+  const [payload, setPayload] = useState({
+    productId: null, // Assuming `id` is the unique identifier for the product
+    width: "",
+    height: "",
+    subCatId: [],
+  });
 
   const decrement = () => {
     if (count > 1) {
@@ -88,26 +88,25 @@ const [payload, setPayload] = useState({
     ?.filter((val) => val.size_type === "H")
     ?.map((val) => ({ size: val.size, id: val.id }));
 
-const [state, setState] = useState({
-  width: "",
-  height: "",
-});
+  const [state, setState] = useState({
+    width: "",
+    height: "",
+  });
 
-useEffect(() => {
-  if (alldata) {
-    const firstWidth = widthSizes?.[0]?.size || "";
-    const firstHeight = heightSizes?.[0]?.size || "";
-    setState({
-      width: firstWidth,
-      height: firstHeight,
-    });
-    setSelectedWidth(firstWidth);
-    setSelectedHeight(firstHeight);
-  }
-}, [alldata]);
+  useEffect(() => {
+    if (alldata) {
+      const firstWidth = widthSizes?.[0]?.size || "";
+      const firstHeight = heightSizes?.[0]?.size || "";
+      setState({
+        width: firstWidth,
+        height: firstHeight,
+      });
+      setSelectedWidth(firstWidth);
+      setSelectedHeight(firstHeight);
+    }
+  }, [alldata]);
 
-
-// console.log(widthSizes?.[0]?.size,"qqqqqqq");
+  // console.log(widthSizes?.[0]?.size,"qqqqqqq");
   useEffect(() => {
     if (alldata?.categories?.length > 0) {
       const initialSelection = {};
@@ -139,18 +138,17 @@ useEffect(() => {
   const handleCardClick = (categoryId, subCat) => {
     setSelectedCard((prevSelectedCards) => {
       const updatedCards = { ...prevSelectedCards, [categoryId]: subCat.id };
-      const subCatIdsArray = Object.values(updatedCards).filter((value) => value !== undefined); 
-      setSelectedSubCatId(subCatIdsArray); 
+      const subCatIdsArray = Object.values(updatedCards).filter((value) => value !== undefined);
+      setSelectedSubCatId(subCatIdsArray);
       return updatedCards;
     });
   };
 
-
   const swiperRef = useRef(null);
 
-const handleThumbClick = (index) => {
-  swiperRef.current.swiper.slideTo(index + 1); 
-};
+  const handleThumbClick = (index) => {
+    swiperRef.current.swiper.slideTo(index + 1);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -171,7 +169,7 @@ const handleThumbClick = (index) => {
   //   name: ProductData[0].title,
   //   description: ProductData[0].description,
   // };
-  
+
   const getApi = async () => {
     ProductService.product().then((res) => {
       const response = res.data;
@@ -181,11 +179,13 @@ const handleThumbClick = (index) => {
   };
   const getReview = async () => {
     try {
-      const res = await ReviewService.Reviews();
-      const response = res.data;
-      setValue(response[0].stars); // Assuming `response.stars` is the value you want
-      setRating(response.length);
-      console.log(value, "response");
+      const res = await ReviewService.ProductReview(1);
+      const reviews = res.data;
+
+      setValue(reviews[0].stars); // Assuming `response.stars` is the value you want
+      setRating(reviews.length); // Sets the number of reviews
+
+      //console.log(averageRating, "Average Rating");
     } catch (error) {
       console.error("Error fetching review:", error);
     }
@@ -197,46 +197,44 @@ const handleThumbClick = (index) => {
   }, []);
 
   const handleClick = async () => {
-        //ProductService.Dataprice(payload).then((res) => {
-        //    console.log(res.data.totalPrice, "totalPrice");
-        //    setPrice(res.data.totalPrice)
-        //});
+    //ProductService.Dataprice(payload).then((res) => {
+    //    console.log(res.data.totalPrice, "totalPrice");
+    //    setPrice(res.data.totalPrice)
+    //});
   };
 
-//  useEffect(() => {
-//console.log(payload, "payload");
-//  }, [payload]);
+  //  useEffect(() => {
+  //console.log(payload, "payload");
+  //  }, [payload]);
 
   useEffect(() => {
-  if (!selectedWidth || !selectedHeight || selectedSubCatId.length === 0) {
-    console.error("Payload is incomplete. Ensure width, height, and subcategory are selected.");
-    //setError("Please select all required options before proceeding.");
-  } else {
-    const payload = {
-      width: selectedWidth,
-      height: selectedHeight,
-      subCatId: JSON.stringify(selectedSubCatId),
-      ProductId: 10,
-      quantity: count,
-    };
+    if (!selectedWidth || !selectedHeight || selectedSubCatId.length === 0) {
+      console.error("Payload is incomplete. Ensure width, height, and subcategory are selected.");
+      //setError("Please select all required options before proceeding.");
+    } else {
+      const payload = {
+        width: selectedWidth,
+        height: selectedHeight,
+        subCatId: JSON.stringify(selectedSubCatId),
+        ProductId: 10,
+        quantity: count,
+      };
 
-    ProductService.Dataprice(payload)
-      .then((res) => {
-        if (res.data && res.data.totalPrice) {
-          setPrice(res.data.totalPrice);
-        } else {
-          setPrice(55);
-          //setError("Failed to fetch pricing information.");
-        }
-      })
-      .catch((error) => {
-        console.error("API call failed:", error);
-        //setError("Unable to fetch pricing. Please try again later.");
-      });
-  }
-
+      ProductService.Dataprice(payload)
+        .then((res) => {
+          if (res.data && res.data.totalPrice) {
+            setPrice(res.data.totalPrice);
+          } else {
+            setPrice(55);
+            //setError("Failed to fetch pricing information.");
+          }
+        })
+        .catch((error) => {
+          console.error("API call failed:", error);
+          //setError("Unable to fetch pricing. Please try again later.");
+        });
+    }
   }, [payload]);
-
 
   const scrollToReviews = (event) => {
     event.preventDefault();
@@ -360,14 +358,7 @@ const handleThumbClick = (index) => {
                 style={{ textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "left" }}
                 onClick={scrollToReviews}
               >
-                <Rating
-                  style={{ color: "#F6AA03" }}
-                  name="simple-controlled"
-                  value={value}
-                  // onChange={(event, newValue) => {
-                  //   setValue(newValue);
-                  // }}
-                />
+                <Rating style={{ color: "#F6AA03" }} name="simple-controlled" value={value} readOnly />
                 &nbsp;&nbsp;&nbsp;
                 <Typography sx={{ color: "#3F5163", display: "inline-block", paddingTop: "2px" }}>{`(${
                   rating || " "
@@ -410,11 +401,8 @@ const handleThumbClick = (index) => {
                   {/* Size (in Inches) Section */}
                   <Grid
                     item
-                    lg={6}
-                    md={6}
-                    sm={12}
-                    xs={12}
                     sx={{
+                      width: "60%", // Set the width to 60%
                       padding: "0px !important",
                     }}
                   >
@@ -427,7 +415,6 @@ const handleThumbClick = (index) => {
                     >
                       Size (in Inches)
                     </Typography>
-
                     <div className="size-form">
                       {/* Width Field */}
                       <div className="size-field">
@@ -500,12 +487,23 @@ const handleThumbClick = (index) => {
                   </Grid>
 
                   {/* Quantity Section */}
-                  <Grid item lg={6} md={6} sm={12} xs={12} sx={{ padding: "0px !important",display:"flex" , flexDirection:"column" , justifyContent:"center",alignItems:"flex-end" }}>
+                  <Grid
+                    item
+                    sx={{
+                      width: "40%", // Set the width to 40%
+                      padding: "0px !important",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "flex-end",
+                    }}
+                  >
                     <Typography
                       sx={{
                         fontSize: { xs: "18px", sm: "20px", md: "22px" },
                         lineHeight: "32px",
                         fontWeight: "bold",
+                        width: { md: "8rem", xs: "5.6rem", sm: "12.2rem", lg: "9.6rem", xl: "9.6rem" },
                       }}
                     >
                       Quantity:
@@ -514,7 +512,7 @@ const handleThumbClick = (index) => {
                     <Box
                       sx={{
                         border: "1px solid #868686",
-                        width: { xs: "100%", sm: "70%", md: "50%" },
+                        width: { xs: "60%", sm: "70%" },
                         marginTop: "20px",
                         height: "53%",
                         borderRadius: "10px",
@@ -552,13 +550,15 @@ const handleThumbClick = (index) => {
                 <>
                   <Accordion
                     key={category.id}
-                    style={{
+                    className="MuiPaper"
+                    sx={{
                       marginBottom: "10px",
                       backgroundColor: "transparent",
                       boxShadow: "none",
                       border: "1px solid #DCDCDC",
                       borderRadius: "10px",
                       marginTop: "25px",
+                      position: "static !important",
                     }}
                   >
                     <AccordionSummary
@@ -626,7 +626,7 @@ const handleThumbClick = (index) => {
               ))}
               <Divider />
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Box>
+                <Box sx={{ paddingTop: "13px" }}>
                   <Typography>
                     <b>Price:</b>
                   </Typography>

@@ -9,6 +9,7 @@ let endpoints = {
   image: "api/premium-images-category?with[]=images&where[type]=1",
   vectorimage: "api/premium-images-category?with[]=images&where[type]=2",
   review: "api/review",
+  productreview: "api/review?where[product_id]=",
   postreview: "api/review",
 };
 let API_ENDPOINTS = {};
@@ -22,6 +23,9 @@ export const apiEndpoint = API_ENDPOINTS;
 let API_ENDPOINTS_FUNCTION = {
   selectedproductdata: (id) => {
     return API_BASE_URL + `${endpoints.selectedproductdata}/${id}`;
+  },
+  productreview: (id) => {
+    return API_BASE_URL + `${endpoints.productreview}${id}`;
   },
 };
 
