@@ -182,10 +182,15 @@ const Product = (props) => {
       const res = await ReviewService.ProductReview(1);
       const reviews = res.data;
 
-      setValue(reviews[0].stars); // Assuming `response.stars` is the value you want
+      // Calculate the average rating
+      const totalStars = reviews.reduce((acc, review) => acc + review.stars, 0);
+      const averageRating = reviews.length > 0 ? (totalStars / reviews.length).toFixed(1) : "0.0";
+
+      // Set the average rating and number of reviews
+      setValue(averageRating); // Assuming `setValue` is used to store the average rating
       setRating(reviews.length); // Sets the number of reviews
 
-      //console.log(averageRating, "Average Rating");
+      console.log(averageRating, "Average Rating");
     } catch (error) {
       console.error("Error fetching review:", error);
     }

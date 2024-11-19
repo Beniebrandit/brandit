@@ -7,9 +7,7 @@ import { ProductService } from "../../services/Product.service";
 // Styled TabPanel component
 const TabPanel = styled(({ children, value, index, ...other }) => (
   <div role="tabpanel" hidden={value !== index} {...other}>
-    {value === index && (
-      <Box sx={{ p: { xs: 2, sm: 3 }, width: "100%" }}>{children}</Box>
-    )}
+    {value === index && <Box sx={{ p: { xs: 2, sm: 3 }, width: "100%" }}>{children}</Box>}
   </div>
 ))``;
 
@@ -53,60 +51,61 @@ const ProductDescription = () => {
         }}
       >
         <Box
-          className="custom-scrollbar custom-scrollbar-container"
+        //className="custom-scrollbar custom-scrollbar-container"
         >
-
-        <Tabs
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            sx={{
+              "& .MuiTabs-indicator": {
+                display: "none",
+              },
+              mb: { xs: 2, sm: 3 },
+              width: "70rem",
+            }}
+          >
+            {["Description", "Lorem Ipsum 1", "Lorem Ipsum 2", "Lorem Ipsum 3"].map((label, index) => (
+              <Tab
+                key={index}
+                label={label}
+                sx={{
+                  border: "1px solid #DCDCDC",
+                  borderRadius: "35px",
+                  fontSize: { xs: "14px", sm: "18px" },
+                  lineHeight: "18px",
+                  fontWeight: "500",
+                  marginRight: { xs: "5px", sm: "10px" },
+                  backgroundColor: value === index ? "#3F5163" : "#F5F5F5",
+                  "&.Mui-selected": {
+                    color: "#FFFFFF",
+                  },
+                }}
+              />
+            ))}
+          </Tabs>
+        </Box>
+        <TabPanel
           value={value}
-          onChange={handleChange}
+          index={0}
           sx={{
-            "& .MuiTabs-indicator": {
-              display: "none",
+            "& .MuiBox-root": {
+              padding: "0px !important",
             },
-            mb: { xs: 2, sm: 3 },
-            width:"70rem"
           }}
         >
-          {[
-            "Description",
-            "Lorem Ipsum 1",
-            "Lorem Ipsum 2",
-            "Lorem Ipsum 3",
-          ].map((label, index) => (
-            <Tab
-              key={index}
-              label={label}
-              sx={{
-                border: "1px solid #DCDCDC",
-                borderRadius: "35px",
-                fontSize: { xs: "14px", sm: "18px" },
-                lineHeight: "18px",
-                fontWeight: "500",
-                marginRight: { xs: "5px", sm: "10px" },
-                backgroundColor: value === index ? "#3F5163" : "#F5F5F5",
-                "&.Mui-selected": {
-                  color: "#FFFFFF",
-                },
-              }}
-            />
-          ))}
-        </Tabs>
-        </Box>
-        <TabPanel value={value} index={0}>
           <Typography
             sx={{
               fontSize: { xs: "14px", sm: "18px" },
               color: "#8C8E8F",
               lineHeight: "28px",
               fontWeight: "500",
+              padding: "0px",
             }}
           >
-           {/* {alldata?.long_description} */}
-           Pellentesque iaculis nulla sollicitudin purus lobortis, varius
-            tempor diam iaculis. Cras nec mauris commodo, suscipit arcu sed,
-            dapibus ligula. Vestibulum fringilla lorem mi, nec aliquam dui
-            blandit et. Sed ornare porta suscipit. Aliquam maximus, ex id
-            sodales pulvinar.
+            {/* {alldata?.long_description} */}
+            Pellentesque iaculis nulla sollicitudin purus lobortis, varius tempor diam iaculis. Cras nec mauris commodo,
+            suscipit arcu sed, dapibus ligula. Vestibulum fringilla lorem mi, nec aliquam dui blandit et. Sed ornare
+            porta suscipit. Aliquam maximus, ex id sodales pulvinar.
           </Typography>
           <Typography
             sx={{
@@ -117,11 +116,9 @@ const ProductDescription = () => {
               mt: 2,
             }}
           >
-            Pellentesque iaculis nulla sollicitudin purus lobortis, varius
-            tempor diam iaculis. Cras nec mauris commodo, suscipit arcu sed,
-            dapibus ligula. Vestibulum fringilla lorem mi, nec aliquam dui
-            blandit et. Sed ornare porta suscipit. Aliquam maximus, ex id
-            sodales pulvinar.
+            Pellentesque iaculis nulla sollicitudin purus lobortis, varius tempor diam iaculis. Cras nec mauris commodo,
+            suscipit arcu sed, dapibus ligula. Vestibulum fringilla lorem mi, nec aliquam dui blandit et. Sed ornare
+            porta suscipit. Aliquam maximus, ex id sodales pulvinar.
           </Typography>
           <Typography
             sx={{
@@ -132,11 +129,9 @@ const ProductDescription = () => {
               mt: 2,
             }}
           >
-            Pellentesque iaculis nulla sollicitudin purus lobortis, varius
-            tempor diam iaculis. Cras nec mauris commodo, suscipit arcu sed,
-            dapibus ligula. Vestibulum fringilla lorem mi, nec aliquam dui
-            blandit et. Sed ornare porta suscipit. Aliquam maximus, ex id
-            sodales pulvinar.
+            Pellentesque iaculis nulla sollicitudin purus lobortis, varius tempor diam iaculis. Cras nec mauris commodo,
+            suscipit arcu sed, dapibus ligula. Vestibulum fringilla lorem mi, nec aliquam dui blandit et. Sed ornare
+            porta suscipit. Aliquam maximus, ex id sodales pulvinar.
           </Typography>
         </TabPanel>
         <TabPanel value={value} index={1}>

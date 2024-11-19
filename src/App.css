@@ -36,18 +36,17 @@
     transform: rotate(360deg);
   }
 }
-.scroll_div{
+.scroll_div {
   position: fixed;
-  width:100%;
+  width: 100%;
   bottom: 0px;
-  padding:19px 0px;
+  padding: 19px 0px;
   right: 0px;
-  background: #FFF;
-  border-top: 1px solid #CFD4D9;
+  background: #fff;
+  border-top: 1px solid #cfd4d9;
   z-index: 2;
   margin: auto;
   height: 10%;
-  transition: all 3s ;
   margin: auto;
-  
+  transition: all 1s ease;
 }

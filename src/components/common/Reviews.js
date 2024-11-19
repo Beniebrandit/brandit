@@ -102,9 +102,9 @@ const Reviews = () => {
       const res = await ReviewService.Reviews();
       const allreviewss = res.data;
 
-      //const totalStars = allreviewss.reduce((acc, review) => acc + review.stars, 0);
-      //const averageRating = allreviewss.length > 0 ? (totalStars / allreviewss.length).toFixed(1) : "0.0";
-      //setValue(averageRating);
+      const totalStars = allreviewss.reduce((acc, review) => acc + review.stars, 0);
+      const averageRating = allreviewss.length > 0 ? (totalStars / allreviewss.length).toFixed(1) : "0.0";
+      setValue(averageRating);
       setAllReviews(allreviewss);
       //console.log(allreviewss, "allreviewss");
     } catch (error) {
@@ -163,8 +163,7 @@ const Reviews = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  {/*{value}*/}
-                  4.8
+                  {value}
                 </Typography>
                 <Rating
                   style={{ color: "#FCB20F !important" }}
@@ -299,7 +298,24 @@ const Reviews = () => {
                             marginBottom: "10px",
                           }}
                         >
-                          <Customerreviewicon />
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              width: "50px", // Adjust size as needed
+                              height: "50px", // Adjust size as needed
+                              borderRadius: "50%", // This makes it a circle
+                              border: "1px solid black",
+                              backgroundColor: "white", // Black background
+                              color: "black", // White text color
+                              fontWeight: "bold", // Optional: Make the letter bold
+                              fontSize: "20px", // Adjust the font size of the letter inside the circle
+                              fontFamily: "cerebri-font",
+                            }}
+                          >
+                            {item.user_name ? item.user_name[0].toUpperCase() : ""}
+                          </div>
                           <Box
                             sx={{
                               display: "flex",

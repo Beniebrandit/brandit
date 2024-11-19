@@ -18,6 +18,11 @@
 .calibri-font {
   font-family: Calibri, sans-serif !important;
 }
+
+.cerebri-font {
+  font-family: 'Cerebri Sans', sans-serif !important;
+}
+
 body {
   margin: 0;
   font-family: "Avenir LT Std" !important;
