@@ -244,12 +244,12 @@ const Header = () => {
           <Grid item xs={12} sm="auto" sx={{ display: { xs: "none", md: "block" } }}>
             <Grid container spacing={2} alignItems="flex-end" justifyContent="center">
               <Typography variant="body2" sx={{ display: "inline-flex", alignItems: "center" }}>
-                Large Format 
+                Large Format
                 <img src={dropdown} style={{ height: "15px", width: "15px" }} />
               </Typography>
               <Grid item>
                 <Typography variant="body2" sx={{ display: "inline-flex", alignItems: "center" }}>
-                  Stickers and Labels 
+                  Stickers and Labels
                   <img src={dropdown} style={{ height: "15px", width: "15px" }} />
                 </Typography>
               </Grid>
@@ -283,6 +283,7 @@ const Header = () => {
                   color: "black",
                   textTransform: "capitalize",
                   width: "200px", // Set a fixed width or make it dynamic
+                  justifyContent: "left",
                 }}
                 aria-controls={anchorEl ? "basic-menu" : undefined}
                 aria-expanded={anchorEl ? "true" : undefined}
@@ -341,7 +342,14 @@ const Header = () => {
               </Box>
             </Grid>
           )}
-          <Grid item xs={12} sm="auto" container justifyContent="center">
+          <Grid
+            item
+            xs={12}
+            sm="auto"
+            container
+            justifyContent="center"
+            sx={{ "&:hover": { backgroundColor: "#e0e0e0" }, borderTopRightRadius: "5px", borderTopLeftRadius: "5px",paddingLeft:"0px !important" }}
+          >
             <Button sx={{ position: "relative" }} href="/cart">
               <img alt="cart_logo" src={cart_logo} style={{ width: "30px", height: "auto" }} />
             </Button>

@@ -17,8 +17,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { ProductService } from "../../../services/Product.service";
 import FormControl from "@mui/material/FormControl";
 
-const Config = ({ allproduct, alldata , setProductDetails,
-  productDetails, }) => {
+const Config = ({ allproduct, alldata, setProductDetails, productDetails }) => {
   const [count, setCount] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedCard, setSelectedCard] = useState({});
@@ -27,8 +26,8 @@ const Config = ({ allproduct, alldata , setProductDetails,
   const [selectedWidth, setSelectedWidth] = useState("");
   const [selectedHeight, setSelectedHeight] = useState("");
   const [price, setPrice] = useState();
-    console.log("productDetails",productDetails);
-    
+  console.log("productDetails", productDetails);
+
   const [payload, setPayload] = useState({
     productId: null, // Assuming `id` is the unique identifier for the product
     width: "",
@@ -40,8 +39,8 @@ const Config = ({ allproduct, alldata , setProductDetails,
     if (productDetails.quantity > 1) {
       setProductDetails({
         ...productDetails,
-        quantity:productDetails.quantity - 1
-      })
+        quantity: productDetails.quantity - 1,
+      });
       // setCount(count - 1);
     }
   };
@@ -93,9 +92,9 @@ const Config = ({ allproduct, alldata , setProductDetails,
       // });
       setProductDetails({
         ...productDetails,
-        width:firstWidth,
-        height : firstHeight, 
-      })
+        width: firstWidth,
+        height: firstHeight,
+      });
       setSelectedProduct(firstproduct);
       // setSelectedWidth(firstWidth);
       // setSelectedHeight(firstHeight);
@@ -129,7 +128,7 @@ const Config = ({ allproduct, alldata , setProductDetails,
       quantity: productDetails.quantity,
       //ProductId: alldata?.id || null,
     });
-  }, [productDetails,selectedSubCatId, alldata, productDetails.quantity]);
+  }, [productDetails, selectedSubCatId, alldata, productDetails.quantity]);
 
   const handleCardClick = (categoryId, subCat) => {
     setSelectedCard((prevSelectedCards) => {
@@ -148,33 +147,30 @@ const Config = ({ allproduct, alldata , setProductDetails,
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProductDetails((prev) =>(
-      {
-        ...prev,
-        [name]: value,
-      }
-    ));
+    setProductDetails((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
     // setState((prev) => ({
     //   ...prev,
     //   [name]: value,
     // }));
     if (name === "width") {
       const selectedWidth = widthSizes.find((size) => size.size === value);
-      setProductDetails ({
+      setProductDetails({
         ...productDetails,
-        width:selectedWidth?.size
+        width: selectedWidth?.size,
       });
     } else if (name === "height") {
       const selectedHeights = heightSizes.find((size) => size.size === value);
-      console.log("selectedHeights",selectedHeights);
-      
-      setProductDetails ({
+      console.log("selectedHeights", selectedHeights);
+
+      setProductDetails({
         ...productDetails,
-        height:selectedHeights?.size
+        height: selectedHeights?.size,
       });
     }
   };
-
 
   useEffect(() => {
     if (!productDetails || selectedSubCatId.length === 0) {
@@ -193,13 +189,13 @@ const Config = ({ allproduct, alldata , setProductDetails,
           if (res.data && res.data.totalPrice) {
             setProductDetails({
               ...productDetails,
-              price:res.data.totalPrice
-            })
+              price: res.data.totalPrice,
+            });
           } else {
             setProductDetails({
               ...productDetails,
-              price:50
-            })
+              price: 50,
+            });
             //setError("Failed to fetch pricing information.");
           }
         })
@@ -208,7 +204,7 @@ const Config = ({ allproduct, alldata , setProductDetails,
           //setError("Unable to fetch pricing. Please try again later.");
         });
     }
-  }, [productDetails?.width,productDetails?.height,productDetails?.quantity ]);
+  }, [productDetails?.width, productDetails?.height, productDetails?.quantity]);
   return (
     <>
       <Box>
@@ -313,7 +309,11 @@ const Config = ({ allproduct, alldata , setProductDetails,
                 justifyContent: "space-around",
               }}
             >
-              <Typography onClick={decrement} disabled={productDetails.quantity === 1} sx={{ color: "#868686", cursor: "pointer" }}>
+              <Typography
+                onClick={decrement}
+                disabled={productDetails.quantity === 1}
+                sx={{ color: "#868686", cursor: "pointer" }}
+              >
                 -
               </Typography>
               <span
@@ -325,10 +325,15 @@ const Config = ({ allproduct, alldata , setProductDetails,
               >
                 {productDetails.quantity}
               </span>
-              <Typography onClick={() => setProductDetails({
-        ...productDetails,
-        quantity:productDetails.quantity + 1
-      })} sx={{ color: "#868686", cursor: "pointer" }}>
+              <Typography
+                onClick={() =>
+                  setProductDetails({
+                    ...productDetails,
+                    quantity: productDetails.quantity + 1,
+                  })
+                }
+                sx={{ color: "#868686", cursor: "pointer" }}
+              >
                 +
               </Typography>
             </Box>

@@ -20,7 +20,7 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PhoneInTalkOutlinedIcon from "@mui/icons-material/PhoneInTalkOutlined";
 import main_logo from "../../asset/images/main_logo.png";
 import cart_logo from "../../asset/images/cart_logo.svg";
-import Account from "../../asset/images/Account.svg";
+import Account from "../../asset/images/Group 6.svg";
 import facebook_logo from "../../asset/images/facebook_logo.svg";
 import twitter_logo from "../../asset/images/twitter_logo.svg";
 import linkedin_logo from "../../asset/images/linkedin_logo.svg";
@@ -176,7 +176,9 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
           </Box>
 
           {/* Account and Cart Section */}
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-around" }}>
+          <Box
+            sx={{ display: "flex", alignItems: "center", justifyContent: "space-around", columnGap: 2, height: "100%" }}
+          >
             <ThemeProvider theme={theme}>
               <Box
                 aria-owns={anchorEl ? "simple-menu" : undefined}
@@ -188,9 +190,13 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                   alignItems: "center",
                   paddingLeft: "1rem",
                   textTransform: "none",
+                  backgroundColor: anchorEl ? "#e0e0e0" : "inherit",
+                  borderTopRightRadius: "5px",
+                  borderTopLeftRadius: "5px",
+                  padding: "6px !important",
                 }}
               >
-                <img alt="Account" src={Account} style={{ width: "46px", height: "auto" }} />
+                <img alt="Account" src={Account} style={{ width: "36px", height: "auto" }} />
                 <span style={{ color: "#3f5163" }}>
                   <b style={{ fontSize: "20px" }}>Account </b>
                   <span style={{ fontSize: "12px" }}>{currentUser ? `(${currentUser})` : "(Sign In)"}</span>
@@ -202,6 +208,15 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                 open={Boolean(anchorEl)}
                 onClose={handleDropdownClose}
                 onMouseLeave={handleDropdownClose}
+                PaperProps={{
+                  sx: {
+                    borderRadius: "0px !important",
+                    backgroundColor: "#e0e0e0 !important",
+                    width: anchorEl?.offsetWidth || "200px !important", // Set the menu width to match the button
+                    marginTop: "0px !important", // Adjust vertical alignment
+                    boxShadow: "none !important", // Add subtle shadow
+                  },
+                }}
               >
                 <MenuItem key="my-design" onClick={handleDropdownClose} component={Link} to="/saved-design">
                   My design
@@ -244,9 +259,14 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                 position: "relative",
                 display: "flex",
                 alignItems: "center",
-                paddingLeft: "1rem",
+                paddingLeft: "0 !important", // To override MUI padding, use `0` without `px`
                 textTransform: "none",
-                "& :hover": { backgroundColor: "transparent" },
+                borderTopRightRadius: "5px",
+                borderTopLeftRadius: "5px",
+                borderBottomRightRadius: "0px",
+                borderBottomLeftRadius: "0px",
+                "&:hover": { backgroundColor: "#e0e0e0" },
+                paddingX: "7px",
               }}
               href="/cart"
             >
