@@ -32,7 +32,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 // const url = `https://flagg.devlopix.com/api`;
 // const token = `6|q8mTawTdGKbRdLazOGLcm1Y0zJe5ks4IPUWRJNIR13495c0c`
 
-const Product = (props) => {
+const Product = ({ productname, ...props }) => {
   const [count, setCount] = useState(1);
   const [value, setValue] = useState(0);
   const [alldata, setAllData] = useState();

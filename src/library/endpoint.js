@@ -11,6 +11,7 @@ let endpoints = {
   review: "api/review",
   productreview: "api/review?where[product_id]=",
   postreview: "api/review",
+  productCategory: "api/product-category?with[images]=images",
 };
 let API_ENDPOINTS = {};
 

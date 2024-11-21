@@ -17,6 +17,7 @@ import PopUp from "./Pop_Up";
 import Navbar from "./Navbar";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ProductService } from "../../services/Product.service";
+import { ProductCategoryService } from "../../services/ProductCategory.service";
 
 const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
   const [open, setOpen] = React.useState(false);
@@ -35,6 +36,10 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
     const [selectedSubCatId, setSelectedSubCatId] = useState([]);
     const [price, setPrice] = useState();
     const [rating, setRating] = useState();
+      const [allcategories, setAllCategories] = useState([]);
+        const [selectedCategory, setSelectedCategory] = useState("Vinyl Banner");
+
+
 
     const [payload, setPayload] = useState({
       productId: null, // Assuming `id` is the unique identifier for the product
@@ -152,7 +157,10 @@ const handleChange = (e) => {
         const value = parseInt(event.target.value, 10);
         setCount(isNaN(value) || value <= 0 ? 1 : value); // Ensure value is at least 1
       };
-
+ 
+   const handleselectedCategory = (event) => {
+     setSelectedCategory(event.target.value);
+   };
 
 
   const getApi = async () => {
@@ -165,7 +173,17 @@ const handleChange = (e) => {
 
   useEffect(() => {
     getApi();
+    getApi1();
   }, []);
+
+    const getApi1 = async () => {
+      ProductCategoryService.ProductCategory().then((res) => {
+        const response = res.data;
+        const productCat = response?.filter((product) => product.parent_id !== null);
+        setAllCategories(productCat);
+      });
+    };
+
 
 
 //    useEffect(() => {
@@ -401,8 +419,8 @@ const handleChange = (e) => {
                   labelId="Stickers and Decals"
                   id="size-select"
                   name="Material"
-                  value="Stickers and Decals"
-                  //onChange={handleChange}
+                  value={selectedCategory} // Set the value to the state variable
+                  onChange={handleselectedCategory} // Update the state on change
                   displayEmpty
                   sx={{
                     color: "gray",
@@ -413,9 +431,12 @@ const handleChange = (e) => {
                       display: "none",
                     },
                   }}
-                  //IconComponent={(props) => <ExpandMoreIcon />}
                 >
-                  <MenuItem value="Stickers and Decals">Stickers and Decals</MenuItem>
+                  {allcategories?.map((product, index) => (
+                    <MenuItem key={index} value={product.name}>
+                      {product.name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>

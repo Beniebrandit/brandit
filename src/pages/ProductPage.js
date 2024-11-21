@@ -9,14 +9,14 @@ import Faq from "../components/productcomponent/Faq";
 import Footer from "../components/productcomponent/Footer";
 import Product from "../components/productcomponent/Product";
 import Reviews from "../components/common/Reviews";
-import { Box, Button, Grid, Typography } from "@mui/material";
-import PhoneIcon from "@mui/icons-material/Phone";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import AssistanceBanner from "../components/common/AssistanceBanner";
+import { useParams } from "react-router-dom";
 
 const ProductPage = () => {
+      const params = useParams();
+      console.log("params", params.id);
     const [isVisible, setIsVisible] = useState(false);
+
 
     useEffect(() => {
       const handleScroll = () => {
@@ -39,7 +39,7 @@ const ProductPage = () => {
   return (
     <>
       <Header />
-      <Product />
+      <Product productname={params.id} />
       <ProductDescription />
       <Services />
       <BannerFeature />
@@ -50,10 +50,7 @@ const ProductPage = () => {
       <Reviews />
       <Footer />
 
-      {isVisible && (
-        <AssistanceBanner/>
-      )}
-
+      {isVisible && <AssistanceBanner />}
     </>
   );
 };
