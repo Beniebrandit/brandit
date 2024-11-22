@@ -8,160 +8,173 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  InputAdornment,
+  ListSubheader,
 } from "@mui/material";
 import banner1 from "../../asset/images/banner1.jpg";
 import MaskGroup from "../../asset/images/Mask Group.png";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import PopUp from "./Pop_Up";
 import Navbar from "./Navbar";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ProductService } from "../../services/Product.service";
 import { ProductCategoryService } from "../../services/ProductCategory.service";
+import SearchIcon from "@mui/icons-material/Search";
+
+const allOptions = ["Option One", "Option Two", "Option Three", "Option Four"];
 
 const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [count, setCount] = useState(1);
+  const [value, setValue] = useState(0);
+  const [alldata, setAllData] = useState();
+  const [selectedCard, setSelectedCard] = useState({});
 
-    const [count, setCount] = useState(1);
-    const [value, setValue] = useState(0);
-    const [alldata, setAllData] = useState();
+  // New state to store selected width, height, and subCat ids
+  const [selectedWidth, setSelectedWidth] = useState("");
+  const [selectedHeight, setSelectedHeight] = useState("");
+  const [selectedSubCatId, setSelectedSubCatId] = useState([]);
+  const [price, setPrice] = useState();
+  const [rating, setRating] = useState();
+  const [allcategories, setAllCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("Vinyl Banner");
+  const [searchText, setSearchText] = useState("");
 
-    const [selectedCard, setSelectedCard] = useState({});
+  // useEffect(() => {
+  //   const displayedOptions = allcategories?.filter((option) => containsText(option, searchText))
 
-    // New state to store selected width, height, and subCat ids
-    const [selectedWidth, setSelectedWidth] = useState("");
-    const [selectedHeight, setSelectedHeight] = useState("");
-    const [selectedSubCatId, setSelectedSubCatId] = useState([]);
-    const [price, setPrice] = useState();
-    const [rating, setRating] = useState();
-      const [allcategories, setAllCategories] = useState([]);
-        const [selectedCategory, setSelectedCategory] = useState("Vinyl Banner");
+  // }, [allcategories])
+  const filteredCategories = useMemo(() => {
+    return allcategories.filter((option) => option?.name.toLowerCase().includes(searchText.toLowerCase()));
+  }, [searchText, allcategories]);
 
+  const handleSelectChange = (e) => {
+    setSelectedCategory(e.target.value);
+    setSearchText(""); // Clear search text after selection
+  };
 
+  const [payload, setPayload] = useState({
+    productId: null, // Assuming `id` is the unique identifier for the product
+    width: "",
+    height: "",
+    subCatId: [],
+  });
 
-    const [payload, setPayload] = useState({
-      productId: null, // Assuming `id` is the unique identifier for the product
-      width: "",
-      height: "",
-      subCatId: [],
-    });
+  const sizes = [
+    { id: 1, value: "6x24", label: '6" x 24"' },
+    { id: 2, value: "12x24", label: '12" x 24"' },
+    { id: 3, value: "18x24", label: '18" x 24"' },
+  ];
 
-    const sizes = [
-      { id: 1, value: "6x24", label: '6" x 24"' },
-      { id: 2, value: "12x24", label: '12" x 24"' },
-      { id: 3, value: "18x24", label: '18" x 24"' },
-    ];
+  const decrement = () => {
+    if (count > 1) {
+      setCount(count - 1);
+    }
+  };
+  // Use effect to set initial selected subcategory and capture their IDs
+  //    useEffect(() => {
+  //      if (alldata?.categories?.length > 0) {
+  //        const initialSelection = {};
+  //        const initialSubCatIds = [];
+  //
+  //        alldata?.categories?.forEach((category) => {
+  //          if (category?.subCategories?.length > 0) {
+  //            // Set the first subcategory as the default selected card
+  //            const firstSubCat = category.subCategories[0];
+  //            initialSelection[category.id] = firstSubCat.id;
+  //
+  //            // Add the initially selected subcategory ID to the array
+  //            initialSubCatIds.push(firstSubCat.id);
+  //          }
+  //        });
+  //
+  //        setSelectedCard(initialSelection); // Update the state with initial selections
+  //        setSelectedSubCatId(initialSubCatIds); // Set the initially selected subcategory IDs
+  //      }
+  //    }, [alldata]);
 
+  const widthSizes = alldata?.productSizes
+    ?.filter((val) => val.size_type === "W")
+    ?.map((val) => ({ size: val.size, id: val.id }));
 
-    const decrement = () => {
-      if (count > 1) {
-        setCount(count - 1);
-      }
-    };
-    // Use effect to set initial selected subcategory and capture their IDs
-//    useEffect(() => {
-//      if (alldata?.categories?.length > 0) {
-//        const initialSelection = {};
-//        const initialSubCatIds = [];
-//
-//        alldata?.categories?.forEach((category) => {
-//          if (category?.subCategories?.length > 0) {
-//            // Set the first subcategory as the default selected card
-//            const firstSubCat = category.subCategories[0];
-//            initialSelection[category.id] = firstSubCat.id;
-//
-//            // Add the initially selected subcategory ID to the array
-//            initialSubCatIds.push(firstSubCat.id);
-//          }
-//        });
-//
-//        setSelectedCard(initialSelection); // Update the state with initial selections
-//        setSelectedSubCatId(initialSubCatIds); // Set the initially selected subcategory IDs
-//      }
-//    }, [alldata]);
+  const heightSizes = alldata?.productSizes
+    ?.filter((val) => val.size_type === "H")
+    ?.map((val) => ({ size: val.size, id: val.id }));
 
-    const widthSizes = alldata?.productSizes
-      ?.filter((val) => val.size_type === "W")
-      ?.map((val) => ({ size: val.size, id: val.id }));
+  const [state, setState] = useState({
+    size: "",
+  });
+  const combinedSizes = widthSizes?.map((width, index) => ({
+    size: `${width.size} x ${heightSizes?.[index]?.size || ""}`,
+    id: width.id,
+  }));
 
-    const heightSizes = alldata?.productSizes
-      ?.filter((val) => val.size_type === "H")
-      ?.map((val) => ({ size: val.size, id: val.id }));
+  useEffect(() => {
+    if (alldata) {
+      const firstSize = `${widthSizes?.[0]?.size || ""} x ${heightSizes?.[0]?.size || ""}`;
+      setState({ size: firstSize });
+      setSelectedWidth(widthSizes?.[0]?.size || "");
+      setSelectedHeight(heightSizes?.[0]?.size || "");
+    }
+  }, [alldata]);
 
-const [state, setState] = useState({
-  size: "",
-});
-const combinedSizes = widthSizes?.map((width, index) => ({
-  size: `${width.size} x ${heightSizes?.[index]?.size || ""}`,
-  id: width.id,
-}));
+  const handleChange = (e) => {
+    const { value } = e.target;
+    const [width, height] = value.split(" x ");
+    setState({ size: value });
+    setSelectedWidth(width);
+    setSelectedHeight(height);
+  };
 
-useEffect(() => {
-  if (alldata) {
-    const firstSize = `${widthSizes?.[0]?.size || ""} x ${heightSizes?.[0]?.size || ""}`;
-    setState({ size: firstSize });
-    setSelectedWidth(widthSizes?.[0]?.size || "");
-    setSelectedHeight(heightSizes?.[0]?.size || "");
-  }
-}, [alldata]);
+  // console.log(widthSizes?.[0]?.size,"qqqqqqq");
+  //useEffect(() => {
+  //  if (alldata?.categories?.length > 0) {
+  //    const initialSelection = {};
+  //    const initialSubCatIds = [];
+  //    alldata?.categories?.forEach((category) => {
+  //      if (category?.subCategories?.length > 0) {
+  //        const firstSubCat = category.subCategories[0];
+  //        initialSelection[category.id] = firstSubCat.id; // Store the subCat ID
+  //        initialSubCatIds.push(firstSubCat.id); // Push the initial subCat ID
+  //      }
+  //    });
+  //    setSelectedCard(initialSelection);
+  //    setSelectedSubCatId(initialSubCatIds);
+  //  }
+  //}, [alldata]);
 
-const handleChange = (e) => {
-  const { value } = e.target;
-  const [width, height] = value.split(" x ");
-  setState({ size: value });
-  setSelectedWidth(width);
-  setSelectedHeight(height);
-};
+  //useEffect(() => {
+  //  const jsonString = JSON.stringify(selectedSubCatId);
+  //  setPayload({
+  //    width: selectedWidth,
+  //    height: selectedHeight,
+  //    subCatId: jsonString,
+  //    ProductId: 10,
+  //    quantity: count,
+  //    //ProductId: alldata?.id || null,
+  //  });
+  //}, [selectedWidth, selectedHeight, selectedSubCatId, alldata, count]);
 
-    // console.log(widthSizes?.[0]?.size,"qqqqqqq");
-    //useEffect(() => {
-    //  if (alldata?.categories?.length > 0) {
-    //    const initialSelection = {};
-    //    const initialSubCatIds = [];
-    //    alldata?.categories?.forEach((category) => {
-    //      if (category?.subCategories?.length > 0) {
-    //        const firstSubCat = category.subCategories[0];
-    //        initialSelection[category.id] = firstSubCat.id; // Store the subCat ID
-    //        initialSubCatIds.push(firstSubCat.id); // Push the initial subCat ID
-    //      }
-    //    });
-    //    setSelectedCard(initialSelection);
-    //    setSelectedSubCatId(initialSubCatIds);
-    //  }
-    //}, [alldata]);
+  //const handleCardClick = (categoryId, subCat) => {
+  //  setSelectedCard((prevSelectedCards) => {
+  //    const updatedCards = { ...prevSelectedCards, [categoryId]: subCat.id };
+  //    const subCatIdsArray = Object.values(updatedCards).filter((value) => value !== undefined);
+  //    setSelectedSubCatId(subCatIdsArray);
+  //    return updatedCards;
+  //  });
+  //};
 
-    //useEffect(() => {
-    //  const jsonString = JSON.stringify(selectedSubCatId);
-    //  setPayload({
-    //    width: selectedWidth,
-    //    height: selectedHeight,
-    //    subCatId: jsonString,
-    //    ProductId: 10,
-    //    quantity: count,
-    //    //ProductId: alldata?.id || null,
-    //  });
-    //}, [selectedWidth, selectedHeight, selectedSubCatId, alldata, count]);
+  const quantityChange = (event) => {
+    const value = parseInt(event.target.value, 10);
+    setCount(isNaN(value) || value <= 0 ? 1 : value); // Ensure value is at least 1
+  };
 
-    //const handleCardClick = (categoryId, subCat) => {
-    //  setSelectedCard((prevSelectedCards) => {
-    //    const updatedCards = { ...prevSelectedCards, [categoryId]: subCat.id };
-    //    const subCatIdsArray = Object.values(updatedCards).filter((value) => value !== undefined);
-    //    setSelectedSubCatId(subCatIdsArray);
-    //    return updatedCards;
-    //  });
-    //};
-
-      const quantityChange = (event) => {
-        const value = parseInt(event.target.value, 10);
-        setCount(isNaN(value) || value <= 0 ? 1 : value); // Ensure value is at least 1
-      };
- 
-   const handleselectedCategory = (event) => {
-     setSelectedCategory(event.target.value);
-   };
-
+  const handleselectedCategory = (event) => {
+    setSelectedCategory(event.target.value);
+  };
 
   const getApi = async () => {
     ProductService.product().then((res) => {
@@ -176,44 +189,42 @@ const handleChange = (e) => {
     getApi1();
   }, []);
 
-    const getApi1 = async () => {
-      ProductCategoryService.ProductCategory().then((res) => {
-        const response = res.data;
-        const productCat = response?.filter((product) => product.parent_id !== null);
-        setAllCategories(productCat);
-      });
-    };
+  const getApi1 = async () => {
+    ProductCategoryService.ProductCategory().then((res) => {
+      const response = res.data;
+      const productCat = response?.filter((product) => product.parent_id !== null);
+      setAllCategories(productCat);
+    });
+  };
 
-
-
-//    useEffect(() => {
-//      if (!selectedWidth || !selectedHeight || selectedSubCatId.length === 0) {
-//        console.error("Payload is incomplete. Ensure width, height, and subcategory are selected.");
-//        //setError("Please select all required options before proceeding.");
-//      } else {
-//        const payload = {
-//          width: selectedWidth,
-//          height: selectedHeight,
-//          subCatId: JSON.stringify(selectedSubCatId),
-//          ProductId: 10,
-//          quantity: count,
-//        };
-//
-//        ProductService.Dataprice(payload)
-//          .then((res) => {
-//            if (res.data && res.data.totalPrice) {
-//              setPrice(res.data.totalPrice);
-//            } else {
-//              setPrice(55);
-//              //setError("Failed to fetch pricing information.");
-//            }
-//          })
-//          .catch((error) => {
-//            console.error("API call failed:", error);
-//            //setError("Unable to fetch pricing. Please try again later.");
-//          });
-//      }
-//    }, [payload]);
+  //    useEffect(() => {
+  //      if (!selectedWidth || !selectedHeight || selectedSubCatId.length === 0) {
+  //        console.error("Payload is incomplete. Ensure width, height, and subcategory are selected.");
+  //        //setError("Please select all required options before proceeding.");
+  //      } else {
+  //        const payload = {
+  //          width: selectedWidth,
+  //          height: selectedHeight,
+  //          subCatId: JSON.stringify(selectedSubCatId),
+  //          ProductId: 10,
+  //          quantity: count,
+  //        };
+  //
+  //        ProductService.Dataprice(payload)
+  //          .then((res) => {
+  //            if (res.data && res.data.totalPrice) {
+  //              setPrice(res.data.totalPrice);
+  //            } else {
+  //              setPrice(55);
+  //              //setError("Failed to fetch pricing information.");
+  //            }
+  //          })
+  //          .catch((error) => {
+  //            console.error("API call failed:", error);
+  //            //setError("Unable to fetch pricing. Please try again later.");
+  //          });
+  //      }
+  //    }, [payload]);
 
   return (
     <>
@@ -403,40 +414,132 @@ const handleChange = (e) => {
             {/* Material Field */}
             <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               <Typography sx={{ fontSize: "20px", color: "#3F5163", fontWeight: 400 }}>Material</Typography>
-              {/*<TextField
-                placeholder="Stickers and Decals"
-                variant="outlined"
-                fullWidth
-                size="small"
-                InputProps={{
-                  sx: {
-                    height: "60px", // Adjust this value as needed
-                  },
-                }}
-              />*/}
               <FormControl sx={{ minWidth: 120, color: "#3F5163" }} size="small" fullWidth>
                 <Select
-                  labelId="Stickers and Decals"
-                  id="size-select"
-                  name="Material"
-                  value={selectedCategory} // Set the value to the state variable
-                  onChange={handleselectedCategory} // Update the state on change
-                  displayEmpty
                   sx={{
                     color: "gray",
                     height: "60px",
                     padding: "0px 10px",
-                    // Hide the dropdown icon
                     ".MuiSelect-icon": {
                       display: "none",
                     },
                   }}
+                  displayEmpty
+                  MenuProps={{
+                    autoFocus: false,
+                    PaperProps: {
+                      sx: {
+                        maxWidth: "200px !important",
+                        overflow: "scroll ",
+                        maxHeight: "500px !important",
+                      },
+                    },
+                  }}
+                  labelId="Stickers and Decals"
+                  id="size-select"
+                  name="Material"
+                  value={selectedCategory}
+                  onChange={handleSelectChange}
+                  onClose={() => setSearchText("")}
+                  renderValue={() => selectedCategory || "Select a category"}
                 >
-                  {allcategories?.map((product, index) => (
-                    <MenuItem key={index} value={product.name}>
-                      {product.name}
+                  <ListSubheader>
+                    <TextField
+                      size="small"
+                      autoFocus
+                      placeholder="Type to search..."
+                      fullWidth
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <SearchIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                      value={searchText}
+                      onChange={(e) => setSearchText(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key !== "Escape") {
+                          e.stopPropagation();
+                        }
+                      }}
+                    />
+                  </ListSubheader>
+                  {filteredCategories.map((option) => (
+                    <MenuItem
+                      key={option.id}
+                      value={option.name}
+                      sx={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        gap: "10px",
+                        padding: "10px",
+                      }}
+                    >
+                      {/* Image */}
+                      {option.image && (
+                        <img
+                          src={`${process.env.REACT_APP_API_BASE_URL}/${option?.image?.path}`}
+                          alt={option.name}
+                          style={{ width: 88, height: 54, borderRadius: "4px" }}
+                        />
+                      )}
+
+                      {/* Text Content */}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "4px",
+                          flex: 1,
+                        }}
+                      >
+                        {/* Title */}
+                        <Typography
+                          sx={{
+                            fontWeight: 600,
+                            fontSize: "16px",
+                            color: "#333",
+                          }}
+                        >
+                          {option.name}
+                        </Typography>
+
+                        {/* Description */}
+                        <Typography sx={{ fontSize: "14px", color: "#666" }}>
+                          {option.description || "No description available No."}
+                        </Typography>
+
+                        {/* Learn More Link */}
+                        <Typography
+                          component="a"
+                          href={`/product/${option?.name}`}
+                          rel="noopener noreferrer"
+                          sx={{
+                            fontSize: "14px",
+                            color: "#007bff",
+                            textDecoration: "underline",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Learn More
+                        </Typography>
+                      </Box>
                     </MenuItem>
                   ))}
+
+                  {/* {filteredCategories.map((option) => (
+                    <MenuItem key={option.id} value={option.name}>
+                      {option.image && (
+                        <img
+                          src={`${process.env.REACT_APP_API_BASE_URL}/${option?.image?.path}`}
+                          alt={option.name}
+                          style={{ width: 30, height: 30, marginRight: 10 }}
+                        />
+                      )}
+                      {option.name}
+                    </MenuItem>
+                  ))} */}
                 </Select>
               </FormControl>
             </Box>

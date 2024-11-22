@@ -311,12 +311,13 @@ html .pintura-editor {
     width: 48px;
     
 }
-.tabs-cust button.Mui-selected,.tabs-cust button.Mui-selected::after {
-  color: #E0CE8F !important;
-  content: url('../src//asset//images/treadingArrow.svg');
-  display: ruby;
-  vertical-align: middle; 
-}
+/*.tabs-cust button.Mui-selected::after {
+  content: url('../src/asset/images/treadingArrow.svg');
+  margin-left: 5px;
+  vertical-align: middle;
+  display: inline;
+}*/
+
 
 .MuiPaper {
   position: static;

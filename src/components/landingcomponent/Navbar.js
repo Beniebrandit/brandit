@@ -14,6 +14,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  Paper,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
@@ -25,13 +26,58 @@ import facebook_logo from "../../asset/images/facebook_logo.svg";
 import twitter_logo from "../../asset/images/twitter_logo.svg";
 import linkedin_logo from "../../asset/images/linkedin_logo.svg";
 import youtube_logo from "../../asset/images/youtube_logo.svg";
+import { useRef } from "react";
 
 const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [currentUser, setCurrentUser] = useState("");
-  const [activeItem, setActiveItem] = useState("Home"); // Track the active item, default to "Home"
+  const [activeItem, setActiveItem] = useState("Home");
+  const [isMegaMenuOpen, setMegaMenuOpen] = useState(false);
+  const [hoveredItem, setHoveredItem] = useState(null);
+  const [isHoveringMegaMenu, setIsHoveringMegaMenu] = useState(false);
+  const menuCloseTimeout = useRef(null);
 
+  // When mouse enters a menu item
+  const handleMouseEnterItem = (text) => {
+    setHoveredItem(text);
+    setMegaMenuOpen(true);
+    clearTimeout(menuCloseTimeout.current);
+  };
+
+  // When mouse leaves a menu item
+  const handleMouseLeaveItem = () => {
+    menuCloseTimeout.current = setTimeout(() => {
+      if (!isHoveringMegaMenu) {
+        setHoveredItem(null);
+        setMegaMenuOpen(false);
+      }
+    }, 200);
+  };
+
+  // When mouse enters the mega menu
+  const handleMegaMenuEnter = () => {
+    setIsHoveringMegaMenu(true);
+    clearTimeout(menuCloseTimeout.current);
+    setMegaMenuOpen(true);
+  };
+
+  // When mouse leaves the mega menu
+  const handleMegaMenuLeave = (e) => {
+    // Only close the mega menu if the mouse is leaving both the mega menu and the menu items
+    setIsHoveringMegaMenu(false);
+
+    // Use a timeout to delay closing to avoid abrupt transitions
+    menuCloseTimeout.current = setTimeout(() => {
+      if (!hoveredItem && !isHoveringMegaMenu) {
+        setMegaMenuOpen(false);
+      }
+    }, 200);
+  };
+
+  useEffect(() => {
+    return () => clearTimeout(menuCloseTimeout.current);
+  }, []);
   const toggleDrawer = (open0) => () => {
     setDrawerOpen(open0);
   };
@@ -70,6 +116,7 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
     window.location.reload();
   };
 
+  const menuItems = ["Home", "Large Format", "Small Format", "Stickers and Decals", "Flags", "Sign Holders"];
   return (
     <>
       <Box className="header">
@@ -148,33 +195,458 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
           </Box>
 
           {/* Navigation Links */}
-          <Box
-            sx={{
-              display: { xs: "none", md: "flex" },
-              alignItems: "center",
-              justifyContent: "space-around",
-              width: "40rem",
-            }}
-          >
-            {["Home", "Large Format", "Small Format", "Stickers and Decals", "Flags", "Sign Holders"].map((text) => (
-              <Typography
-                key={text}
-                variant="body2"
-                style={{
-                  paddingRight: "10px",
-                  fontSize: "16px",
-                  fontWeight: "400",
-                  color: activeItem === text ? "#3F5163" : "#8C8E8F", // Set color based on active status
-                  textDecoration: activeItem === text ? "underline" : "none", // Add underline for active item
-                  textUnderlineOffset: "4px", // Add space between text and underline
-                }}
-                onClick={() => setActiveItem(text)} // set active item on click
-              >
-                {text}
-              </Typography>
-            ))}
-          </Box>
+          <Box>
+            {/* Main menu items */}
+            <Box
+              sx={{
+                display: { xs: "none", md: "flex" },
+                alignItems: "center",
+                justifyContent: "space-around",
+                width: "40rem",
+              }}
+            >
+              {menuItems.map((text) => (
+                <Typography
+                  key={text}
+                  variant="body2"
+                  sx={{
+                    paddingRight: "10px",
+                    fontSize: "16px",
+                    fontWeight: "400",
+                    color: hoveredItem === text ? "#3F5163" : "#8C8E8F",
+                    textDecoration: hoveredItem === text ? "underline" : "none",
+                    textUnderlineOffset: "4px",
+                  }}
+                  onMouseEnter={() => handleMouseEnterItem(text)}
+                  onMouseLeave={handleMouseLeaveItem}
+                >
+                  {text}
+                </Typography>
+              ))}
+            </Box>
 
+            {/* Mega Menu */}
+            {isMegaMenuOpen && hoveredItem === "Large Format" && (
+              <Paper
+                onMouseEnter={handleMegaMenuEnter}
+                onMouseLeave={handleMegaMenuLeave}
+                sx={{
+                  position: "absolute",
+                  top: "110px",
+                  left: "23%",
+                  maxWidth: "1200px",
+                  padding: "20px 30px",
+                  margin: "0 auto",
+                  display: "flex",
+                  justifyContent: "space-around",
+                  backgroundColor: "#fff",
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                  zIndex: 10,
+                  borderRadius: "8px",
+                }}
+              >
+                {/* Column 2 - Banners */}
+                <Box sx={{ flex: "1" }}>
+                  <Typography variant="h6" fontWeight="bold">
+                    Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Vinyl Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Mesh Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Fabric Banners
+                  </Typography>
+                  {/* Add more items as needed */}
+                </Box>
+
+                {/* Column 3 - Banner Stands */}
+                <Box sx={{ flex: "1" }}>
+                  <Typography variant="h6" fontWeight="bold">
+                    Banner Stands
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Retractable Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Step & Repeat Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Backdrops
+                  </Typography>
+                </Box>
+
+                {/* Column 4 - Flag Banners */}
+                <Box sx={{ flex: "1" }}>
+                  <Typography variant="h6" fontWeight="bold">
+                    Flag Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Feather Flag
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Angled Flag
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Rectangle Flag
+                  </Typography>
+                </Box>
+
+                {/* Optional - Show All Banners */}
+                <Box sx={{ flex: "1", textAlign: "center", alignSelf: "center" }}>
+                  <Typography variant="body2" color="primary" sx={{ cursor: "pointer" }}>
+                    Show All Banners
+                  </Typography>
+                </Box>
+              </Paper>
+            )}
+            {isMegaMenuOpen && hoveredItem === "Home" && (
+              <Paper
+                onMouseEnter={handleMegaMenuEnter}
+                onMouseLeave={handleMegaMenuLeave}
+                sx={{
+                  position: "absolute",
+                  top: "110px",
+                  left: "23%",
+                  maxWidth: "1200px",
+                  padding: "20px 30px",
+                  margin: "0 auto",
+                  display: "flex",
+                  justifyContent: "space-around",
+                  backgroundColor: "#fff",
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                  zIndex: 10,
+                  borderRadius: "8px",
+                }}
+              >
+                {/* Column 1 - Most Popular */}
+                <Box sx={{ flex: "1" }}>
+                  <Typography variant="h6" fontWeight="bold">
+                    Most Popular
+                  </Typography>
+                  <Box
+                    component="img"
+                    src="path-to-image"
+                    alt="Popular Banner"
+                    sx={{ width: "100%", marginTop: "10px" }}
+                  />
+                  <Typography variant="body2" mt={1}>
+                    Vinyl Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Feather Flag Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Fabric Banners
+                  </Typography>
+                </Box>
+
+                {/* Column 2 - Banners */}
+                <Box sx={{ flex: "1" }}>
+                  <Typography variant="h6" fontWeight="bold">
+                    Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Vinyl Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Mesh Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Fabric Banners
+                  </Typography>
+                  {/* Add more items as needed */}
+                </Box>
+
+                {/* Column 3 - Banner Stands */}
+                <Box sx={{ flex: "1" }}>
+                  <Typography variant="h6" fontWeight="bold">
+                    Banner Stands
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Retractable Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Step & Repeat Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Backdrops
+                  </Typography>
+                </Box>
+
+                {/* Column 4 - Flag Banners */}
+                <Box sx={{ flex: "1" }}>
+                  <Typography variant="h6" fontWeight="bold">
+                    Flag Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Feather Flag
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Angled Flag
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Rectangle Flag
+                  </Typography>
+                </Box>
+
+                {/* Optional - Show All Banners */}
+                <Box sx={{ flex: "1", textAlign: "center", alignSelf: "center" }}>
+                  <Typography variant="body2" color="primary" sx={{ cursor: "pointer" }}>
+                    Show All Banners
+                  </Typography>
+                </Box>
+              </Paper>
+            )}
+            {isMegaMenuOpen && hoveredItem === "Small Format" && (
+              <Paper
+                onMouseEnter={handleMegaMenuEnter}
+                onMouseLeave={handleMegaMenuLeave}
+                sx={{
+                  position: "absolute",
+                  top: "110px",
+                  left: "23%",
+                  maxWidth: "1200px",
+                  padding: "20px 30px",
+                  margin: "0 auto",
+                  display: "flex",
+                  justifyContent: "space-around",
+                  backgroundColor: "#fff",
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                  zIndex: 10,
+                  borderRadius: "8px",
+                }}
+              >
+                {/* Column 1 - Most Popular */}
+                <Box sx={{ flex: "1" }}>
+                  <Typography variant="h6" fontWeight="bold">
+                    Most Popular
+                  </Typography>
+                  <Box
+                    component="img"
+                    src="path-to-image"
+                    alt="Popular Banner"
+                    sx={{ width: "100%", marginTop: "10px" }}
+                  />
+                  <Typography variant="body2" mt={1}>
+                    Vinyl Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Feather Flag Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Fabric Banners
+                  </Typography>
+                </Box>
+
+                {/* Column 3 - Banner Stands */}
+                <Box sx={{ flex: "1" }}>
+                  <Typography variant="h6" fontWeight="bold">
+                    Banner Stands
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Retractable Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Step & Repeat Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Backdrops
+                  </Typography>
+                </Box>
+
+                {/* Optional - Show All Banners */}
+                <Box sx={{ flex: "1", textAlign: "center", alignSelf: "center" }}>
+                  <Typography variant="body2" color="primary" sx={{ cursor: "pointer" }}>
+                    Show All Banners
+                  </Typography>
+                </Box>
+              </Paper>
+            )}
+            {isMegaMenuOpen && hoveredItem === "Stickers and Decals" && (
+              <Paper
+                onMouseEnter={handleMegaMenuEnter}
+                onMouseLeave={handleMegaMenuLeave}
+                sx={{
+                  position: "absolute",
+                  //top: "110px",
+                  //left: "23%",
+                  maxWidth: "1200px",
+                  padding: "20px 30px",
+                  margin: "0 auto",
+                  display: "flex",
+                  justifyContent: "space-around",
+                  backgroundColor: "#fff",
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                  zIndex: 10,
+                  borderRadius: "8px",
+                }}
+              >
+                {/* Column 1 - Most Popular */}
+                <Box sx={{ flex: "1" }}>
+                  <Typography variant="h6" fontWeight="bold">
+                    Most Popular
+                  </Typography>
+                  <Box
+                    component="img"
+                    src="path-to-image"
+                    alt="Popular Banner"
+                    sx={{ width: "100%", marginTop: "10px" }}
+                  />
+                  <Typography variant="body2" mt={1}>
+                    Vinyl Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Feather Flag Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Fabric Banners
+                  </Typography>
+                </Box>
+
+                {/* Optional - Show All Banners */}
+                <Box sx={{ flex: "1", textAlign: "center", alignSelf: "center" }}>
+                  <Typography variant="body2" color="primary" sx={{ cursor: "pointer" }}>
+                    Show All Banners
+                  </Typography>
+                </Box>
+              </Paper>
+            )}
+            {isMegaMenuOpen && hoveredItem === "Flags" && (
+              <Paper
+                onMouseEnter={handleMegaMenuEnter}
+                onMouseLeave={handleMegaMenuLeave}
+                sx={{
+                  position: "absolute",
+                  top: "110px",
+                  left: "23%",
+                  maxWidth: "1200px",
+                  padding: "20px 30px",
+                  margin: "0 auto",
+                  display: "flex",
+                  justifyContent: "space-around",
+                  backgroundColor: "#fff",
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                  zIndex: 10,
+                  borderRadius: "8px",
+                }}
+              >
+                {/* Column 1 - Most Popular */}
+                <Box sx={{ flex: "1" }}>
+                  <Typography variant="h6" fontWeight="bold">
+                    Most Popular
+                  </Typography>
+                  <Box
+                    component="img"
+                    src="path-to-image"
+                    alt="Popular Banner"
+                    sx={{ width: "100%", marginTop: "10px" }}
+                  />
+                  <Typography variant="body2" mt={1}>
+                    Vinyl Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Feather Flag Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Fabric Banners
+                  </Typography>
+                </Box>
+
+                {/* Optional - Show All Banners */}
+              </Paper>
+            )}
+            {isMegaMenuOpen && hoveredItem === "Flags" && (
+              <Paper
+                onMouseEnter={handleMegaMenuEnter}
+                onMouseLeave={handleMegaMenuLeave}
+                sx={{
+                  position: "absolute",
+                  top: "110px",
+                  left: "23%",
+                  maxWidth: "1200px",
+                  padding: "20px 30px",
+                  margin: "0 auto",
+                  display: "flex",
+                  justifyContent: "space-around",
+                  backgroundColor: "#fff",
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                  zIndex: 10,
+                  borderRadius: "8px",
+                }}
+              >
+                {/* Column 1 - Most Popular */}
+                <Box sx={{ flex: "1" }}>
+                  <Typography variant="h6" fontWeight="bold">
+                    Most Popular
+                  </Typography>
+                  <Box
+                    component="img"
+                    src="path-to-image"
+                    alt="Popular Banner"
+                    sx={{ width: "100%", marginTop: "10px" }}
+                  />
+                  <Typography variant="body2" mt={1}>
+                    Vinyl Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Feather Flag Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Fabric Banners
+                  </Typography>
+                </Box>
+
+                {/* Optional - Show All Banners */}
+              </Paper>
+            )}
+            {isMegaMenuOpen && hoveredItem === "Sign Holders" && (
+              <Paper
+                onMouseEnter={handleMegaMenuEnter}
+                onMouseLeave={handleMegaMenuLeave}
+                sx={{
+                  position: "absolute",
+                  top: "110px",
+                  left: "23%",
+                  maxWidth: "1200px",
+                  padding: "20px 30px",
+                  margin: "0 auto",
+                  display: "flex",
+                  justifyContent: "space-around",
+                  backgroundColor: "#fff",
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                  zIndex: 10,
+                  borderRadius: "8px",
+                }}
+              >
+                {/* Column 1 - Most Popular */}
+                <Box sx={{ flex: "1" }}>
+                  <Typography variant="h6" fontWeight="bold">
+                    Most Popular
+                  </Typography>
+                  <Box
+                    component="img"
+                    src="path-to-image"
+                    alt="Popular Banner"
+                    sx={{ width: "100%", marginTop: "10px" }}
+                  />
+                  <Typography variant="body2" mt={1}>
+                    Vinyl Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Feather Flag Banners
+                  </Typography>
+                  <Typography variant="body2" mt={1}>
+                    Fabric Banners
+                  </Typography>
+                </Box>
+
+                {/* Optional - Show All Banners */}
+              </Paper>
+            )}
+          </Box>
           {/* Account and Cart Section */}
           <Box
             sx={{ display: "flex", alignItems: "center", justifyContent: "space-around", columnGap: 2, height: "100%" }}

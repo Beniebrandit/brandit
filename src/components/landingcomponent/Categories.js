@@ -62,6 +62,8 @@ const Categories = () => {
   const [flagCategories, setFlagCategories] = useState([]);
   const [signCategories, setSignCategories] = useState([]);
   const [decalsCategories, setDecalsCategories] = useState([]);
+  const [largeformatCategories, setLargeFormatCategories] = useState([]);
+  const [smallformatCategories, setSmallFormatCategories] = useState([]);
 
   const navigate = useNavigate();
 
@@ -79,6 +81,12 @@ const Categories = () => {
 
       const decalsProductCategories = response?.filter((product) => product.parent_name === "Decals");
       setDecalsCategories(decalsProductCategories);
+
+      const smallformatProductCategories = response?.filter((product) => product.parent_name === "Small Format");
+      setLargeFormatCategories(smallformatProductCategories);
+
+      const largeformatProductCategories = response?.filter((product) => product.parent_name === "Large Format");
+      setSmallFormatCategories(largeformatProductCategories);
     });
   };
 
@@ -160,10 +168,10 @@ const Categories = () => {
             >
               {allcategories?.map((val) => {
                 return (
-                  <Box onClick={() => productClick(val.name)} sx={{ padding: "24px 0px !important" }}>
+                  <Box onClick={() => productClick(val?.name)} sx={{ padding: "24px 0px !important" }}>
                     <Box className="product-image">
                       <img
-                        src={`${process.env.REACT_APP_API_BASE_URL}/${val.image.path}`}
+                        src={`${process.env.REACT_APP_API_BASE_URL}/${val?.image?.path}`}
                         className="category-img"
                         alt=""
                       />
@@ -180,10 +188,74 @@ const Categories = () => {
             </Box>
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-            Large Format
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: {
+                  xl: "repeat(3, 1fr)", // For large screens, create 3 equal columns
+                  lg: "repeat(3, 1fr)", // For large screens, create 3 equal columns
+                  md: "repeat(2, 1fr)", // For large screens, create 3 equal columns
+                  sm: "repeat(1)", // For large screens, create 3 equal columns
+                },
+                gap: "1.5rem",
+                justifyContent: "center",
+              }}
+            >
+              {largeformatCategories?.map((val) => {
+                return (
+                  <Box onClick={() => productClick(val?.name)} sx={{ padding: "24px 0px !important" }}>
+                    <Box className="product-image">
+                      <img
+                        src={`${process.env.REACT_APP_API_BASE_URL}/${val.image?.path}`}
+                        className="category-img"
+                        alt=""
+                      />
+
+                      <img src={ArrowIcon} className="cust_arrow" />
+                    </Box>
+                    <Typography sx={{ paddingTop: "1rem" }}>{val?.name}</Typography>
+                    <Typography sx={{ fontSize: "20px", color: "#3F5163" }}>
+                      {val?.description ? val?.description : "null"}
+                    </Typography>
+                  </Box>
+                );
+              })}
+            </Box>
           </CustomTabPanel>
           <CustomTabPanel value={value} index={2}>
-            Small Format
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: {
+                  xl: "repeat(3, 1fr)", // For large screens, create 3 equal columns
+                  lg: "repeat(3, 1fr)", // For large screens, create 3 equal columns
+                  md: "repeat(2, 1fr)", // For large screens, create 3 equal columns
+                  sm: "repeat(1)", // For large screens, create 3 equal columns
+                },
+                gap: "1.5rem",
+                justifyContent: "center",
+              }}
+            >
+              {smallformatCategories?.map((val) => {
+                return (
+                  <Box onClick={() => productClick(val?.name)} sx={{ padding: "24px 0px !important" }}>
+                    <Box className="product-image">
+                      <img
+                        src={`${process.env.REACT_APP_API_BASE_URL}/${val.image?.path}`}
+                        className="category-img"
+                        alt=""
+                      />
+
+                      <img src={ArrowIcon} className="cust_arrow" />
+                    </Box>
+                    <Typography sx={{ paddingTop: "1rem" }}>{val?.name}</Typography>
+                    <Typography sx={{ fontSize: "20px", color: "#3F5163" }}>
+                      {val?.description ? val?.description : "null"}
+                    </Typography>
+                  </Box>
+                );
+              })}
+            </Box>
           </CustomTabPanel>
           <CustomTabPanel value={value} index={3}>
             <Box

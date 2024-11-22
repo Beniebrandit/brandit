@@ -9,6 +9,7 @@ import trending_image1 from "../../asset/images/trending_image1.png";
 import trending_image2 from "../../asset/images/trending_image2.png";
 import trending_image3 from "../../asset/images/trending_image3.png";
 import trending_image4 from "../../asset/images/trending_image4.png";
+import treadingArrow from "../../asset/images/treadingArrow.svg";
 import PropTypes from "prop-types";
 
 const data = [
@@ -104,20 +105,29 @@ const TrendingProducts = () => {
                 sx={{ height: "185px" }}
                 {...a11yProps(index)}
                 label={
-                  <Box>
+                  <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <img src={tab.icon} alt={tab.alt} style={{ height: "113px", width: "113px" }} />
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        marginTop: "1rem",
-                        fontSize: "20px",
-                        fontWeight: 400,
-                        textTransform: "capitalize",
-                        paddingRight: "1rem",
-                      }}
-                    >
-                      {tab.label}
-                    </Typography>
+                    <Box display="flex" alignItems="baseline" width="12rem" sx={{justifyContent:"center", columnGap: 1}}>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          marginTop: "1rem",
+                          fontSize: "20px",
+                          fontWeight: 400,
+                          textTransform: "capitalize",
+                          //paddingRight: "1rem",
+                        }}
+                      >
+                        {tab.label}
+                      </Typography>
+                      {value === index && (
+                        <img
+                          src={treadingArrow}
+                          alt="Arrow Icon"
+                          style={{ marginLeft: "5px",marginTop:"5px", height: "15px",width:"auto" }} // Adjust size as needed
+                        />
+                      )}
+                    </Box>
                   </Box>
                 }
               />
