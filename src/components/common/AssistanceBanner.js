@@ -22,11 +22,6 @@ const AssistanceBanner = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Toggle visibility (for testing; you could hook this to other logic)
-  const toggleVisibility = () => {
-    setIsVisible((prev) => !prev);
-  };
-
   return (
     <>
       <Box
@@ -102,7 +97,7 @@ const AssistanceBanner = () => {
         <Box sx={{ display: "flex", justifyContent: "center", width: "14rem", height: "48px" }}>
           <Button
             variant="contained"
-            onClick={toggleVisibility}
+            onClick={handleOpen}
             sx={{
               textTransform: "none",
               backgroundColor: "#3f5163",

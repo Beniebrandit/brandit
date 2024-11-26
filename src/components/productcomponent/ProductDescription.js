@@ -11,7 +11,7 @@ const TabPanel = styled(({ children, value, index, ...other }) => (
   </div>
 ))``;
 
-const ProductDescription = () => {
+const ProductDescription = ({ longdescription }) => {
   const [value, setValue] = useState(0);
   const [alldata, setAllData] = useState();
 
@@ -19,23 +19,18 @@ const ProductDescription = () => {
     setValue(newValue);
   };
 
-  const getApi = async () => {
-    ProductService.product().then((res) => {
-      const response = res.data;
-      setAllData(response);
-      console.log(alldata, "alldata1");
-    });
-
-    // const res = await axios.get(`${url}/product/2`, {
-    //   headers: {
-    //     "Authorization": `Bearer ${token}`
-    //   }
-    // });
-  };
-
-  useEffect(() => {
-    getApi();
-  }, []);
+  //  const getApi = async () => {
+  //    ProductService.product().then((res) => {
+  //      const response = res.data;
+  //      setAllData(response);
+  //      console.log(alldata, "alldata1");
+  //    });
+  //
+  //  };
+  //
+  //  useEffect(() => {
+  //    getApi();
+  //  }, []);
 
   return (
     <Container>
@@ -102,12 +97,9 @@ const ProductDescription = () => {
               padding: "0px",
             }}
           >
-            {/* {alldata?.long_description} */}
-            Pellentesque iaculis nulla sollicitudin purus lobortis, varius tempor diam iaculis. Cras nec mauris commodo,
-            suscipit arcu sed, dapibus ligula. Vestibulum fringilla lorem mi, nec aliquam dui blandit et. Sed ornare
-            porta suscipit. Aliquam maximus, ex id sodales pulvinar.
+            {longdescription}
           </Typography>
-          <Typography
+          {/*<Typography
             sx={{
               fontSize: { xs: "14px", sm: "18px" },
               color: "#8C8E8F",
@@ -132,7 +124,7 @@ const ProductDescription = () => {
             Pellentesque iaculis nulla sollicitudin purus lobortis, varius tempor diam iaculis. Cras nec mauris commodo,
             suscipit arcu sed, dapibus ligula. Vestibulum fringilla lorem mi, nec aliquam dui blandit et. Sed ornare
             porta suscipit. Aliquam maximus, ex id sodales pulvinar.
-          </Typography>
+          </Typography>*/}
         </TabPanel>
         <TabPanel value={value} index={1}>
           Content for Tab 2

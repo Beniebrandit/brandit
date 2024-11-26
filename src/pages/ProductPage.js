@@ -16,6 +16,8 @@ const ProductPage = () => {
       const params = useParams();
       console.log("params", params.id);
     const [isVisible, setIsVisible] = useState(false);
+    const [longdescription, setLongDescription] = useState();
+    const [productId, setProductId] = useState();
 
 
     useEffect(() => {
@@ -39,15 +41,15 @@ const ProductPage = () => {
   return (
     <>
       <Header />
-      <Product productname={params.id} />
-      <ProductDescription />
+      <Product productname={params.id} setLongDescription={setLongDescription} setProductId={setProductId} />
+      <ProductDescription longdescription={longdescription} />
       <Services />
       <BannerFeature />
 
       <Bannerslider />
       <Detail />
       <Faq />
-      <Reviews />
+      <Reviews productId={productId} />
       <Footer />
 
       {isVisible && <AssistanceBanner />}

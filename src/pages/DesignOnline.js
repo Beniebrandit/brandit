@@ -217,12 +217,12 @@ const DesignOnline = () => {
     }
   };
 
-  const getApi = async () => {
-    ProductService.product().then((res) => {
-      const response = res.data;
-      setAllData(response);
-    });
-  };
+  //const getApi = async () => {
+  //  ProductService.product().then((res) => {
+  //    const response = res.data;
+  //    setAllData(response);
+  //  });
+  //};
   const Allproducts = async () => {
     ProductService.Allproduct().then((res) => {
       const response = res.data;
@@ -231,7 +231,7 @@ const DesignOnline = () => {
   };
 
   useEffect(() => {
-    getApi();
+    //getApi();
     Allproducts();
   }, []);
 

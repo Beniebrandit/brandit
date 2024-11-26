@@ -28,11 +28,13 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { ProductCategoryService } from "../../services/ProductCategory.service";
+import { authHeader } from "../../library/authHeader";
 
 // const url = `https://flagg.devlopix.com/api`;
 // const token = `6|q8mTawTdGKbRdLazOGLcm1Y0zJe5ks4IPUWRJNIR13495c0c`
 
-const Product = ({ productname, ...props }) => {
+const Product = ({ productname,setLongDescription,setProductId, ...props }) => {
   const [count, setCount] = useState(1);
   const [value, setValue] = useState(0);
   const [alldata, setAllData] = useState();
@@ -45,6 +47,7 @@ const Product = ({ productname, ...props }) => {
   const [selectedSubCatId, setSelectedSubCatId] = useState([]);
   const [price, setPrice] = useState();
   const [rating, setRating] = useState();
+  const [getid, setgetId] = useState();
 
   const [payload, setPayload] = useState({
     productId: null, // Assuming `id` is the unique identifier for the product
@@ -129,11 +132,10 @@ const Product = ({ productname, ...props }) => {
       width: selectedWidth,
       height: selectedHeight,
       subCatId: jsonString,
-      ProductId: 10,
+      ProductId: getid,
       quantity: count,
-      //ProductId: alldata?.id || null,
     });
-  }, [selectedWidth, selectedHeight, selectedSubCatId, alldata, count]);
+  }, [selectedWidth, selectedHeight, selectedSubCatId, alldata, count, getid]);
 
   const handleCardClick = (categoryId, subCat) => {
     setSelectedCard((prevSelectedCards) => {
@@ -170,16 +172,52 @@ const Product = ({ productname, ...props }) => {
   //   description: ProductData[0].description,
   // };
 
-  const getApi = async () => {
-    ProductService.product().then((res) => {
-      const response = res.data;
-      setAllData(response);
-      //console.log(response, "response");
-    });
-  };
-  const getReview = async () => {
+const fetchProducts = async (productname) => {
+  if (productname) {
     try {
-      const res = await ReviewService.ProductReview(1);
+      const response = await axios.get(
+        `https://flagg.devlopix.com/api/product?with[]=images&with[]=productCategory&where[productCategoryId]=${productname}`,
+        {
+          headers: authHeader(),
+        }
+      );
+      console.log("Fetched products", response.data.data);
+
+      // Get the product ID from the response and set it
+      const fetchedId = response.data?.data[0].id;
+      setgetId(fetchedId);
+      setProductId(fetchedId);
+
+      // Call getApi only if fetchedId is valid
+      if (fetchedId) {
+        getApi(fetchedId);
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      // Handle the error as needed
+    }
+  }
+};
+
+const getApi = async (id) => {
+  try {
+    const res = await ProductCategoryService.ProductDetail(id);
+    const response = res.data;
+    setAllData(response);
+    setLongDescription(response?.long_description);
+    // Handle response as needed
+  } catch (error) {
+    console.error("Error fetching product details:", error);
+  }
+};
+
+useEffect(() => {
+  fetchProducts(productname);
+}, [productname]);
+
+  const getReview = async (id) => {
+    try {
+      const res = await ReviewService.ProductReview(id);
       const reviews = res.data;
 
       // Calculate the average rating
@@ -190,16 +228,15 @@ const Product = ({ productname, ...props }) => {
       setValue(averageRating); // Assuming `setValue` is used to store the average rating
       setRating(reviews.length); // Sets the number of reviews
 
-      console.log(averageRating, "Average Rating");
+      console.log(reviews.length, "reviews.length");
     } catch (error) {
       console.error("Error fetching review:", error);
     }
   };
 
   useEffect(() => {
-    getApi();
-    getReview();
-  }, []);
+    getReview(getid);
+  }, [getid]);
 
   const handleClick = async () => {
     //ProductService.Dataprice(payload).then((res) => {
@@ -221,7 +258,7 @@ const Product = ({ productname, ...props }) => {
         width: selectedWidth,
         height: selectedHeight,
         subCatId: JSON.stringify(selectedSubCatId),
-        ProductId: 10,
+        ProductId: getid,
         quantity: count,
       };
 
@@ -247,6 +284,7 @@ const Product = ({ productname, ...props }) => {
       behavior: "smooth",
     });
   };
+console.log("getid", getid);
 
   return (
     <Box className="product_box">
@@ -272,7 +310,7 @@ const Product = ({ productname, ...props }) => {
                       <img
                         src={process.env.REACT_APP_API_BASE_URL + item?.path}
                         alt=""
-                        style={{ width: "100%", height: "100%" }}
+                        style={{ width: "100%", height: "643px",borderRadius:"30px" }}
                       />
                     </SwiperSlide>
                   ))}
@@ -317,7 +355,7 @@ const Product = ({ productname, ...props }) => {
                             alt=""
                             style={{
                               width: "100%",
-                              height: "100%",
+                              height: "141px",
                               cursor: "pointer",
                               borderRadius: "20px",
                             }}
@@ -365,8 +403,8 @@ const Product = ({ productname, ...props }) => {
               >
                 <Rating style={{ color: "#F6AA03" }} name="simple-controlled" value={value} readOnly />
                 &nbsp;&nbsp;&nbsp;
-                <Typography sx={{ color: "#3F5163", display: "inline-block", paddingTop: "2px" }}>{`(${
-                  rating || " "
+                <Typography sx={{ color: "#3F5163", display: "inline-flex", paddingTop: "2px" }}>{`(${
+                  rating || "0"
                 })`}</Typography>
               </a>
               <Typography

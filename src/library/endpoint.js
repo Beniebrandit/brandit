@@ -28,6 +28,9 @@ let API_ENDPOINTS_FUNCTION = {
   productreview: (id) => {
     return API_BASE_URL + `${endpoints.productreview}${id}`;
   },
+  productdetail: (id) => {
+    return `${API_BASE_URL}${endpoints.allproduct}/${id}?with[]=images&with[]=productSizes&with[]=categories.subCategories.image`;
+  },
 };
 
 export const apiEndpointFunction = API_ENDPOINTS_FUNCTION;

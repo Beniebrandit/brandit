@@ -32,14 +32,14 @@ import CloseIcon from "@mui/icons-material/Close";
 import { ReviewService } from "../../services/Review.service";
 import CustomPagination from "./CustomPagination";
 
-const Reviews = () => {
+const Reviews = ({ productId }) => {
   const [value, setValue] = useState(5);
   const [open, setOpen] = useState(false);
   const [emailNotification, setEmailNotification] = useState(true);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [question, setQuestion] = useState("");
   const [rating, setRating] = useState(0);
-  const [productId, setProductId] = useState();
+  const [userId, setUserId] = useState();
   const [allreviews, setAllReviews] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
@@ -74,8 +74,8 @@ const Reviews = () => {
     const data = await response.json();
 
     if (data) {
-      setProductId(data.id);
-      console.log("productId", data.id);
+      setUserId(data.id);
+      console.log("userId", data.id);
     }
   };
 
@@ -89,8 +89,8 @@ const Reviews = () => {
 
   useEffect(() => {
     setPayload({
-      user_id: productId,
-      product_id: 1,
+      user_id: userId,
+      product_id: productId,
       stars: rating,
       review: question,
     });

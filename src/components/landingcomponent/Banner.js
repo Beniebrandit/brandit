@@ -176,16 +176,16 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
     setSelectedCategory(event.target.value);
   };
 
-  const getApi = async () => {
-    ProductService.product().then((res) => {
-      const response = res.data;
-      setAllData(response);
-      //console.log(response, "response");
-    });
-  };
+  //const getApi = async () => {
+  //  ProductService.product().then((res) => {
+  //    const response = res.data;
+  //    setAllData(response);
+  //    //console.log(response, "response");
+  //  });
+  //};
 
   useEffect(() => {
-    getApi();
+    //getApi();
     getApi1();
   }, []);
 
