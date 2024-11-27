@@ -33,23 +33,30 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
   const [alldata, setAllData] = useState();
   const [selectedCard, setSelectedCard] = useState({});
 
-  // New state to store selected width, height, and subCat ids
   const [selectedWidth, setSelectedWidth] = useState("");
   const [selectedHeight, setSelectedHeight] = useState("");
   const [selectedSubCatId, setSelectedSubCatId] = useState([]);
   const [price, setPrice] = useState();
   const [rating, setRating] = useState();
   const [allcategories, setAllCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("Vinyl Banner");
+  const [selectedCategory, setSelectedCategory] = useState();
   const [searchText, setSearchText] = useState("");
+  const [productSize, setProductSize] = useState();
+  const [productDetails, setProductDetails] = useState([]);
+  const [productId, setProductId] = useState();
+  const [isPayloadReady, setIsPayloadReady] = useState(false);
 
-  // useEffect(() => {
-  //   const displayedOptions = allcategories?.filter((option) => containsText(option, searchText))
-
-  // }, [allcategories])
   const filteredCategories = useMemo(() => {
     return allcategories.filter((option) => option?.name.toLowerCase().includes(searchText.toLowerCase()));
   }, [searchText, allcategories]);
+
+  useEffect(() => {
+    if (filteredCategories?.length > 0) {
+      getProductDetails(filteredCategories[0]?.id);
+      setSelectedCategory(filteredCategories[0]?.name);
+      // handleSetPayload(filteredCategories[0]?.id, state && state);
+    }
+  }, [filteredCategories]);
 
   const handleSelectChange = (e) => {
     setSelectedCategory(e.target.value);
@@ -63,168 +70,147 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
     subCatId: [],
   });
 
-  const sizes = [
-    { id: 1, value: "6x24", label: '6" x 24"' },
-    { id: 2, value: "12x24", label: '12" x 24"' },
-    { id: 3, value: "18x24", label: '18" x 24"' },
-  ];
-
-  const decrement = () => {
-    if (count > 1) {
-      setCount(count - 1);
-    }
-  };
-  // Use effect to set initial selected subcategory and capture their IDs
-  //    useEffect(() => {
-  //      if (alldata?.categories?.length > 0) {
-  //        const initialSelection = {};
-  //        const initialSubCatIds = [];
-  //
-  //        alldata?.categories?.forEach((category) => {
-  //          if (category?.subCategories?.length > 0) {
-  //            // Set the first subcategory as the default selected card
-  //            const firstSubCat = category.subCategories[0];
-  //            initialSelection[category.id] = firstSubCat.id;
-  //
-  //            // Add the initially selected subcategory ID to the array
-  //            initialSubCatIds.push(firstSubCat.id);
-  //          }
-  //        });
-  //
-  //        setSelectedCard(initialSelection); // Update the state with initial selections
-  //        setSelectedSubCatId(initialSubCatIds); // Set the initially selected subcategory IDs
-  //      }
-  //    }, [alldata]);
-
-  const widthSizes = alldata?.productSizes
+  const widthSizes = productDetails
     ?.filter((val) => val.size_type === "W")
     ?.map((val) => ({ size: val.size, id: val.id }));
 
-  const heightSizes = alldata?.productSizes
+  const heightSizes = productDetails
     ?.filter((val) => val.size_type === "H")
     ?.map((val) => ({ size: val.size, id: val.id }));
 
   const [state, setState] = useState({
     size: "",
   });
+
   const combinedSizes = widthSizes?.map((width, index) => ({
     size: `${width.size} x ${heightSizes?.[index]?.size || ""}`,
     id: width.id,
   }));
 
   useEffect(() => {
-    if (alldata) {
+    if (productDetails) {
       const firstSize = `${widthSizes?.[0]?.size || ""} x ${heightSizes?.[0]?.size || ""}`;
+
       setState({ size: firstSize });
-      setSelectedWidth(widthSizes?.[0]?.size || "");
-      setSelectedHeight(heightSizes?.[0]?.size || "");
     }
-  }, [alldata]);
+  }, [productDetails]);
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { value } = e.target;
-    const [width, height] = value.split(" x ");
+
     setState({ size: value });
-    setSelectedWidth(width);
-    setSelectedHeight(height);
+
+    const [width, height] = value.split(" x ").map(Number); // Extract width and height from the size string
+
+    // Check if the width and height are valid
+    if (width && height && productId && count) {
+      setSelectedWidth(width);
+      setSelectedHeight(height);
+
+      // Prepare the payload
+      const newPayload = {
+        width: width,
+        height: height,
+        subCatId: selectedSubCatId,
+        ProductId: productId,
+        quantity: count,
+      };
+      setPayload(newPayload);
+    }
   };
-
-  // console.log(widthSizes?.[0]?.size,"qqqqqqq");
-  //useEffect(() => {
-  //  if (alldata?.categories?.length > 0) {
-  //    const initialSelection = {};
-  //    const initialSubCatIds = [];
-  //    alldata?.categories?.forEach((category) => {
-  //      if (category?.subCategories?.length > 0) {
-  //        const firstSubCat = category.subCategories[0];
-  //        initialSelection[category.id] = firstSubCat.id; // Store the subCat ID
-  //        initialSubCatIds.push(firstSubCat.id); // Push the initial subCat ID
-  //      }
-  //    });
-  //    setSelectedCard(initialSelection);
-  //    setSelectedSubCatId(initialSubCatIds);
-  //  }
-  //}, [alldata]);
-
-  //useEffect(() => {
-  //  const jsonString = JSON.stringify(selectedSubCatId);
-  //  setPayload({
-  //    width: selectedWidth,
-  //    height: selectedHeight,
-  //    subCatId: jsonString,
-  //    ProductId: 10,
-  //    quantity: count,
-  //    //ProductId: alldata?.id || null,
-  //  });
-  //}, [selectedWidth, selectedHeight, selectedSubCatId, alldata, count]);
-
-  //const handleCardClick = (categoryId, subCat) => {
-  //  setSelectedCard((prevSelectedCards) => {
-  //    const updatedCards = { ...prevSelectedCards, [categoryId]: subCat.id };
-  //    const subCatIdsArray = Object.values(updatedCards).filter((value) => value !== undefined);
-  //    setSelectedSubCatId(subCatIdsArray);
-  //    return updatedCards;
-  //  });
-  //};
 
   const quantityChange = (event) => {
     const value = parseInt(event.target.value, 10);
-    setCount(isNaN(value) || value <= 0 ? 1 : value); // Ensure value is at least 1
+    setCount(isNaN(value) || value <= 0 ? 1 : value);
   };
 
   const handleselectedCategory = (event) => {
     setSelectedCategory(event.target.value);
   };
 
-  //const getApi = async () => {
-  //  ProductService.product().then((res) => {
-  //    const response = res.data;
-  //    setAllData(response);
-  //    //console.log(response, "response");
-  //  });
-  //};
-
   useEffect(() => {
-    //getApi();
     getApi1();
   }, []);
 
   const getApi1 = async () => {
-    ProductCategoryService.ProductCategory().then((res) => {
+    ProductService.ProductList().then((res) => {
       const response = res.data;
+
       const productCat = response?.filter((product) => product.parent_id !== null);
       setAllCategories(productCat);
     });
   };
 
-  //    useEffect(() => {
-  //      if (!selectedWidth || !selectedHeight || selectedSubCatId.length === 0) {
-  //        console.error("Payload is incomplete. Ensure width, height, and subcategory are selected.");
-  //        //setError("Please select all required options before proceeding.");
-  //      } else {
-  //        const payload = {
-  //          width: selectedWidth,
-  //          height: selectedHeight,
-  //          subCatId: JSON.stringify(selectedSubCatId),
-  //          ProductId: 10,
-  //          quantity: count,
-  //        };
-  //
-  //        ProductService.Dataprice(payload)
-  //          .then((res) => {
-  //            if (res.data && res.data.totalPrice) {
-  //              setPrice(res.data.totalPrice);
-  //            } else {
-  //              setPrice(55);
-  //              //setError("Failed to fetch pricing information.");
-  //            }
-  //          })
-  //          .catch((error) => {
-  //            console.error("API call failed:", error);
-  //            //setError("Unable to fetch pricing. Please try again later.");
-  //          });
-  //      }
-  //    }, [payload]);
+  const getProductDetails = async (id) => {
+    const initialSelection = {};
+    const initialSubCatIds = [];
+    try {
+      const res = await ProductCategoryService.ProductDetail(id);
+      const response = res.data;
+      setProductDetails(response?.productSizes);
+      setProductId(id);
+      handleSetPayload(id, state);
+
+      response?.categories?.forEach((category) => {
+        if (category?.subCategories?.length > 0) {
+          // Set the first subcategory as the default selected card
+          const firstSubCat = category.subCategories[1];
+          initialSelection[category.id] = firstSubCat.id;
+
+          // Add the initially selected subcategory ID to the array
+          initialSubCatIds.push(firstSubCat.id);
+        }
+      });
+      setSelectedCard(initialSelection); // Update the state with initial selections
+      setSelectedSubCatId(initialSubCatIds);
+    } catch (error) {
+      console.error("Error fetching product details:", error);
+    }
+  };
+
+  const handleSetPayload = async (id, state) => {
+    const [width, height] = state?.size?.split(" x ").map(Number);
+
+    if (width && height && id) {
+      setSelectedHeight(height);
+      setSelectedWidth(width);
+    }
+  };
+
+  useEffect(() => {
+    handleSetPayload(productId, state);
+
+    if (productId && selectedWidth && selectedHeight && selectedSubCatId && count !== "") {
+      const jsonString = JSON.stringify(selectedSubCatId);
+
+      const payloadData = {
+        width: selectedWidth,
+        height: selectedHeight,
+        subCatId: jsonString,
+        ProductId: productId,
+        quantity: count,
+      };
+      setPayload(payloadData);
+      setIsPayloadReady(true);
+    }
+  }, [productId, selectedWidth, selectedHeight, state, count]);
+
+  useEffect(() => {
+    if (isPayloadReady && payload) {
+      getPrice(payload);
+      setIsPayloadReady(false); // Reset the ready state after the call
+    }
+  }, [isPayloadReady, payload]);
+
+  const getPrice = (payload) => {
+    ProductService.Dataprice(payload).then((res) => {
+      setPrice(res.data.totalPrice);
+    });
+  };
+
+  const handleClick = (id) => {
+    getProductDetails(id);
+  };
 
   return (
     <>
@@ -263,12 +249,6 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
               marginTop: "1rem",
             }}
           >
-            {/*<Box sx={{ display: "flex", alignItems: "center" }}>
-            <img src={star} alt="star" />
-            <Typography sx={{ fontSize: { xs: "13px", sm: "16px" }, padding: "1rem" }}>
-              Rated By Hundreds Of Satisfied Customers
-            </Typography>
-          </Box>*/}
             <Typography
               sx={{
                 fontSize: {
@@ -331,56 +311,6 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
             </Box>
           </Box>
         </div>
-        {/*<Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              flexWrap: "wrap",
-              marginLeft: {
-                lg: "10rem",
-                md: "8rem",
-              },
-              padding: "2rem",
-            }}
-            className="demophoto"
-          >
-            <Box>
-              <img src={MaskGroup} alt="MaskGroup" height={90} style={{ display: "block", margin: "auto" }} />
-            </Box>
-            <Box sx={{ padding: { sx: "2rem", sm: "1rem" } }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: { xs: "center", sm: "flex-start" },
-                  alignItems: "center",
-                }}
-              >
-                <img src={star} alt="star" style={{ display: "block" }} />
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: { xs: "center", sm: "flex-start" },
-                  alignItems: "center",
-                }}
-              >
-                <Typography sx={{ textAlign: { sx: "center", sm: "left" } }}>John Doe</Typography>
-              </Box>
-              <Box>
-                <Typography
-                  sx={{
-                    width: { sx: "200px", sm: "300px" },
-                    // textAlign: { sx: "center", sm: "left" }, not working in inline
-                  }}
-                  className="protext"
-                >
-                  Lorem Ipsum is simply dummy text of the printing and typesetting
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-        </Box>*/}
       </Box>
       <Box sx={{ margin: "auto", marginTop: "-3rem", position: "relative" }}>
         <Container
@@ -467,8 +397,9 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                   </ListSubheader>
                   {filteredCategories.map((option) => (
                     <MenuItem
+                      onClick={() => handleClick(option?.id)}
                       key={option.id}
-                      value={option.name}
+                      value={option?.name}
                       sx={{
                         display: "flex",
                         alignItems: "flex-start",
@@ -477,13 +408,15 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                       }}
                     >
                       {/* Image */}
-                      {option.image && (
-                        <img
-                          src={`${process.env.REACT_APP_API_BASE_URL}/${option?.image?.path}`}
-                          alt={option.name}
-                          style={{ width: 88, height: 54, borderRadius: "4px" }}
-                        />
-                      )}
+                      <Box>
+                        {option.images && (
+                          <img
+                            src={`${process.env.REACT_APP_API_BASE_URL}/${option?.images[0]?.path}`}
+                            alt={option.name}
+                            style={{ width: 88, height: 64, borderRadius: "4px" }}
+                          />
+                        )}
+                      </Box>
 
                       {/* Text Content */}
                       <Box
@@ -599,7 +532,7 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                 paddingTop: "10px",
               }}
             >
-              <Typography sx={{ fontSize: "28px", color: "#3F5163", fontWeight: 700 }}>$10.65</Typography>
+              <Typography sx={{ fontSize: "28px", color: "#3F5163", fontWeight: 700 }}>{price}</Typography>
               <Box
                 sx={{
                   display: "flex",

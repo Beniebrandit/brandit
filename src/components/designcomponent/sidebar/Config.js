@@ -17,7 +17,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { ProductService } from "../../../services/Product.service";
 import FormControl from "@mui/material/FormControl";
 
-const Config = ({ allproduct, alldata, setProductDetails, productDetails }) => {
+const Config = ({ allproduct, alldata, setProductDetails, productDetails, setgetId }) => {
   const [count, setCount] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedCard, setSelectedCard] = useState({});
@@ -81,11 +81,16 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails }) => {
   // });
 
   useEffect(() => {
+    if (allproduct) {
+      setSelectedProduct(allproduct[0].name); // Set the initial value to the first product's ID
+      setgetId(allproduct[0].id);
+    }
+  }, [allproduct]);
+
+  useEffect(() => {
     if (alldata) {
       const firstWidth = widthSizes?.[0]?.size || "";
       const firstHeight = heightSizes?.[0]?.size || "";
-      const firstproduct = allproduct[0]?.name || "";
-
       // setState({
       //   width: firstWidth,
       //   height: firstHeight,
@@ -95,7 +100,6 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails }) => {
         width: firstWidth,
         height: firstHeight,
       });
-      setSelectedProduct(firstproduct);
       // setSelectedWidth(firstWidth);
       // setSelectedHeight(firstHeight);
     }
@@ -124,9 +128,8 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails }) => {
       width: productDetails?.width,
       height: productDetails?.height,
       subCatId: jsonString,
-      ProductId: 10,
+      ProductId: alldata?.id,
       quantity: productDetails.quantity,
-      //ProductId: alldata?.id || null,
     });
   }, [productDetails, selectedSubCatId, alldata, productDetails.quantity]);
 
@@ -141,9 +144,19 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails }) => {
 
   const swiperRef = useRef(null);
 
-  const handleProductChange = (event) => {
-    setSelectedProduct(event.target.value);
-  };
+const handleProductChange = (event) => {
+  const selectedProductName = event.target.value;
+
+  // Find the corresponding product ID from the allproduct array
+  const selectedProduct = allproduct.find((product) => product.name === selectedProductName);
+
+  // Update the selectedProduct state and setgetId function with the selected product ID
+  if (selectedProduct) {
+    setSelectedProduct(selectedProductName);
+    setgetId(selectedProduct.id);
+    console.log("Selected Product ID:", selectedProduct.id);
+  }
+};
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -181,7 +194,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails }) => {
         width: productDetails?.width,
         height: productDetails?.height,
         subCatId: JSON.stringify(selectedSubCatId),
-        ProductId: 10,
+        ProductId: alldata?.id,
         quantity: productDetails.quantity,
       };
       ProductService.Dataprice(payload)
@@ -204,18 +217,15 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails }) => {
           //setError("Unable to fetch pricing. Please try again later.");
         });
     }
-  }, [productDetails?.width, productDetails?.height, productDetails?.quantity]);
+  }, [productDetails?.width, productDetails?.height, productDetails?.quantity, selectedSubCatId, alldata]);
+  
   return (
     <>
       <Box>
         <Box className="custom-scrollbar custom-scrollbar-container">
           <Box sx={{ height: "38rem" }}>
             <Typography>Select product :</Typography>
-            <Select
-              fullWidth
-              value={selectedProduct}
-              onChange={handleProductChange} // Add onChange to update the state
-            >
+            <Select fullWidth value={selectedProduct} onChange={handleProductChange}>
               {allproduct?.map((product) => (
                 <MenuItem key={product.id} value={product.name}>
                   {product.name}
@@ -285,7 +295,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails }) => {
                     >
                       {heightSizes?.map((size) => (
                         <MenuItem key={size.id} value={size.size}>
-                          <em>{size.size}</em>
+                        {size.size}
                         </MenuItem>
                       ))}
                     </Select>

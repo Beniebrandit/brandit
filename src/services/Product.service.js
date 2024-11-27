@@ -5,6 +5,7 @@ import { authHeader } from "../library/authHeader";
 
 export const ProductService = {
   product,
+  ProductList,
   Allproduct,
   Dataprice,
   registers,
@@ -31,6 +32,17 @@ function product(){
         })
     );
   }
+function ProductList() {
+  return axios
+    .get(apiEndpoint.productlist, {
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    })
+    .then((res) => {
+      if (res && res.status === 200) {
+        return res.data;
+      }
+    });
+}
   
 function Allproduct() {
   return axios

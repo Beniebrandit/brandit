@@ -1,4 +1,13 @@
-import { Box, Button, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from "@mui/material";
+import {
+  Box,
+  Button,
+  ClickAwayListener,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+} from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ReactComponent as Sidebarsetting } from "../../../asset/images/sidebar_setting.svg";
 import { ReactComponent as Sidebarupload } from "../../../asset/images/sidebar_upload.svg";
@@ -67,18 +76,21 @@ const Sidebar = ({
   handleDeleteDropboxFile,
   handleSuccess,
   dropdata,
+  value,
+  setValue,
+  isTabOpen,
+  setIsTabOpen,
+  setgetId,
 }) => {
-  const [value, setValue] = React.useState(1);
   const [open, setOpen] = React.useState(false);
   const [delopen, setDelOpen] = React.useState(false);
   const [imageToDelete, setImageToDelete] = useState(null);
   const [expandimage, setExpandImage] = useState();
-  const [isTabOpen, setIsTabOpen] = useState(false);
   const [expandedImageIndex, setExpandedImageIndex] = useState(null);
   const tabRef = useRef(null);
   const dialogRef = useRef(null);
-const [selectedSource, setSelectedSource] = useState(null);
- const [selectedSourceToDelete, setSelectedSourceToDelete] = useState(null);
+  const [selectedSource, setSelectedSource] = useState(null);
+  const [selectedSourceToDelete, setSelectedSourceToDelete] = useState(null);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -103,44 +115,46 @@ const [selectedSource, setSelectedSource] = useState(null);
     setSelectedSourceToDelete(source); // Set the source for the image to delete
     setDelOpen(true); // Open the delete confirmation dialog
   };
-  
-const handleExpand = (index, source) => {
-  let image;
-  console.log("selectImageIndex", index);
-  console.log("source", source);
-  setSelectedSource(source); // Set the source state here
 
-  if (source === "upload") {
-    image = selectedFile[index]; // My Uploads
-  } else if (source === "premium") {
-    image = `${process.env.REACT_APP_API_BASE_URL}/${vectorimage[index]}`; // Premium Images
-  } else if (source === "dropdata") {
-    image = dropdata[index].link; // Dropbox Data
-  }
-  setExpandImage(image);
-  setExpandedImageIndex(index);
-  console.log("Expanded image index:", index, "Source:", source);
-  handleClickOpen();
-};
+  const handleExpand = (index, source) => {
+    let image;
+    console.log("selectImageIndex", index);
+    console.log("source", source);
+    setSelectedSource(source); // Set the source state here
 
-// When calling selectImage
-const handleSelectImage = () => {
-  if (expandedImageIndex !== null && selectedSource) {
-    selectImage(expandedImageIndex, selectedSource); // Pass the stored source here
-  }
-};
+    if (source === "upload") {
+      image = selectedFile[index]; // My Uploads
+    } else if (source === "premium") {
+      image = `${process.env.REACT_APP_API_BASE_URL}/${vectorimage[index]}`; // Premium Images
+    } else if (source === "dropdata") {
+      image = dropdata[index].link; // Dropbox Data
+    }
+    setExpandImage(image);
+    setExpandedImageIndex(index);
+    console.log("Expanded image index:", index, "Source:", source);
+    handleClickOpen();
+  };
+
+  // When calling selectImage
+  const handleSelectImage = () => {
+    if (expandedImageIndex !== null && selectedSource) {
+      selectImage(expandedImageIndex, selectedSource); // Pass the stored source here
+    }
+  };
 
   const handleDeleteConfirm = () => {
     console.log("imageToDelete", imageToDelete);
-   if (imageToDelete !== null) {
-     onDeleteImage(imageToDelete, selectedSourceToDelete); // Pass the source to the delete function
-     setDelOpen(false);
-     setImageToDelete(null); // Reset the index after deletion
-     setSelectedSourceToDelete(null); // Reset the source after deletion
-   }
+    if (imageToDelete !== null) {
+      onDeleteImage(imageToDelete, selectedSourceToDelete); // Pass the source to the delete function
+      setDelOpen(false);
+      setImageToDelete(null); // Reset the index after deletion
+      setSelectedSourceToDelete(null); // Reset the source after deletion
+    }
   };
 
   const handleChange = (event, newValue) => {
+    console.log("vvv", newValue);
+
     setValue(newValue);
     setIsTabOpen(true);
   };
@@ -172,14 +186,12 @@ const handleSelectImage = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  
-const handleClickAway = () => {
-  // Only close the tab if neither dialog is open
-  if (open || delopen) return;
-  setIsTabOpen(false);
-};
 
-  
+  const handleClickAway = () => {
+    // Only close the tab if neither dialog is open
+    if (open || delopen) return;
+    setIsTabOpen(false);
+  };
 
   return (
     <>
@@ -190,7 +202,7 @@ const handleClickAway = () => {
             marginTop: "20px",
             flexGrow: 1,
             display: "flex",
-            height: "82vh",
+            height: "82.5vh",
             boxShadow: "0px 5px 30px -15px", // Background color of the sidebar
             // padding: "20px 0",
             position: "fixed",
@@ -249,7 +261,7 @@ const handleClickAway = () => {
               label={<span style={{ color: "#3F5163", textTransform: "capitalize" }}>Premium images</span>}
               {...a11yProps(2)}
             />
-            <Tab
+            {/*<Tab
               sx={{
                 margin: "0px 15px 10px 15px",
                 "&.Mui-selected": {
@@ -281,7 +293,7 @@ const handleClickAway = () => {
               icon={<Sidebarbackground style={{ width: "20px", height: "auto" }} />}
               label={<span style={{ color: "#3F5163", textTransform: "capitalize" }}>background</span>}
               {...a11yProps(5)}
-            />
+            />*/}
             <Tab
               sx={{
                 margin: "0px 15px 10px 15px",
@@ -310,6 +322,7 @@ const handleClickAway = () => {
                     alldata={alldata}
                     setProductDetails={setProductDetails}
                     productDetails={productDetails}
+                    setgetId={setgetId}
                   />
                 </TabPanel>
                 <TabPanel value={value} index={1} style={{ width: "24rem" }}>
@@ -485,4 +498,3 @@ const handleClickAway = () => {
 };
 
 export default Sidebar;
-

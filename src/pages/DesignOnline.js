@@ -10,8 +10,11 @@ import LoginDialog from "../components/common/LoginDialog";
 import CreateAccountDialog from "../components/common/CreateAccountDialog";
 import { Rnd } from "react-rnd";
 import { PremiumImage } from "../services/PremiumImage.service";
+import { ProductCategoryService } from "../services/ProductCategory.service";
 
 const DesignOnline = () => {
+  const [value, setValue] = React.useState(1);
+  const [isTabOpen, setIsTabOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState([]);
   const [addimage, AddImage] = useState("");
   const [images, setImages] = useState();
@@ -28,6 +31,8 @@ const DesignOnline = () => {
   const [alldata, setAllData] = useState();
   const [allproduct, setAllProduct] = useState();
   const [showSection, setShowSection] = useState(true);
+  const [getid, setgetId] = useState();
+
   const [productDetails, setProductDetails] = useState({
     width: "",
     height: "",
@@ -217,23 +222,42 @@ const DesignOnline = () => {
     }
   };
 
-  //const getApi = async () => {
-  //  ProductService.product().then((res) => {
-  //    const response = res.data;
-  //    setAllData(response);
-  //  });
-  //};
-  const Allproducts = async () => {
-    ProductService.Allproduct().then((res) => {
+  const getApi = async (id) => {
+    try {
+      const res = await ProductCategoryService.ProductDetail(id);
       const response = res.data;
-      setAllProduct(response);
-    });
+      setAllData(response);
+    } catch (error) {
+      console.error("Error fetching product details:", error);
+    }
   };
 
+const Allproducts = async () => {
+  try {
+    const res = await ProductService.ProductList();
+    const response = res.data;
+    setAllProduct(response); // Set product list
+    if (response.length > 0) {
+      // Automatically set the first product as the default selection
+      setgetId(response[0].id);
+      console.log("Initial product ID set:", response[0].id);
+    }
+  } catch (error) {
+    console.error("Error fetching all products:", error);
+  }
+};
+
   useEffect(() => {
-    //getApi();
+    // Fetch all products on component mount
     Allproducts();
   }, []);
+
+  useEffect(() => {
+    if (getid) {
+      console.log("getid changed:", getid);
+      getApi(getid);
+    }
+  }, [getid]);
 
   const handleSuccess = (files) => {
     if (files && files.length > 0) {
@@ -258,6 +282,10 @@ const DesignOnline = () => {
       <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" } }}>
         {showSection && (
           <Sidebar
+            value={value}
+            setValue={setValue}
+            setIsTabOpen={setIsTabOpen}
+            isTabOpen={isTabOpen}
             setProductDetails={setProductDetails}
             productDetails={productDetails}
             handleImageChange={handleImageChange}
@@ -274,6 +302,7 @@ const DesignOnline = () => {
             handleDeleteDropboxFile={handleDeleteDropboxFile}
             handleSuccess={handleSuccess}
             dropdata={dropdata}
+            setgetId={setgetId}
             sx={{
               width: { xs: "100px", sm: "100%" }, // Full width on xs, fixed width on sm and up
               position: { xs: "relative", sm: "fixed" },
@@ -288,13 +317,14 @@ const DesignOnline = () => {
             minHeight: "78vh",
             width: {
               xs: "100%",
-              xl: isAccordionOpen ? "calc(100% - 30%)" : "100%",
-              lg: isAccordionOpen ? "calc(100% - 30%)" : "100%",
-              sm: isAccordionOpen ? "calc(100% - 25%)" : "100%",
+              xl: isAccordionOpen ? "calc(100% - 32%)" : "100%",
+              lg: isAccordionOpen ? "calc(100% - 39%)" : "100%",
+              md: isAccordionOpen ? "calc(100% - 55%)" : "100%",
+              sm: "100%",
             },
             marginTop: "20px",
             marginLeft: "197px",
-            marginRight: { sm: isAccordionOpen ? "265px" : "0px" },
+            //marginRight: { sm: isAccordionOpen ? "265px" : "0px" },
             padding: { xs: "10px", sm: "20px" },
             position: "relative",
             boxShadow: { sm: "0px 5px 30px -15px" },
@@ -348,6 +378,8 @@ const DesignOnline = () => {
               onToggleAccordion={handleAccordionToggle}
               productDetails={productDetails}
               setShowSection={setShowSection}
+              setValue={setValue}
+              setIsTabOpen={setIsTabOpen}
             />
           )}
           <Box
