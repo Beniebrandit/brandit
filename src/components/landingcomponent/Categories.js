@@ -13,6 +13,7 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import CustomPagination from "../common/CustomPagination";
 import { ProductCategoryService } from "../../services/ProductCategory.service";
+import { ProductService } from "../../services/Product.service";
 
 const tabData = [
   { icon: categories_icon1, alt: "categories_icon1", label: "All" },
@@ -47,19 +48,42 @@ const Categories = () => {
     setCurrentPage(1); // Reset page when switching tabs
   }, [value]);
 
-  const getApi = async () => {
-    const response = await ProductCategoryService.ProductCategory();
-    const data = response.data;
+ const getApi = async () => {
+   try {
+     const productCategory = ["Small Format Category"]; // Filter based on "Small Format Category"
+     const withParams = ["images", "productCategory"]; // Define the "with" parameters
 
-    setCategoriesData({
-      all: data.filter((product) => product.parent_id !== null),
-      largeFormat: data.filter((product) => product.parent_name === "Large Format"),
-      smallFormat: data.filter((product) => product.parent_name === "Small Format"),
-      decals: data.filter((product) => product.parent_name === "Decals"),
-      flags: data.filter((product) => product.parent_name === "Flags"),
-      signs: data.filter((product) => product.parent_name === "Signs"),
-    });
-  };
+     const params = {
+       with: withParams,
+     };
+
+     if (productCategory.length > 0) {
+       params.productCategory = productCategory;
+     }
+
+     const res = await ProductService.ProductList(params);
+     const data = res.data;
+     console.log("Fetched Data:", data);
+
+     // Verify the filtered results directly
+     const filteredCategories = {
+       all: data.filter((product) => product.productCategory?.parent_id !== null),
+       largeFormat: data.filter((product) => product.productCategory?.parent_name === "Large Format"),
+       smallFormat: data.filter((product) => product.productCategory?.parent_name === "Small Format"),
+       decals: data.filter((product) => product.productCategory?.parent_name === "Decals"),
+       flags: data.filter((product) => product.productCategory?.parent_name === "Flags"),
+       signs: data.filter((product) => product.productCategory?.parent_name === "Signs"),
+     };
+
+     console.log("Filtered Categories:", filteredCategories);
+
+     // Update the state with the filtered data
+     setCategoriesData(filteredCategories);
+   } catch (error) {
+     console.error("Error fetching all products:", error);
+   }
+ };
+
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -178,14 +202,20 @@ const CategoryGrid = ({ items, onItemClick }) => (
       justifyContent: "center",
     }}
   >
-    {items.map((val, index) => (
+    {items?.map((val, index) => (
       <Box key={index} onClick={() => onItemClick(val.id)} sx={{ padding: "24px 0px !important" }}>
         <Box className="product-image">
-          <img src={`${process.env.REACT_APP_API_BASE_URL}/${val.image.path}`} className="category-img" alt="" />
-          <img src={ArrowIcon} className="cust_arrow" />
+          <img
+            src={`${process.env.REACT_APP_API_BASE_URL}/${val?.images?.[0]?.path || "default-image-path.jpg"}`}
+            className="category-img"
+            alt={val?.name || "Category Image"}
+          />
+          <img src={ArrowIcon} className="cust_arrow" alt="Arrow Icon" />
         </Box>
-        <Typography sx={{ paddingTop: "1rem" }}>{val.name}</Typography>
-        <Typography sx={{ fontSize: "20px", color: "#3F5163" }}>{val.description || "null"}</Typography>
+        <Typography sx={{ paddingTop: "1rem" }}>{val?.name || "Unnamed Category"}</Typography>
+        <Typography sx={{ fontSize: "20px", color: "#3F5163" }}>
+          {val?.description ? val.description : "No description available"}
+        </Typography>
       </Box>
     ))}
   </Box>

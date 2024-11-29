@@ -16,17 +16,19 @@ import {
   ListItemText,
   Paper,
 } from "@mui/material";
+import "./MegaMenu.css";
 import MenuIcon from "@mui/icons-material/Menu";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PhoneInTalkOutlinedIcon from "@mui/icons-material/PhoneInTalkOutlined";
-import main_logo from "../../asset/images/main_logo.png";
-import cart_logo from "../../asset/images/cart_logo.svg";
-import Account from "../../asset/images/Group 6.svg";
-import facebook_logo from "../../asset/images/facebook_logo.svg";
-import twitter_logo from "../../asset/images/twitter_logo.svg";
-import linkedin_logo from "../../asset/images/linkedin_logo.svg";
-import youtube_logo from "../../asset/images/youtube_logo.svg";
+import main_logo from "../../../asset/images/main_logo.png";
+import cart_logo from "../../../asset/images/cart_logo.svg";
+import Account from "../../../asset/images/Group 6.svg";
+import facebook_logo from "../../../asset/images/facebook_logo.svg";
+import twitter_logo from "../../../asset/images/twitter_logo.svg";
+import linkedin_logo from "../../../asset/images/linkedin_logo.svg";
+import youtube_logo from "../../../asset/images/youtube_logo.svg";
 import { useRef } from "react";
+import MegaMenu from "./MegaMenu";
 
 const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -35,7 +37,6 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
   const [activeItem, setActiveItem] = useState("Home");
   const [isMegaMenuOpen, setMegaMenuOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
-  const [isHoveringMegaMenu, setIsHoveringMegaMenu] = useState(false);
   const menuCloseTimeout = useRef(null);
 
   const menuItems = [
@@ -116,8 +117,7 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
   };
 
   const handleMouseLeaveItem = () => {
-    setHoveredItem(null);
-    setMegaMenuOpen(false);
+    setMegaMenuOpen(true);
   };
 
   const handleMegaMenuEnter = () => {
@@ -127,40 +127,6 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
   const handleMegaMenuLeave = () => {
     setMegaMenuOpen(false);
   };
-
-  // When mouse enters a menu item
-  // const handleMouseEnterItem = (text) => {
-  //   setHoveredItem(text);
-  //   setMegaMenuOpen(true);
-  //   clearTimeout(menuCloseTimeout.current);
-  // };
-
-  // // When mouse leaves a menu item
-  // const handleMouseLeaveItem = () => {
-  //   menuCloseTimeout.current = setTimeout(() => {
-  //     if (!isHoveringMegaMenu) {
-  //       setHoveredItem(null);
-  //       setMegaMenuOpen(false);
-  //     }
-  //   }, 200);
-  // };
-
-  // // When mouse enters the mega menu
-  // const handleMegaMenuEnter = () => {
-  //   setIsHoveringMegaMenu(true);
-  //   clearTimeout(menuCloseTimeout.current);
-  //   setMegaMenuOpen(true);
-  // };
-
-  // // When mouse leaves the mega menu
-  // const handleMegaMenuLeave = () => {
-  //   setIsHoveringMegaMenu(false);
-  //   menuCloseTimeout.current = setTimeout(() => {
-  //     if (!hoveredItem && !isHoveringMegaMenu) {
-  //       setMegaMenuOpen(false);
-  //     }
-  //   }, 200);
-  // };
 
   useEffect(() => {
     return () => clearTimeout(menuCloseTimeout.current);
@@ -280,23 +246,27 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
           <Box className="header_box">
             <img alt="main_logo" src={main_logo} style={{ width: "50px", height: "auto" }} />
           </Box>
-
-          {/* Navigation Links */}
           <Box>
-            {/* Main menu items */}
-            <Box
-              sx={{
+            <MegaMenu />
+          </Box>
+          {/* Navigation Links */}
+          {/*<Box>
+         
+          <Box
+          
+             sx={{
                 display: { xs: "none", md: "flex" },
                 alignItems: "center",
                 justifyContent: "space-around",
                 width: "40rem",
               }}
-            >
-              {menuItems.map((menu) => (
-                <Typography
-                  key={menu.name}
-                  variant="body2"
-                  sx={{
+          >
+          <MegaMenu/>
+            {menuItems.map((menu) => (
+              <Typography
+                key={menu.name}
+                variant="body2"
+                sx={{
                     paddingRight: "10px",
                     fontSize: "16px",
                     fontWeight: "400",
@@ -304,57 +274,55 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                     textDecoration: hoveredItem === menu?.name ? "underline" : "none",
                     textUnderlineOffset: "4px",
                   }}
-                  onMouseEnter={() => handleMouseEnterItem(menu.name)}
-                  // onMouseLeave={handleMouseLeaveItem}
-                >
-                  {menu.name}
-                </Typography>
-              ))}
-            </Box>
-
-            {/* Mega Menu */}
-            {isMegaMenuOpen && hoveredItem && (
-              <Paper
-                onMouseEnter={handleMegaMenuEnter}
-                onMouseLeave={handleMegaMenuLeave}
-                sx={{
-                  position: "absolute",
-                  top: "110px",
-                  left: "23%",
-                  maxWidth: "1200px",
-                  padding: "20px 30px",
-                  margin: "0 auto",
-                  display: "flex",
-                  justifyContent: "space-around",
-                  backgroundColor: "#fff",
-                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-                  zIndex: 10,
-                  borderRadius: "8px",
-                }}
+                onMouseEnter={() => handleMouseEnterItem(menu.name)}
+                onMouseLeave={handleMouseLeaveItem}
               >
-                {/* Render the hovered menu's subItems dynamically */}
-                {menuItems
-                  .filter((menu) => menu.name === hoveredItem)
-                  .map((menu) => (
-                    <Box key={menu.name} sx={{ display: "flex", gap: 3 }}>
-                      {menu.subItems.map((subItem) => (
-                        <Box key={subItem.title} sx={{ marginBottom: "20px" }}>
-                          <Typography variant="h6" fontWeight="bold">
-                            {subItem.title}
-                          </Typography>
-                          {subItem.items.map((item) => (
-                            <Typography key={item} variant="body2" mt={1}>
-                              {item}
-                            </Typography>
-                          ))}
-                        </Box>
-                      ))}
-                    </Box>
-                  ))}
-              </Paper>
-            )}
+                {menu.name}
+              </Typography>
+            ))}
           </Box>
-          {/* Account and Cart Section */}
+
+         
+          {isMegaMenuOpen && hoveredItem && (
+            <Paper
+              onMouseEnter={handleMegaMenuEnter}
+              onMouseLeave={handleMegaMenuLeave}
+              sx={{
+                position: 'absolute',
+                top: '105px',
+                left: '23%',
+                maxWidth: '1200px',
+                padding: '20px 30px',
+                margin: '0 auto',
+                display: 'flex',
+                justifyContent: 'space-around',
+                backgroundColor: '#fff',
+                boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+                zIndex: 10,
+                borderRadius: '8px',
+              }}
+            >
+              {menuItems
+                .filter((menu) => menu.name === hoveredItem)
+                .map((menu) => (
+                  <Box key={menu.name} sx={{ display:'flex',gap:3} }>
+                    {menu.subItems.map((subItem) => (
+                      <Box key={subItem.title} sx={{ marginBottom: '20px' }}>
+                        <Typography variant="h6" fontWeight="bold">
+                          {subItem.title}
+                        </Typography>
+                        {subItem.items.map((item) => (
+                          <Typography key={item} variant="body2" mt={1}>
+                            {item}
+                          </Typography>
+                        ))}
+                      </Box>
+                    ))}
+                  </Box>
+                ))}
+            </Paper>
+          )}
+        </Box>*/}
           <Box
             sx={{ display: "flex", alignItems: "center", justifyContent: "space-around", columnGap: 2, height: "100%" }}
           >
@@ -375,10 +343,10 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                   padding: "6px !important",
                 }}
               >
-                <img alt="Account" src={Account} style={{ width: "36px", height: "auto" }} />
+                <img alt="Account" src={Account} style={{ width: "36px", height: "auto",marginRight:"7px" }} />
                 <span style={{ color: "#3f5163" }}>
                   <b style={{ fontSize: "20px" }}>Account </b>
-                  <span style={{ fontSize: "12px" }}>{currentUser ? `(${currentUser})` : "(Sign In)"}</span>
+                  <span style={{ fontSize: "12px" ,display:"flex"}}>{currentUser ? `(${currentUser})` : "(Sign In)"}</span>
                 </span>
               </Box>
               <Menu
@@ -391,9 +359,9 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                   sx: {
                     borderRadius: "0px !important",
                     backgroundColor: "#e0e0e0 !important",
-                    width: anchorEl?.offsetWidth || "200px !important", // Set the menu width to match the button
-                    marginTop: "0px !important", // Adjust vertical alignment
-                    boxShadow: "none !important", // Add subtle shadow
+                    width: anchorEl?.offsetWidth || "200px !important",
+                    marginTop: "0px !important",
+                    boxShadow: "none !important",
                   },
                 }}
               >

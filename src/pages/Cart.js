@@ -3,7 +3,7 @@ import { Container, Grid, Typography, Card, CardContent, CardMedia, Button, Text
 import InventoryRoundedIcon from '@mui/icons-material/InventoryRounded';
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
-import Navbar from "../components/landingcomponent/Navbar";
+import Navbar from "../components/landingcomponent/Navbar/Navbar";
 import { DesignServiceFooter } from "../components/designservice/DesignServiceFooter";
 import LoginDialog from "../components/common/LoginDialog";
 import CreateAccountDialog from "../components/common/CreateAccountDialog";

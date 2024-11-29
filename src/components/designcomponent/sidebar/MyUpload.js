@@ -17,14 +17,14 @@ const MyUpload = ({
   handleDeleteDropboxFile,
   handleSuccess,
   dropdata,
+  combinedImages,
+  setCombinedImages,
 }) => {
   const [loading, setLoading] = useState([]);
   const [openPicker, data, authResponse] = useDrivePicker();
   const [accessToken, setAccessToken] = useState(null);
-  const [drivedata, setDriveData] = useState();
+  const [drivedata, setDriveData] = useState([]);
   let [thumbnail, setThbumnail] = React.useState("");
-  //let [dropdata, setDropData] = React.useState([]);
-  // Function to refresh access token
   const APP_KEY = "3astslwrlzfkcvc";
   const refreshAccessToken = async () => {
     const refreshToken =
@@ -54,128 +54,64 @@ const MyUpload = ({
       }
 
       const data = await response.json();
-      console.log("New access token:", data.access_token);
       setAccessToken(data.access_token);
     } catch (error) {
       console.error("Failed to refresh access token:", error.message);
     }
   };
-  //const handleSuccess = (files) => {
-  //  console.log("Dropbox Files:", files);
-  //  if (files && files.length > 0) {
-  //    const updatedFiles = files.map((file) => {
-  //      const imageUrl = file.link.replace("&dl=0", "&dl=1");
-  //      return {
-  //        name: file.name,
-  //        link: imageUrl,
-  //        thumbnail: file.thumbnailLink,
-  //      };
-  //    });
-  //    setDropData(updatedFiles);
-  //  }
-  //};
 
-  // const handleOpenPicker = async () => {
-  //   // Refresh access token before opening the picker
-  //   await refreshAccessToken();
-
-  //   openPicker({
-  //     clientId:
-  //       "1062247369631-2i266asc9rltsjaknplpc6pl079ji3r1.apps.googleusercontent.com",
-  //     developerKey: "AIzaSyDyHd1C_t-voUaaMejrVvL9eMnKa9QfNtc",
-  //     viewId: "DOCS_IMAGES",
-  //     // token: token, // pass oauth token in case you already have one
-  //     showUploadView: true,
-  //     showUploadFolders: true,
-  //     supportDrives: true,
-  //     multiselect: true,
-  //     // customViews: customViewsArray, // custom view
-  //     callbackFunction: (data) => {
-  //       if (data.action === "cancel") {
-  //         console.log("User clicked cancel/close button");
-  //       }
-  //       console.log(data, "drivedata");
-  //       setDriveData(data);
-  //     },
-
-  //   });
-  // };
   const handleOpenPicker = async () => {
-    // Refresh access token before opening the picker
     await refreshAccessToken();
 
     openPicker({
-      clientId: "1062247369631-2i266asc9rltsjaknplpc6pl079ji3r1.apps.googleusercontent.com", // Replace with your actual client ID
-      developerKey: "AIzaSyDyHd1C_t-voUaaMejrVvL9eMnKa9QfNtc", // Replace with your actual API key
-      viewId: "DOCS_IMAGES", // To filter for images
+      clientId: "YOUR_CLIENT_ID",
+      developerKey: "YOUR_DEVELOPER_KEY",
+      viewId: "DOCS_IMAGES",
       showUploadView: true,
       showUploadFolders: true,
       supportDrives: true,
       multiselect: true,
       callbackFunction: (data) => {
-        if (data.action === "cancel") {
-          console.log("User clicked cancel/close button");
-          return;
-        }
+        if (data.action === "cancel") return;
 
-        // console.log("Google Drive data", data);
-
-        // Assuming data.docs contains the selected file information
-        if (data.docs && data.docs.length > 0) {
-          const driveFiles = data.docs.map((file) => {
-            console.log("asasasasa", file);
-
-            return {
-              name: file.name,
-              embedUrl: file.embedUrl, // Embed URL for image preview
-              id: file.id, // File ID for constructing a direct image link
-            };
-          });
-          console.log("driveFiles", driveFiles);
-          setDriveData(driveFiles); // Update the state with the file data
+        // Only set drive data if docs is an array
+        if (Array.isArray(data?.docs) && data?.docs?.length > 0) {
+          const driveFiles = data.docs.map((file) => ({
+            name: file.name,
+            embedUrl: file.embedUrl,
+            id: file.id,
+          }));
+          setDriveData((prevDriveData) => [...prevDriveData, ...driveFiles]);
+        } else {
+          console.error("No valid files found in the picker response");
         }
       },
     });
   };
 
-  // const handleDropboxPick = () => {
-  //   if (typeof window.Dropbox !== "undefined" && window.Dropbox.choose) {
-  //     console.log("innnn");
+  useEffect(() => {
+    // Extract image URLs from each data source and combine them
+    const selectedFiles = selectedFile?.map((file) => ({
+      source: "upload", // Indicates this image is from the selectedFile
+      url: file,
+    }));
+    console.log("drivedata", drivedata);
 
-  //     window.Dropbox.choose({
-  //       success: (files) => {
-  //         console.log("Dropbox Files:", files);
-  //       },
-  //       cancel: () => {
-  //         console.log("User canceled Dropbox picker");
-  //       },
-  //       linkType: "preview",
-  //       multiselect: true,
-  //       app_key: APP_KEY,
-  //     });
-  //   } else {
-  //     alert(
-  //       "Dropbox Chooser is not loaded. Please make sure you have included the Dropbox Chooser SDK."
-  //     );
-  //   }
-  // };
+    const driveFiles = drivedata?.map((file) => ({
+      source: "drive", // Indicates this image is from Google Drive
+      url: file?.embedUrl, // Assuming embedUrl is the image link
+    }));
 
-  // useEffect(() => {
-  //   const script = document.createElement("script");
-  //   script.src = "https://www.dropbox.com/static/api/2/dropins.js";
-  //   script.async = true;
-  //   script.onload = () => {
-  //     // console.log("Dropbox Chooser SDK is loaded.");
-  //   };
-  //   script.onerror = () => {
-  //     // console.error("Failed to load Dropbox Chooser SDK.");
-  //   };
-  //   document.head.appendChild(script);
+    const dropboxFiles = dropdata?.map((file) => ({
+      source: "dropdata", // Indicates this image is from Dropbox
+      url: file?.link, // Assuming link is the image URL
+    }));
 
-  //   return () => {
-  //     document.head.removeChild(script);
-  //   };
-  // }, []);
+    // Combine all three arrays
+    const combined = [...selectedFiles, ...driveFiles, ...dropboxFiles];
+
+    setCombinedImages(combined); // Update the state with the combined array
+  }, [selectedFile, drivedata, dropdata]);
 
   useEffect(() => {
     if (data) {
@@ -206,7 +142,6 @@ const MyUpload = ({
   };
 
   const handleDeleteImage = (index, source) => {
-    console.log("handleDeleteImage",source);
     handleDeleteClick(index, source); // Call parent function to delete image
     setLoading((prev) => {
       const updatedLoading = prev.filter((_, i) => i !== index);
@@ -216,6 +151,8 @@ const MyUpload = ({
   //const handleDeleteDropboxFile = (index) => {
   //  setDropData(dropdata.filter((_, i) => i !== index));
   //};
+
+  const handleMicrosoft = () => {};
   return (
     <>
       <Box
@@ -344,6 +281,7 @@ const MyUpload = ({
           <Googledrive style={{ width: "40px", height: "100%", pointerEvents: "none" }} />
         </Box>
         <Box
+          onClick={() => handleMicrosoft()}
           sx={{
             textAlign: "center",
             border: "1px solid #cfd4d9",
@@ -356,220 +294,103 @@ const MyUpload = ({
         </Box>
       </Box>
       <Typography variant="caption" display="block" textAlign="center">
-        JPG, JPEG, PNG, GIF, TIFF, BMP, AI, EPS, SVG, PDF, HEIC, JFIF, PJPEG, WEBP
+        JPG, JPEG, PNG, GIF, TIFF, BMP, AI, EPS, SVG, PDF, HEIC, JFIF, PJPEG , WEBP
         <br />
         Max file size: 200 MB
       </Typography>
-      {selectedFile && (
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            gap: 2,
-          }}
-        >
-          {selectedFile.map(
-            (
-              image,
-              selectedIndex // Changed to selectedIndex
-            ) => (
-              <Box
-                key={selectedIndex}
-                sx={{
-                  position: "relative",
-                  width: "100px",
-                  height: "100px",
-                  margin: "auto",
-                  "&:hover .icon-box": {
-                    top: "0", // Move icons into view on hover
-                    opacity: 1, // Make icons visible on hover
-                  },
-                }}
-              >
-                <img
-                  src={image}
-                  style={{
-                    height: "100px",
-                    width: "100px",
-                    display: "block",
-                    opacity: loading[selectedIndex] ? 0.5 : 1,
-                  }}
-                  alt="img"
-                  onClick={() => {
-                    selectImage(selectedIndex, "upload");
-                  }}
-                />
-                {loading[selectedIndex] && (
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      height: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      backgroundColor: "rgba(255, 255, 255, 0.7)", // Semi-transparent overlay
-                    }}
-                  >
-                    <CircularProgress size={24} />
-                  </Box>
-                )}
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: "0", // Position it over the image
-                    marginTop: "5px",
-                    left: "21%",
-                    transform: "translateX(-50%)",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    width: "70px",
-                    opacity: 0, // Initially hide icons
-                    transition: "top 0.3s ease-in-out, opacity 0.3s ease-in-out", // Smooth transition
-                  }}
-                  className="icon-box"
-                >
-                  <Button onClick={() => handleDeleteImage(selectedIndex, "upload")}>
-                    <DeleteOutlinedIcon
-                      sx={{
-                        backgroundColor: "whitesmoke",
-                        padding: "3px",
-                        borderRadius: "5px",
-                      }}
-                    />
-                  </Button>
-                  <Button onClick={() => handleExpand(selectedIndex, "upload")}>
-                    <OpenInFullOutlinedIcon
-                      sx={{
-                        backgroundColor: "whitesmoke",
-                        padding: "3px",
-                        borderRadius: "5px",
-                      }}
-                    />
-                  </Button>
-                </Box>
-              </Box>
-            )
-          )}
-        </Box>
-      )}
-      <Box>
-        {drivedata?.map((file, index) => {
-          console.log("file from Drive", file?.embedUrl);
-          return (
-            <img
-              key={index}
-              src={file?.embedUrl || null} // Use embedUrl for image preview
-              style={{
-                height: "500px",
-                width: "600px",
-                display: "block",
+      <Box sx={{ display: "flex" }}>
+        <Box sx={{ display: "flex" }}>
+          {combinedImages?.length > 0 && (
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr",
+                gap: 2,
               }}
-              alt={file.name}
-            />
-          );
-        })}
-      </Box>
-
-      {dropdata && (
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            gap: 2,
-          }}
-        >
-          {dropdata.map(
-            (
-              image,
-              dropIndex // Changed to dropIndex
-            ) => (
-              <Box
-                key={dropIndex}
-                sx={{
-                  position: "relative",
-                  width: "100px",
-                  height: "100px",
-                  margin: "auto",
-                  "&:hover .icon-box": {
-                    top: "0", // Move icons into view on hover
-                    opacity: 1, // Make icons visible on hover
-                  },
-                }}
-              >
-                <img
-                  src={image.link}
-                  style={{
-                    height: "100px",
+            >
+              {combinedImages.map((image, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    position: "relative",
                     width: "100px",
-                    display: "block",
-                    opacity: loading[dropIndex] ? 0.5 : 1,
+                    height: "100px",
+                    margin: "auto",
                   }}
-                  alt="img"
-                  onClick={() => {
-                    selectImage(dropIndex, "dropdata");
-                  }}
-                />
-                {loading[dropIndex] && (
+                >
+                  <img
+                    src={image.url}
+                    style={{
+                      height: "100px",
+                      width: "100px",
+                      display: "block",
+                      opacity: loading[index] ? 0.5 : 1,
+                    }}
+                    alt={image.source}
+                    onClick={() => {
+                      selectImage(index, image.source);
+                    }}
+                  />
+                  {loading[index] && (
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: "rgba(255, 255, 255, 0.7)",
+                      }}
+                    >
+                      <CircularProgress size={24} />
+                    </Box>
+                  )}
                   <Box
                     sx={{
                       position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      height: "100%",
+                      top: "0",
+                      marginTop: "5px",
+                      left: "21%",
+                      transform: "translateX(-50%)",
                       display: "flex",
-                      justifyContent: "center",
+                      justifyContent: "space-between",
                       alignItems: "center",
-                      backgroundColor: "rgba(255, 255, 255, 0.7)", // Semi-transparent overlay
+                      width: "70px",
+                      opacity: 0,
+                      transition: "opacity 0.3s ease", // Smooth transition for opacity
+                      "&:hover": {
+                        opacity: 1, // Show buttons on hover
+                      },
                     }}
                   >
-                    <CircularProgress size={24} />
+                    <Button onClick={() => handleDeleteImage(index, image.source)}>
+                      <DeleteOutlinedIcon
+                        sx={{
+                          backgroundColor: "whitesmoke",
+                          padding: "3px",
+                          borderRadius: "5px",
+                        }}
+                      />
+                    </Button>
+                    <Button onClick={() => handleExpand(index, image.source)}>
+                      <OpenInFullOutlinedIcon
+                        sx={{
+                          backgroundColor: "whitesmoke",
+                          padding: "3px",
+                          borderRadius: "5px",
+                        }}
+                      />
+                    </Button>
                   </Box>
-                )}
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: "0", // Position it over the image
-                    marginTop: "5px",
-                    left: "21%",
-                    transform: "translateX(-50%)",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    width: "70px",
-                    opacity: 0, // Initially hide icons
-                    transition: "top 0.3s ease-in-out, opacity 0.3s ease-in-out", // Smooth transition
-                  }}
-                  className="icon-box"
-                >
-                  <Button onClick={() => handleDeleteImage(dropIndex, "dropdata")}>
-                    <DeleteOutlinedIcon
-                      sx={{
-                        backgroundColor: "whitesmoke",
-                        padding: "3px",
-                        borderRadius: "5px",
-                      }}
-                    />
-                  </Button>
-                  <Button onClick={() => handleExpand(dropIndex, "dropdata")}>
-                    <OpenInFullOutlinedIcon
-                      sx={{
-                        backgroundColor: "whitesmoke",
-                        padding: "3px",
-                        borderRadius: "5px",
-                      }}
-                    />
-                  </Button>
                 </Box>
-              </Box>
-            )
+              ))}
+            </Box>
           )}
         </Box>
-      )}
+      </Box>
     </>
   );
 };

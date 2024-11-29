@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Container, Grid, Typography, Button, Box, Divider } from "@mui/material";
 import { styled } from "@mui/system";
-import Navbar from "../components/landingcomponent/Navbar";
+import Navbar from "../components/landingcomponent/Navbar/Navbar";
 import DesignRequestForm from "../components/designservice/DesignRequestForm";
 import CustomerFeedback from "../components/designservice/CustomerFeedback";
 import { DesignServiceFooter } from "../components/designservice/DesignServiceFooter";

@@ -76,16 +76,20 @@ const Sidebar = ({
   handleDeleteDropboxFile,
   handleSuccess,
   dropdata,
+  combinedImages,
+  setCombinedImages,
   value,
   setValue,
   isTabOpen,
   setIsTabOpen,
   setgetId,
 }) => {
+  //const [value, setValue] = React.useState(1);
   const [open, setOpen] = React.useState(false);
   const [delopen, setDelOpen] = React.useState(false);
   const [imageToDelete, setImageToDelete] = useState(null);
   const [expandimage, setExpandImage] = useState();
+  //const [isTabOpen, setIsTabOpen] = useState(false);
   const [expandedImageIndex, setExpandedImageIndex] = useState(null);
   const tabRef = useRef(null);
   const dialogRef = useRef(null);
@@ -118,16 +122,14 @@ const Sidebar = ({
 
   const handleExpand = (index, source) => {
     let image;
-    console.log("selectImageIndex", index);
-    console.log("source", source);
-    setSelectedSource(source); // Set the source state here
+    setSelectedSource(source);
 
     if (source === "upload") {
-      image = selectedFile[index]; // My Uploads
+      image = selectedFile[index];
     } else if (source === "premium") {
-      image = `${process.env.REACT_APP_API_BASE_URL}/${vectorimage[index]}`; // Premium Images
+      image = `${process.env.REACT_APP_API_BASE_URL}/${vectorimage[index]}`;
     } else if (source === "dropdata") {
-      image = dropdata[index].link; // Dropbox Data
+      image = combinedImages[index].url;
     }
     setExpandImage(image);
     setExpandedImageIndex(index);
@@ -153,8 +155,6 @@ const Sidebar = ({
   };
 
   const handleChange = (event, newValue) => {
-    console.log("vvv", newValue);
-
     setValue(newValue);
     setIsTabOpen(true);
   };
@@ -202,7 +202,7 @@ const Sidebar = ({
             marginTop: "20px",
             flexGrow: 1,
             display: "flex",
-            height: "82.5vh",
+            height: "82vh",
             boxShadow: "0px 5px 30px -15px", // Background color of the sidebar
             // padding: "20px 0",
             position: "fixed",
@@ -322,11 +322,13 @@ const Sidebar = ({
                     alldata={alldata}
                     setProductDetails={setProductDetails}
                     productDetails={productDetails}
-                    setgetId={setgetId}
+                     setgetId={setgetId}
                   />
                 </TabPanel>
                 <TabPanel value={value} index={1} style={{ width: "24rem" }}>
                   <MyUpload
+                    combinedImages={combinedImages}
+                    setCombinedImages={setCombinedImages}
                     handleImageChange={handleImageChange}
                     selectedFile={selectedFile}
                     handleDeleteClick={handleDeleteClick}

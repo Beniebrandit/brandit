@@ -32,9 +32,10 @@ function product(){
         })
     );
   }
-function ProductList() {
+function ProductList(params) {
   return axios
     .get(apiEndpoint.productlist, {
+      params: params,
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
     })
     .then((res) => {

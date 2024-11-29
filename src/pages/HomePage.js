@@ -10,7 +10,7 @@ import LoginDialog from "../components/common/LoginDialog";
 import CreateAccountDialog from "../components/common/CreateAccountDialog";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import Reviews from '../components/common/Reviews'
+import Reviews from "../components/common/Reviews";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import PopUp from "../components/landingcomponent/Pop_Up";
 import AssistanceBanner from "../components/common/AssistanceBanner";
@@ -19,6 +19,8 @@ const HomePage = () => {
   const [openSignUp, setOpenSignUp] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
   const [isVisible, setIsVisible] = useState(false);
+  const [pricePerProduct, setPricePerProduct] = useState();
+
   const handleClickOpenLogin = () => setLoginOpen(true);
   const handleCloseLogin = () => setLoginOpen(false);
 
@@ -76,14 +78,19 @@ const HomePage = () => {
   }, []);
   return (
     <>
-      <HeaderHome handleClickOpenLogin={handleClickOpenLogin} handleClickOpenSignUp={handleClickOpenSignUp} />
+      <HeaderHome
+        pricePerProduct={pricePerProduct}
+        setPricePerProduct={setPricePerProduct}
+        handleClickOpenLogin={handleClickOpenLogin}
+        handleClickOpenSignUp={handleClickOpenSignUp}
+      />
       <Categories />
       <TrendingProducts />
       <WhyBranditSignage />
       <Reviews />
       <HomeFooter />
 
-      {isVisible && <AssistanceBanner />}
+      {isVisible && <AssistanceBanner pricePerProduct={pricePerProduct} />}
 
       <LoginDialog
         open={loginOpen}

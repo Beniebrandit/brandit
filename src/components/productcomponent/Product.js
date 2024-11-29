@@ -47,7 +47,7 @@ const Product = ({ productname,setLongDescription,setProductId, ...props }) => {
   const [selectedSubCatId, setSelectedSubCatId] = useState([]);
   const [price, setPrice] = useState();
   const [rating, setRating] = useState();
-  const [getid, setgetId] = useState();
+  //const [getid, setgetId] = useState();
 
   const [payload, setPayload] = useState({
     productId: null, // Assuming `id` is the unique identifier for the product
@@ -132,10 +132,10 @@ const Product = ({ productname,setLongDescription,setProductId, ...props }) => {
       width: selectedWidth,
       height: selectedHeight,
       subCatId: jsonString,
-      ProductId: getid,
+      ProductId: productname,
       quantity: count,
     });
-  }, [selectedWidth, selectedHeight, selectedSubCatId, alldata, count, getid]);
+  }, [selectedWidth, selectedHeight, selectedSubCatId, alldata, count, productname]);
 
   const handleCardClick = (categoryId, subCat) => {
     setSelectedCard((prevSelectedCards) => {
@@ -172,32 +172,32 @@ const Product = ({ productname,setLongDescription,setProductId, ...props }) => {
   //   description: ProductData[0].description,
   // };
 
-const fetchProducts = async (productname) => {
-  if (productname) {
-    try {
-      const response = await axios.get(
-        `https://flagg.devlopix.com/api/product?with[]=images&with[]=productCategory&where[productCategoryId]=${productname}`,
-        {
-          headers: authHeader(),
-        }
-      );
-      console.log("Fetched products", response.data.data);
-
-      // Get the product ID from the response and set it
-      const fetchedId = response.data?.data[0].id;
-      setgetId(fetchedId);
-      setProductId(fetchedId);
-
-      // Call getApi only if fetchedId is valid
-      if (fetchedId) {
-        getApi(fetchedId);
-      }
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      // Handle the error as needed
-    }
-  }
-};
+//const fetchProducts = async (productname) => {
+//  if (productname) {
+//    try {
+//      const response = await axios.get(
+//        `https://flagg.devlopix.com/api/product?with[]=images&with[]=productCategory&where[productCategoryId]=${productname}`,
+//        {
+//          headers: authHeader(),
+//        }
+//      );
+//      console.log("Fetched products", response.data.data);
+//
+//      // Get the product ID from the response and set it
+//      const fetchedId = response.data?.data[0].id;
+//      setgetId(fetchedId);
+//      setProductId(fetchedId);
+//
+//      // Call getApi only if fetchedId is valid
+//      if (fetchedId) {
+//        getApi(fetchedId);
+//      }
+//    } catch (error) {
+//      console.error("Error fetching products:", error);
+//      // Handle the error as needed
+//    }
+//  }
+//};
 
 const getApi = async (id) => {
   try {
@@ -205,6 +205,7 @@ const getApi = async (id) => {
     const response = res.data;
     setAllData(response);
     setLongDescription(response?.long_description);
+    setProductId(id);
     // Handle response as needed
   } catch (error) {
     console.error("Error fetching product details:", error);
@@ -212,7 +213,7 @@ const getApi = async (id) => {
 };
 
 useEffect(() => {
-  fetchProducts(productname);
+  getApi(productname);
 }, [productname]);
 
   const getReview = async (id) => {
@@ -235,8 +236,8 @@ useEffect(() => {
   };
 
   useEffect(() => {
-    getReview(getid);
-  }, [getid]);
+    getReview(productname);
+  }, [productname]);
 
   const handleClick = async () => {
     //ProductService.Dataprice(payload).then((res) => {
@@ -258,7 +259,7 @@ useEffect(() => {
         width: selectedWidth,
         height: selectedHeight,
         subCatId: JSON.stringify(selectedSubCatId),
-        ProductId: getid,
+        ProductId: productname,
         quantity: count,
       };
 
@@ -284,7 +285,6 @@ useEffect(() => {
       behavior: "smooth",
     });
   };
-console.log("getid", getid);
 
   return (
     <Box className="product_box">

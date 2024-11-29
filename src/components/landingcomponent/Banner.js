@@ -16,7 +16,7 @@ import MaskGroup from "../../asset/images/Mask Group.png";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import PopUp from "./Pop_Up";
-import Navbar from "./Navbar";
+import Navbar from "./Navbar/Navbar";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ProductService } from "../../services/Product.service";
 import { ProductCategoryService } from "../../services/ProductCategory.service";
@@ -24,7 +24,7 @@ import SearchIcon from "@mui/icons-material/Search";
 
 const allOptions = ["Option One", "Option Two", "Option Three", "Option Four"];
 
-const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
+const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduct, pricePerProduct }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -45,7 +45,6 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
   const [productDetails, setProductDetails] = useState([]);
   const [productId, setProductId] = useState();
   const [isPayloadReady, setIsPayloadReady] = useState(false);
-
   const filteredCategories = useMemo(() => {
     return allcategories.filter((option) => option?.name.toLowerCase().includes(searchText.toLowerCase()));
   }, [searchText, allcategories]);
@@ -54,7 +53,6 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
     if (filteredCategories?.length > 0) {
       getProductDetails(filteredCategories[0]?.id);
       setSelectedCategory(filteredCategories[0]?.name);
-      // handleSetPayload(filteredCategories[0]?.id, state && state);
     }
   }, [filteredCategories]);
 
@@ -205,6 +203,7 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
   const getPrice = (payload) => {
     ProductService.Dataprice(payload).then((res) => {
       setPrice(res.data.totalPrice);
+      setPricePerProduct(res.data.totalPrice / count);
     });
   };
 
@@ -214,7 +213,13 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
 
   return (
     <>
-      <PopUp open={open} handleClose={handleClose} />
+      <PopUp
+        open={open}
+        handleClose={handleClose}
+        payload={payload}
+        price={price}
+        selectedCategory={selectedCategory}
+      />
 
       <Box>
         <Navbar handleClickOpenSignUp={handleClickOpenSignUp} handleClickOpenLogin={handleClickOpenLogin} />
@@ -446,7 +451,7 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                         {/* Learn More Link */}
                         <Typography
                           component="a"
-                          href={`/product/${option?.name}`}
+                          href={`/product/${option?.id}`}
                           rel="noopener noreferrer"
                           sx={{
                             fontSize: "14px",
@@ -532,7 +537,7 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                 paddingTop: "10px",
               }}
             >
-              <Typography sx={{ fontSize: "28px", color: "#3F5163", fontWeight: 700 }}>{price}</Typography>
+              <Typography sx={{ fontSize: "28px", color: "#3F5163", fontWeight: 700 }}>${price}</Typography>
               <Box
                 sx={{
                   display: "flex",
@@ -548,7 +553,7 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                     textDecoration: "line-through",
                   }}
                 >
-                  $13.31
+                  {pricePerProduct}
                 </Typography>
                 <Typography sx={{ fontSize: "28px", color: "#3F5163", fontWeight: 500 }}>each</Typography>
               </Box>

@@ -13,8 +13,8 @@ import { PremiumImage } from "../services/PremiumImage.service";
 import { ProductCategoryService } from "../services/ProductCategory.service";
 
 const DesignOnline = () => {
-  const [value, setValue] = React.useState(1);
-  const [isTabOpen, setIsTabOpen] = useState(false);
+    const [value, setValue] = React.useState(1);
+    const [isTabOpen, setIsTabOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState([]);
   const [addimage, AddImage] = useState("");
   const [images, setImages] = useState();
@@ -31,7 +31,8 @@ const DesignOnline = () => {
   const [alldata, setAllData] = useState();
   const [allproduct, setAllProduct] = useState();
   const [showSection, setShowSection] = useState(true);
-  const [getid, setgetId] = useState();
+  const [combinedImages, setCombinedImages] = useState([]);
+   const [getid, setgetId] = useState();
 
   const [productDetails, setProductDetails] = useState({
     width: "",
@@ -68,7 +69,6 @@ const DesignOnline = () => {
       });
 
       setImages(fixedImages);
-      //console.log(fixedImages, "Fixed image URLs");
     } catch (error) {
       console.error("Failed to fetch images:", error);
     }
@@ -91,7 +91,6 @@ const DesignOnline = () => {
       });
 
       setVectorImg(fixedImages);
-      //console.log(fixedImages, "Fixed image URLs");
     } catch (error) {
       console.error("Failed to fetch images:", error);
     }
@@ -167,10 +166,10 @@ const DesignOnline = () => {
       } else {
         console.error("No valid uploaded image at upload index", index);
       }
-    } else if (source === "dropdata" && dropdata && dropdata.length > 0) {
-      const DropImage = dropdata[index];
+    } else if (source === "dropdata" && combinedImages && combinedImages.length > 0) {
+      const DropImage = combinedImages[index];
       if (DropImage) {
-        AddImage(DropImage.link);
+        AddImage(DropImage.url);
         openImgEditor();
       } else {
         console.error("No valid uploaded image at dropdata index", index);
@@ -178,7 +177,6 @@ const DesignOnline = () => {
     } else {
       console.error("No valid image found at the selected index or source");
     }
-    //console.log("Selected premium image URL:", selectedImageUrl);
   };
 
   const handleClickOpenLogin = () => {
@@ -232,20 +230,20 @@ const DesignOnline = () => {
     }
   };
 
-const Allproducts = async () => {
-  try {
-    const res = await ProductService.ProductList();
-    const response = res.data;
-    setAllProduct(response); // Set product list
-    if (response.length > 0) {
-      // Automatically set the first product as the default selection
-      setgetId(response[0].id);
-      console.log("Initial product ID set:", response[0].id);
+  const Allproducts = async () => {
+    try {
+      const res = await ProductService.ProductList();
+      const response = res.data;
+      setAllProduct(response); // Set product list
+      if (response.length > 0) {
+        // Automatically set the first product as the default selection
+        setgetId(response[0].id);
+        console.log("Initial product ID set:", response[0].id);
+      }
+    } catch (error) {
+      console.error("Error fetching all products:", error);
     }
-  } catch (error) {
-    console.error("Error fetching all products:", error);
-  }
-};
+  };
 
   useEffect(() => {
     // Fetch all products on component mount
@@ -269,10 +267,9 @@ const Allproducts = async () => {
           thumbnail: file.thumbnailLink,
         };
       });
-      setDropData(updatedFiles);
+      setDropData((prevDropData) => [...prevDropData, ...updatedFiles]);
     }
   };
-
   const handleDeleteDropboxFile = (index) => {
     setDropData(dropdata.filter((_, i) => i !== index));
   };
@@ -282,6 +279,8 @@ const Allproducts = async () => {
       <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" } }}>
         {showSection && (
           <Sidebar
+            combinedImages={combinedImages}
+            setCombinedImages={setCombinedImages}
             value={value}
             setValue={setValue}
             setIsTabOpen={setIsTabOpen}
@@ -317,7 +316,7 @@ const Allproducts = async () => {
             minHeight: "78vh",
             width: {
               xs: "100%",
-              xl: isAccordionOpen ? "calc(100% - 32%)" : "100%",
+              xl: isAccordionOpen ? "calc(100% - 30%)" : "100%",
               lg: isAccordionOpen ? "calc(100% - 39%)" : "100%",
               md: isAccordionOpen ? "calc(100% - 55%)" : "100%",
               sm: "100%",

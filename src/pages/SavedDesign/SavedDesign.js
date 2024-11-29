@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LoginDialog from "../../components/common/LoginDialog";
 import CreateAccountDialog from "../../components/common/CreateAccountDialog";
-import Navbar from "../../components/landingcomponent/Navbar";
+import Navbar from "../../components/landingcomponent/Navbar/Navbar";
 import { DesignServiceFooter } from "../../components/designservice/DesignServiceFooter";
 import Brandit_image from "../../asset/images/Brandit.png";
 import {

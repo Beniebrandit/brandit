@@ -5,7 +5,7 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import PopUp from "../landingcomponent/Pop_Up";
 
-const AssistanceBanner = () => {
+const AssistanceBanner = ({ pricePerProduct }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -89,7 +89,7 @@ const AssistanceBanner = () => {
             <Typography>Price Each</Typography>
           </Box>
           <Typography variant="h5" color="#3f5163" sx={{ fontWeight: "bold" }}>
-            $58.03
+            ${pricePerProduct && pricePerProduct}
           </Typography>
         </Box>
 
