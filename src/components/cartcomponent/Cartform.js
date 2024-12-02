@@ -94,20 +94,23 @@ const products = [
 ];
 
 const ProductCard = ({ title }) => (
-  
   <Box sx={{ textAlign: "center", width: "100%", height: "100%" }}>
-    <Card sx={{ width: "192px",
-    height: "162px",
-    boxShadow: "0 3px 6px #cfd4d9",
-    position: "relative",
-    padding:'20px'
-     }}>
+    <Card
+      sx={{
+        width: "100%",
+        maxWidth: "192px",
+        height: "162px",
+        boxShadow: "0 3px 6px #cfd4d9",
+        position: "relative",
+        padding: "20px",
+      }}
+    >
       <img
-        
         src="https://images.unsplash.com/1/type-away-numero-dos.jpg?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         alt="dummy"
-        width='100%'
+        width="100%"
         height="100%"
+        sx={{ maxWidth: "100%" }}
       />
     </Card>
     <Typography variant="body2" sx={{ mt: 2 }}>
@@ -119,7 +122,7 @@ const ProductCard = ({ title }) => (
 const Cartform = () => {
   const [openDetails, setOpenDetails] = useState(true);
   const [cartItems, setCartItems] = useState(initialCartItems);
-   const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
 
   const handleToggleDetails = (id) => {
     setOpenDetails((prevOpenDetails) => ({
@@ -135,40 +138,46 @@ const Cartform = () => {
     setCartItems(updatedCartItems);
   };
 
-const handleSelectAll = (event) => {
-  if (event.target.checked) {
-    setSelectedItems(cartItems.map((item) => item.id));
-  } else {
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      setSelectedItems(cartItems.map((item) => item.id));
+    } else {
+      setSelectedItems([]);
+    }
+  };
+
+  const handleSelectItem = (id) => {
+    setSelectedItems((prevSelected) =>
+      prevSelected.includes(id) ? prevSelected.filter((itemId) => itemId !== id) : [...prevSelected, id]
+    );
+  };
+
+  const handleRemoveItems = () => {
+    const updatedCartItems = cartItems.filter((item) => !selectedItems.includes(item.id));
+    setCartItems(updatedCartItems);
     setSelectedItems([]);
-  }
-};
-
-const handleSelectItem = (id) => {
-  setSelectedItems((prevSelected) =>
-    prevSelected.includes(id) ? prevSelected.filter((itemId) => itemId !== id) : [...prevSelected, id]
-  );
-};
-
-const handleRemoveItems = () => {
-  const updatedCartItems = cartItems.filter((item) => !selectedItems.includes(item.id));
-  setCartItems(updatedCartItems);
-  setSelectedItems([]);
-};
+  };
   return (
     <>
-      <Box container sx={{ margin: "60px" }}>
-        <Grid container spacing={3}>
+      <Box container sx={{ margin: { sm: "60px", xs: "30px 15px" } }}>
+        <Grid container>
           <Grid item lg={8} md={6} sm={12} xs={12}>
-            <Typography variant="h4" gutterBottom sx={{ textAlign: "center" ,
+            <Typography
+              variant="h4"
+              gutterBottom
+              sx={{
+                textAlign: "center",
                 paddingLeft: "25px",
-    gap: "30px",
-    justifyContent:`${selectedItems.length > 0 ? 'start':'space-aroun'}`,
-    //justifyContent:'space-around',
-    display: "flex",
-            }}>
+                gap: "30px",
+                justifyContent: `${selectedItems.length > 0 ? "start" : "space-aroun"}`,
+                //justifyContent:'space-around',
+                display: "flex",
+                fontSize: { xs: "24px", sm: "32px", lg: "40px" },
+              }}
+            >
               {selectedItems.length > 0 && (
                 <Button
-                onClick={handleRemoveItems}
+                  onClick={handleRemoveItems}
                   variant="contained"
                   sx={{
                     backgroundColor: "#3f5163",
@@ -177,13 +186,12 @@ const handleRemoveItems = () => {
                       backgroundColor: "#3f5163",
                       color: "white",
                     },
-                   
+
                     borderRadius: "10px",
-                    
+
                     padding: "6px 40px",
                   }}
                 >
-                
                   Remove Items
                 </Button>
               )}
@@ -228,7 +236,7 @@ const handleRemoveItems = () => {
                 <TableBody>
                   {cartItems.map((item) => (
                     <React.Fragment key={item.id}>
-                      <TableRow>
+                      <TableRow style={{ verticalAlign: "baseline" }}>
                         <TableCell>
                           <Box sx={{ display: "flex", alignItems: "center", color: "gray" }}>
                             <Checkbox
@@ -286,7 +294,7 @@ const handleRemoveItems = () => {
                             </Grid>
                           </Box>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: "180px" }}>
                           <TextField value={item.projectName} variant="outlined" size="small" sx={{ mt: 1 }} />
                           <Typography>{item.title}</Typography>
                           <Typography>Size: {item.details.size}</Typography>
@@ -306,7 +314,7 @@ const handleRemoveItems = () => {
                               ))}
                           </Collapse>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: "200px" }}>
                           <TextField
                             type="number"
                             value={item.quantity}
@@ -450,7 +458,7 @@ const handleRemoveItems = () => {
                 display: "flex",
                 justifyContent: "space-around",
                 alignItems: "center",
-                padding: "50px 30px 50px 30px",
+                padding: "20px",
                 borderBottom: "1px solid #e0e0e0",
               }}
             >
@@ -459,13 +467,13 @@ const handleRemoveItems = () => {
               <Typography>View My Previous Orders</Typography>
             </Box>
 
-            <Box sx={{ mt: 4, mb: 4 }}>
+            <Box sx={{ mt: 4, mb: 4, paddingX: "15px" }}>
               <Typography variant="h5" align="center" gutterBottom>
                 Other Products You May Like
               </Typography>
               <Grid container spacing={2} justifyContent="center" sx={{ marginTop: "30px" }}>
                 {products.map((product, index) => (
-                  <Grid item xs={12} sm={6} md={3} key={index}>
+                  <Grid item xs={6} sm={6} md={3} key={index}>
                     <ProductCard title={product.title} />
                   </Grid>
                 ))}
@@ -473,7 +481,7 @@ const handleRemoveItems = () => {
             </Box>
           </Grid>
 
-          <Grid item lg={4} md={6} sm={12} xs={12}>
+          <Grid item lg={4} md={6} sm={12} xs={12} sx={{ paddingX: "15px" }}>
             <Box sx={{ position: "sticky", top: "20px", zIndex: 10 }}>
               <Card
                 sx={{

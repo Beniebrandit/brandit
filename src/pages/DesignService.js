@@ -22,47 +22,47 @@ const UploadButton = styled(Button)({
 });
 
 const DesignService = () => {
-    const [loginOpen, setLoginOpen] = useState(false);
-    const [openSignUp, setOpenSignUp] = useState(false);
-    const [currentUser, setCurrentUser] = useState("");
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [openSignUp, setOpenSignUp] = useState(false);
+  const [currentUser, setCurrentUser] = useState("");
 
-    const handleClickOpenLogin = () => setLoginOpen(true);
-    const handleCloseLogin = () => setLoginOpen(false);
+  const handleClickOpenLogin = () => setLoginOpen(true);
+  const handleCloseLogin = () => setLoginOpen(false);
 
-    const handleClickOpenSignUp = () => {
-      setOpenSignUp(true);
-      setLoginOpen(false);
-    };
+  const handleClickOpenSignUp = () => {
+    setOpenSignUp(true);
+    setLoginOpen(false);
+  };
 
-    const handleCloseSignUp = () => setOpenSignUp(false);
+  const handleCloseSignUp = () => setOpenSignUp(false);
 
-    const fetchUserData = async (token) => {
-      if (!token) {
-        console.warn("Token is null or undefined, skipping fetch.");
-        return; // Exit the function if the token is null
+  const fetchUserData = async (token) => {
+    if (!token) {
+      console.warn("Token is null or undefined, skipping fetch.");
+      return; // Exit the function if the token is null
+    }
+
+    try {
+      const response = await fetch("https://flagg.devlopix.com/api/user", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        console.error("Failed to fetch user data:", response.status);
+        return;
       }
 
-      try {
-        const response = await fetch("https://flagg.devlopix.com/api/user", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          console.error("Failed to fetch user data:", response.status);
-          return;
-        }
-
-        const data = await response.json();
-        setCurrentUser(data.name);
-        localStorage.setItem("currentUser", data.name);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
+      const data = await response.json();
+      setCurrentUser(data.name);
+      localStorage.setItem("currentUser", data.name);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
   return (
     <>
@@ -74,8 +74,8 @@ const DesignService = () => {
         <Typography variant="h6" align="center" gutterBottom>
           How It Works
         </Typography>
-        <Grid container columnSpacing={"80px"} justifyContent="center" sx={{ mb: 4 }}>
-          <Grid item xs={9} md={4}>
+        <Grid container justifyContent="center" sx={{ mb: 4 }}>
+          <Grid item xs={12} md={4}>
             <Box sx={{ justifyContent: "center", display: "flex" }}>
               <img src="https://s1-ecp.signs.com/2503/NowHiring-ProductThumbnails-Artboard-15-5040.png" alt="img" />
             </Box>

@@ -182,15 +182,17 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
             sx={{
               display: "flex",
               alignItems: "center",
+              flexWrap: "wrap",
               justifyContent: "space-between",
-              width: { xs: "20rem", sm: "30rem", md: "30rem", lg: "35rem", xl: "35rem" },
+              paddingX: "15px",
+              width: { xs: "100%", sm: "100%", md: "30rem", lg: "35rem", xl: "35rem" },
             }}
           >
             {/* Email Section */}
             <Box
               sx={{
                 display: "flex",
-                flexDirection: { xs: "column", sm: "row" },
+                // flexDirection: { xs: "column", sm: "row" },
                 alignItems: { xs: "left", sm: "center" },
               }}
             >
@@ -210,7 +212,7 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
             <Box
               sx={{
                 display: "flex",
-                flexDirection: { xs: "column", sm: "row" },
+                // flexDirection: { xs: "column", sm: "row" },
                 alignItems: { xs: "left", sm: "center" },
                 fontSize: { xs: "12px", sm: "15px" },
               }}
@@ -323,118 +325,130 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
             </Paper>
           )}
         </Box>*/}
-          <Box
-            sx={{ display: "flex", alignItems: "center", justifyContent: "space-around", columnGap: 2, height: "100%" }}
-          >
-            <ThemeProvider theme={theme}>
-              <Box
-                aria-owns={anchorEl ? "simple-menu" : undefined}
-                aria-haspopup="true"
-                onMouseEnter={handleClick}
+          <Box sx={{ display: "flex" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-around",
+                columnGap: 2,
+                height: "100%",
+              }}
+            >
+              <ThemeProvider theme={theme}>
+                <Box
+                  aria-owns={anchorEl ? "simple-menu" : undefined}
+                  aria-haspopup="true"
+                  onMouseEnter={handleClick}
+                  sx={{
+                    position: "relative",
+                    display: "flex",
+                    alignItems: "center",
+                    paddingLeft: "1rem",
+                    textTransform: "none",
+                    //backgroundColor: anchorEl ? "#e0e0e0" : "inherit",
+                    backgroundColor: "transparent",
+                    borderTopRightRadius: "5px",
+                    borderTopLeftRadius: "5px",
+                    padding: "6px !important",
+                  }}
+                >
+                  <img alt="Account" src={Account} style={{ width: "36px", height: "auto", marginRight: "7px" }} />
+                  <span style={{ color: "#3f5163" }}>
+                    <b style={{ fontSize: { sm: "20px", xs: "14px" } }}>Account </b>
+                    <span style={{ fontSize: "12px", display:  currentUser ? "flex" : ""  }}>
+                      {currentUser ? `(${currentUser})` : "(Sign In)"}
+                    </span>
+                  </span>
+                </Box>
+                <Menu
+                  id="simple-menu"
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleDropdownClose}
+                  onMouseLeave={handleDropdownClose}
+                  PaperProps={{
+                    sx: {
+                      //borderRadius: "0px !important",
+                      //backgroundColor: "#e0e0e0 !important",
+                      backgroundColor: "white !important",
+                      width: anchorEl?.offsetWidth || "200px !important",
+                      marginTop: "0px !important",
+                      boxShadow: "none !important",
+                    },
+                  }}
+                >
+                  <MenuItem key="my-design" onClick={handleDropdownClose} component={Link} to="/saved-design">
+                    My design
+                  </MenuItem>
+                  {!currentUser ? (
+                    <>
+                      <MenuItem
+                        key="signin"
+                        onClick={() => {
+                          handleDropdownClose();
+                          handleClickOpenLogin();
+                        }}
+                      >
+                        Sign in
+                      </MenuItem>
+                      <MenuItem
+                        key="create-account"
+                        onClick={() => {
+                          handleDropdownClose();
+                          handleClickOpenSignUp();
+                        }}
+                      >
+                        Create account
+                      </MenuItem>
+                    </>
+                  ) : (
+                    <MenuItem
+                      key="logout"
+                      onClick={() => {
+                        Logout();
+                      }}
+                    >
+                      Log out
+                    </MenuItem>
+                  )}
+                </Menu>
+              </ThemeProvider>
+              <Button
                 sx={{
                   position: "relative",
                   display: "flex",
                   alignItems: "center",
-                  paddingLeft: "1rem",
+                  paddingLeft: "0 !important", // To override MUI padding, use `0` without `px`
                   textTransform: "none",
-                  backgroundColor: anchorEl ? "#e0e0e0" : "inherit",
                   borderTopRightRadius: "5px",
                   borderTopLeftRadius: "5px",
-                  padding: "6px !important",
+                  borderBottomRightRadius: "0px",
+                  borderBottomLeftRadius: "0px",
+                  "&:hover": { backgroundColor: "#e0e0e0" },
+                  paddingX: "7px",
                 }}
+                href="/cart"
               >
-                <img alt="Account" src={Account} style={{ width: "36px", height: "auto",marginRight:"7px" }} />
-                <span style={{ color: "#3f5163" }}>
-                  <b style={{ fontSize: "20px" }}>Account </b>
-                  <span style={{ fontSize: "12px" ,display:"flex"}}>{currentUser ? `(${currentUser})` : "(Sign In)"}</span>
+                <img alt="cart_logo" src={cart_logo} style={{ width: "36px", height: "auto" }} />
+                &nbsp;
+                <span style={{ color: "#3f5163", fontSize: { sm: "20px", xs: "14px" } }}>
+                  <b>Cart</b>
                 </span>
-              </Box>
-              <Menu
-                id="simple-menu"
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleDropdownClose}
-                onMouseLeave={handleDropdownClose}
-                PaperProps={{
-                  sx: {
-                    borderRadius: "0px !important",
-                    backgroundColor: "#e0e0e0 !important",
-                    width: anchorEl?.offsetWidth || "200px !important",
-                    marginTop: "0px !important",
-                    boxShadow: "none !important",
-                  },
-                }}
-              >
-                <MenuItem key="my-design" onClick={handleDropdownClose} component={Link} to="/saved-design">
-                  My design
-                </MenuItem>
-                {!currentUser ? (
-                  <>
-                    <MenuItem
-                      key="signin"
-                      onClick={() => {
-                        handleDropdownClose();
-                        handleClickOpenLogin();
-                      }}
-                    >
-                      Sign in
-                    </MenuItem>
-                    <MenuItem
-                      key="create-account"
-                      onClick={() => {
-                        handleDropdownClose();
-                        handleClickOpenSignUp();
-                      }}
-                    >
-                      Create account
-                    </MenuItem>
-                  </>
-                ) : (
-                  <MenuItem
-                    key="logout"
-                    onClick={() => {
-                      Logout();
-                    }}
-                  >
-                    Log out
-                  </MenuItem>
-                )}
-              </Menu>
-            </ThemeProvider>
-            <Button
-              sx={{
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-                paddingLeft: "0 !important", // To override MUI padding, use `0` without `px`
-                textTransform: "none",
-                borderTopRightRadius: "5px",
-                borderTopLeftRadius: "5px",
-                borderBottomRightRadius: "0px",
-                borderBottomLeftRadius: "0px",
-                "&:hover": { backgroundColor: "#e0e0e0" },
-                paddingX: "7px",
-              }}
-              href="/cart"
-            >
-              <img alt="cart_logo" src={cart_logo} style={{ width: "36px", height: "auto" }} />
-              &nbsp;
-              <span style={{ color: "#3f5163", fontSize: "20px" }}>
-                <b>Cart</b>
-              </span>
-            </Button>
-          </Box>
+              </Button>
+            </Box>
 
-          {/* Drawer for smaller screens */}
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="end"
-            sx={{ display: { lg: "none" } }}
-            onClick={toggleDrawer(true)}
-          >
-            <MenuIcon />
-          </IconButton>
+            {/* Drawer for smaller screens */}
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="end"
+              sx={{ display: { lg: "none" } }}
+              onClick={toggleDrawer(true)}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Box>
         </Container>
 
         {/* Drawer Content */}

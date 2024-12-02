@@ -60,7 +60,7 @@ a, a:hover, a.active, a:active, a:visited, a:focus {
 .mega-menu {
   display: none;
   position: absolute;
-  top: 100%;
+  /*top: 100%;*/
   left: 0;
   /*right: 10%;*/
   background-color: #fff;
@@ -148,6 +148,11 @@ a, a:hover, a.active, a:active, a:visited, a:focus {
 
   .exo-menu > li:hover > .mega-menu {
     display: block;
+  }
+}
+@media (max-width: 1199px){
+  .exo-menu {
+    display: none;
   }
 }
 

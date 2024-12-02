@@ -85,7 +85,7 @@ const DesignRequestForm = () => {
           Design request details
         </Box>
 
-        <Grid container sx={{ padding: "21px 32px" }}>
+        <Grid container sx={{ padding: { sm: "21px 32px", xs: "12px" } }}>
           <Grid item xs={12} md={6}>
             <Box sx={{}}>
               <Typography sx={{ color: "#333", fontWeight: 700, fontSize: "16px" }}>Sign Type</Typography>
@@ -161,7 +161,7 @@ const DesignRequestForm = () => {
             </Box>
           </Grid>
 
-          <Grid item xs={12} md={6} sx={{ paddingLeft: "30px" }}>
+          <Grid item xs={12} md={6} sx={{ paddingLeft: { md: "30px" } }}>
             <Typography sx={{ color: "#333", fontWeight: 700, fontSize: "16px" }}>Size</Typography>
             <Box sx={{ display: "flex" }}>
               <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>

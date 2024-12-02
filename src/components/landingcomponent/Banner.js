@@ -21,8 +21,42 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ProductService } from "../../services/Product.service";
 import { ProductCategoryService } from "../../services/ProductCategory.service";
 import SearchIcon from "@mui/icons-material/Search";
+import { Card, Grid } from "@mui/material";
 
 const allOptions = ["Option One", "Option Two", "Option Three", "Option Four"];
+
+const optionsData = [
+  {
+    title: "Printed Sides",
+    key: "printedSides",
+    defaultValue: "Single Sided",
+    options: ["Single Sided", "Double Sided", "Double Sided2", "Double Sided", "Double Sided2"],
+  },
+  {
+    title: "Grommets",
+    key: "grommets",
+    defaultValue: "Every 2-3 ft",
+    options: ["Every 2-3 ft", "Every 4-5 ft"],
+  },
+  {
+    title: "Accessories",
+    key: "accessories",
+    defaultValue: "None",
+    options: ["None", "Ropes"],
+  },
+  {
+    title: "Edge Finish",
+    key: "edgeFinish",
+    defaultValue: "Welded Hem",
+    options: ["Welded Hem", "Stitched Hem"],
+  },
+  {
+    title: "Pole Pockets",
+    key: "polePockets",
+    defaultValue: "None",
+    options: ["None", "With Pockets"],
+  },
+];
 
 const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduct, pricePerProduct }) => {
   const [open, setOpen] = React.useState(false);
@@ -45,6 +79,26 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
   const [productDetails, setProductDetails] = useState([]);
   const [productId, setProductId] = useState();
   const [isPayloadReady, setIsPayloadReady] = useState(false);
+
+  const [showOptions, setShowOptions] = useState(false);
+  const [activeOptionKey, setActiveOptionKey] = useState(null);
+  const [selectedValues, setSelectedValues] = useState(
+    optionsData.reduce((acc, option) => {
+      acc[option.key] = option.defaultValue;
+      return acc;
+    }, {})
+  );
+
+  const toggleOptions = () => setShowOptions(!showOptions);
+
+  const handleChanges = (key, value) => {
+    setSelectedValues((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleopenCard = (key) => {
+    setActiveOptionKey((prevKey) => (prevKey === key ? null : key));
+  };
+
   const filteredCategories = useMemo(() => {
     return allcategories.filter((option) => option?.name.toLowerCase().includes(searchText.toLowerCase()));
   }, [searchText, allcategories]);
@@ -329,144 +383,156 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
         >
           <Box
             sx={{
-              display: "grid",
-              gridTemplateColumns: {
-                xl: "3fr 2fr 1fr 1fr 1.5fr",
-                lg: "3fr 2fr 1fr 1fr 1.5fr",
-                md: "repeat(3, 1fr)",
-                sm: "repeat(2 ,1fr)",
-                xs: "repeat(1 ,1fr)",
-              },
-              gap: "1rem",
+              boxShadow: "10px 10px 35px -15px",
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: "white",
-              padding: "1.5rem",
-              borderRadius: "1rem",
-              boxShadow: "10px 10px 35px -15px",
+              // backgroundColor: "white",
+              borderRadius: "1rem !important",
             }}
           >
-            {/* Material Field */}
-            <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              <Typography sx={{ fontSize: "20px", color: "#3F5163", fontWeight: 400 }}>Material</Typography>
-              <FormControl sx={{ minWidth: 120, color: "#3F5163" }} size="small" fullWidth>
-                <Select
-                  sx={{
-                    color: "gray",
-                    height: "60px",
-                    padding: "0px 10px",
-                    ".MuiSelect-icon": {
-                      display: "none",
-                    },
-                  }}
-                  displayEmpty
-                  MenuProps={{
-                    autoFocus: false,
-                    PaperProps: {
-                      sx: {
-                        maxWidth: "200px !important",
-                        overflow: "scroll ",
-                        maxHeight: "500px !important",
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: {
+                  xl: "3fr 2fr 1fr 1fr 1.5fr",
+                  lg: "3fr 2fr 1fr 1fr 1.5fr",
+                  md: "repeat(3, 1fr)",
+                  sm: "repeat(2 ,1fr)",
+                  xs: "repeat(1 ,1fr)",
+                },
+                gap: "1rem",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "white",
+                padding: "1.5rem",
+                borderRadius: "1rem",
+              }}
+            >
+              {/* Material Field */}
+              <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <Typography sx={{ fontSize: "20px", color: "#3F5163", fontWeight: 400 }}>Material</Typography>
+                <FormControl sx={{ minWidth: 120, color: "#3F5163" }} size="small" fullWidth>
+                  <Select
+                    sx={{
+                      color: "gray",
+                      height: "60px",
+                      padding: "0px 10px",
+                      ".MuiSelect-icon": {
+                        display: "none",
                       },
-                    },
-                  }}
-                  labelId="Stickers and Decals"
-                  id="size-select"
-                  name="Material"
-                  value={selectedCategory}
-                  onChange={handleSelectChange}
-                  onClose={() => setSearchText("")}
-                  renderValue={() => selectedCategory || "Select a category"}
-                >
-                  <ListSubheader>
-                    <TextField
-                      size="small"
-                      autoFocus
-                      placeholder="Type to search..."
-                      fullWidth
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <SearchIcon />
-                          </InputAdornment>
-                        ),
-                      }}
-                      value={searchText}
-                      onChange={(e) => setSearchText(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key !== "Escape") {
-                          e.stopPropagation();
-                        }
-                      }}
-                    />
-                  </ListSubheader>
-                  {filteredCategories.map((option) => (
-                    <MenuItem
-                      onClick={() => handleClick(option?.id)}
-                      key={option.id}
-                      value={option?.name}
-                      sx={{
-                        display: "flex",
-                        alignItems: "flex-start",
-                        gap: "10px",
-                        padding: "10px",
-                      }}
-                    >
-                      {/* Image */}
-                      <Box>
-                        {option.images && (
-                          <img
-                            src={`${process.env.REACT_APP_API_BASE_URL}/${option?.images[0]?.path}`}
-                            alt={option.name}
-                            style={{ width: 88, height: 64, borderRadius: "4px" }}
-                          />
-                        )}
-                      </Box>
-
-                      {/* Text Content */}
-                      <Box
+                    }}
+                    displayEmpty
+                    MenuProps={{
+                      autoFocus: false,
+                      PaperProps: {
+                        sx: {
+                          maxWidth: "200px !important",
+                          overflow: "scroll ",
+                          maxHeight: "500px !important",
+                        },
+                      },
+                    }}
+                    labelId="Stickers and Decals"
+                    id="size-select"
+                    name="Material"
+                    value={selectedCategory}
+                    onChange={handleSelectChange}
+                    onClose={() => setSearchText("")}
+                    renderValue={() => selectedCategory || "Select a category"}
+                  >
+                    <ListSubheader>
+                      <TextField
+                        size="small"
+                        autoFocus
+                        placeholder="Type to search..."
+                        fullWidth
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <SearchIcon />
+                            </InputAdornment>
+                          ),
+                        }}
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key !== "Escape") {
+                            e.stopPropagation();
+                          }
+                        }}
+                      />
+                    </ListSubheader>
+                    {filteredCategories.map((option) => (
+                      <MenuItem
+                        onClick={() => handleClick(option?.id)}
+                        key={option.id}
+                        value={option?.name}
                         sx={{
                           display: "flex",
-                          flexDirection: "column",
-                          gap: "4px",
-                          flex: 1,
+                          alignItems: "flex-start",
+                          gap: "10px",
+                          padding: "10px",
                         }}
                       >
-                        {/* Title */}
-                        <Typography
+                        {/* Image */}
+                        <Box>
+                          {option.images && (
+                            <img
+                              src={`${process.env.REACT_APP_API_BASE_URL}/${option?.images[0]?.path}`}
+                              alt={option.name}
+                              style={{
+                                width: 88,
+                                height: 64,
+                                borderRadius: "4px",
+                              }}
+                            />
+                          )}
+                        </Box>
+
+                        {/* Text Content */}
+                        <Box
                           sx={{
-                            fontWeight: 600,
-                            fontSize: "16px",
-                            color: "#333",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "4px",
+                            flex: 1,
                           }}
                         >
-                          {option.name}
-                        </Typography>
+                          {/* Title */}
+                          <Typography
+                            sx={{
+                              fontWeight: 600,
+                              fontSize: "16px",
+                              color: "#333",
+                            }}
+                          >
+                            {option.name}
+                          </Typography>
 
-                        {/* Description */}
-                        <Typography sx={{ fontSize: "14px", color: "#666" }}>
-                          {option.description || "No description available No."}
-                        </Typography>
+                          {/* Description */}
+                          <Typography sx={{ fontSize: "14px", color: "#666" }}>
+                            {option.description || "No description available No."}
+                          </Typography>
 
-                        {/* Learn More Link */}
-                        <Typography
-                          component="a"
-                          href={`/product/${option?.id}`}
-                          rel="noopener noreferrer"
-                          sx={{
-                            fontSize: "14px",
-                            color: "#007bff",
-                            textDecoration: "underline",
-                            cursor: "pointer",
-                          }}
-                        >
-                          Learn More
-                        </Typography>
-                      </Box>
-                    </MenuItem>
-                  ))}
+                          {/* Learn More Link */}
+                          <Typography
+                            component="a"
+                            href={`/product/${option?.id}`}
+                            rel="noopener noreferrer"
+                            sx={{
+                              fontSize: "14px",
+                              color: "#007bff",
+                              textDecoration: "underline",
+                              cursor: "pointer",
+                            }}
+                          >
+                            Learn More
+                          </Typography>
+                        </Box>
+                      </MenuItem>
+                    ))}
 
-                  {/* {filteredCategories.map((option) => (
+                    {/* {filteredCategories.map((option) => (
                     <MenuItem key={option.id} value={option.name}>
                       {option.image && (
                         <img
@@ -478,107 +544,197 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
                       {option.name}
                     </MenuItem>
                   ))} */}
-                </Select>
-              </FormControl>
-            </Box>
+                  </Select>
+                </FormControl>
+              </Box>
 
-            {/* Size Field */}
-            <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              <Typography sx={{ fontSize: "20px", color: "#3F5163", fontWeight: 400 }}>Size</Typography>
-              <FormControl sx={{ minWidth: 120, color: "#3F5163" }} size="small" fullWidth>
-                <Select
-                  labelId="size-select-label"
-                  id="size-select"
-                  name="size"
-                  value={state.size}
-                  onChange={handleChange}
-                  displayEmpty
-                  sx={{ color: "gray", height: "60px", padding: "0px 10px" }}
-                  IconComponent={(props) => <ExpandMoreIcon />}
-                >
-                  {combinedSizes?.map((size) => (
-                    <MenuItem key={size.id} value={size.size}>
-                      {size.size}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
+              {/* Size Field */}
+              <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <Typography sx={{ fontSize: "20px", color: "#3F5163", fontWeight: 400 }}>Size</Typography>
+                <FormControl sx={{ minWidth: 120, color: "#3F5163" }} size="small" fullWidth>
+                  <Select
+                    labelId="size-select-label"
+                    id="size-select"
+                    name="size"
+                    value={state.size}
+                    onChange={handleChange}
+                    displayEmpty
+                    sx={{ color: "gray", height: "60px", padding: "0px 10px" }}
+                    IconComponent={(props) => <ExpandMoreIcon />}
+                  >
+                    {combinedSizes?.map((size) => (
+                      <MenuItem key={size.id} value={size.size}>
+                        {size.size}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
 
-            {/* Quantity Field */}
-            <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              <Typography sx={{ fontSize: "20px", color: "#3F5163", fontWeight: 400 }}>Qty</Typography>
-              <TextField
-                value={count}
-                onChange={quantityChange}
-                type="number"
-                variant="outlined"
-                size="small"
-                inputProps={{
-                  min: 1, // Minimum value
-                  step: 1, // Increment/Decrement step
-                }}
-                InputProps={{
-                  sx: {
-                    height: "60px", // Adjust this value as needed
-                    textAlign: "center",
-                  },
-                }}
-              />
-            </Box>
+              {/* Quantity Field */}
+              <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <Typography sx={{ fontSize: "20px", color: "#3F5163", fontWeight: 400 }}>Qty</Typography>
+                <TextField
+                  value={count}
+                  onChange={quantityChange}
+                  type="number"
+                  variant="outlined"
+                  size="small"
+                  inputProps={{
+                    min: 1, // Minimum value
+                    step: 1, // Increment/Decrement step
+                  }}
+                  InputProps={{
+                    sx: {
+                      height: "60px", // Adjust this value as needed
+                      textAlign: "center",
+                    },
+                  }}
+                />
+              </Box>
 
-            {/* Price Section */}
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                paddingTop: "10px",
-              }}
-            >
-              <Typography sx={{ fontSize: "28px", color: "#3F5163", fontWeight: 700 }}>${price}</Typography>
+              {/* Price Section */}
               <Box
                 sx={{
                   display: "flex",
+                  flexDirection: "column",
                   alignItems: "center",
-                  justifyContent: "space-around",
-                  width: "100%",
+                  justifyContent: "center",
+                  paddingTop: "10px",
                 }}
               >
-                <Typography
+                <Typography sx={{ fontSize: "28px", color: "#3F5163", fontWeight: 700 }}>${price}</Typography>
+                <Box
                   sx={{
-                    fontSize: "18px",
-                    color: "#E0CE8F",
-                    textDecoration: "line-through",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                    width: "100%",
                   }}
                 >
-                  {pricePerProduct}
-                </Typography>
-                <Typography sx={{ fontSize: "28px", color: "#3F5163", fontWeight: 500 }}>each</Typography>
+                  <Typography
+                    sx={{
+                      fontSize: "18px",
+                      color: "#E0CE8F",
+                      textDecoration: "line-through",
+                    }}
+                  >
+                    {pricePerProduct}
+                  </Typography>
+                  <Typography sx={{ fontSize: "28px", color: "#3F5163", fontWeight: 500 }}>each</Typography>
+                </Box>
               </Box>
-            </Box>
 
-            {/* Design Now Button */}
-            <Button
-              onClick={handleOpen}
+              {/* Design Now Button */}
+              <Button
+                onClick={handleOpen}
+                sx={{
+                  margin: "25px 0px 0px 0px",
+                  //width: "7rem",
+                  height: "60px",
+                  //margin: "auto",
+                  backgroundColor: "#3F5163",
+                  color: "white",
+                  fontWeight: 500,
+                  borderRadius: "8px",
+                  textTransform: "none",
+                  "&:hover": {
+                    backgroundColor: "#2E4053",
+                  },
+                }}
+              >
+                Design Now
+              </Button>
+            </Box>
+            <Box
               sx={{
-                margin: "25px 0px 0px 0px",
-                //width: "7rem",
-                height: "60px",
-                //margin: "auto",
-                backgroundColor: "#3F5163",
-                color: "white",
-                fontWeight: 500,
-                borderRadius: "8px",
-                textTransform: "none",
-                "&:hover": {
-                  backgroundColor: "#2E4053",
-                },
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "white",
+                padding: "1rem",
+                borderRadius: "1rem !important",
               }}
             >
-              Design Now
-            </Button>
+              {/* Show/Hide Button */}
+              <Button
+                variant="text"
+                onClick={toggleOptions}
+                sx={{
+                  textTransform: "capitalize",
+                  color: "#3F5163",
+                  fontSize: "18px",
+                  fontWeight: "bold",
+                  marginBottom: "1rem",
+                  border: "none !important",
+                  boxShadow: "none  !important",
+                }}
+              >
+                {showOptions ? "Hide Options" : "Show Options"}
+                <ExpandMoreIcon sx={{ rotate: `${showOptions ? "180deg" : ""}` }} />
+              </Button>
+
+              {/* Options Section */}
+              {showOptions && (
+                <Box sx={{ boxShadow: "none" }}>
+                  {/* Dropdowns */}
+                  <Grid container spacing={2} sx={{ marginBottom: "1rem", width: "100%" }}>
+                    {optionsData.map(({ title, key, options }) => (
+                      <Grid item xs={12} md={3} key={key}>
+                        <Button
+                          variant="text"
+                          onClick={() => handleopenCard(key)}
+                          sx={{
+                            textTransform: "capitalize",
+                            color: "gray",
+                            fontWeight: "bold",
+                            fontSize: "16px",
+                            marginBottom: "1rem",
+                            border: "none !important",
+                            boxShadow: "none  !important",
+                          }}
+                        >
+                          {title}
+                          <ExpandMoreIcon
+                            sx={{
+                              rotate: `${activeOptionKey === key ? "180deg" : ""}`,
+                            }}
+                          />
+                        </Button>
+                      </Grid>
+                    ))}
+                  </Grid>
+
+                  {/* Cards */}
+                  <Grid container spacing={2} sx={{ justifyContent: "center" }}>
+                    {optionsData
+                      .filter(({ key }) => key === activeOptionKey)
+                      .flatMap(({ options, key }) =>
+                        options.map((option) => (
+                          <Grid item xs={6} sm={4} md={3} lg={2} key={option}>
+                            <Card
+                              sx={{
+                                padding: "1rem",
+                                border: "1px solid",
+                                borderColor: selectedValues[key] === option ? "#3F5163" : "#ccc",
+                                textAlign: "center",
+                                width: "100%",
+                                cursor: "pointer",
+                                transition: "all 0.2s",
+                                "&:hover": { borderColor: "#3F5163" },
+                              }}
+                              onClick={() => handleChanges(key, option)}
+                            >
+                              <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
+                                {option}
+                              </Typography>
+                            </Card>
+                          </Grid>
+                        ))
+                      )}
+                  </Grid>
+                </Box>
+              )}
+            </Box>
           </Box>
         </Container>
       </Box>

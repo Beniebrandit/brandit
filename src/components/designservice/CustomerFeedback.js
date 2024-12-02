@@ -3,7 +3,7 @@ import { Box, Container, Typography, Grid } from "@mui/material";
 
 const CustomerFeedback = () => {
   return (
-    <Container maxWidth="lg" sx={{ mt: 4 }}>
+    <Container maxWidth="lg" sx={{ mt: 4, padding: { sm: "unset", xs: "0" } }}>
       {/* Header */}
       <Typography variant="h4" align="center" gutterBottom>
         Feedback from our Customers
@@ -11,20 +11,20 @@ const CustomerFeedback = () => {
 
       {/* First Image Row */}
       <Box mb={6}>
-        <Grid container spacing={2} justifyContent="center">
-          <Grid item xs={12} sm={2}>
+        <Grid container style={{ marginTop: "15px" }} justifyContent="center">
+          <Grid item xs={12} sm={2} sx={{ padding: { sm: "0 15px 0 0", xs: "0 0 15px 0" } }}>
             <img src="https://via.placeholder.com/100x300" alt="Dummy Image 1" width="100%" />
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={2} sx={{ padding: { sm: "0 15px 0 0", xs: "0 0 15px 0" } }}>
             <img src="https://via.placeholder.com/100x300" alt="Dummy Image 2" width="100%" />
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={2} sx={{ padding: { sm: "0 15px 0 0", xs: "0 0 15px 0" } }}>
             <img src="https://via.placeholder.com/100x300" alt="Dummy Image 3" width="100%" />
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={2} sx={{ padding: { sm: "0 15px 0 0", xs: "0 0 15px 0" } }}>
             <img src="https://via.placeholder.com/100x300" alt="Dummy Image 4" width="100%" />
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={2} sx={{ padding: { sm: "0 15px 0 0", xs: "0 0 15px 0" } }}>
             <img src="https://via.placeholder.com/100x300" alt="Dummy Image 5" width="100%" />
           </Grid>
         </Grid>

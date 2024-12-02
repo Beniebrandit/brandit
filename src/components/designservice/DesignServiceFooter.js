@@ -20,22 +20,52 @@ export const DesignServiceFooter = () => {
         <Box sty>
           <Container>
             <Grid container>
-              <Grid lg={2.4} md={2.4} sm={12} xs={12}>
+              <Grid
+                lg={2.4}
+                md={2.4}
+                sm={2.4}
+                xs={6}
+                style={{ justifyContent: "center", display: "flex", marginBottom: "15px" }}
+              >
                 <img src={logo1} alt="demo" />
               </Grid>
-              <Grid lg={2.4} md={2.4} sm={12} xs={12}>
+              <Grid
+                lg={2.4}
+                md={2.4}
+                sm={2.4}
+                xs={6}
+                style={{ justifyContent: "center", display: "flex", marginBottom: "15px" }}
+              >
                 {" "}
                 <img src={logo2} alt="demo" />
               </Grid>
-              <Grid lg={2.4} md={2.4} sm={12} xs={12}>
+              <Grid
+                lg={2.4}
+                md={2.4}
+                sm={2.4}
+                xs={6}
+                style={{ justifyContent: "center", display: "flex", marginBottom: "15px" }}
+              >
                 {" "}
                 <img src={logo5} alt="demo" style={{ height: "41px" }} />
               </Grid>
-              <Grid lg={2.4} md={2.4} sm={12} xs={12}>
+              <Grid
+                lg={2.4}
+                md={2.4}
+                sm={2.4}
+                xs={6}
+                style={{ justifyContent: "center", display: "flex", marginBottom: "15px" }}
+              >
                 {" "}
                 <img src={logo4} alt="demo" />
               </Grid>
-              <Grid lg={2.4} md={2.4} sm={12} xs={12}>
+              <Grid
+                lg={2.4}
+                md={2.4}
+                sm={2.4}
+                xs={6}
+                style={{ justifyContent: "center", display: "flex", marginBottom: "15px" }}
+              >
                 {" "}
                 <img src={logo3} alt="demo" />
               </Grid>
@@ -46,7 +76,7 @@ export const DesignServiceFooter = () => {
           <Container>
             <Box container sx={{ backgroundColor: "aliceblue", marginTop: "1rem" }}>
               <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "3rem" }}>
-                <img src={logo6} alt="demo" />
+                <img src={logo6} alt="demo" style={{ maxWidth: "100%" }} />
               </Box>
             </Box>
           </Container>
@@ -54,7 +84,7 @@ export const DesignServiceFooter = () => {
         <Box sx={{ mt: 4 }}>
           <Container>
             <Grid container>
-              <Grid lg={2.4} md={2.4} sm={12} xs={12}>
+              <Grid lg={2.4} md={2.4} sm={3} xs={12}>
                 <Typography sx={{ paddingBottom: "1rem", fontSize: "16px" }}>
                   <b>Company</b>
                 </Typography>
@@ -68,7 +98,7 @@ export const DesignServiceFooter = () => {
                 <Typography sx={{ paddingBottom: "0.5rem", fontSize: "14px" }}>Editorial Team</Typography>
                 <Typography sx={{ paddingBottom: "0.5rem", fontSize: "14px" }}>Accessibility Statement</Typography>
               </Grid>
-              <Grid lg={2.4} md={2.4} sm={12} xs={12}>
+              <Grid lg={2.4} md={2.4} sm={3} xs={12}>
                 <Typography sx={{ paddingBottom: "1rem", fontSize: "16px" }}>
                   <b>Resources</b>
                 </Typography>
@@ -81,7 +111,7 @@ export const DesignServiceFooter = () => {
                 </Typography>{" "}
                 <Typography sx={{ paddingBottom: "0.5rem", fontSize: "14px" }}>Site Map</Typography>
               </Grid>
-              <Grid lg={2.4} md={2.4} sm={12} xs={12}>
+              <Grid lg={2.4} md={2.4} sm={3} xs={12}>
                 <Typography sx={{ paddingBottom: "1rem", fontSize: "16px" }}>
                   <b>Support</b>
                 </Typography>
@@ -89,7 +119,7 @@ export const DesignServiceFooter = () => {
                 <Typography sx={{ paddingBottom: "0.5rem", fontSize: "14px" }}>How Tos</Typography>{" "}
                 <Typography sx={{ paddingBottom: "0.5rem", fontSize: "14px" }}>Careers</Typography>
               </Grid>
-              <Grid lg={2.4} md={2.4} sm={12} xs={12}>
+              <Grid lg={2.4} md={2.4} sm={3} xs={12}>
                 <Typography sx={{ paddingBottom: "1rem", fontSize: "16px" }}>
                   <b>Shop</b>
                 </Typography>
@@ -109,9 +139,9 @@ export const DesignServiceFooter = () => {
                     alignItems: "center",
                   }}
                 >
-                    <FacebookOutlinedIcon sx={{ fontSize: "30px" }} />
-                    <InstagramIcon sx={{ fontSize: "30px" }} />
-                    <LinkedInIcon sx={{ fontSize: "30px" }} />
+                  <FacebookOutlinedIcon sx={{ fontSize: "30px" }} />
+                  <InstagramIcon sx={{ fontSize: "30px" }} />
+                  <LinkedInIcon sx={{ fontSize: "30px" }} />
                 </Box>
                 <Typography sx={{ paddingBottom: "0.5rem", fontSize: "14px" }}>
                   Sign up for exclusive offers!

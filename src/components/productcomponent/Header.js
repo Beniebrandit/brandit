@@ -270,7 +270,8 @@ const Header = () => {
               justifyContent="center"
               sx={{
                 paddingLeft: "0px !important",
-                backgroundColor: anchorEl ? "#e0e0e0" : "inherit",
+                //backgroundColor: anchorEl ? "#e0e0e0" : "inherit",
+                backgroundColor: "transparent",
                 borderTopRightRadius: "5px",
                 borderTopLeftRadius: "5px",
               }}
@@ -308,11 +309,12 @@ const Header = () => {
                 }}
                 PaperProps={{
                   sx: {
-                    borderRadius: "0px !important",
-                    backgroundColor: "#e0e0e0 !important",
-                    width: anchorEl?.offsetWidth || "200px !important", // Set the menu width to match the button
-                    marginTop: "0px !important", // Adjust vertical alignment
-                    boxShadow: "none !important", // Add subtle shadow
+                    //borderRadius: "0px !important",
+                    //backgroundColor: "#e0e0e0 !important",
+                    backgroundColor: "white !important",
+                    width: anchorEl?.offsetWidth || "200px !important", 
+                    marginTop: "0px !important", 
+                    boxShadow: "none !important", 
                   },
                 }}
               >
@@ -348,7 +350,9 @@ const Header = () => {
             sm="auto"
             container
             justifyContent="center"
-            sx={{ "&:hover": { backgroundColor: "#e0e0e0" }, borderTopRightRadius: "5px", borderTopLeftRadius: "5px",paddingLeft:"0px !important" }}
+            sx={{ 
+              //"&:hover": { backgroundColor: "#e0e0e0" },
+             borderTopRightRadius: "5px", borderTopLeftRadius: "5px",paddingLeft:"0px !important" }}
           >
             <Button sx={{ position: "relative" }} href="/cart">
               <img alt="cart_logo" src={cart_logo} style={{ width: "30px", height: "auto" }} />
