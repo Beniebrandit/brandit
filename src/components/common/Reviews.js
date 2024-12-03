@@ -31,6 +31,7 @@ import { ReactComponent as Customerreviewicon } from "../../asset/images/custome
 import CloseIcon from "@mui/icons-material/Close";
 import { ReviewService } from "../../services/Review.service";
 import CustomPagination from "./CustomPagination";
+import { ProductService } from "../../services/Product.service";
 
 const Reviews = ({ productId }) => {
   const [value, setValue] = useState(5);
@@ -42,9 +43,9 @@ const Reviews = ({ productId }) => {
   const [userId, setUserId] = useState();
   const [allreviews, setAllReviews] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [allProducts, setAllProducts] = useState([]);
   const itemsPerPage = 6;
   const paginatedReviews = allreviews?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
   const [payload, setPayload] = useState({
     user_id: "",
     product_id: "",
@@ -105,6 +106,7 @@ const Reviews = ({ productId }) => {
       const totalStars = allreviewss.reduce((acc, review) => acc + review.stars, 0);
       const averageRating = allreviewss.length > 0 ? (totalStars / allreviewss.length).toFixed(1) : "0.0";
       setValue(averageRating);
+
       setAllReviews(allreviewss);
       //console.log(allreviewss, "allreviewss");
     } catch (error) {
@@ -112,9 +114,25 @@ const Reviews = ({ productId }) => {
     }
   };
 
+ const getAllProducts = async () => {
+   try {
+     const res = await ProductService.Allproduct();
+     setAllProducts(res.data);
+   } catch (error) {
+     console.error("Error fetching products:", error);
+   }
+ };
+
+
   useEffect(() => {
     getallReview();
+    getAllProducts();
   }, []);
+
+  const getProductName = (productId) => {
+    const product = allProducts.find((product) => product.id === productId);
+    return product ? product.name : "Unknown Product";
+  };
 
   function handleClick() {
     ReviewService.Postreview(payload)
@@ -401,7 +419,7 @@ const Reviews = ({ productId }) => {
                           marginTop: "10px",
                         }}
                       >
-                        Lorem Ipsum is simply dummy text
+                        {getProductName(item.product_id)}
                       </Typography>
                       <Box sx={{ display: "flex", alignItems: "center", marginTop: "15px" }}>
                         <Typography

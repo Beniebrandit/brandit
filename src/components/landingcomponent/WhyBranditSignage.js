@@ -63,7 +63,7 @@ const WhyBranditSignage = () => {
               <Box
                 sx={{
                   flex: 1,
-                  padding: { xs: "0.5rem", sm: "1rem" },
+                  //padding: { xs: "0.5rem", sm: "1rem" },
                 }}
               >
                 <img
@@ -83,7 +83,7 @@ const WhyBranditSignage = () => {
               <Box
                 sx={{
                   flex: 1,
-                  padding: { xs: "0.5rem", sm: "1rem" },
+                  //padding: { xs: "0.5rem", sm: "1rem" },
                 }}
               >
                 <img
@@ -92,7 +92,7 @@ const WhyBranditSignage = () => {
                   style={{ maxWidth: "100px", height: "auto", padding: "10px 0px" }}
                 />
                 <Typography
-                  sx={{ fontSize: { xs: "0.875rem", md: "1rem", xl: "36px" }, color: "#3F5163", fontWeight: "bold" }}
+                  sx={{ fontSize: { xs: "0.875rem", md: "1rem", xl: "30px" }, color: "#3F5163", fontWeight: "bold" }}
                 >
                   Lorem Ipsum
                 </Typography>

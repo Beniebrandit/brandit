@@ -34,7 +34,7 @@ import { authHeader } from "../../library/authHeader";
 // const url = `https://flagg.devlopix.com/api`;
 // const token = `6|q8mTawTdGKbRdLazOGLcm1Y0zJe5ks4IPUWRJNIR13495c0c`
 
-const Product = ({ productname,setLongDescription,setProductId, ...props }) => {
+const Product = ({ productname, setLongDescription, setProductId, setPricePerProduct, ...props }) => {
   const [count, setCount] = useState(1);
   const [value, setValue] = useState(0);
   const [alldata, setAllData] = useState();
@@ -172,49 +172,49 @@ const Product = ({ productname,setLongDescription,setProductId, ...props }) => {
   //   description: ProductData[0].description,
   // };
 
-//const fetchProducts = async (productname) => {
-//  if (productname) {
-//    try {
-//      const response = await axios.get(
-//        `https://flagg.devlopix.com/api/product?with[]=images&with[]=productCategory&where[productCategoryId]=${productname}`,
-//        {
-//          headers: authHeader(),
-//        }
-//      );
-//      console.log("Fetched products", response.data.data);
-//
-//      // Get the product ID from the response and set it
-//      const fetchedId = response.data?.data[0].id;
-//      setgetId(fetchedId);
-//      setProductId(fetchedId);
-//
-//      // Call getApi only if fetchedId is valid
-//      if (fetchedId) {
-//        getApi(fetchedId);
-//      }
-//    } catch (error) {
-//      console.error("Error fetching products:", error);
-//      // Handle the error as needed
-//    }
-//  }
-//};
+  //const fetchProducts = async (productname) => {
+  //  if (productname) {
+  //    try {
+  //      const response = await axios.get(
+  //        `https://flagg.devlopix.com/api/product?with[]=images&with[]=productCategory&where[productCategoryId]=${productname}`,
+  //        {
+  //          headers: authHeader(),
+  //        }
+  //      );
+  //      console.log("Fetched products", response.data.data);
+  //
+  //      // Get the product ID from the response and set it
+  //      const fetchedId = response.data?.data[0].id;
+  //      setgetId(fetchedId);
+  //      setProductId(fetchedId);
+  //
+  //      // Call getApi only if fetchedId is valid
+  //      if (fetchedId) {
+  //        getApi(fetchedId);
+  //      }
+  //    } catch (error) {
+  //      console.error("Error fetching products:", error);
+  //      // Handle the error as needed
+  //    }
+  //  }
+  //};
 
-const getApi = async (id) => {
-  try {
-    const res = await ProductCategoryService.ProductDetail(id);
-    const response = res.data;
-    setAllData(response);
-    setLongDescription(response?.long_description);
-    setProductId(id);
-    // Handle response as needed
-  } catch (error) {
-    console.error("Error fetching product details:", error);
-  }
-};
+  const getApi = async (id) => {
+    try {
+      const res = await ProductCategoryService.ProductDetail(id);
+      const response = res.data;
+      setAllData(response);
+      setLongDescription(response?.long_description);
+      setProductId(id);
+      // Handle response as needed
+    } catch (error) {
+      console.error("Error fetching product details:", error);
+    }
+  };
 
-useEffect(() => {
-  getApi(productname);
-}, [productname]);
+  useEffect(() => {
+    getApi(productname);
+  }, [productname]);
 
   const getReview = async (id) => {
     try {
@@ -267,6 +267,7 @@ useEffect(() => {
         .then((res) => {
           if (res.data && res.data.totalPrice) {
             setPrice(res.data.totalPrice);
+            setPricePerProduct(res.data.totalPrice / count);
           } else {
             setPrice(55);
             //setError("Failed to fetch pricing information.");
@@ -310,7 +311,7 @@ useEffect(() => {
                       <img
                         src={process.env.REACT_APP_API_BASE_URL + item?.path}
                         alt=""
-                        style={{ width: "100%", height: "643px",borderRadius:"30px" }}
+                        style={{ width: "100%", height: "643px", borderRadius: "30px" }}
                       />
                     </SwiperSlide>
                   ))}
@@ -403,8 +404,8 @@ useEffect(() => {
               >
                 <Rating style={{ color: "#F6AA03" }} name="simple-controlled" value={value} readOnly />
                 &nbsp;&nbsp;&nbsp;
-                <Typography sx={{ color: "#3F5163", display: "inline-flex", paddingTop: "2px" }}>{`(${
-                  rating || "0"
+                <Typography sx={{ color: "#3F5163", display: "inline-block", paddingTop: "2px" }}>{`(${
+                  rating || " "
                 })`}</Typography>
               </a>
               <Typography
@@ -445,7 +446,7 @@ useEffect(() => {
                   <Grid
                     item
                     sx={{
-                      width: "60%", // Set the width to 60%
+                      width: { xs: "100%", sm: "60%" }, // Set the width to 60%
                       padding: "0px !important",
                     }}
                   >
@@ -555,7 +556,7 @@ useEffect(() => {
                     <Box
                       sx={{
                         border: "1px solid #868686",
-                        width: { xs: "60%", sm: "70%" },
+                        width: { xs: "100%", sm: "60%" },
                         marginTop: "20px",
                         height: "53%",
                         borderRadius: "10px",
@@ -656,7 +657,7 @@ useEffect(() => {
                                 <img
                                   src={`${process.env.REACT_APP_API_BASE_URL}${subCat.image}`}
                                   alt={subCat.subCatName}
-                                  style={{ width: "100%", marginTop: "10px" }}
+                                  style={{ width: "100%",height:"10rem", marginTop: "10px" }}
                                 />
                               </Paper>
                             </Grid>

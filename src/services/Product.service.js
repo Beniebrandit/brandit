@@ -12,7 +12,6 @@ export const ProductService = {
 };
 
 const token = localStorage.getItem("authToken");
-//console.log(token, "token");
 
 function product(){
     return (
@@ -21,9 +20,6 @@ function product(){
           apiEndpoint.product,
           {
             headers: { "Content-Type": "application/json","Authorization": `Bearer ${token}` },
-            // params: {
-            //   email
-            // }
           }
         ).then(res => {
           if(res && res.status === 200){
@@ -49,9 +45,6 @@ function Allproduct() {
   return axios
     .get(apiEndpoint.allproduct, {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      // params: {
-      //   email
-      // }
     })
     .then((res) => {
       if (res && res.status === 200) {

@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import CustomPagination from "../common/CustomPagination";
 import { ProductCategoryService } from "../../services/ProductCategory.service";
 import { ProductService } from "../../services/Product.service";
+import { unset } from "lodash";
 
 const tabData = [
   { icon: categories_icon1, alt: "categories_icon1", label: "All" },
@@ -84,7 +85,6 @@ const Categories = () => {
    }
  };
 
-
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -131,7 +131,7 @@ const Categories = () => {
   };
 
   return (
-    <Box sx={{ margin: "auto", marginTop: "10rem", width: "75%", padding: "1rem" }}>
+    <Box sx={{ margin: "auto", marginTop: "10rem", width: { md: "75%", xs: "100%" }, padding: "1rem" }}>
       <Container>
         <h1 style={{ marginBottom: "1rem" }}>Categories</h1>
         <Tabs
@@ -141,11 +141,9 @@ const Categories = () => {
             "& .MuiTabs-flexContainer": {
               display: "flex",
               flexWrap: "wrap",
-              gap: "1rem",
-              justifyContent: { xs: "left", sm: "space-between" },
+              justifyContent: { xs: "left" },
               alignItems: "center",
             },
-            width: "1050px",
           }}
         >
           {tabData.map((tab, index) => (
@@ -159,7 +157,16 @@ const Categories = () => {
                   </Typography>
                 </Box>
               }
-              sx={{ height: "7rem" }}
+              sx={{
+                width: {
+                  xl: "calc(100% / 6)",
+                  lg: "calc(100% / 6)",
+                  md: "calc(100% / 4)",
+                  sm: "calc(100% / 4)",
+                  xs: "50%",
+                },
+                minWidth: "unset",
+              }}
             />
           ))}
         </Tabs>
@@ -196,7 +203,8 @@ const CategoryGrid = ({ items, onItemClick }) => (
         xl: "repeat(3, 1fr)",
         lg: "repeat(3, 1fr)",
         md: "repeat(2, 1fr)",
-        sm: "repeat(1, 1fr)",
+        sm: "repeat(2, 1fr)",
+        xs: "repeat(1, 1fr)",
       },
       gap: "1.5rem",
       justifyContent: "center",

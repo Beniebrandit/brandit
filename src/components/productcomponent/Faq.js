@@ -1,45 +1,25 @@
 import { Box, Container, Typography, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import React, { useState } from "react";
-
-const faqData = [
-  {
-    question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit?",
-    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-  },
-  {
-    question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit?",
-    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-  },
-  {
-    question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit?",
-    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-  },
-  {
-    question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit?",
-    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-  },
-  {
-    question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit?",
-    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-  },
-  {
-    question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit?",
-    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-  },
-  {
-    question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit?",
-    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-  },
-  // Add more FAQ items as needed
-];
+import React, { useEffect, useState } from "react";
+import { ReviewService } from "../../services/Review.service";
 
 const Faq = () => {
-  const [expanded, setExpanded] = useState(1); // Initialize with index 1 (second item)
+  const [expanded, setExpanded] = useState(1);
+  const [data, setData] = useState([]);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+  const Faqfetch = async () => {
+  const res = await ReviewService.Faq();
+  const response = res.data;
+  setData(response);
+  }
+
+  useEffect(() => {
+    Faqfetch();
+  }, []);
 
   return (
     <>
@@ -55,7 +35,7 @@ const Faq = () => {
           >
             Frequently Asked Questions
           </Typography>
-          {faqData.map((faq, index) => (
+          {data?.map((faq, index) => (
             <Accordion
               key={index}
               expanded={expanded === index}

@@ -7,11 +7,11 @@ import { ProductService } from "../../services/Product.service";
 // Styled TabPanel component
 const TabPanel = styled(({ children, value, index, ...other }) => (
   <div role="tabpanel" hidden={value !== index} {...other}>
-    {value === index && <Box sx={{ p: { xs: 2, sm: 3 }, width: "100%" }}>{children}</Box>}
+    {value === index && <Box sx={{ p: { xs: 2, sm: 3 }, width: "100%", flexWrap: "wrap" }}>{children}</Box>}
   </div>
 ))``;
 
-const ProductDescription = ({ longdescription }) => {
+const ProductDescription = () => {
   const [value, setValue] = useState(0);
   const [alldata, setAllData] = useState();
 
@@ -43,10 +43,14 @@ const ProductDescription = ({ longdescription }) => {
           marginTop: { xs: "50px", sm: "100px" },
           padding: { xs: "20px", sm: "30px" },
           maxWidth: "100%",
+          flexWrap: "wrap",
         }}
       >
         <Box
-        //className="custom-scrollbar custom-scrollbar-container"
+          sx={{
+            flexWrap: "wrap",
+          }}
+          //className="custom-scrollbar custom-scrollbar-container"
         >
           <Tabs
             value={value}
@@ -56,7 +60,8 @@ const ProductDescription = ({ longdescription }) => {
                 display: "none",
               },
               mb: { xs: 2, sm: 3 },
-              width: "70rem",
+              flexWrap: "wrap",
+              // width: "70rem",
             }}
           >
             {["Description", "Lorem Ipsum 1", "Lorem Ipsum 2", "Lorem Ipsum 3"].map((label, index) => (
@@ -70,6 +75,7 @@ const ProductDescription = ({ longdescription }) => {
                   lineHeight: "18px",
                   fontWeight: "500",
                   marginRight: { xs: "5px", sm: "10px" },
+                  flexWrap: "wrap",
                   backgroundColor: value === index ? "#3F5163" : "#F5F5F5",
                   "&.Mui-selected": {
                     color: "#FFFFFF",
@@ -97,9 +103,12 @@ const ProductDescription = ({ longdescription }) => {
               padding: "0px",
             }}
           >
-            {longdescription}
+            {/* {alldata?.long_description} */}
+            Pellentesque iaculis nulla sollicitudin purus lobortis, varius tempor diam iaculis. Cras nec mauris commodo,
+            suscipit arcu sed, dapibus ligula. Vestibulum fringilla lorem mi, nec aliquam dui blandit et. Sed ornare
+            porta suscipit. Aliquam maximus, ex id sodales pulvinar.
           </Typography>
-          {/*<Typography
+          <Typography
             sx={{
               fontSize: { xs: "14px", sm: "18px" },
               color: "#8C8E8F",
@@ -124,7 +133,7 @@ const ProductDescription = ({ longdescription }) => {
             Pellentesque iaculis nulla sollicitudin purus lobortis, varius tempor diam iaculis. Cras nec mauris commodo,
             suscipit arcu sed, dapibus ligula. Vestibulum fringilla lorem mi, nec aliquam dui blandit et. Sed ornare
             porta suscipit. Aliquam maximus, ex id sodales pulvinar.
-          </Typography>*/}
+          </Typography>
         </TabPanel>
         <TabPanel value={value} index={1}>
           Content for Tab 2

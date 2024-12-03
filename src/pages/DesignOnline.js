@@ -317,13 +317,12 @@ const DesignOnline = () => {
             width: {
               xs: "100%",
               xl: isAccordionOpen ? "calc(100% - 30%)" : "100%",
-              lg: isAccordionOpen ? "calc(100% - 39%)" : "100%",
-              md: isAccordionOpen ? "calc(100% - 55%)" : "100%",
-              sm: "100%",
+              lg: isAccordionOpen ? "calc(100% - 30%)" : "100%",
+              sm: isAccordionOpen ? "calc(100% - 25%)" : "100%",
             },
             marginTop: "20px",
             marginLeft: "197px",
-            //marginRight: { sm: isAccordionOpen ? "265px" : "0px" },
+            marginRight: { sm: isAccordionOpen ? "265px" : "0px" },
             padding: { xs: "10px", sm: "20px" },
             position: "relative",
             boxShadow: { sm: "0px 5px 30px -15px" },
@@ -371,7 +370,7 @@ const DesignOnline = () => {
             </Box>
           )}
           <h1>Your Content Here</h1>
-          <p>This is your main content area.</p>
+          <p style={{ marginTop: "20px" }}>This is your main content area.</p>
           {showSection && (
             <BannerSideSection
               onToggleAccordion={handleAccordionToggle}

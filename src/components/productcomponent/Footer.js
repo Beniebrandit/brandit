@@ -218,7 +218,7 @@ const Footer = () => {
                   color: "#545454",
                   fontWeight: "600",
                   marginTop: "40px",
-                  width: "22rem",
+                  // width: "22rem",
                 }}
               >
                 Need help? Just give us call at <span style={{ color: "#E0CE8F" }}> 800-905-8851</span> or email us at{" "}

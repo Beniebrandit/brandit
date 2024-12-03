@@ -30,7 +30,7 @@ const optionsData = [
     title: "Printed Sides",
     key: "printedSides",
     defaultValue: "Single Sided",
-    options: ["Single Sided", "Double Sided", "Double Sided2", "Double Sided", "Double Sided2"],
+    options: ["Single Sided", "Double Sided", "Double Sided1", "Double Sided2"],
   },
   {
     title: "Grommets",

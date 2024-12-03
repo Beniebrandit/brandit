@@ -13,35 +13,39 @@ import AssistanceBanner from "../components/common/AssistanceBanner";
 import { useParams } from "react-router-dom";
 
 const ProductPage = () => {
-      const params = useParams();
-      console.log("params", params.id);
-    const [isVisible, setIsVisible] = useState(false);
-    const [longdescription, setLongDescription] = useState();
-    const [productId, setProductId] = useState();
+  const params = useParams();
+  const [isVisible, setIsVisible] = useState(false);
+  const [longdescription, setLongDescription] = useState();
+  const [productId, setProductId] = useState();
+  const [pricePerProduct, setPricePerProduct] = useState();
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const threshold = 1100;
 
-    useEffect(() => {
-      const handleScroll = () => {
-        const scrollPosition = window.scrollY;
-        const threshold = 1100;
+      if (scrollPosition > threshold) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
 
-        if (scrollPosition > threshold) {
-          setIsVisible(true);
-        } else {
-          setIsVisible(false);
-        }
-      };
+    window.addEventListener("scroll", handleScroll);
 
-      window.addEventListener("scroll", handleScroll);
-
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
-    }, []);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   return (
     <>
       <Header />
-      <Product productname={params.id} setLongDescription={setLongDescription} setProductId={setProductId} />
+      <Product
+        productname={params.id}
+        setLongDescription={setLongDescription}
+        setProductId={setProductId}
+        setPricePerProduct={setPricePerProduct}
+      />
       <ProductDescription longdescription={longdescription} />
       <Services />
       <BannerFeature />
@@ -52,7 +56,7 @@ const ProductPage = () => {
       <Reviews productId={productId} />
       <Footer />
 
-      {isVisible && <AssistanceBanner />}
+      {isVisible && <AssistanceBanner setPricePerProduct={setPricePerProduct} pricePerProduct={pricePerProduct} />}
     </>
   );
 };
