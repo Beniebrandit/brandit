@@ -109,23 +109,6 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
     }
   }, [alldata]);
 
-  // console.log(widthSizes?.[0]?.size,"qqqqqqq");
-  useEffect(() => {
-    if (alldata?.categories?.length > 0) {
-      const initialSelection = {};
-      const initialSubCatIds = [];
-      alldata?.categories?.forEach((category) => {
-        if (category?.subCategories?.length > 0) {
-          const firstSubCat = category.subCategories[0];
-          initialSelection[category.id] = firstSubCat.id; // Store the subCat ID
-          initialSubCatIds.push(firstSubCat.id); // Push the initial subCat ID
-        }
-      });
-      setSelectedCard(initialSelection);
-      setSelectedSubCatId(initialSubCatIds);
-    }
-  }, [alldata]);
-
   useEffect(() => {
     const jsonString = JSON.stringify(selectedSubCatId);
     setPayload({

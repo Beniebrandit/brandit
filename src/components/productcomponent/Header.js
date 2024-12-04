@@ -41,6 +41,7 @@ import "react-toastify/dist/ReactToastify.css";
 import LoginDialog from "../common/LoginDialog";
 import CreateAccountDialog from "../common/CreateAccountDialog";
 import { borderRadius, minWidth, padding, styled } from "@mui/system";
+import SearchBar from "./Searchbar";
 
 const CustomMenu = styled(Menu)(({ theme }) => ({
   "& .MuiPaper-root": {
@@ -195,17 +196,7 @@ const Header = () => {
             </Grid>
 
             <Grid item xs={12} sm={6} md={4}>
-              <TextField
-                placeholder="Search here.."
-                sx={{
-                  backgroundColor: "white",
-                  width: "100%",
-                  borderRadius: 1,
-                  "& .MuiInputBase-root": {
-                    height: "100%",
-                  },
-                }}
-              />
+              <SearchBar/>
             </Grid>
 
             <Grid item xs={12} sm="auto">

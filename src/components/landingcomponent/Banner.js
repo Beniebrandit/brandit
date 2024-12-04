@@ -91,8 +91,14 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
 
   const toggleOptions = () => setShowOptions(!showOptions);
 
-  const handleChanges = (key, value) => {
-    setSelectedValues((prev) => ({ ...prev, [key]: value }));
+  const handleCardClick = (categoryId, subCat) => {
+    setSelectedCard((prevSelectedCards) => {
+      const updatedCards = { ...prevSelectedCards, [categoryId]: subCat.id };
+      const subCatIdsArray = Object.values(updatedCards).filter((value) => value !== undefined);
+      setSelectedSubCatId(subCatIdsArray);
+      console.log("selectedSubCatId", selectedSubCatId);
+      return updatedCards;
+    });
   };
 
   const handleopenCard = (key) => {
@@ -200,13 +206,15 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
       const res = await ProductCategoryService.ProductDetail(id);
       const response = res.data;
       setProductDetails(response?.productSizes);
+      //console.log("alldata", alldata);
+      setAllData(response);
       setProductId(id);
       handleSetPayload(id, state);
 
       response?.categories?.forEach((category) => {
         if (category?.subCategories?.length > 0) {
           // Set the first subcategory as the default selected card
-          const firstSubCat = category.subCategories[1];
+          const firstSubCat = category.subCategories[0];
           initialSelection[category.id] = firstSubCat.id;
 
           // Add the initially selected subcategory ID to the array
@@ -245,7 +253,7 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
       setPayload(payloadData);
       setIsPayloadReady(true);
     }
-  }, [productId, selectedWidth, selectedHeight, state, count]);
+  }, [productId, selectedWidth, selectedHeight, state, count, selectedSubCatId]);
 
   useEffect(() => {
     if (isPayloadReady && payload) {
@@ -265,6 +273,7 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
     getProductDetails(id);
   };
 
+  //console.log("allcategories", allcategories);
   return (
     <>
       <PopUp
@@ -296,29 +305,38 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
             />
           </div>
 
-          <Box
+          <Box 
             sx={{
               position: "relative",
               zIndex: 99,
-              padding: "70px 50px 130px",
-              marginLeft: {
-                lg: "10rem",
-                md: "8rem",
-              },
+              padding: "70px 0px 130px",
+              //marginLeft: {
+              //  lg: "10rem",
+              //  md: "8rem",
+              //},
               marginTop: "1rem",
             }}
           >
+             <Container
+          sx={{
+            width: {
+              lg: "1200px",
+              md: "40rem",
+              sm: "35rem",
+            },
+          }}
+        >
+
             <Typography
               sx={{
                 fontSize: {
                   xs: "40px",
                   sm: "35px",
+                },
                   color: " white",
                   fontWeight: "600",
                   lineHeight: "52.8px",
                   margin: 0,
-                  //fontSize: "40px",
-                },
               }}
             >
               CREATE <br />
@@ -368,6 +386,7 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
                 Perfect for events, promotions, and branding
               </Typography>
             </Box>
+        </Container>
           </Box>
         </div>
       </Box>
@@ -675,63 +694,71 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
 
               {/* Options Section */}
               {showOptions && (
-                <Box sx={{ boxShadow: "none" }}>
+                <Box>
                   {/* Dropdowns */}
                   <Grid container spacing={2} sx={{ marginBottom: "1rem", width: "100%" }}>
-                    {optionsData.map(({ title, key, options }) => (
-                      <Grid item xs={12} md={3} key={key}>
-                        <Button
-                          variant="text"
-                          onClick={() => handleopenCard(key)}
-                          sx={{
-                            textTransform: "capitalize",
-                            color: "gray",
-                            fontWeight: "bold",
-                            fontSize: "16px",
-                            marginBottom: "1rem",
-                            border: "none !important",
-                            boxShadow: "none  !important",
-                          }}
-                        >
-                          {title}
-                          <ExpandMoreIcon
+                    {alldata?.categories?.map((category) => {
+                      //console.log("category", category);
+                      return (
+                        <Grid item xs={12} md={3} key={category.id}>
+                          <Button
+                            variant="text"
+                            onClick={() => handleopenCard(category.id)}
                             sx={{
-                              rotate: `${activeOptionKey === key ? "180deg" : ""}`,
+                              textTransform: "capitalize",
+                              color: "gray",
+                              fontWeight: "bold",
+                              fontSize: "16px",
+                              marginBottom: "1rem",
+                              border: "none !important",
+                              boxShadow: "none !important",
                             }}
-                          />
-                        </Button>
-                      </Grid>
-                    ))}
+                          >
+                            {category?.name}
+                            <ExpandMoreIcon
+                              sx={{
+                                rotate: `${activeOptionKey === category.id ? "180deg" : ""}`,
+                              }}
+                            />
+                          </Button>
+                        </Grid>
+                      );
+                    })}
                   </Grid>
 
-                  {/* Cards */}
-                  <Grid container spacing={2} sx={{ justifyContent: "center" }}>
-                    {optionsData
-                      .filter(({ key }) => key === activeOptionKey)
-                      .flatMap(({ options, key }) =>
-                        options.map((option) => (
-                          <Grid item xs={6} sm={4} md={3} lg={2} key={option}>
+                  {/* Cards Section */}
+                  {alldata?.categories?.map((category) =>
+                    activeOptionKey === category.id ? (
+                      <Grid container spacing={2} sx={{ justifyContent: "center" }} key={category.id}>
+                        {category?.subCategories?.map((subCat) => (
+                          <Grid item xs={6} sm={4} md={3} lg={2} key={subCat.id}>
                             <Card
                               sx={{
                                 padding: "1rem",
                                 border: "1px solid",
-                                borderColor: selectedValues[key] === option ? "#3F5163" : "#ccc",
+                                borderColor: selectedCard[category.id] === subCat.id ? "#3F5163" : "#ccc",
                                 textAlign: "center",
                                 width: "100%",
                                 cursor: "pointer",
                                 transition: "all 0.2s",
                                 "&:hover": { borderColor: "#3F5163" },
                               }}
-                              onClick={() => handleChanges(key, option)}
+                              onClick={() => handleCardClick(category.id, subCat)}
                             >
                               <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
-                                {option}
+                                {subCat.subCatName}
                               </Typography>
+                              <img
+                                src={`${process.env.REACT_APP_API_BASE_URL}${subCat.image}`}
+                                alt={subCat.subCatName}
+                                style={{ width: "100%", height: "10rem", marginTop: "10px" }}
+                              />
                             </Card>
                           </Grid>
-                        ))
-                      )}
-                  </Grid>
+                        ))}
+                      </Grid>
+                    ) : null
+                  )}
                 </Box>
               )}
             </Box>
