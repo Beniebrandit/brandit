@@ -74,9 +74,9 @@ const BannerFeature = () => {
   return (
     <Box
       sx={{
-        maxHeight: { xl: "1385px" },
+        // maxHeight: { xl: "1385px" },
         backgroundColor: "#FAF8EE",
-        padding: { xs: "60px 0px", md: "90px 0px 250px" },
+        padding: { xs: "60px 0px", md: "90px 0px 150px" },
         position: "relative",
       }}
     >
@@ -259,11 +259,16 @@ const BannerFeature = () => {
             justifyContent: "center",
             flexDirection: "column",
             alignItems: "center",
-            height: "305px",
+            // height: "305px",
+            position: { md: "absolute" },
+            bottom: "-115px",
+            left: "0",
+            right: "0",
+            margin: "auto",
           }}
         >
           <Container>
-            <Grid container spacing={8} justifyContent="center" sx={{ height: "305px" }}>
+            <Grid container spacing={8} justifyContent="center">
               {cardData.map((card) => (
                 <Grid key={card.id} item xs={12} sm={6} md={4} sx={{ height: "100%" }}>
                   <CardComponent title={card.title} description={card.description} iconColor={card.iconColor} />

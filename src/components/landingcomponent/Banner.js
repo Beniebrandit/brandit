@@ -305,88 +305,83 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
             />
           </div>
 
-          <Box 
+          <Box
             sx={{
               position: "relative",
               zIndex: 99,
               padding: "70px 0px 130px",
-              //marginLeft: {
-              //  lg: "10rem",
-              //  md: "8rem",
-              //},
               marginTop: "1rem",
             }}
           >
-             <Container
-          sx={{
-            width: {
-              lg: "1200px",
-              md: "40rem",
-              sm: "35rem",
-            },
-          }}
-        >
-
-            <Typography
+            <Container
               sx={{
-                fontSize: {
-                  xs: "40px",
-                  sm: "35px",
+                width: {
+                  lg: "1200px",
+                  md: "40rem",
+                  sm: "35rem",
                 },
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: {
+                    xs: "40px",
+                    sm: "35px",
+                  },
                   color: " white",
                   fontWeight: "600",
                   lineHeight: "52.8px",
                   margin: 0,
-              }}
-            >
-              CREATE <br />
-              SIGN IN MINUTES!
-            </Typography>
-            <Box sx={{ display: "flex", alignItems: "center", paddingTop: "5px" }}>
-              <CheckCircleIcon sx={{ fontSize: { xs: "18px", sm: "24px" }, color: "white" }} />
-              <Typography
-                sx={{
-                  color: "white",
-                  fontWeight: "400",
-                  //margin: "16px 0 0 0",
-                  fontSize: { xl: "20px", sm: "16px" },
-                  lineHeight: "30px",
-                }}
-                // sx={{ fontSize: { xs: "13px", sm: "16px" } }}
-              >
-                High-quality materials and printing
-              </Typography>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "center", paddingTop: "5px" }}>
-              <CheckCircleIcon sx={{ fontSize: { xs: "18px", sm: "24px" }, color: "white" }} />
-
-              <Typography
-                sx={{
-                  color: "white",
-                  fontWeight: "400",
-
-                  fontSize: { xl: "20px", sm: "16px" },
-                  lineHeight: "30px",
                 }}
               >
-                Fast and easy online customization
+                CREATE <br />
+                SIGN IN MINUTES!
               </Typography>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "center", paddingTop: "5px" }}>
-              <CheckCircleIcon sx={{ fontSize: { xs: "18px", sm: "24px" }, color: "white" }} />
+              <Box sx={{ display: "flex", alignItems: "center", paddingTop: "5px" }}>
+                <CheckCircleIcon sx={{ fontSize: { xs: "18px", sm: "24px" }, color: "white" }} />
+                <Typography
+                  sx={{
+                    color: "white",
+                    fontWeight: "400",
+                    //margin: "16px 0 0 0",
+                    fontSize: { xl: "20px", sm: "16px" },
+                    lineHeight: "30px",
+                  }}
+                  // sx={{ fontSize: { xs: "13px", sm: "16px" } }}
+                >
+                  High-quality materials and printing
+                </Typography>
+              </Box>
+              <Box sx={{ display: "flex", alignItems: "center", paddingTop: "5px" }}>
+                <CheckCircleIcon sx={{ fontSize: { xs: "18px", sm: "24px" }, color: "white" }} />
 
-              <Typography
-                sx={{
-                  color: "white",
-                  fontWeight: "400",
-                  fontSize: { xl: "20px", sm: "16px" },
-                  lineHeight: "30px",
-                }}
-              >
-                Perfect for events, promotions, and branding
-              </Typography>
-            </Box>
-        </Container>
+                <Typography
+                  sx={{
+                    color: "white",
+                    fontWeight: "400",
+
+                    fontSize: { xl: "20px", sm: "16px" },
+                    lineHeight: "30px",
+                  }}
+                >
+                  Fast and easy online customization
+                </Typography>
+              </Box>
+              <Box sx={{ display: "flex", alignItems: "center", paddingTop: "5px" }}>
+                <CheckCircleIcon sx={{ fontSize: { xs: "18px", sm: "24px" }, color: "white" }} />
+
+                <Typography
+                  sx={{
+                    color: "white",
+                    fontWeight: "400",
+                    fontSize: { xl: "20px", sm: "16px" },
+                    lineHeight: "30px",
+                  }}
+                >
+                  Perfect for events, promotions, and branding
+                </Typography>
+              </Box>
+            </Container>
           </Box>
         </div>
       </Box>
@@ -700,7 +695,7 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
                     {alldata?.categories?.map((category) => {
                       //console.log("category", category);
                       return (
-                        <Grid item xs={12} md={3} key={category.id}>
+                        <Grid item xs={12} sm={6} lg={3} key={category.id}>
                           <Button
                             variant="text"
                             onClick={() => handleopenCard(category.id)}
@@ -712,9 +707,23 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
                               marginBottom: "1rem",
                               border: "none !important",
                               boxShadow: "none !important",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              width: { xs: "100%", sm: "15rem", md: "18rem" },
                             }}
                           >
-                            {category?.name}
+                            <Box sx={{ fontSize: "15px" }}>
+                              {category?.name}&nbsp;:&nbsp;
+                              {selectedCard[category.id] && (
+                                <span sx={{ marginLeft: "10px" }}>
+                                  {
+                                    alldata.categories
+                                      .find((cat) => cat.id === category.id)
+                                      ?.subCategories.find((sub) => sub.id === selectedCard[category.id])?.subCatName
+                                  }
+                                </span>
+                              )}
+                            </Box>
                             <ExpandMoreIcon
                               sx={{
                                 rotate: `${activeOptionKey === category.id ? "180deg" : ""}`,

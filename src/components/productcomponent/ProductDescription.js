@@ -46,12 +46,7 @@ const ProductDescription = () => {
           flexWrap: "wrap",
         }}
       >
-        <Box
-          sx={{
-            flexWrap: "wrap",
-          }}
-          //className="custom-scrollbar custom-scrollbar-container"
-        >
+        <Box>
           <Tabs
             value={value}
             onChange={handleChange}
@@ -60,9 +55,9 @@ const ProductDescription = () => {
                 display: "none",
               },
               mb: { xs: 2, sm: 3 },
-              flexWrap: "wrap",
               // width: "70rem",
             }}
+            className="custom_wraper"
           >
             {["Description", "Lorem Ipsum 1", "Lorem Ipsum 2", "Lorem Ipsum 3"].map((label, index) => (
               <Tab
@@ -81,6 +76,7 @@ const ProductDescription = () => {
                     color: "#FFFFFF",
                   },
                 }}
+                style={{ flexWrap: "wrap" }}
               />
             ))}
           </Tabs>

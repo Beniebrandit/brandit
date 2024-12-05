@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/productcomponent/Header";
+import Header from "../components/productcomponent/Header/Header";
 import ProductDescription from "../components/productcomponent/ProductDescription";
 import Services from "../components/productcomponent/Services";
 import BannerFeature from "../components/productcomponent/BannerFeature";

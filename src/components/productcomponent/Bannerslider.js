@@ -3,8 +3,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import Bannerslider_img from "../../asset/images/bannerslider_img.png";
-import Bannervideo from "../../asset/images/bannervideo_2.png"
-import Bannervideo2 from "../../asset/images/bannervideo_3.png"
+import Bannervideo from "../../asset/images/bannervideo_2.png";
+import Bannervideo2 from "../../asset/images/bannervideo_3.png";
 
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
@@ -52,11 +52,12 @@ const Bannerslider = (props) => {
 
   return (
     <>
-      <Container sx={{ marginTop: "250px" }}>
+      <Container sx={{ paddingTop: { md: "250px", xs: "50px" } }}>
+        {/* <Container> */}
         <Box>
           <Typography
             sx={{
-              fontSize: "60px",
+              fontSize: { md: "60px", xs: "32px" },
               color: "#3F5163",
               lineHeight: "auto",
               fontFamily: "Avenir LT Std",
@@ -78,40 +79,19 @@ const Bannerslider = (props) => {
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
               >
                 <SwiperSlide>
-                  <img
-                    alt="Bannerslider_img"
-                    src={Bannerslider_img}
-                    width="100%"
-                    height="100%"
-                  />
+                  <img alt="Bannerslider_img" src={Bannerslider_img} width="100%" height="100%" />
                 </SwiperSlide>
                 <SwiperSlide>
-                  <img
-                    alt="Bannerslider_img"
-                    src={Bannerslider_img}
-                    width="100%"
-                    height="100%"
-                  />
+                  <img alt="Bannerslider_img" src={Bannerslider_img} width="100%" height="100%" />
                 </SwiperSlide>
                 <SwiperSlide>
-                  <img
-                    alt="Bannerslider_img"
-                    src={Bannerslider_img}
-                    width="100%"
-                    height="100%"
-                  />
+                  <img alt="Bannerslider_img" src={Bannerslider_img} width="100%" height="100%" />
                 </SwiperSlide>
               </Swiper>
 
               {/* Custom Prev Button */}
               <div className="swiper-button-prev">
-                <svg
-                  width="100"
-                  height="100"
-                  viewBox="0 0 80 81"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+                <svg width="100" height="100" viewBox="0 0 80 81" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     fillRule="evenodd"
                     clipRule="evenodd"
@@ -131,13 +111,7 @@ const Bannerslider = (props) => {
               </div>
 
               <div className="swiper-button-next">
-                <svg
-                  width="100"
-                  height="100"
-                  viewBox="0 0 80 81"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+                <svg width="100" height="100" viewBox="0 0 80 81" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     fillRule="evenodd"
                     clipRule="evenodd"
@@ -160,7 +134,7 @@ const Bannerslider = (props) => {
 
           <Typography
             sx={{
-              fontSize: "60px",
+              fontSize: { md: "60px", xs: "32px" },
               color: "#3F5163",
               lineHeight: "auto",
               fontFamily: "Avenir LT Std",
@@ -188,17 +162,8 @@ const Bannerslider = (props) => {
                 height: "500px",
               }}
             >
-              <video
-                ref={videoRef}
-                width="100%"
-                height="100%"
-                poster={mainPoster}
-                style={{ objectFit: "cover" }}
-              >
-                <source
-                  src="https://www.w3schools.com/html/mov_bbb.mp4"
-                  type="video/mp4"
-                />
+              <video ref={videoRef} width="100%" height="100%" poster={mainPoster} style={{ objectFit: "cover" }}>
+                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
 
@@ -219,73 +184,65 @@ const Bannerslider = (props) => {
                     borderRadius: "50%",
                   }}
                 >
-                  {isPlaying ? (
-                    <PauseIcon sx={{ fontSize: 40 }} />
-                  ) : (
-                    <PlayArrowIcon sx={{ fontSize: 40 }} />
-                  )}
+                  {isPlaying ? <PauseIcon sx={{ fontSize: 40 }} /> : <PlayArrowIcon sx={{ fontSize: 40 }} />}
                 </IconButton>
               </Box>
             </Box>
           </Box>
           <Grid container spacing={3}>
-        {[Bannervideo, Bannervideo2, Bannervideo].map((poster, index) => (
-          <Grid item lg={4} md={3} sm={12} xs={12} key={index}>
-            <Box
-              sx={{
-                position: 'relative',
-                marginTop: '30px',
-                borderRadius: '10px',
-              }}
-            >
-              <Box
-                sx={{
-                  position: 'relative',
-                  marginTop: '30px',
-                  borderRadius: '30px',
-                  overflow: 'hidden',
-                  height: '100%',
-                }}
-              >
-                <video
-                  width="100%"
-                  height="100%"
-                  poster={poster}
-                  style={{ objectFit: 'cover' }}
-                  onClick={() => handleGridVideoClick(poster)} 
-                >
-                 asd
-                </video>
-
+            {[Bannervideo, Bannervideo2, Bannervideo].map((poster, index) => (
+              <Grid item lg={4} md={3} sm={12} xs={12} key={index}>
                 <Box
                   sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
+                    position: "relative",
+                    marginTop: "30px",
+                    borderRadius: "10px",
                   }}
                 >
-                  <IconButton
-                    // onClick={handlePlayPause}
+                  <Box
                     sx={{
-                      color: '#fff',
-                      backgroundColor: '#E0CE8F',
-                      padding: '20px',
-                      borderRadius: '50%',
+                      position: "relative",
+                      marginTop: "30px",
+                      borderRadius: "30px",
+                      overflow: "hidden",
+                      height: "100%",
                     }}
                   >
-                    {isPlaying ? (
-                      <PauseIcon sx={{ fontSize: 40 }} />
-                    ) : (
-                      <PlayArrowIcon sx={{ fontSize: 40 }} />
-                    )}
-                  </IconButton>
+                    <video
+                      width="100%"
+                      height="100%"
+                      poster={poster}
+                      style={{ objectFit: "cover" }}
+                      onClick={() => handleGridVideoClick(poster)}
+                    >
+                      asd
+                    </video>
+
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                      }}
+                    >
+                      <IconButton
+                        // onClick={handlePlayPause}
+                        sx={{
+                          color: "#fff",
+                          backgroundColor: "#E0CE8F",
+                          padding: "20px",
+                          borderRadius: "50%",
+                        }}
+                      >
+                        {isPlaying ? <PauseIcon sx={{ fontSize: 40 }} /> : <PlayArrowIcon sx={{ fontSize: 40 }} />}
+                      </IconButton>
+                    </Box>
+                  </Box>
                 </Box>
-              </Box>
-            </Box>
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
           {/* <Grid item xs={12} md={6}>
             <Box p={2}>
               <div className={props.className}>

@@ -166,6 +166,7 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
   const Logout = () => {
     localStorage.removeItem("currentUser");
     localStorage.removeItem("authToken");
+    localStorage.removeItem("recentSearches");
     window.location.reload();
   };
 
@@ -356,7 +357,7 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                   <img alt="Account" src={Account} style={{ width: "36px", height: "auto", marginRight: "7px" }} />
                   <span style={{ color: "#3f5163" }}>
                     <b style={{ fontSize: { sm: "20px", xs: "14px" } }}>Account </b>
-                    <span style={{ fontSize: "12px", display:  currentUser ? "flex" : ""  }}>
+                    <span style={{ fontSize: "12px", display: currentUser ? "flex" : "" }}>
                       {currentUser ? `(${currentUser})` : "(Sign In)"}
                     </span>
                   </span>
@@ -372,7 +373,7 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                       //borderRadius: "0px !important",
                       //backgroundColor: "#e0e0e0 !important",
                       backgroundColor: "white !important",
-                      width: anchorEl?.offsetWidth || "200px !important",
+                      width: anchorEl?.offsetWidth || { sx: "126px !important", sm: "143px !important" },
                       marginTop: "0px !important",
                       boxShadow: "none !important",
                     },
@@ -425,7 +426,7 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                   borderTopLeftRadius: "5px",
                   borderBottomRightRadius: "0px",
                   borderBottomLeftRadius: "0px",
-                  "&:hover": { backgroundColor: "#e0e0e0" },
+                  //"&:hover": { backgroundColor: "#e0e0e0" },
                   paddingX: "7px",
                 }}
                 href="/cart"

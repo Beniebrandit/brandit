@@ -1,40 +1,31 @@
 import React, { useEffect, useState } from "react";
-import "./MegaMenu.css";
 import { ProductService } from "../../../services/Product.service";
-import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
-const menuItems = [
-  { name: "Banners", category: "Banners" },
-  { name: "Large Format", category: "Large Format" },
-  { name: "Small Format", category: "Small Format" },
-  { name: "Stickers and Decals", category: "Decals" },
-  { name: "Flags", category: "Flags" },
-  { name: "Sign Holders", category: "Signs" },
-];
+import dropdown from "../../../asset/images/chevron-down-svgrepo-com.svg"; 
+import "./MegaMenuGrid.css";
+import { Box } from "@mui/material";
 
 const MegaMenu = () => {
   const navigate = useNavigate();
-  const [menuVisible, setMenuVisible] = useState(false);
-  const [allproduct, setAllProduct] = useState([]);
-  const [currentImage, setCurrentImage] = useState(""); // Current hover image
-  const [defaultImage, setDefaultImage] = useState(""); // Default image fallback
-  const [selectedCategory, setSelectedCategory] = useState(menuItems[0].category);
+  const [allProduct, setAllProduct] = useState([]);
+  const [currentImage, setCurrentImage] = useState("");
+  const [defaultImage, setDefaultImage] = useState("default-category-image.jpg");
+  const [selectedCategory, setSelectedCategory] = useState("");
 
-  const toggleMenu = () => {
-    setMenuVisible(!menuVisible);
-  };
+  const menuItems = [
+    { name: "Large Format", category: "Large Format" },
+    { name: "Stickers and Labels", category: "Decals" },
+    { name: "Fabrics", category: "Banners" },
+    { name: "Accessories", category: "Signs" },
+  ];
 
   const fetchAllProducts = async () => {
     try {
       const params = { with: ["images", "productCategory"] };
       const res = await ProductService.ProductList(params);
       setAllProduct(res.data);
-
-      // Set the default image based on the first product
       const initialImage = res.data[0]?.productCategory?.image?.path || "default-category-image.jpg";
       setCurrentImage(initialImage);
-      //setDefaultImage(initialImage);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -45,18 +36,17 @@ const MegaMenu = () => {
   }, []);
 
   useEffect(() => {
-    // Dynamically update the initial image based on the selected category
-    const filteredProducts = allproduct.filter((product) => product.productCategory?.parent_name === selectedCategory);
+    const filteredProducts = allProduct.filter((product) => product.productCategory?.parent_name === selectedCategory);
 
     if (filteredProducts.length > 0) {
       const initialProductImage = filteredProducts[0]?.images?.[0]?.path || defaultImage;
       setCurrentImage(initialProductImage);
     }
-  }, [selectedCategory, allproduct]);
+  }, [selectedCategory, allProduct]);
 
   const renderMostPopular = (categoryName) => {
     // Filter products for the selected category
-    const filteredProducts = allproduct.filter((product) => product.productCategory?.parent_name === categoryName);
+    const filteredProducts = allProduct.filter((product) => product.productCategory?.parent_name === categoryName);
 
     // Group products by their category names
     const groupedBySubCategory = filteredProducts.reduce((acc, product) => {
@@ -105,21 +95,21 @@ const MegaMenu = () => {
     );
   };
 
-  const renderCategoryProducts = (categoryName) => {
-    const groupedProducts = allproduct
-      .filter((product) => product.productCategory.parent_name === categoryName)
-      .reduce((acc, product) => {
-        const name = product.productCategory.name;
-        if (!acc[name]) acc[name] = [];
-        acc[name].push(product);
-        return acc;
-      }, {});
 
-    // Find the product corresponding to the current image
-    const currentProduct = allproduct.find((product) => product.images?.[0]?.path === currentImage);
+  const renderCategoryProducts = (categoryName) => {
+    const filteredProducts = allProduct.filter((product) => product.productCategory.parent_name === categoryName);
+
+    const groupedProducts = filteredProducts.reduce((acc, product) => {
+      const subCategory = product.productCategory.name;
+      if (!acc[subCategory]) acc[subCategory] = [];
+      acc[subCategory].push(product);
+      return acc;
+    }, {});
+
+    const currentProduct = allProduct.find((product) => product.images?.[0]?.path === currentImage);
 
     return (
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between" ,gap:2}}>
         {renderMostPopular(categoryName)}
         <Box className="stander" sx={{ marginBottom: "15px" }}>
           {Object.entries(groupedProducts).map(([subCategory, products], index) => (
@@ -131,18 +121,21 @@ const MegaMenu = () => {
               >
                 {subCategory}
               </h4>
+              <Box>
+
               {products.map((product, itemIndex) => (
                 <li
                   key={itemIndex}
                   style={{ paddingBottom: "5px" }}
                   onMouseEnter={() => setCurrentImage(product.images?.[0]?.path || defaultImage)}
-                  onClick={() => ClickProduct(product.id)}
+                  onClick={() => navigate(`/product/${product.id}`)}
                 >
                   <a href="#" style={{ fontSize: "14px" }}>
                     {product.name}
                   </a>
                 </li>
               ))}
+              </Box>
             </div>
           ))}
         </Box>
@@ -170,41 +163,42 @@ const MegaMenu = () => {
   };
 
 function ClickProduct(id) {
-navigate(`/product/${id}`);
+  navigate(`/product/${id}`);
 }
   return (
-    <div>
-      <ul className={`exo-menu ${menuVisible ? "display" : ""}`}>
-        {menuItems.map((menu, index) => (
-          <li
-            key={index}
-            className="mega-drop-down"
-            onMouseEnter={() => setSelectedCategory(menu.category)}
-            onMouseLeave={() => setSelectedCategory("")}
+    <ul className="exo-menu">
+      {menuItems.map((menu, index) => (
+        <li
+          key={index}
+          onMouseEnter={() => setSelectedCategory(menu.category)}
+          onMouseLeave={() => setSelectedCategory("")}
+        >
+          <a
+            href="#"
+            style={{ display: "inline-flex", alignItems: "center" }}
+            className={selectedCategory === menu.category ? "active" : ""}
           >
-            <a href="#" className={selectedCategory === menu.category ? "active" : ""}>
-              <i className="fa fa-list"></i> {menu.name === "Banners" ? "Home" : menu.name}
-            </a>
-            <div
-              className="animated fadeIn mega-menu"
-              style={{
-                maxWidth: "1200px",
-                padding: "20px 30px",
-                backgroundColor: "#fff",
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-                zIndex: "100",
-                position: "absolute",
-              }}
-            >
-              {menu.name !== "Home" && renderCategoryProducts(menu.category)}
-            </div>
-          </li>
-        ))}
-        <a href="#" className="toggle-menu" onClick={toggleMenu}>
-          |||
-        </a>
-      </ul>
-    </div>
+            {menu.name}
+            {menu.name !== "Fabrics" && menu.name !== "Accessories" && (
+              <img src={dropdown} style={{ height: "auto", width: "22px", paddingLeft: "5px", fontWeight: "900" }} />
+            )}
+          </a>
+          <div
+            className="animated fadeIn mega-menu"
+            style={{
+              maxWidth: "1200px",
+              padding: "20px 30px",
+              backgroundColor: "#fff",
+              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+              zIndex: "100",
+              position: "absolute",
+            }}
+          >
+            {renderCategoryProducts(menu.category)}
+          </div>
+        </li>
+      ))}
+    </ul>
   );
 };
 

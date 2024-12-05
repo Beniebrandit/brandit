@@ -12,10 +12,10 @@ const Faq = () => {
   };
 
   const Faqfetch = async () => {
-  const res = await ReviewService.Faq();
-  const response = res.data;
-  setData(response);
-  }
+    const res = await ReviewService.Faq();
+    const response = res.data;
+    setData(response);
+  };
 
   useEffect(() => {
     Faqfetch();
@@ -29,7 +29,7 @@ const Faq = () => {
             sx={{
               textAlign: "center",
               color: "#3F5163",
-              fontSize: "60px",
+              fontSize: { md: "60px", xs: "32px" },
               fontWeight: "600",
             }}
           >

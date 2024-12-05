@@ -23,25 +23,26 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PhoneInTalkOutlinedIcon from "@mui/icons-material/PhoneInTalkOutlined";
-import main_logo from "../../asset/images/main_logo.png";
-import cart_logo from "../../asset/images/cart_logo.svg";
-import facebook_logo from "../../asset/images/facebook_logo.svg";
-import twitter_logo from "../../asset/images/twitter_logo.svg";
-import linkedin_logo from "../../asset/images/linkedin_logo.svg";
-import youtube_logo from "../../asset/images/youtube_logo.svg";
+import main_logo from "../../../asset/images/main_logo.png";
+import cart_logo from "../../../asset/images/cart_logo.svg";
+import facebook_logo from "../../../asset/images/facebook_logo.svg";
+import twitter_logo from "../../../asset/images/twitter_logo.svg";
+import linkedin_logo from "../../../asset/images/linkedin_logo.svg";
+import youtube_logo from "../../../asset/images/youtube_logo.svg";
 import { useEffect } from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import dropdown from "../../asset/images/chevron-down-svgrepo-com.svg";
+import dropdown from "../../../asset/images/chevron-down-svgrepo-com.svg";
 import CloseIcon from "@mui/icons-material/Close";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { ProductService } from "../../services/Product.service";
+import { ProductService } from "../../../services/Product.service";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import LoginDialog from "../common/LoginDialog";
-import CreateAccountDialog from "../common/CreateAccountDialog";
+import LoginDialog from "../../common/LoginDialog";
+import CreateAccountDialog from "../../common/CreateAccountDialog";
 import { borderRadius, minWidth, padding, styled } from "@mui/system";
 import SearchBar from "./Searchbar";
+import MegaMenuGrid from "./MegaMenuGrid";
 
 const CustomMenu = styled(Menu)(({ theme }) => ({
   "& .MuiPaper-root": {
@@ -142,6 +143,7 @@ const Header = () => {
   const Logout = () => {
     localStorage.removeItem("currentUser");
     localStorage.removeItem("authToken");
+    localStorage.removeItem("recentSearches");
     window.location.reload();
   };
   return (
@@ -196,7 +198,7 @@ const Header = () => {
             </Grid>
 
             <Grid item xs={12} sm={6} md={4}>
-              <SearchBar/>
+              <SearchBar />
             </Grid>
 
             <Grid item xs={12} sm="auto">
@@ -233,7 +235,7 @@ const Header = () => {
           </Grid>
 
           <Grid item xs={12} sm="auto" sx={{ display: { xs: "none", md: "block" } }}>
-            <Grid container spacing={2} alignItems="flex-end" justifyContent="center">
+            {/*<Grid container spacing={2} alignItems="flex-end" justifyContent="center">
               <Typography variant="body2" sx={{ display: "inline-flex", alignItems: "center" }}>
                 Large Format
                 <img src={dropdown} style={{ height: "15px", width: "15px" }} />
@@ -250,7 +252,8 @@ const Header = () => {
               <Grid item>
                 <Typography variant="body2">Accessories</Typography>
               </Grid>
-            </Grid>
+            </Grid>*/}
+            <MegaMenuGrid />
           </Grid>
           {currentUser ? (
             <Grid
@@ -303,9 +306,9 @@ const Header = () => {
                     //borderRadius: "0px !important",
                     //backgroundColor: "#e0e0e0 !important",
                     backgroundColor: "white !important",
-                    width: anchorEl?.offsetWidth || "200px !important", 
-                    marginTop: "0px !important", 
-                    boxShadow: "none !important", 
+                    width: anchorEl?.offsetWidth || "200px !important",
+                    marginTop: "0px !important",
+                    boxShadow: "none !important",
                   },
                 }}
               >
@@ -341,9 +344,12 @@ const Header = () => {
             sm="auto"
             container
             justifyContent="center"
-            sx={{ 
+            sx={{
               //"&:hover": { backgroundColor: "#e0e0e0" },
-             borderTopRightRadius: "5px", borderTopLeftRadius: "5px",paddingLeft:"0px !important" }}
+              borderTopRightRadius: "5px",
+              borderTopLeftRadius: "5px",
+              paddingLeft: "0px !important",
+            }}
           >
             <Button sx={{ position: "relative" }} href="/cart">
               <img alt="cart_logo" src={cart_logo} style={{ width: "30px", height: "auto" }} />

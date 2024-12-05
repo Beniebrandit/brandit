@@ -158,7 +158,7 @@ const Reviews = ({ productId }) => {
           <Typography
             sx={{
               textAlign: "center",
-              fontSize: "60px",
+              fontSize: { md: "60px", xs: "32px" },
               color: "#3F5163",
               fontWeight: "600",
               marginBottom: "20px",

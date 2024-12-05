@@ -339,7 +339,7 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
                             alt=""
                             style={{
                               width: "100%",
-                              height: "141px",
+                              height: "119px",
                               cursor: "pointer",
                               borderRadius: "20px",
                             }}

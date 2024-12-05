@@ -5,7 +5,7 @@
 .swiper-prev,
 .swiper-next {
   position: absolute;
-  top: 25% !important;
+  top: 30% !important;
   width: 20px !important;
   height: 20px !important;
   background-color: white !important;

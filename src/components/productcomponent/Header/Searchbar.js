@@ -4,11 +4,11 @@ import { debounce } from "lodash";
 
 import algoliasearch from "algoliasearch/lite";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
-import { ProductService } from "../../services/Product.service";
+import { ProductService } from "../../../services/Product.service";
 import { useNavigate } from "react-router-dom";
 
 const SearchBar = () => {
-     const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState();
@@ -33,10 +33,10 @@ const SearchBar = () => {
     }
   };
 
-  const handleSelect = (label,id) => {
+  const handleSelect = (label, id) => {
     setSearchTerm(label);
     setShowSuggestions(false);
-     navigate(`/product/${id}`);
+    navigate(`/product/${id}`);
   };
 
   const submitSearch = debounce(async (value, page = 0) => {
@@ -119,7 +119,7 @@ const SearchBar = () => {
           <List>
             {filteredData.length > 0 ? (
               filteredData.map((item) => (
-                <ListItem button key={item.id} onClick={() => handleSelect(item.name,item.id)}>
+                <ListItem button key={item.id} onClick={() => handleSelect(item.name, item.id)}>
                   <img
                     width="70px"
                     height="60px"
