@@ -37,7 +37,7 @@ const Pop_Up = ({ open, handleClose }) => {
             id="keep-mounted-modal-title"
             variant="h6"
             component="h2"
-            sx={{ backgroundColor: "#3F5163", padding: "1rem", color: "white" }}
+            sx={{ backgroundColor: "#3F5163", padding: "1rem 1rem 1rem 49px", color: "white" }}
           >
             Select one of the Following
           </Typography>
@@ -45,22 +45,27 @@ const Pop_Up = ({ open, handleClose }) => {
             sx={{
               display: "flex",
               flexDirection: "row",
-              justifyContent: "space-evenly",
-              margin: "auto",
-              backgroundColor: "#E0CE8F",
+              padding: "0px 40px",
+              justifyContent: "space-between",
+              margin: "0 auto",
+              backgroundColor: "#FAF8EE",
             }}
           >
-            <Typography id="keep-mounted-modal-description" sx={{ padding: "1rem" }}>
-              Type: Banner
+            <Typography id="keep-mounted-modal-description" sx={{ padding: "1rem 1rem 1rem 10px" }}>
+              <span style={{ color: "#868686" }}>Type:</span>{" "}
+              <b style={{ color: "#3F5163", fontWeight: 600 }}>Banner</b>
             </Typography>
             <Typography id="keep-mounted-modal-description" sx={{ padding: "1rem" }}>
-              Size: 72" W x 36" H
+              <span style={{ color: "#868686" }}> Size:</span>
+              <b style={{ color: "#3F5163", fontWeight: 600 }}>72" W x 36" H</b>
             </Typography>
             <Typography id="keep-mounted-modal-description" sx={{ padding: "1rem" }}>
-              QTY: 2
+              <span style={{ color: "#868686" }}>QTY:</span>
+              <b style={{ color: "#3F5163", fontWeight: 600 }}>2</b>
             </Typography>
             <Typography id="keep-mounted-modal-description" sx={{ padding: "1rem" }}>
-              Price: $39.02 sq/ft
+              <span style={{ color: "#868686" }}>Price:</span>
+              <b style={{ color: "#3F5163", fontWeight: 600 }}> $39.02 sq/ft</b>
             </Typography>
           </Box>
           <Box
@@ -74,20 +79,25 @@ const Pop_Up = ({ open, handleClose }) => {
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                padding: "1rem",
                 margin: "auto",
-                backgroundColor: "#E0CE8F",
-                width: "250px",
-                height: "150px",
+                backgroundColor: "#FAF8EE",
+                gap: "2rem",
+                height: "228px",
+                width: "310px",
               }}
               href="/design"
             >
-              <Box sx={{ margin: "auto", display: "block" }}>
-                <Button>
-                  <UploadFile />
-                </Button>
-              </Box>
-              <Typography sx={{ textAlign: "center", color: "#3F5163" }}>Upload File</Typography>
+              <DesignOnline />
+              <Typography
+                sx={{
+                  textAlign: "center",
+                  fontSize: "18px",
+                  textTransform: "capitalize",
+                  color: "#3F5163",
+                }}
+              >
+                Upload File
+              </Typography>
             </Button>
             <Button
               sx={{
@@ -95,19 +105,24 @@ const Pop_Up = ({ open, handleClose }) => {
                 flexDirection: "column",
                 padding: "1rem",
                 margin: "auto",
-                backgroundColor: "#E0CE8F",
-                width: "250px",
-                height: "150px",
+                backgroundColor: "#FAF8EE",
+                gap: "2rem",
+                height: "228px",
+                width: "310px",
               }}
               href="/design"
             >
-              <Box sx={{ margin: "auto", display: "block" }}>
-                <Button>
-                  <DesignOnline />
-                </Button>
-              </Box>
-
-              <Typography sx={{ textAlign: "center", color: "#3F5163" }}>Design Online</Typography>
+              <UploadFile />
+              <Typography
+                sx={{
+                  textAlign: "center",
+                  fontSize: "18px",
+                  textTransform: "capitalize",
+                  color: "#3F5163",
+                }}
+              >
+                Design Online
+              </Typography>
             </Button>
             <Button
               sx={{
@@ -115,12 +130,13 @@ const Pop_Up = ({ open, handleClose }) => {
                 flexDirection: "column",
                 padding: "1rem",
                 margin: "auto",
-                backgroundColor: "#E0CE8F",
-                width: "250px",
-                height: "150px",
+                backgroundColor: "#FAF8EE",
+                gap: "2rem",
+                height: "228px",
+                width: "310px",
               }}
             >
-              <Box sx={{ margin: "auto", display: "block" }}>
+              <Box>
                 <SearchTemplete />
               </Box>
 
@@ -148,7 +164,8 @@ const Pop_Up = ({ open, handleClose }) => {
                   sx={{
                     backgroundColor: "#3F5163",
                     padding: "1rem",
-                    color: "white",
+                    color: "white !important",
+                    textTransform: "capitalize",
                     fontSize: "13px",
                     "&:hover": {
                       backgroundColor: "#6888a7",

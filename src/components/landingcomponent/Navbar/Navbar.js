@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Box,
   Container,
@@ -15,8 +15,21 @@ import {
   ListItem,
   ListItemText,
   Paper,
+  TextField,
+  Divider,
+  ListItemIcon,
+  Collapse,
 } from "@mui/material";
 import "./MegaMenu.css";
+import {
+  Search,
+  AccountCircle,
+  ShoppingCart,
+  Support,
+  ExpandLess,
+  ExpandMore,
+  Dashboard,
+} from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PhoneInTalkOutlinedIcon from "@mui/icons-material/PhoneInTalkOutlined";
@@ -27,110 +40,166 @@ import facebook_logo from "../../../asset/images/facebook_logo.svg";
 import twitter_logo from "../../../asset/images/twitter_logo.svg";
 import linkedin_logo from "../../../asset/images/linkedin_logo.svg";
 import youtube_logo from "../../../asset/images/youtube_logo.svg";
-import { useRef } from "react";
 import MegaMenu from "./MegaMenu";
+import { ProductService } from "../../../services/Product.service";
+
 
 const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
+  const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [currentUser, setCurrentUser] = useState("");
-  const [activeItem, setActiveItem] = useState("Home");
-  const [isMegaMenuOpen, setMegaMenuOpen] = useState(false);
-  const [hoveredItem, setHoveredItem] = useState(null);
-  const menuCloseTimeout = useRef(null);
+  const [selectedTab, setSelectedTab] = useState("Products"); // Default selected tab
+  const [allProducts, setAllProducts] = useState([]); // Assuming all products are loaded here
+  const [categoryContent, setCategoryContent] = useState([]); // To hold the content for the selected category
+  const [currentImage, setCurrentImage] = useState(""); // To track the current image
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [showCategoryContent, setShowCategoryContent] = useState(false); // Flag to toggle category content visibility
 
-  const menuItems = [
-    {
-      name: "Home",
-      subItems: [
-        {
-          title: "Banners",
-          items: ["Vinyl Banners", "Mesh Banners", "Fabric Banners"],
-        },
-        {
-          title: "Banner Stands",
-          items: ["Retractable Banners", "Step & Repeat Banners", "Backdrops"],
-        },
-        {
-          title: "Flag Banners",
-          items: ["Feather Flag", "Angled Flag", "Rectangle Flag"],
-        },
-      ],
-    },
-    {
-      name: "Large Format",
-      subItems: [
-        {
-          title: "Wide Format",
-          items: ["Poster Printing", "Canvas Printing", "Paper Prints"],
-        },
-        {
-          title: "Signs",
-          items: ["Acrylic Signs", "PVC Signs", "Aluminum Signs"],
-        },
-      ],
-    },
-    {
-      name: "Small Format",
-      subItems: [
-        {
-          title: "Business Cards",
-          items: ["Premium Business Cards", "Standard Business Cards"],
-        },
-        {
-          title: "Flyers",
-          items: ["Single-sided Flyers", "Double-sided Flyers"],
-        },
-      ],
-    },
-    {
-      name: "Stickers and Decals",
-      subItems: [
-        {
-          title: "Vinyl Stickers",
-          items: ["Custom Vinyl Stickers", "Die-cut Stickers"],
-        },
-        {
-          title: "Window Decals",
-          items: ["Static Cling", "Adhesive Decals"],
-        },
-      ],
-    },
-    {
-      name: "Flags",
-      subItems: [
-        {
-          title: "Outdoor Flags",
-          items: ["Feather Flags", "Pole Flags", "Garden Flags"],
-        },
-        {
-          title: "Indoor Flags",
-          items: ["Table Flags", "Wall Flags", "Banner Flags"],
-        },
-      ],
-    },
-  ];
-
-  const handleMouseEnterItem = (item) => {
-    setHoveredItem(item);
-    setMegaMenuOpen(true);
+  const handleCategoryClick = async (categoryName) => {
+    setSelectedCategory(categoryName);
+    setShowCategoryContent(true); // Show category content section
+    // Fetch category-specific content logic
+    try {
+      const params = { with: ["images", "productCategory"] };
+      const res = await ProductService.ProductList(params);
+      const filteredContent = res.data.filter((product) => product.productCategory?.parent_name === categoryName);
+      setCategoryContent(filteredContent); // Set the content to display
+      console.log("categoryContent", categoryContent);
+    } catch (error) {
+      console.error("Error fetching category content:", error);
+    }
   };
 
-  const handleMouseLeaveItem = () => {
-    setMegaMenuOpen(true);
+  // Back button functionality
+  const handleBackToCategories = () => {
+    setShowCategoryContent(false); // Hide category content and show buttons
   };
 
-  const handleMegaMenuEnter = () => {
-    setMegaMenuOpen(true);
+  const renderMostPopular = (categoryName) => {
+    const filteredProducts = categoryContent.filter((product) => product.productCategory?.parent_name === categoryName);
+    console.log("filteredProducts", filteredProducts);
+    // Group products by their subcategory
+    const groupedBySubCategory = filteredProducts.reduce((acc, product) => {
+      const subCategoryName = product.productCategory?.name;
+      if (!acc[subCategoryName]) acc[subCategoryName] = [];
+      acc[subCategoryName].push(product);
+      return acc;
+    }, {});
+
+    // Get all subcategories for the current category
+    const subCategories = Object.keys(groupedBySubCategory);
+
+    // Determine the number of products to display
+    const limit = subCategories.length > 3 ? 3 : subCategories.length;
+
+    // Collect the first product of each subcategory, up to the limit
+    const mostPopularProducts = subCategories.slice(0, limit).map(
+      (subCategory) => groupedBySubCategory[subCategory][0] // Get the first product from each subcategory
+    );
+
+    return (
+      <Box sx={{}}>
+        <h4 className="row mega-title" style={{ paddingBottom: "7px", fontSize: "16px", textTransform: "capitalize" }}>
+          Most Popular
+        </h4>
+        <ul style={{ listStyleType: "none", padding: 0 }}>
+          {mostPopularProducts.map((product, index) => {
+            console.log("mostPopularProducts", mostPopularProducts);
+            return (
+            <li
+              key={index}
+              style={{ paddingBottom: "5px", cursor: "pointer", display: "flex", flexDirection: "column" }}
+              onMouseEnter={() => setCurrentImage(product.images?.[0]?.path)}
+              //onClick={() => ClickProduct(product.id)}
+            >
+              <img
+                style={{ height: "5rem", width: "7rem", marginBottom: "5px" }}
+                src={`${process.env.REACT_APP_API_BASE_URL}/${product.images?.[0]?.path}`}
+                alt={product.name || "Default"}
+              />
+              <a href="#" style={{ width: "7rem", float: "left" }}>
+                {product.name}
+              </a>
+            </li>
+          )})}
+        </ul>
+      </Box>
+    );
   };
 
-  const handleMegaMenuLeave = () => {
-    setMegaMenuOpen(false);
+  // Function to render products for the selected category
+  const renderCategoryContent = (categoryName) => {
+    const groupedProducts = categoryContent
+      .filter((product) => product.productCategory.parent_name === categoryName)
+      .reduce((acc, product) => {
+        const name = product.productCategory.name;
+        if (!acc[name]) acc[name] = [];
+        acc[name].push(product);
+        return acc;
+      }, {});
+    return (
+      <Box sx={{ display: "flex", justifyContent: "space-between", padding: "20px" }}>
+        <Button variant="outlined" onClick={handleBackToCategories} sx={{ mb: 2 }}>
+          Back to Categories
+        </Button>
+        {renderMostPopular(selectedCategory)} {/* Display most popular products */}
+        <Box className="stander" sx={{ marginBottom: "15px" }}>
+          {Object.entries(groupedProducts).map(([subCategory, products], index) => (
+            <div key={index} style={{ paddingBottom: "10px" }}>
+              <h4
+                className="row mega-title"
+                style={{ paddingBottom: "7px", fontSize: "16px", maxWidth: "10rem", textTransform: "capitalize" }}
+              >
+                {subCategory}
+              </h4>
+              {products.map((product, itemIndex) => (
+                <li key={itemIndex} style={{ paddingBottom: "5px" }} onClick={() => ClickProduct(product.id)}>
+                  <a href="#" style={{ fontSize: "14px" }}>
+                    {product.name}
+                  </a>
+                </li>
+              ))}
+            </div>
+          ))}
+        </Box>
+      </Box>
+    );
   };
 
-  useEffect(() => {
-    return () => clearTimeout(menuCloseTimeout.current);
-  }, []);
+
+  const renderCategoryButtons = () => (
+    <Box sx={{ display: "flex", flexDirection: "column" }}>
+      <Button fullWidth variant="outlined" sx={{ mb: 1 }} onClick={() => handleCategoryClick("Banners")}>
+        Home
+      </Button>
+      <Button fullWidth variant="outlined" sx={{ mb: 1 }} onClick={() => handleCategoryClick("Large Format")}>
+        Large Format
+      </Button>
+      <Button fullWidth variant="outlined" sx={{ mb: 1 }} onClick={() => handleCategoryClick("Small Format")}>
+        Small Format
+      </Button>
+      <Button fullWidth variant="outlined" sx={{ mb: 1 }} onClick={() => handleCategoryClick("Decals")}>
+        Stickers and Decals
+      </Button>
+      <Button fullWidth variant="outlined" sx={{ mb: 1 }} onClick={() => handleCategoryClick("Flags")}>
+        Flags
+      </Button>
+      <Button fullWidth variant="outlined" sx={{ mb: 1 }} onClick={() => handleCategoryClick("Signs")}>
+        Sign Holders
+      </Button>
+    </Box>
+  );
+  // Function to handle tab content based on selected tab
+  const renderTabContent = () => {
+    switch (selectedTab) {
+      case "Products":
+        return showCategoryContent ? renderCategoryContent(selectedCategory) : renderCategoryButtons();
+      default:
+        return null;
+    }
+  };
+
   const toggleDrawer = (open0) => () => {
     setDrawerOpen(open0);
   };
@@ -170,7 +239,9 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
     window.location.reload();
   };
 
-  // const menuItems = ["Home", "Large Format", "Small Format", "Stickers and Decals", "Flags", "Sign Holders"];
+  function ClickProduct(id) {
+    navigate(`/product/${id}`);
+  }
   return (
     <>
       <Box className="header">
@@ -252,80 +323,6 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
           <Box>
             <MegaMenu />
           </Box>
-          {/* Navigation Links */}
-          {/*<Box>
-         
-          <Box
-          
-             sx={{
-                display: { xs: "none", md: "flex" },
-                alignItems: "center",
-                justifyContent: "space-around",
-                width: "40rem",
-              }}
-          >
-          <MegaMenu/>
-            {menuItems.map((menu) => (
-              <Typography
-                key={menu.name}
-                variant="body2"
-                sx={{
-                    paddingRight: "10px",
-                    fontSize: "16px",
-                    fontWeight: "400",
-                    color: hoveredItem === menu?.name ? "#3F5163" : "#8C8E8F",
-                    textDecoration: hoveredItem === menu?.name ? "underline" : "none",
-                    textUnderlineOffset: "4px",
-                  }}
-                onMouseEnter={() => handleMouseEnterItem(menu.name)}
-                onMouseLeave={handleMouseLeaveItem}
-              >
-                {menu.name}
-              </Typography>
-            ))}
-          </Box>
-
-         
-          {isMegaMenuOpen && hoveredItem && (
-            <Paper
-              onMouseEnter={handleMegaMenuEnter}
-              onMouseLeave={handleMegaMenuLeave}
-              sx={{
-                position: 'absolute',
-                top: '105px',
-                left: '23%',
-                maxWidth: '1200px',
-                padding: '20px 30px',
-                margin: '0 auto',
-                display: 'flex',
-                justifyContent: 'space-around',
-                backgroundColor: '#fff',
-                boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-                zIndex: 10,
-                borderRadius: '8px',
-              }}
-            >
-              {menuItems
-                .filter((menu) => menu.name === hoveredItem)
-                .map((menu) => (
-                  <Box key={menu.name} sx={{ display:'flex',gap:3} }>
-                    {menu.subItems.map((subItem) => (
-                      <Box key={subItem.title} sx={{ marginBottom: '20px' }}>
-                        <Typography variant="h6" fontWeight="bold">
-                          {subItem.title}
-                        </Typography>
-                        {subItem.items.map((item) => (
-                          <Typography key={item} variant="body2" mt={1}>
-                            {item}
-                          </Typography>
-                        ))}
-                      </Box>
-                    ))}
-                  </Box>
-                ))}
-            </Paper>
-          )}
-        </Box>*/}
           <Box sx={{ display: "flex" }}>
             <Box
               sx={{
@@ -456,23 +453,52 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
         <Drawer
           anchor="left"
           open={drawerOpen}
-          onClose={toggleDrawer(false)}
-          sx={{ "& .MuiDrawer-paper": { width: 240, boxSizing: "border-box" } }}
+          onClose={() => setDrawerOpen(false)}
+          sx={{
+            "& .MuiDrawer-paper": {
+              width: 360,
+              boxSizing: "border-box",
+            },
+          }}
         >
-          <List>
-            {["Home", "Large Format", "Small Format", "Stickers and Decals", "Flags", "Sign Holders"].map((text) => (
-              <ListItem
-                button
-                key={text}
-                onClick={() => {
-                  setActiveItem(text);
-                  toggleDrawer(false)();
-                }}
-              >
-                <ListItemText primary={text} sx={{ textDecoration: activeItem === text ? "underline" : "none" }} />
-              </ListItem>
-            ))}
-          </List>
+          <Box sx={{ width: 80, backgroundColor: "#f0f0f0", display: "flex", flexDirection: "column" }}>
+            <List>
+              {[
+                { text: "Products", icon: <Dashboard /> },
+                { text: "Account", icon: <AccountCircle /> },
+                { text: "Support", icon: <Support /> },
+                { text: "Cart", icon: <ShoppingCart /> },
+              ].map((item) => (
+                <ListItem
+                  button
+                  key={item.text}
+                  onClick={() => setSelectedTab(item.text)}
+                  sx={{
+                    textAlign: "center",
+                    padding: "16px 0",
+                    color: selectedTab === item.text ? "#1976d2" : "#333",
+                    backgroundColor: selectedTab === item.text ? "#e3f2fd" : "transparent",
+                    "&:hover": { backgroundColor: "#e0e0e0" },
+                  }}
+                >
+                  <Box sx={{ display: "flex", flexDirection: "column" }}>
+                    {item.icon}
+                    <ListItemText
+                      primary={item.text}
+                      primaryTypographyProps={{
+                        fontSize: "10px",
+                        fontWeight: "bold",
+                      }}
+                      sx={{ mt: 1 }}
+                    />
+                  </Box>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+
+          <Divider orientation="vertical" flexItem />
+          <Box sx={{ flex: 1 }}>{renderTabContent()}</Box>
         </Drawer>
       </Box>
     </>

@@ -31,15 +31,16 @@ const BannerSideSection = ({ onToggleAccordion, productDetails, setShowSection, 
     <Box
       sx={{
         height: isAccordionOpen ? "78vh" : "auto",
-        width: "300px",
+        width: { sm: "300px" },
         marginTop: "20px",
         boxShadow: "0px 5px 30px -15px",
         display: "flex",
         flexDirection: "column",
         border: "1px solid #868686",
         alignItems: "end",
-        padding: "20px 0",
+        // padding: {md:"20px 0"},
         position: "fixed",
+        background: "#fff",
         right: "0.5rem",
         top: "5rem",
         color: isAccordionOpen
@@ -54,7 +55,11 @@ const BannerSideSection = ({ onToggleAccordion, productDetails, setShowSection, 
         zIndex: "1000",
       }}
     >
-      <Accordion expanded={isAccordionOpen} onChange={handleAccordionChange} sx={{ width: "96%", boxShadow: "none" }}>
+      <Accordion
+        expanded={isAccordionOpen}
+        onChange={handleAccordionChange}
+        sx={{ width: "100%", boxShadow: "none", background: "#fff", position: "relative", zIndex: "1" }}
+      >
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2-content" id="panel2-header">
           <Typography sx={{ color: "#3F5163", fontWeight: "bold", fontSize: "20px" }}>Banner</Typography>
         </AccordionSummary>
@@ -77,7 +82,7 @@ const BannerSideSection = ({ onToggleAccordion, productDetails, setShowSection, 
                     <Typography sx={{ color: "#3F5163", fontSize: "16px", fontWeight: 500 }}>Material</Typography>
                     <Typography sx={{ fontSize: "16px", color: "#868686" }}>Stickers and Decals</Typography>
                   </Box>
-                  <Box sx={{ display: "grid", gap: "5px", paddingLeft: "2px" }} onClick={OpenConfig}>
+                  <Box sx={{ display: "grid", paddingLeft: "2px" }} onClick={OpenConfig}>
                     <Sidebarsetting
                       style={{
                         paddingLeft: "8px",

@@ -13,8 +13,8 @@ import { PremiumImage } from "../services/PremiumImage.service";
 import { ProductCategoryService } from "../services/ProductCategory.service";
 
 const DesignOnline = () => {
-    const [value, setValue] = React.useState(1);
-    const [isTabOpen, setIsTabOpen] = useState(false);
+  const [value, setValue] = React.useState(1);
+  const [isTabOpen, setIsTabOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState([]);
   const [addimage, AddImage] = useState("");
   const [images, setImages] = useState();
@@ -32,7 +32,7 @@ const DesignOnline = () => {
   const [allproduct, setAllProduct] = useState();
   const [showSection, setShowSection] = useState(true);
   const [combinedImages, setCombinedImages] = useState([]);
-   const [getid, setgetId] = useState();
+  const [getid, setgetId] = useState();
 
   const [productDetails, setProductDetails] = useState({
     width: "",
@@ -311,6 +311,16 @@ const DesignOnline = () => {
           />
         )}
 
+        {showSection && (
+          <BannerSideSection
+            onToggleAccordion={handleAccordionToggle}
+            productDetails={productDetails}
+            setShowSection={setShowSection}
+            setValue={setValue}
+            setIsTabOpen={setIsTabOpen}
+          />
+        )}
+
         <Box
           sx={{
             minHeight: "78vh",
@@ -321,16 +331,16 @@ const DesignOnline = () => {
               sm: isAccordionOpen ? "calc(100% - 25%)" : "100%",
             },
             marginTop: "20px",
-            marginLeft: "197px",
-            marginRight: { sm: isAccordionOpen ? "265px" : "0px" },
+            marginLeft: { sm: "197px" },
+            // marginRight: { sm: isAccordionOpen ? "265px" : "0px" },
             padding: { xs: "10px", sm: "20px" },
             position: "relative",
             boxShadow: { sm: "0px 5px 30px -15px" },
             alignItems: "flex-start",
-            top: { xs: "2rem", sm: "5rem" },
+            top: { xs: "5rem", sm: "5rem" },
             color: "#3F5163",
             borderRadius: "6px",
-            zIndex: "1",
+            zIndex: "2",
           }}
         >
           {!showSection && (
@@ -371,15 +381,7 @@ const DesignOnline = () => {
           )}
           <h1>Your Content Here</h1>
           <p style={{ marginTop: "20px" }}>This is your main content area.</p>
-          {showSection && (
-            <BannerSideSection
-              onToggleAccordion={handleAccordionToggle}
-              productDetails={productDetails}
-              setShowSection={setShowSection}
-              setValue={setValue}
-              setIsTabOpen={setIsTabOpen}
-            />
-          )}
+
           <Box
             sx={{
               maxWidth: {
@@ -440,8 +442,8 @@ const DesignOnline = () => {
               </Rnd>
             </Box>
           )}
-          <Toolbar />
         </Box>
+        <Toolbar />
 
         <LoginDialog
           open={loginOpen}

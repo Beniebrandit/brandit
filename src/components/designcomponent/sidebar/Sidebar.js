@@ -202,7 +202,7 @@ const Sidebar = ({
             marginTop: "20px",
             flexGrow: 1,
             display: "flex",
-            height: "82vh",
+            height: "78vh",
             boxShadow: "0px 5px 30px -15px", // Background color of the sidebar
             // padding: "20px 0",
             position: "fixed",
@@ -210,7 +210,8 @@ const Sidebar = ({
             top: "5rem",
             color: "#3F5163",
             borderRadius: "6px",
-            zIndex: "2",
+            background: "#fff",
+            zIndex: "3",
           }}
           //ref={tabRef} // Reference to the entire box that holds the tabs and panel
         >
@@ -220,8 +221,8 @@ const Sidebar = ({
             onChange={handleChange}
             aria-label="Vertical tabs example"
             sx={{
-              borderRight: 1,
-              borderColor: "divider",
+              // borderRight: 1,
+              // borderColor: "divider",
               height: "80vh",
               "& .MuiTabs-indicator": {
                 display: "none !important",
@@ -303,7 +304,7 @@ const Sidebar = ({
               }}
               icon={<SidebarQRcode style={{ width: "20px", height: "auto" }} />}
               label={<span style={{ color: "#3F5163", textTransform: "capitalize" }}>QR Code</span>}
-              {...a11yProps(6)}
+              {...a11yProps(3)}
             />
           </Tabs>
           <Box
@@ -322,10 +323,10 @@ const Sidebar = ({
                     alldata={alldata}
                     setProductDetails={setProductDetails}
                     productDetails={productDetails}
-                     setgetId={setgetId}
+                    setgetId={setgetId}
                   />
                 </TabPanel>
-                <TabPanel value={value} index={1} style={{ width: "24rem" }}>
+                <TabPanel value={value} index={1} style={{ width: "auto", maxWidth: "24rem" }}>
                   <MyUpload
                     combinedImages={combinedImages}
                     setCombinedImages={setCombinedImages}
@@ -339,7 +340,7 @@ const Sidebar = ({
                     dropdata={dropdata}
                   />
                 </TabPanel>
-                <TabPanel value={value} index={2} style={{ width: "24rem" }}>
+                <TabPanel value={value} index={2} style={{ width: "auto", maxWidth: "24rem" }}>
                   <PremiumImg
                     selectImage={selectImage}
                     images={images}
@@ -348,10 +349,7 @@ const Sidebar = ({
                     handlePremiumImage={handlePremiumImage}
                   />
                 </TabPanel>
-                <TabPanel value={value} index={3}>
-                  <Text onStyleChange={onStyleChange} />
-                </TabPanel>
-                <TabPanel value={value} index={6} style={{ height: "15rem" }}>
+                <TabPanel value={value} index={3} style={{ height: "15rem" }}>
                   <Qrcode setImage={setImage} />
                 </TabPanel>
               </>
