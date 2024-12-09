@@ -86,7 +86,7 @@ const SearchBar = () => {
     setProducts("");
   };
   return (
-    <Box sx={{ position: "relative", width: "400px" }}>
+    <Box sx={{ position: "relative", width: "300px" }}>
       <TextField
         placeholder="Search for Products or Templates"
         sx={{

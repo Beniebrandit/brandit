@@ -184,7 +184,7 @@ function ClickProduct(id) {
             )}
           </a>
           <div
-            className="animated fadeIn mega-menu"
+            className="animated fadeIn mega-menu-grid"
             style={{
               maxWidth: "1200px",
               padding: "20px 30px",

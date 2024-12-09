@@ -1,7 +1,6 @@
 body {
   margin: 0;
   padding: 0;
-  /*font-family: 'Cerebri Sans', sans-serif !important;*/
 }
 
 *,
@@ -28,15 +27,10 @@ a, a:hover, a.active, a:active, a:visited, a:focus {
   background-color: #fff;
   float: left;
   padding: 10px 20px;
-  /*width: 100vh;*/
   list-style: none;
   position: relative;
   font-family: 'Cerebri Sans', sans-serif !important;
 }
-
-/*.exo-menu > li {
-  position: relative;
-}*/
 
 .exo-menu > li > a {
   font-size: 16px;
@@ -55,12 +49,10 @@ a, a:hover, a.active, a:active, a:visited, a:focus {
   text-underline-offset: 4px;
 }
 
-.mega-menu {
+.mega-menu-grid {
   display: none;
   position: absolute;
-  /*top: 100%;*/
   left: 0;
-  /*right: 10%;*/
   background-color: #fff;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 10;
@@ -69,7 +61,7 @@ a, a:hover, a.active, a:active, a:visited, a:focus {
   width: 100%;
 }
 
-.mega-menu h4 {
+.mega-menu-grid h4 {
   font-size: 14px;
   font-weight: bold;
   color: #3f5163;
@@ -77,22 +69,22 @@ a, a:hover, a.active, a:active, a:visited, a:focus {
   text-transform: uppercase;
 }
 
-.mega-menu ul {
+.mega-menu-grid ul {
   padding: 0;
   margin: 0;
 }
 
-.mega-menu ul > li {
+.mega-menu-grid ul > li {
   margin-bottom: 5px;
 }
 
-.mega-menu ul > li > a {
+.mega-menu-grid ul > li > a {
   font-size: 14px;
   color: #3f5163;
   transition: color 0.2s;
 }
 
-.mega-menu ul > li > a:hover {
+.mega-menu-grid ul > li > a:hover {
   color: #547787;
 }
 
@@ -130,7 +122,7 @@ a, a:hover, a.active, a:active, a:visited, a:focus {
     cursor: pointer;
   }
 
-  .mega-menu {
+  .mega-menu-grid {
     position: relative;
     width: 100%;
     border-radius: 0;
@@ -144,13 +136,14 @@ a, a:hover, a.active, a:active, a:visited, a:focus {
     display: none;
   }
 
-  .exo-menu > li:hover > .mega-menu {
+  .exo-menu > li:hover > .mega-menu-grid {
     display: block;
   }
 }
-@media (max-width: 1199px){
+@media (max-width: 768px){
   .exo-menu {
     display: none;
   }
 }
+
 

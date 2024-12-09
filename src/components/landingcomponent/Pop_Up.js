@@ -4,6 +4,7 @@ import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 import { ReactComponent as SearchTemplete } from "../../asset/images/Vector.svg";
 import { ReactComponent as DesignOnline } from "../../asset/images/DesignOnline.svg";
 import { ReactComponent as UploadFile } from "../../asset/images/UploadFile.svg";
+import { useNavigate } from "react-router-dom";
 
 const style = {
   position: "absolute",
@@ -22,7 +23,8 @@ const style = {
   },
 };
 
-const Pop_Up = ({ open, handleClose }) => {
+const Pop_Up = ({ open, handleClose, productId }) => {
+  const navigate = useNavigate();
   return (
     <div>
       <Modal
@@ -110,7 +112,7 @@ const Pop_Up = ({ open, handleClose }) => {
                 height: "228px",
                 width: "310px",
               }}
-              href="/design"
+              onClick={() => navigate(`/design/${productId}`)}
             >
               <UploadFile />
               <Typography

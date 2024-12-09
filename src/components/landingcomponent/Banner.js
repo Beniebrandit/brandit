@@ -282,6 +282,7 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
         payload={payload}
         price={price}
         selectedCategory={selectedCategory}
+        productId={productId}
       />
 
       <Box>

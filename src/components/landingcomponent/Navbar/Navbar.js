@@ -14,22 +14,10 @@ import {
   List,
   ListItem,
   ListItemText,
-  Paper,
-  TextField,
   Divider,
-  ListItemIcon,
-  Collapse,
 } from "@mui/material";
 import "./MegaMenu.css";
-import {
-  Search,
-  AccountCircle,
-  ShoppingCart,
-  Support,
-  ExpandLess,
-  ExpandMore,
-  Dashboard,
-} from "@mui/icons-material";
+import { Search, AccountCircle, Dashboard } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PhoneInTalkOutlinedIcon from "@mui/icons-material/PhoneInTalkOutlined";
@@ -42,19 +30,36 @@ import linkedin_logo from "../../../asset/images/linkedin_logo.svg";
 import youtube_logo from "../../../asset/images/youtube_logo.svg";
 import MegaMenu from "./MegaMenu";
 import { ProductService } from "../../../services/Product.service";
+import { useMediaQuery, useTheme } from "@mui/material";
 
+const items = [
+  { text: "Products", icon: <Dashboard /> },
+  { text: "Account", icon: <AccountCircle /> },
+];
+
+const categories = [
+  { label: "Home", category: "Banners" },
+  { label: "Large Format", category: "Large Format" },
+  { label: "Small Format", category: "Small Format" },
+  { label: "Stickers and Decals", category: "Decals" },
+  { label: "Flags", category: "Flags" },
+  { label: "Sign Holders", category: "Signs" },
+];
 
 const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
   const navigate = useNavigate();
+  const theme0 = useTheme();
+  const isBelowMd = useMediaQuery(theme0.breakpoints.down("md"));
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [currentUser, setCurrentUser] = useState("");
-  const [selectedTab, setSelectedTab] = useState("Products"); // Default selected tab
+  const [selectedTab, setSelectedTab] = useState(isBelowMd ? "Products" : "Account"); // Default selected tab
   const [allProducts, setAllProducts] = useState([]); // Assuming all products are loaded here
   const [categoryContent, setCategoryContent] = useState([]); // To hold the content for the selected category
   const [currentImage, setCurrentImage] = useState(""); // To track the current image
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [showCategoryContent, setShowCategoryContent] = useState(false); // Flag to toggle category content visibility
+  const [showCategoryContent, setShowCategoryContent] = useState(false);
+  const filteredItems = items.filter((item) => (item.text === "Products" ? isBelowMd : true));
 
   const handleCategoryClick = async (categoryName) => {
     setSelectedCategory(categoryName);
@@ -99,30 +104,37 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
     );
 
     return (
-      <Box sx={{}}>
+      <Box sx={{ width: "100%", borderBottom: "1px solid #ddd", padding: "0 20px" }}>
         <h4 className="row mega-title" style={{ paddingBottom: "7px", fontSize: "16px", textTransform: "capitalize" }}>
           Most Popular
         </h4>
-        <ul style={{ listStyleType: "none", padding: 0 }}>
+        <ul style={{ listStyleType: "none", padding: 0, display: "flex", justifyContent: "space-between" }}>
           {mostPopularProducts.map((product, index) => {
             console.log("mostPopularProducts", mostPopularProducts);
             return (
-            <li
-              key={index}
-              style={{ paddingBottom: "5px", cursor: "pointer", display: "flex", flexDirection: "column" }}
-              onMouseEnter={() => setCurrentImage(product.images?.[0]?.path)}
-              //onClick={() => ClickProduct(product.id)}
-            >
-              <img
-                style={{ height: "5rem", width: "7rem", marginBottom: "5px" }}
-                src={`${process.env.REACT_APP_API_BASE_URL}/${product.images?.[0]?.path}`}
-                alt={product.name || "Default"}
-              />
-              <a href="#" style={{ width: "7rem", float: "left" }}>
-                {product.name}
-              </a>
-            </li>
-          )})}
+              <li
+                key={index}
+                style={{
+                  padding: "0 15px 5px 0",
+                  cursor: "pointer",
+                  display: "flex",
+                  width: "50%",
+                  flexDirection: "column",
+                }}
+                onMouseEnter={() => setCurrentImage(product.images?.[0]?.path)}
+                onClick={() => ClickProduct(product.id)}
+              >
+                <img
+                  style={{ height: "100%", width: "100%", marginBottom: "5px", maxHeight: "150px" }}
+                  src={`${process.env.REACT_APP_API_BASE_URL}/${product.images?.[0]?.path}`}
+                  alt={product.name || "Default"}
+                />
+                <a href="#" style={{ float: "left", padding: "10px 0" }}>
+                  {product.name}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </Box>
     );
@@ -139,27 +151,36 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
         return acc;
       }, {});
     return (
-      <Box sx={{ display: "flex", justifyContent: "space-between", padding: "20px" }}>
-        <Button variant="outlined" onClick={handleBackToCategories} sx={{ mb: 2 }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between" }}>
+        <Button variant="outlined" onClick={handleBackToCategories} sx={{ width: "100%", margin: "20px" }}>
           Back to Categories
         </Button>
         {renderMostPopular(selectedCategory)} {/* Display most popular products */}
-        <Box className="stander" sx={{ marginBottom: "15px" }}>
+        <Box className="stander" sx={{ margin: "15px 0", width: "100%", padding: "0 20px" }}>
           {Object.entries(groupedProducts).map(([subCategory, products], index) => (
-            <div key={index} style={{ paddingBottom: "10px" }}>
+            <div key={index} sx={{ paddingBottom: "10px", width: "100%" }}>
               <h4
                 className="row mega-title"
-                style={{ paddingBottom: "7px", fontSize: "16px", maxWidth: "10rem", textTransform: "capitalize" }}
+                style={{ paddingBottom: "7px", fontSize: "16px", textTransform: "capitalize" }}
               >
                 {subCategory}
               </h4>
               {products.map((product, itemIndex) => (
-                <li key={itemIndex} style={{ paddingBottom: "5px" }} onClick={() => ClickProduct(product.id)}>
+                <li
+                  key={itemIndex}
+                  style={{
+                    paddingBottom: "5px",
+                    paddingLeft: "5px",
+                    listStyle: "none",
+                  }}
+                  onClick={() => ClickProduct(product.id)}
+                >
                   <a href="#" style={{ fontSize: "14px" }}>
                     {product.name}
                   </a>
                 </li>
               ))}
+              <Divider orientation="horizontal" flexItem  sx={{margin:"8px 0px 8px"}}/>
             </div>
           ))}
         </Box>
@@ -167,34 +188,172 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
     );
   };
 
-
   const renderCategoryButtons = () => (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <Button fullWidth variant="outlined" sx={{ mb: 1 }} onClick={() => handleCategoryClick("Banners")}>
-        Home
-      </Button>
-      <Button fullWidth variant="outlined" sx={{ mb: 1 }} onClick={() => handleCategoryClick("Large Format")}>
-        Large Format
-      </Button>
-      <Button fullWidth variant="outlined" sx={{ mb: 1 }} onClick={() => handleCategoryClick("Small Format")}>
-        Small Format
-      </Button>
-      <Button fullWidth variant="outlined" sx={{ mb: 1 }} onClick={() => handleCategoryClick("Decals")}>
-        Stickers and Decals
-      </Button>
-      <Button fullWidth variant="outlined" sx={{ mb: 1 }} onClick={() => handleCategoryClick("Flags")}>
-        Flags
-      </Button>
-      <Button fullWidth variant="outlined" sx={{ mb: 1 }} onClick={() => handleCategoryClick("Signs")}>
-        Sign Holders
-      </Button>
+    <Box
+      sx={{ display: "flex", flexDirection: "column", padding: "20px 15px"}}
+    >
+      {categories.map(({ label, category }) => (
+        <Button
+          key={category}
+          fullWidth
+          variant="text"
+          sx={{
+            mb: 1,
+            justifyContent: "flex-start",
+            color: "#3F5163",
+            textTransform: "capitalize",
+            fontWeight: "bold",
+            borderLeft:"1px solid black",
+            "&:hover": { backgroundColor: "#e0e0e0" },
+          }}
+          onClick={() => handleCategoryClick(category)}
+        >
+          {label}
+        </Button>
+      ))}
     </Box>
   );
+
+  const accountRender = () => {
+    return (
+      <ThemeProvider theme={theme}>
+        <Button
+          aria-owns={anchorEl ? "simple-menu" : undefined}
+          aria-haspopup="true"
+          sx={{
+            position: "relative",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            color: "#3F5163",
+            textTransform: "capitalize",
+            fontWeight: "bold",
+            borderLeft: "1px solid black",
+            "&:hover": { backgroundColor: "#e0e0e0" },
+            ml: "1rem",
+            p: "8px 16px",
+            mt: "1rem",
+          }}
+        >
+          <span style={{ color: "#3F5163" }}>
+            <b style={{ fontSize: { sm: "20px", xs: "14px" } }}>Account </b>
+            <span
+              style={{
+                fontSize: "12px",
+                display: currentUser ? "inline-flex" : "inline",
+              }}
+            >
+              {currentUser ? `(${currentUser})` : "(Sign In)"}
+            </span>
+          </span>
+        </Button>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              position: "absolute",
+              backgroundColor: "white",
+              mt: 1,
+              pl: "1rem",
+              width:"100%",
+              borderRadius: "4px",
+            }}
+          >
+            <Button
+              sx={{
+                p: "8px 16px",
+                width: "100%",
+                justifyContent: "flex-start",
+                color: "#3F5163",
+                textTransform: "capitalize",
+                fontWeight: "bold",
+                borderLeft: "1px solid black",
+                "&:hover": { backgroundColor: "#e0e0e0" },
+                mb: 1,
+              }}
+            >
+              <Link
+                to="/saved-design"
+                style={{
+                  textDecoration: "none",
+                  textTransform: "capitalize",
+                  color: "#3F5163",
+                }}
+              >
+                My design
+              </Link>
+            </Button>
+
+            {!currentUser ? (
+              <>
+                <Button
+                  sx={{
+                    p: "8px 16px",
+                    width: "100%",
+                    justifyContent: "flex-start",
+                    color: "#3F5163",
+                    textTransform: "capitalize",
+                    fontWeight: "bold",
+                    borderLeft: "1px solid black",
+                    "&:hover": { backgroundColor: "#e0e0e0" },
+                    mb: 1,
+                  }}
+                  onClick={() => {
+                    handleClickOpenLogin();
+                  }}
+                >
+                  Sign in
+                </Button>
+                <Button
+                  sx={{
+                    p: "8px 16px",
+                    width: "100%",
+                    justifyContent: "flex-start",
+                    color: "#3F5163",
+                    textTransform: "capitalize",
+                    fontWeight: "bold",
+                    borderLeft: "1px solid black",
+                    "&:hover": { backgroundColor: "#e0e0e0" },
+                    mb: 1,
+                  }}
+                  onClick={() => {
+                    handleClickOpenSignUp();
+                  }}
+                >
+                  Create account
+                </Button>
+              </>
+            ) : (
+              <Button
+                sx={{
+                  p: "8px 16px",
+                  width: "100%",
+                  justifyContent: "flex-start",
+                  color: "#3F5163",
+                  textTransform: "capitalize",
+                  fontWeight: "bold",
+                  borderLeft: "1px solid black",
+                  "&:hover": { backgroundColor: "#e0e0e0" },
+                  mb: 1,
+                }}
+                onClick={() => {
+                  Logout();
+                }}
+              >
+                Log out
+              </Button>
+            )}
+          </Box>
+      </ThemeProvider>
+    );
+  };
   // Function to handle tab content based on selected tab
   const renderTabContent = () => {
     switch (selectedTab) {
       case "Products":
         return showCategoryContent ? renderCategoryContent(selectedCategory) : renderCategoryButtons();
+      case "Account":
+        return accountRender();
       default:
         return null;
     }
@@ -333,85 +492,87 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                 height: "100%",
               }}
             >
-              <ThemeProvider theme={theme}>
-                <Box
-                  aria-owns={anchorEl ? "simple-menu" : undefined}
-                  aria-haspopup="true"
-                  onMouseEnter={handleClick}
-                  sx={{
-                    position: "relative",
-                    display: "flex",
-                    alignItems: "center",
-                    paddingLeft: "1rem",
-                    textTransform: "none",
-                    //backgroundColor: anchorEl ? "#e0e0e0" : "inherit",
-                    backgroundColor: "transparent",
-                    borderTopRightRadius: "5px",
-                    borderTopLeftRadius: "5px",
-                    padding: "6px !important",
-                  }}
-                >
-                  <img alt="Account" src={Account} style={{ width: "36px", height: "auto", marginRight: "7px" }} />
-                  <span style={{ color: "#3f5163" }}>
-                    <b style={{ fontSize: { sm: "20px", xs: "14px" } }}>Account </b>
-                    <span style={{ fontSize: "12px", display: currentUser ? "flex" : "" }}>
-                      {currentUser ? `(${currentUser})` : "(Sign In)"}
+              <Box sx={{ display: { xs: "none", lg: "flex" } }}>
+                <ThemeProvider theme={theme}>
+                  <Box
+                    aria-owns={anchorEl ? "simple-menu" : undefined}
+                    aria-haspopup="true"
+                    onMouseEnter={handleClick}
+                    sx={{
+                      position: "relative",
+                      display: "flex",
+                      alignItems: "center",
+                      paddingLeft: "1rem",
+                      textTransform: "none",
+                      //backgroundColor: anchorEl ? "#e0e0e0" : "inherit",
+                      backgroundColor: "transparent",
+                      borderTopRightRadius: "5px",
+                      borderTopLeftRadius: "5px",
+                      padding: "6px !important",
+                    }}
+                  >
+                    <img alt="Account" src={Account} style={{ width: "36px", height: "auto", marginRight: "7px" }} />
+                    <span style={{ color: "#3f5163" }}>
+                      <b style={{ fontSize: { sm: "20px", xs: "14px" } }}>Account </b>
+                      <span style={{ fontSize: "12px", display: currentUser ? "flex" : "" }}>
+                        {currentUser ? `(${currentUser})` : "(Sign In)"}
+                      </span>
                     </span>
-                  </span>
-                </Box>
-                <Menu
-                  id="simple-menu"
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleDropdownClose}
-                  onMouseLeave={handleDropdownClose}
-                  PaperProps={{
-                    sx: {
-                      //borderRadius: "0px !important",
-                      //backgroundColor: "#e0e0e0 !important",
-                      backgroundColor: "white !important",
-                      width: anchorEl?.offsetWidth || { sx: "126px !important", sm: "143px !important" },
-                      marginTop: "0px !important",
-                      boxShadow: "none !important",
-                    },
-                  }}
-                >
-                  <MenuItem key="my-design" onClick={handleDropdownClose} component={Link} to="/saved-design">
-                    My design
-                  </MenuItem>
-                  {!currentUser ? (
-                    <>
-                      <MenuItem
-                        key="signin"
-                        onClick={() => {
-                          handleDropdownClose();
-                          handleClickOpenLogin();
-                        }}
-                      >
-                        Sign in
-                      </MenuItem>
-                      <MenuItem
-                        key="create-account"
-                        onClick={() => {
-                          handleDropdownClose();
-                          handleClickOpenSignUp();
-                        }}
-                      >
-                        Create account
-                      </MenuItem>
-                    </>
-                  ) : (
-                    <MenuItem
-                      key="logout"
-                      onClick={() => {
-                        Logout();
-                      }}
-                    >
-                      Log out
+                  </Box>
+                  <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleDropdownClose}
+                    onMouseLeave={handleDropdownClose}
+                    PaperProps={{
+                      sx: {
+                        //borderRadius: "0px !important",
+                        //backgroundColor: "#e0e0e0 !important",
+                        backgroundColor: "white !important",
+                        width: anchorEl?.offsetWidth || { sx: "126px !important", sm: "143px !important" },
+                        marginTop: "0px !important",
+                        boxShadow: "none !important",
+                      },
+                    }}
+                  >
+                    <MenuItem key="my-design" onClick={handleDropdownClose} component={Link} to="/saved-design">
+                      My design
                     </MenuItem>
-                  )}
-                </Menu>
-              </ThemeProvider>
+                    {!currentUser ? (
+                      <>
+                        <MenuItem
+                          key="signin"
+                          onClick={() => {
+                            handleDropdownClose();
+                            handleClickOpenLogin();
+                          }}
+                        >
+                          Sign in
+                        </MenuItem>
+                        <MenuItem
+                          key="create-account"
+                          onClick={() => {
+                            handleDropdownClose();
+                            handleClickOpenSignUp();
+                          }}
+                        >
+                          Create account
+                        </MenuItem>
+                      </>
+                    ) : (
+                      <MenuItem
+                        key="logout"
+                        onClick={() => {
+                          Logout();
+                        }}
+                      >
+                        Log out
+                      </MenuItem>
+                    )}
+                  </Menu>
+                </ThemeProvider>
+              </Box>
               <Button
                 sx={{
                   position: "relative",
@@ -456,49 +617,48 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
           onClose={() => setDrawerOpen(false)}
           sx={{
             "& .MuiDrawer-paper": {
-              width: 360,
+              width: { xs: "calc(100vw - 63px)", sm: "calc(100vw - 96px)" },
               boxSizing: "border-box",
             },
           }}
         >
-          <Box sx={{ width: 80, backgroundColor: "#f0f0f0", display: "flex", flexDirection: "column" }}>
-            <List>
-              {[
-                { text: "Products", icon: <Dashboard /> },
-                { text: "Account", icon: <AccountCircle /> },
-                { text: "Support", icon: <Support /> },
-                { text: "Cart", icon: <ShoppingCart /> },
-              ].map((item) => (
-                <ListItem
-                  button
-                  key={item.text}
-                  onClick={() => setSelectedTab(item.text)}
-                  sx={{
-                    textAlign: "center",
-                    padding: "16px 0",
-                    color: selectedTab === item.text ? "#1976d2" : "#333",
-                    backgroundColor: selectedTab === item.text ? "#e3f2fd" : "transparent",
-                    "&:hover": { backgroundColor: "#e0e0e0" },
-                  }}
-                >
-                  <Box sx={{ display: "flex", flexDirection: "column" }}>
-                    {item.icon}
-                    <ListItemText
-                      primary={item.text}
-                      primaryTypographyProps={{
-                        fontSize: "10px",
-                        fontWeight: "bold",
-                      }}
-                      sx={{ mt: 1 }}
-                    />
-                  </Box>
-                </ListItem>
-              ))}
-            </List>
+          <Box sx={{ display: "flex", height: "100%" }}>
+            <Box sx={{ width: 80, backgroundColor: "#f0f0f0", display: "flex", flexDirection: "column" }}>
+              <List>
+                {filteredItems.map((item) => (
+                  <ListItem
+                    button
+                    key={item.text}
+                    onClick={() => setSelectedTab(item.text)}
+                    sx={{
+                      textAlign: "center",
+                      padding: "16px 0",
+                      justifyContent: "center",
+                      color: selectedTab === item.text ? "#1976d2" : "#333",
+                      backgroundColor: selectedTab === item.text ? "#e3f2fd" : "transparent",
+                      "&:hover": { backgroundColor: "#e0e0e0" },
+                    }}
+                  >
+                    <Box
+                      sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}
+                    >
+                      {item.icon}
+                      <ListItemText
+                        primary={item.text}
+                        primaryTypographyProps={{
+                          fontSize: "10px",
+                          fontWeight: "bold",
+                        }}
+                        sx={{ mt: 1 }}
+                      />
+                    </Box>
+                  </ListItem>
+                ))}
+              </List>
+              <Divider orientation="vertical" flexItem />
+            </Box>
+            <Box sx={{ flex: 1 }}>{renderTabContent()}</Box>
           </Box>
-
-          <Divider orientation="vertical" flexItem />
-          <Box sx={{ flex: 1 }}>{renderTabContent()}</Box>
         </Drawer>
       </Box>
     </>

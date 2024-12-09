@@ -326,8 +326,8 @@ const DesignOnline = () => {
             minHeight: "78vh",
             width: {
               xs: "100%",
-              xl: isAccordionOpen ? "calc(100% - 30%)" : "100%",
-              lg: isAccordionOpen ? "calc(100% - 30%)" : "100%",
+              xl: isAccordionOpen ? "calc(100% - 520px)" : "100%",
+              lg: isAccordionOpen ? "calc(100% - 520px)" : "100%",
               sm: isAccordionOpen ? "calc(100% - 25%)" : "100%",
             },
             marginTop: "20px",
