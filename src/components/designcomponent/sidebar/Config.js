@@ -13,26 +13,27 @@ import {
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { ProductService } from "../../../services/Product.service";
 import FormControl from "@mui/material/FormControl";
 
-const Config = ({ allproduct, alldata, setProductDetails, productDetails, setgetId }) => {
+const Config = ({ allproduct, alldata, setProductDetails, productDetails, setgetId ,payload0}) => {
   const [count, setCount] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedCard, setSelectedCard] = useState({});
   const [selectedSubCatId, setSelectedSubCatId] = useState([]);
-  // New state to store selected width, height, and subCat ids
-  const [selectedWidth, setSelectedWidth] = useState("");
-  const [selectedHeight, setSelectedHeight] = useState("");
-  const [price, setPrice] = useState();
+  const [isPayloadInitialized, setIsPayloadInitialized] = useState(false);
+  const [isProductChanged, setIsProductChanged] = useState(false); // Track product change
+  console.log("alldata", alldata);
+  console.log("payload0", payload0);
   console.log("productDetails", productDetails);
 
   const [payload, setPayload] = useState({
-    productId: null, // Assuming `id` is the unique identifier for the product
+    productId: null,
     width: "",
     height: "",
     subCatId: [],
+    quantity: 1,
   });
 
   const decrement = () => {
@@ -45,69 +46,72 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
     }
   };
 
-  // Use effect to set initial selected subcategory and capture their IDs
-  useEffect(() => {
-    if (alldata?.categories?.length > 0) {
-      const initialSelection = {};
-      const initialSubCatIds = [];
+  const widthSizes = useMemo(
+    () => alldata?.productSizes?.filter((val) => val.size_type === "W")?.map((val) => ({ size: val.size, id: val.id })),
+    [alldata]
+  );
 
-      alldata?.categories?.forEach((category) => {
-        if (category?.subCategories?.length > 0) {
-          // Set the first subcategory as the default selected card
-          const firstSubCat = category.subCategories[0];
-          initialSelection[category.id] = firstSubCat.id;
-
-          // Add the initially selected subcategory ID to the array
-          initialSubCatIds.push(firstSubCat.id);
-        }
-      });
-
-      setSelectedCard(initialSelection); // Update the state with initial selections
-      setSelectedSubCatId(initialSubCatIds); // Set the initially selected subcategory IDs
-    }
-  }, [alldata]);
-
-  const widthSizes = alldata?.productSizes
-    ?.filter((val) => val.size_type === "W")
-    ?.map((val) => ({ size: val.size, id: val.id }));
-
-  const heightSizes = alldata?.productSizes
-    ?.filter((val) => val.size_type === "H")
-    ?.map((val) => ({ size: val.size, id: val.id }));
-
-  // const [state, setState] = useState({
-  //   width: "",
-  //   height: "",
-  // });
+  const heightSizes = useMemo(
+    () => alldata?.productSizes?.filter((val) => val.size_type === "H")?.map((val) => ({ size: val.size, id: val.id })),
+    [alldata]
+  );
 
   useEffect(() => {
     if (allproduct) {
-      setSelectedProduct(allproduct[0].name); // Set the initial value to the first product's ID
-      setgetId(allproduct[0].id);
+      setSelectedProduct(alldata?.name);
+      setPayload((prev) => ({
+        ...prev,
+        productId: allproduct[0].id,
+      }));
+      //setgetId(allproduct[0].id);
     }
   }, [allproduct]);
 
-  useEffect(() => {
-    if (alldata) {
-      const firstWidth = widthSizes?.[0]?.size || "";
-      const firstHeight = heightSizes?.[0]?.size || "";
-      // setState({
-      //   width: firstWidth,
-      //   height: firstHeight,
-      // });
-      setProductDetails({
-        ...productDetails,
-        width: firstWidth,
-        height: firstHeight,
-      });
-      // setSelectedWidth(firstWidth);
-      // setSelectedHeight(firstHeight);
-    }
-  }, [alldata, allproduct]);
+useEffect(() => {
+  // Initialize data from `payload0` only once on the initial render
+  if (payload0 && !isPayloadInitialized) {
+    console.log("Initializing from payload0");
+    setProductDetails((prev) => ({
+      ...prev,
+      width: payload0.width || prev.width,
+      height: payload0.height || prev.height,
+      quantity: payload0.quantity || prev.quantity,
+    }));
 
-  // console.log(widthSizes?.[0]?.size,"qqqqqqq");
+    const initialSelection = {};
+    const initialSubCatIds = [];
+
+    // Convert subCatId from payload0 to an array and filter for the corresponding subcategory selections
+    const initialSubCatArray = JSON.parse(payload0.subCatId); // Assuming subCatId is in stringified array format
+
+    alldata?.categories?.forEach((category) => {
+      if (category?.subCategories?.length > 0) {
+        // If subCategory id from payload0 matches the category's subCategories, update the selection
+        const matchingSubCats = category.subCategories.filter((subCat) => initialSubCatArray.includes(subCat.id));
+
+        if (matchingSubCats.length > 0) {
+          // Store the first matching subCategory id or set the selected state accordingly
+          initialSelection[category.id] = matchingSubCats[0].id;
+          initialSubCatIds.push(matchingSubCats[0].id);
+        }
+      }
+    });
+
+    // Update state with initial subcategory selections
+    setSelectedCard(initialSelection);
+    setSelectedSubCatId(initialSubCatIds);
+  }
+}, [payload0, isPayloadInitialized, setProductDetails]);
+
   useEffect(() => {
-    if (alldata?.categories?.length > 0) {
+    // Handle `alldata` initialization only on product change
+    if (isProductChanged && alldata) {
+      setProductDetails((prev) => ({
+        ...prev,
+        width: widthSizes?.[0]?.size || prev.width,
+        height: heightSizes?.[0]?.size || prev.height,
+        quantity: 1, // Reset quantity
+      }));
       const initialSelection = {};
       const initialSubCatIds = [];
       alldata?.categories?.forEach((category) => {
@@ -120,18 +124,18 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
       setSelectedCard(initialSelection);
       setSelectedSubCatId(initialSubCatIds);
     }
-  }, [alldata]);
+  }, [isProductChanged, alldata, widthSizes, heightSizes, setProductDetails]);
 
   useEffect(() => {
     const jsonString = JSON.stringify(selectedSubCatId);
     setPayload({
-      width: productDetails?.width,
-      height: productDetails?.height,
+      ...payload,
+      width: productDetails.width,
+      height: productDetails.height,
       subCatId: jsonString,
-      ProductId: alldata?.id,
       quantity: productDetails.quantity,
     });
-  }, [productDetails, selectedSubCatId, alldata, productDetails.quantity]);
+  }, [productDetails, selectedSubCatId]);
 
   const handleCardClick = (categoryId, subCat) => {
     setSelectedCard((prevSelectedCards) => {
@@ -142,21 +146,29 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
     });
   };
 
-  const swiperRef = useRef(null);
+  const handleProductChange = (event) => {
+    const selectedProductName = event.target.value;
+    const selectedProduct = allproduct.find((product) => product.name === selectedProductName);
+console.log("selectedProduct", selectedProduct);
+    if (selectedProduct) {
+      setSelectedProduct(selectedProductName);
+      setgetId(selectedProduct.id);
+      setIsProductChanged(true); // Mark that the product has changed
 
-const handleProductChange = (event) => {
-  const selectedProductName = event.target.value;
+      // Update width, height, and subcategories based on the new product
+      setProductDetails((prev) => ({
+        ...prev,
+        width: widthSizes?.[0]?.size || prev.width,
+        height: heightSizes?.[0]?.size || prev.height,
+        quantity: 1, // Reset quantity to default
+      }));
 
-  // Find the corresponding product ID from the allproduct array
-  const selectedProduct = allproduct.find((product) => product.name === selectedProductName);
-
-  // Update the selectedProduct state and setgetId function with the selected product ID
-  if (selectedProduct) {
-    setSelectedProduct(selectedProductName);
-    setgetId(selectedProduct.id);
-    console.log("Selected Product ID:", selectedProduct.id);
-  }
-};
+      const initialSubCatIds = alldata.categories?.flatMap((cat) =>
+        cat.subCategories?.[0]?.id ? [cat.subCategories[0].id] : []
+      );
+      setSelectedSubCatId(initialSubCatIds || []);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -164,61 +176,49 @@ const handleProductChange = (event) => {
       ...prev,
       [name]: value,
     }));
-    // setState((prev) => ({
-    //   ...prev,
-    //   [name]: value,
-    // }));
+
+    // Handle width change logic
     if (name === "width") {
       const selectedWidth = widthSizes.find((size) => size.size === value);
       setProductDetails({
         ...productDetails,
-        width: selectedWidth?.size,
+        width: selectedWidth?.size || "prev.width",
       });
     } else if (name === "height") {
-      const selectedHeights = heightSizes.find((size) => size.size === value);
-      console.log("selectedHeights", selectedHeights);
-
+      const selectedHeight = heightSizes.find((size) => size.size === value);
       setProductDetails({
         ...productDetails,
-        height: selectedHeights?.size,
+        height: selectedHeight?.size || "prev.height",
       });
     }
   };
 
   useEffect(() => {
-    if (!productDetails || selectedSubCatId.length === 0) {
-      console.error("Payload is incomplete. Ensure width, height, and subcategory are selected.");
-      //setError("Please select all required options before proceeding.");
-    } else {
-      const payload = {
-        width: productDetails?.width,
-        height: productDetails?.height,
-        subCatId: JSON.stringify(selectedSubCatId),
-        ProductId: alldata?.id,
-        quantity: productDetails.quantity,
-      };
-      ProductService.Dataprice(payload)
-        .then((res) => {
-          if (res.data && res.data.totalPrice) {
-            setProductDetails({
-              ...productDetails,
-              price: res.data.totalPrice,
-            });
-          } else {
-            setProductDetails({
-              ...productDetails,
-              price: 50,
-            });
-            //setError("Failed to fetch pricing information.");
-          }
-        })
-        .catch((error) => {
-          console.error("API call failed:", error);
-          //setError("Unable to fetch pricing. Please try again later.");
-        });
-    }
-  }, [productDetails?.width, productDetails?.height, productDetails?.quantity, selectedSubCatId, alldata]);
-  
+    const timeout = setTimeout(() => {
+      if (productDetails.width && productDetails.height && selectedSubCatId.length > 0) {
+        const payload = {
+          width: productDetails.width,
+          height: productDetails.height,
+          subCatId: JSON.stringify(selectedSubCatId),
+          ProductId: alldata?.id,
+          quantity: productDetails.quantity,
+        };
+        ProductService.Dataprice(payload)
+          .then((res) => {
+            setProductDetails((prev) => ({
+              ...prev,
+              price: res.data?.totalPrice || 50,
+            }));
+          })
+          .catch((error) => {
+            console.error("Error fetching price:", error);
+          });
+      }
+    }, 300);
+
+    return () => clearTimeout(timeout); // Cleanup debounce
+  }, [productDetails.width, productDetails.height, productDetails.quantity, selectedSubCatId]);
+
   return (
     <>
       <Box>
@@ -295,7 +295,7 @@ const handleProductChange = (event) => {
                     >
                       {heightSizes?.map((size) => (
                         <MenuItem key={size.id} value={size.size}>
-                        {size.size}
+                          {size.size}
                         </MenuItem>
                       ))}
                     </Select>

@@ -23,7 +23,7 @@ const style = {
   },
 };
 
-const Pop_Up = ({ open, handleClose, productId }) => {
+const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategory }) => {
   const navigate = useNavigate();
   return (
     <div>
@@ -55,19 +55,21 @@ const Pop_Up = ({ open, handleClose, productId }) => {
           >
             <Typography id="keep-mounted-modal-description" sx={{ padding: "1rem 1rem 1rem 10px" }}>
               <span style={{ color: "#868686" }}>Type:</span>{" "}
-              <b style={{ color: "#3F5163", fontWeight: 600 }}>Banner</b>
+              <b style={{ color: "#3F5163", fontWeight: 600 }}>{selectedCategory}</b>
             </Typography>
             <Typography id="keep-mounted-modal-description" sx={{ padding: "1rem" }}>
               <span style={{ color: "#868686" }}> Size:</span>
-              <b style={{ color: "#3F5163", fontWeight: 600 }}>72" W x 36" H</b>
+              <b style={{ color: "#3F5163", fontWeight: 600 }}>
+                {payload0?.width}" W x {payload0?.height}" H
+              </b>
             </Typography>
             <Typography id="keep-mounted-modal-description" sx={{ padding: "1rem" }}>
               <span style={{ color: "#868686" }}>QTY:</span>
-              <b style={{ color: "#3F5163", fontWeight: 600 }}>2</b>
+              <b style={{ color: "#3F5163", fontWeight: 600 }}>{payload0?.quantity}</b>
             </Typography>
             <Typography id="keep-mounted-modal-description" sx={{ padding: "1rem" }}>
               <span style={{ color: "#868686" }}>Price:</span>
-              <b style={{ color: "#3F5163", fontWeight: 600 }}> $39.02 sq/ft</b>
+              <b style={{ color: "#3F5163", fontWeight: 600 }}> ${price} sq/ft</b>
             </Typography>
           </Box>
           <Box
@@ -112,7 +114,14 @@ const Pop_Up = ({ open, handleClose, productId }) => {
                 height: "228px",
                 width: "310px",
               }}
-              onClick={() => navigate(`/design/${productId}`)}
+              onClick={() =>
+                navigate(`/design/${productId}`, {
+                  state: {
+                    payload0,
+                    price,
+                  },
+                })
+              }
             >
               <UploadFile />
               <Typography

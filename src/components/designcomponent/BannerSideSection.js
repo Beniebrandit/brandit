@@ -14,10 +14,9 @@ import { ReactComponent as Sidebarsetting } from "../../asset/images/sidebar_set
 import React, { useState } from "react";
 import { ReactComponent as Eye } from "../../asset/images/Eye.svg";
 
-const BannerSideSection = ({ onToggleAccordion, productDetails, setShowSection, setValue, setIsTabOpen }) => {
+const BannerSideSection = ({ onToggleAccordion, productDetails, alldata, setShowSection, setValue, setIsTabOpen }) => {
   const [isAccordionOpen, setIsAccordionOpen] = useState(true);
   const theme = useTheme();
-
   const handleAccordionChange = () => {
     setIsAccordionOpen((prevState) => !prevState); // Toggles the state
     onToggleAccordion(!isAccordionOpen); // Notify parent of the new state
@@ -96,7 +95,8 @@ const BannerSideSection = ({ onToggleAccordion, productDetails, setShowSection, 
               <Box>
                 <Typography sx={{ color: "#3F5163", fontSize: "16px", fontWeight: 500 }}>Size</Typography>
                 <Typography sx={{ fontSize: "16px", color: "#868686" }}>
-                  {productDetails?.width}" W X {productDetails?.height}" H
+                  {productDetails?.width || alldata?.productSizes[0].size}" W X{" "}
+                  {productDetails?.height || alldata?.productSizes[3].size}" H
                 </Typography>
               </Box>
               <Box>

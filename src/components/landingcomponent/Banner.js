@@ -279,7 +279,7 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
       <PopUp
         open={open}
         handleClose={handleClose}
-        payload={payload}
+        payload0={payload}
         price={price}
         selectedCategory={selectedCategory}
         productId={productId}

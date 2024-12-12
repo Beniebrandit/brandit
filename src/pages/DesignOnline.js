@@ -11,8 +11,10 @@ import CreateAccountDialog from "../components/common/CreateAccountDialog";
 import { Rnd } from "react-rnd";
 import { PremiumImage } from "../services/PremiumImage.service";
 import { ProductCategoryService } from "../services/ProductCategory.service";
+import { useLocation, useParams } from "react-router-dom";
 
 const DesignOnline = () => {
+    const { id } = useParams();
   const [value, setValue] = React.useState(1);
   const [isTabOpen, setIsTabOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState([]);
@@ -33,7 +35,6 @@ const DesignOnline = () => {
   const [showSection, setShowSection] = useState(true);
   const [combinedImages, setCombinedImages] = useState([]);
   const [getid, setgetId] = useState();
-
   const [productDetails, setProductDetails] = useState({
     width: "",
     height: "",
@@ -237,8 +238,8 @@ const DesignOnline = () => {
       setAllProduct(response); // Set product list
       if (response.length > 0) {
         // Automatically set the first product as the default selection
-        setgetId(response[0].id);
-        console.log("Initial product ID set:", response[0].id);
+        setgetId(id);
+        console.log("Initial product ID set:", getid);
       }
     } catch (error) {
       console.error("Error fetching all products:", error);
@@ -246,7 +247,6 @@ const DesignOnline = () => {
   };
 
   useEffect(() => {
-    // Fetch all products on component mount
     Allproducts();
   }, []);
 
@@ -256,6 +256,8 @@ const DesignOnline = () => {
       getApi(getid);
     }
   }, [getid]);
+
+  
 
   const handleSuccess = (files) => {
     if (files && files.length > 0) {
@@ -315,6 +317,7 @@ const DesignOnline = () => {
           <BannerSideSection
             onToggleAccordion={handleAccordionToggle}
             productDetails={productDetails}
+            alldata={alldata}
             setShowSection={setShowSection}
             setValue={setValue}
             setIsTabOpen={setIsTabOpen}

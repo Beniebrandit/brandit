@@ -25,6 +25,7 @@ import Config from "./Config";
 import MyUpload from "./MyUpload";
 import Text from "./Text";
 import PremiumImg from "./PremiumImg";
+import { useLocation } from "react-router-dom";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -84,17 +85,32 @@ const Sidebar = ({
   setIsTabOpen,
   setgetId,
 }) => {
-  //const [value, setValue] = React.useState(1);
+  const location = useLocation();
+  const { payload0, price } = location.state || {};
   const [open, setOpen] = React.useState(false);
   const [delopen, setDelOpen] = React.useState(false);
   const [imageToDelete, setImageToDelete] = useState(null);
   const [expandimage, setExpandImage] = useState();
-  //const [isTabOpen, setIsTabOpen] = useState(false);
   const [expandedImageIndex, setExpandedImageIndex] = useState(null);
   const tabRef = useRef(null);
   const dialogRef = useRef(null);
   const [selectedSource, setSelectedSource] = useState(null);
   const [selectedSourceToDelete, setSelectedSourceToDelete] = useState(null);
+  //  const [productDetails, setProductDetails] = useState({
+  //    width: "",
+  //    height: "",
+  //    quantity: 1,
+  //    price: 0,
+  //  });
+  //const [selectedSubCatId, setSelectedSubCatId] = useState([]);
+  //const [selectedCard, setSelectedCard] = useState({});
+  //const [payload, setPayload] = useState({
+  //  productId: null,
+  //  width: "",
+  //  height: "",
+  //  subCatId: [],
+  //  quantity: 1,
+  //});
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -324,6 +340,13 @@ const Sidebar = ({
                     setProductDetails={setProductDetails}
                     productDetails={productDetails}
                     setgetId={setgetId}
+                    payload0={payload0}
+                    //selectedSubCatId={selectedSubCatId}
+                    //setSelectedSubCatId={setSelectedSubCatId}
+                    //selectedCard={selectedCard}
+                    //setSelectedCard={setSelectedCard}
+                    //payload={payload}
+                    //setPayload={setPayload}
                   />
                 </TabPanel>
                 <TabPanel value={value} index={1} style={{ width: "auto", maxWidth: "24rem" }}>
