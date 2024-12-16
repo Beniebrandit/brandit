@@ -84,9 +84,8 @@ const Sidebar = ({
   isTabOpen,
   setIsTabOpen,
   setgetId,
+  storedPayload,
 }) => {
-  const location = useLocation();
-  const { payload0, price } = location.state || {};
   const [open, setOpen] = React.useState(false);
   const [delopen, setDelOpen] = React.useState(false);
   const [imageToDelete, setImageToDelete] = useState(null);
@@ -340,7 +339,7 @@ const Sidebar = ({
                     setProductDetails={setProductDetails}
                     productDetails={productDetails}
                     setgetId={setgetId}
-                    payload0={payload0}
+                    storedPayload={storedPayload}
                     //selectedSubCatId={selectedSubCatId}
                     //setSelectedSubCatId={setSelectedSubCatId}
                     //selectedCard={selectedCard}

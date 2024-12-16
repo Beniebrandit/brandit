@@ -17,7 +17,7 @@ import React, { useState, useRef, useEffect, useMemo } from "react";
 import { ProductService } from "../../../services/Product.service";
 import FormControl from "@mui/material/FormControl";
 
-const Config = ({ allproduct, alldata, setProductDetails, productDetails, setgetId ,payload0}) => {
+const Config = ({ allproduct, alldata, setProductDetails, productDetails, setgetId, storedPayload }) => {
   const [count, setCount] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedCard, setSelectedCard] = useState({});
@@ -25,7 +25,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
   const [isPayloadInitialized, setIsPayloadInitialized] = useState(false);
   const [isProductChanged, setIsProductChanged] = useState(false); // Track product change
   console.log("alldata", alldata);
-  console.log("payload0", payload0);
+  console.log("storedPayload", storedPayload);
   console.log("productDetails", productDetails);
 
   const [payload, setPayload] = useState({
@@ -67,74 +67,166 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
     }
   }, [allproduct]);
 
-useEffect(() => {
-  // Initialize data from `payload0` only once on the initial render
-  if (payload0 && !isPayloadInitialized) {
-    console.log("Initializing from payload0");
-    setProductDetails((prev) => ({
-      ...prev,
-      width: payload0.width || prev.width,
-      height: payload0.height || prev.height,
-      quantity: payload0.quantity || prev.quantity,
-    }));
+  const handleProductChange = (event) => {
+    const selectedProductName = event.target.value;
+    const selectedProduct = allproduct.find((product) => product.name === selectedProductName);
 
-    const initialSelection = {};
-    const initialSubCatIds = [];
+    if (selectedProduct) {
+      setSelectedProduct(selectedProductName);
+      setgetId(selectedProduct.id);
+      setIsProductChanged(true); // Mark product change
 
-    // Convert subCatId from payload0 to an array and filter for the corresponding subcategory selections
-    const initialSubCatArray = JSON.parse(payload0.subCatId); // Assuming subCatId is in stringified array format
+      const newWidth = widthSizes?.[0]?.size || "";
+      const newHeight = heightSizes?.[0]?.size || "";
+      const initialSubCatIds = alldata.categories?.flatMap((cat) =>
+        cat.subCategories?.[0]?.id ? [cat.subCategories[0].id] : []
+      );
 
-    alldata?.categories?.forEach((category) => {
-      if (category?.subCategories?.length > 0) {
-        // If subCategory id from payload0 matches the category's subCategories, update the selection
-        const matchingSubCats = category.subCategories.filter((subCat) => initialSubCatArray.includes(subCat.id));
+      const updatedProductDetails = {
+        width: newWidth,
+        height: newHeight,
+        quantity: 1,
+      };
 
-        if (matchingSubCats.length > 0) {
-          // Store the first matching subCategory id or set the selected state accordingly
-          initialSelection[category.id] = matchingSubCats[0].id;
-          initialSubCatIds.push(matchingSubCats[0].id);
-        }
-      }
-    });
+      setProductDetails(updatedProductDetails);
+      setSelectedSubCatId(initialSubCatIds || []);
 
-    // Update state with initial subcategory selections
-    setSelectedCard(initialSelection);
-    setSelectedSubCatId(initialSubCatIds);
-  }
-}, [payload0, isPayloadInitialized, setProductDetails]);
+      // Update localStorage immediately
+      localStorage.setItem(
+        "productDetails",
+        JSON.stringify({
+          ...updatedProductDetails,
+          subCatId: JSON.stringify(initialSubCatIds || []),
+          ProductId: selectedProduct.id,
+        })
+      );
+    }
+  };
+
+
+ useEffect(() => {
+   const savedProductDetails = localStorage.getItem("productDetails");
+
+   if (!savedProductDetails && storedPayload) {
+     console.log("Initializing from storedPayload on page reload");
+
+     const initialProductDetails = {
+       width: storedPayload.width || "",
+       height: storedPayload.height || "",
+       quantity: storedPayload.quantity || 1,
+       ProductId: alldata?.id || null,
+     };
+
+     setProductDetails(initialProductDetails);
+
+     const initialSubCatArray = JSON.parse(storedPayload.subCatId || "[]");
+     const initialSelection = {};
+     const initialSubCatIds = [];
+
+     alldata?.categories?.forEach((category) => {
+       if (category?.subCategories?.length > 0) {
+         const matchingSubCats = category.subCategories.filter((subCat) => initialSubCatArray.includes(subCat.id));
+
+         if (matchingSubCats.length > 0) {
+           initialSelection[category.id] = matchingSubCats[0].id;
+           initialSubCatIds.push(matchingSubCats[0].id);
+         }
+       }
+     });
+
+     setSelectedCard(initialSelection);
+     setSelectedSubCatId(initialSubCatIds);
+
+     localStorage.setItem(
+       "productDetails",
+       JSON.stringify({
+         ...initialProductDetails,
+         subCatId: JSON.stringify(initialSubCatIds),
+       })
+     );
+   } else if (savedProductDetails) {
+     const parsedDetails = JSON.parse(savedProductDetails);
+     console.log("Loading from localStorage:", parsedDetails);
+
+     setProductDetails({
+       width: parsedDetails.width || "",
+       height: parsedDetails.height || "",
+       quantity: parsedDetails.quantity || 1,
+       ProductId: parsedDetails.ProductId || null,
+     });
+
+     setSelectedSubCatId(JSON.parse(parsedDetails.subCatId || "[]"));
+   }
+ }, [storedPayload, alldata]);
+
 
   useEffect(() => {
-    // Handle `alldata` initialization only on product change
     if (isProductChanged && alldata) {
-      setProductDetails((prev) => ({
-        ...prev,
-        width: widthSizes?.[0]?.size || prev.width,
-        height: heightSizes?.[0]?.size || prev.height,
-        quantity: 1, // Reset quantity
-      }));
+      const newWidth = widthSizes?.[0]?.size || productDetails.width;
+      const newHeight = heightSizes?.[0]?.size || productDetails.height;
+
       const initialSelection = {};
       const initialSubCatIds = [];
+
       alldata?.categories?.forEach((category) => {
         if (category?.subCategories?.length > 0) {
           const firstSubCat = category.subCategories[0];
-          initialSelection[category.id] = firstSubCat.id; // Store the subCat ID
-          initialSubCatIds.push(firstSubCat.id); // Push the initial subCat ID
+          initialSelection[category.id] = firstSubCat.id;
+          initialSubCatIds.push(firstSubCat.id);
         }
+      });
+
+      setProductDetails({
+        width: newWidth,
+        height: newHeight,
+        quantity: 1,
       });
       setSelectedCard(initialSelection);
       setSelectedSubCatId(initialSubCatIds);
+
+      localStorage.setItem(
+        "productDetails",
+        JSON.stringify({
+          width: newWidth,
+          height: newHeight,
+          quantity: 1,
+          subCatId: JSON.stringify(initialSubCatIds),
+          ProductId: alldata?.id,
+        })
+      );
     }
-  }, [isProductChanged, alldata, widthSizes, heightSizes, setProductDetails]);
+  }, [isProductChanged, alldata, widthSizes, heightSizes]);
+ // Update localStorage with productDetails whenever it changes
+ useEffect(() => {
+   if (productDetails.width && productDetails.height && selectedSubCatId.length > 0) {
+     const updatedPayload = {
+       width: productDetails.width,
+       height: productDetails.height,
+       quantity: productDetails.quantity,
+       subCatId: JSON.stringify(selectedSubCatId),
+       ProductId: productDetails.ProductId || "",
+     };
+
+     console.log("Saving to localStorage:", updatedPayload);
+
+     localStorage.setItem("productDetails", JSON.stringify(updatedPayload));
+   }
+ }, [productDetails, selectedSubCatId]);
 
   useEffect(() => {
-    const jsonString = JSON.stringify(selectedSubCatId);
-    setPayload({
-      ...payload,
-      width: productDetails.width,
-      height: productDetails.height,
-      subCatId: jsonString,
-      quantity: productDetails.quantity,
-    });
+    if (productDetails.width && productDetails.height && selectedSubCatId.length > 0) {
+      const updatedPayload = {
+        width: productDetails.width,
+        height: productDetails.height,
+        quantity: productDetails.quantity,
+        subCatId: JSON.stringify(selectedSubCatId),
+        ProductId: productDetails.ProductId || "",
+      };
+
+      console.log("Saving to localStorage:", updatedPayload);
+
+      localStorage.setItem("productDetails", JSON.stringify(updatedPayload));
+    }
   }, [productDetails, selectedSubCatId]);
 
   const handleCardClick = (categoryId, subCat) => {
@@ -146,29 +238,7 @@ useEffect(() => {
     });
   };
 
-  const handleProductChange = (event) => {
-    const selectedProductName = event.target.value;
-    const selectedProduct = allproduct.find((product) => product.name === selectedProductName);
-console.log("selectedProduct", selectedProduct);
-    if (selectedProduct) {
-      setSelectedProduct(selectedProductName);
-      setgetId(selectedProduct.id);
-      setIsProductChanged(true); // Mark that the product has changed
 
-      // Update width, height, and subcategories based on the new product
-      setProductDetails((prev) => ({
-        ...prev,
-        width: widthSizes?.[0]?.size || prev.width,
-        height: heightSizes?.[0]?.size || prev.height,
-        quantity: 1, // Reset quantity to default
-      }));
-
-      const initialSubCatIds = alldata.categories?.flatMap((cat) =>
-        cat.subCategories?.[0]?.id ? [cat.subCategories[0].id] : []
-      );
-      setSelectedSubCatId(initialSubCatIds || []);
-    }
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -177,23 +247,23 @@ console.log("selectedProduct", selectedProduct);
       [name]: value,
     }));
 
-    // Handle width change logic
     if (name === "width") {
       const selectedWidth = widthSizes.find((size) => size.size === value);
       setProductDetails({
         ...productDetails,
-        width: selectedWidth?.size || "prev.width",
+        width: selectedWidth?.size || productDetails.width,
       });
     } else if (name === "height") {
       const selectedHeight = heightSizes.find((size) => size.size === value);
       setProductDetails({
         ...productDetails,
-        height: selectedHeight?.size || "prev.height",
+        height: selectedHeight?.size || productDetails.height,
       });
     }
   };
 
   useEffect(() => {
+    // Handle debounce for price fetch based on product details
     const timeout = setTimeout(() => {
       if (productDetails.width && productDetails.height && selectedSubCatId.length > 0) {
         const payload = {
@@ -219,6 +289,17 @@ console.log("selectedProduct", selectedProduct);
     return () => clearTimeout(timeout); // Cleanup debounce
   }, [productDetails.width, productDetails.height, productDetails.quantity, selectedSubCatId]);
 
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      localStorage.removeItem("productDetails");
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
   return (
     <>
       <Box>

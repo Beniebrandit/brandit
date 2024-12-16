@@ -114,14 +114,14 @@ const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategor
                 height: "228px",
                 width: "310px",
               }}
-              onClick={() =>
-                navigate(`/design/${productId}`, {
-                  state: {
-                    payload0,
-                    price,
-                  },
-                })
-              }
+              onClick={() => {
+                if (payload0) {
+                  localStorage.setItem("selectedData", JSON.stringify(payload0));
+                } else {
+                  console.warn("payload0 is undefined or null");
+                }
+                navigate(`/design/${productId}`);
+              }}
             >
               <UploadFile />
               <Typography

@@ -14,7 +14,8 @@ import { ProductCategoryService } from "../services/ProductCategory.service";
 import { useLocation, useParams } from "react-router-dom";
 
 const DesignOnline = () => {
-    const { id } = useParams();
+  const { id } = useParams();
+  const [storedPayload, setStoredPayload] = useState(null);
   const [value, setValue] = React.useState(1);
   const [isTabOpen, setIsTabOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState([]);
@@ -41,6 +42,19 @@ const DesignOnline = () => {
     quantity: 1,
     price: null,
   });
+
+  useEffect(() => {
+    const payload = localStorage.getItem("selectedData");
+
+    if (payload) {
+      setStoredPayload(JSON.parse(payload));
+    } else {
+      console.warn("No payload0 found in localStorage");
+    }
+
+    // Optionally, you can clear the data from localStorage if it's not needed anymore
+    // localStorage.removeItem("payload0");
+  }, [id]);
 
   const APP_KEY = "3astslwrlzfkcvc";
 
@@ -257,8 +271,6 @@ const DesignOnline = () => {
     }
   }, [getid]);
 
-  
-
   const handleSuccess = (files) => {
     if (files && files.length > 0) {
       const updatedFiles = files.map((file) => {
@@ -275,6 +287,8 @@ const DesignOnline = () => {
   const handleDeleteDropboxFile = (index) => {
     setDropData(dropdata.filter((_, i) => i !== index));
   };
+      console.log("storedPayload", storedPayload);
+
   return (
     <>
       {showSection && <HeaderDesign handleClickOpenLogin={handleClickOpenLogin} />}
@@ -304,6 +318,7 @@ const DesignOnline = () => {
             handleSuccess={handleSuccess}
             dropdata={dropdata}
             setgetId={setgetId}
+            storedPayload={storedPayload}
             sx={{
               width: { xs: "100px", sm: "100%" }, // Full width on xs, fixed width on sm and up
               position: { xs: "relative", sm: "fixed" },
