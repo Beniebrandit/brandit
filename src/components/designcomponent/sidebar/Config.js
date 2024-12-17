@@ -24,9 +24,9 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
   const [selectedSubCatId, setSelectedSubCatId] = useState([]);
   const [isPayloadInitialized, setIsPayloadInitialized] = useState(false);
   const [isProductChanged, setIsProductChanged] = useState(false); // Track product change
-  console.log("alldata", alldata);
-  console.log("storedPayload", storedPayload);
-  console.log("productDetails", productDetails);
+  //console.log("alldata", alldata);
+  //console.log("storedPayload", storedPayload);
+  //console.log("productDetails", productDetails);
 
   const [payload, setPayload] = useState({
     productId: null,
@@ -92,6 +92,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
       setSelectedSubCatId(initialSubCatIds || []);
 
       // Update localStorage immediately
+      console.log("selectedProduct.id", selectedProduct.id);
       localStorage.setItem(
         "productDetails",
         JSON.stringify({
@@ -103,62 +104,66 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
     }
   };
 
+  useEffect(() => {
+    const savedProductDetails = localStorage.getItem("productDetails");
+    const savedSelectedCard = localStorage.getItem("selectedCard");
 
- useEffect(() => {
-   const savedProductDetails = localStorage.getItem("productDetails");
+    if (!savedProductDetails && storedPayload) {
+      console.log("Initializing from storedPayload on page reload");
 
-   if (!savedProductDetails && storedPayload) {
-     console.log("Initializing from storedPayload on page reload");
+      const initialProductDetails = {
+        width: storedPayload.width || "",
+        height: storedPayload.height || "",
+        quantity: storedPayload.quantity || 1,
+        ProductId: alldata?.id || null,
+      };
 
-     const initialProductDetails = {
-       width: storedPayload.width || "",
-       height: storedPayload.height || "",
-       quantity: storedPayload.quantity || 1,
-       ProductId: alldata?.id || null,
-     };
+      setProductDetails(initialProductDetails);
 
-     setProductDetails(initialProductDetails);
+      const initialSubCatArray = JSON.parse(storedPayload.subCatId || "[]");
+      const initialSelection = {};
+      const initialSubCatIds = [];
 
-     const initialSubCatArray = JSON.parse(storedPayload.subCatId || "[]");
-     const initialSelection = {};
-     const initialSubCatIds = [];
+      alldata?.categories?.forEach((category) => {
+        if (category?.subCategories?.length > 0) {
+          const matchingSubCats = category.subCategories.filter((subCat) => initialSubCatArray.includes(subCat.id));
 
-     alldata?.categories?.forEach((category) => {
-       if (category?.subCategories?.length > 0) {
-         const matchingSubCats = category.subCategories.filter((subCat) => initialSubCatArray.includes(subCat.id));
+          if (matchingSubCats.length > 0) {
+            initialSelection[category.id] = matchingSubCats[0].id;
+            initialSubCatIds.push(matchingSubCats[0].id);
+          }
+        }
+      });
 
-         if (matchingSubCats.length > 0) {
-           initialSelection[category.id] = matchingSubCats[0].id;
-           initialSubCatIds.push(matchingSubCats[0].id);
-         }
-       }
-     });
+      setSelectedCard(initialSelection);
+      localStorage.setItem("selectedCard", JSON.stringify(initialSelection));
 
-     setSelectedCard(initialSelection);
-     setSelectedSubCatId(initialSubCatIds);
+      setSelectedSubCatId(initialSubCatIds);
 
-     localStorage.setItem(
-       "productDetails",
-       JSON.stringify({
-         ...initialProductDetails,
-         subCatId: JSON.stringify(initialSubCatIds),
-       })
-     );
-   } else if (savedProductDetails) {
-     const parsedDetails = JSON.parse(savedProductDetails);
-     console.log("Loading from localStorage:", parsedDetails);
+      localStorage.setItem(
+        "productDetails",
+        JSON.stringify({
+          ...initialProductDetails,
+          subCatId: JSON.stringify(initialSubCatIds),
+        })
+      );
+    } else if (savedProductDetails) {
+      const parsedDetails = JSON.parse(savedProductDetails);
+      setProductDetails({
+        width: parsedDetails.width || "",
+        height: parsedDetails.height || "",
+        quantity: parsedDetails.quantity || 1,
+        ProductId: parsedDetails.ProductId || null,
+      });
 
-     setProductDetails({
-       width: parsedDetails.width || "",
-       height: parsedDetails.height || "",
-       quantity: parsedDetails.quantity || 1,
-       ProductId: parsedDetails.ProductId || null,
-     });
-
-     setSelectedSubCatId(JSON.parse(parsedDetails.subCatId || "[]"));
-   }
- }, [storedPayload, alldata]);
-
+      // Restore selectedCard from localStorage if available
+      if (savedSelectedCard) {
+        const parsedSelectedCard = JSON.parse(savedSelectedCard);
+        setSelectedCard(parsedSelectedCard);
+        setSelectedSubCatId(Object.values(parsedSelectedCard).filter(Boolean));
+      }
+    }
+  }, [storedPayload, alldata]);
 
   useEffect(() => {
     if (isProductChanged && alldata) {
@@ -182,6 +187,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
         quantity: 1,
       });
       setSelectedCard(initialSelection);
+      localStorage.setItem("selectedCard", JSON.stringify(initialSelection));
       setSelectedSubCatId(initialSubCatIds);
 
       localStorage.setItem(
@@ -194,25 +200,10 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
           ProductId: alldata?.id,
         })
       );
+      console.log("alldata?.id", alldata?.id);
     }
   }, [isProductChanged, alldata, widthSizes, heightSizes]);
- // Update localStorage with productDetails whenever it changes
- useEffect(() => {
-   if (productDetails.width && productDetails.height && selectedSubCatId.length > 0) {
-     const updatedPayload = {
-       width: productDetails.width,
-       height: productDetails.height,
-       quantity: productDetails.quantity,
-       subCatId: JSON.stringify(selectedSubCatId),
-       ProductId: productDetails.ProductId || "",
-     };
-
-     console.log("Saving to localStorage:", updatedPayload);
-
-     localStorage.setItem("productDetails", JSON.stringify(updatedPayload));
-   }
- }, [productDetails, selectedSubCatId]);
-
+  // Update localStorage with productDetails whenever it changes
   useEffect(() => {
     if (productDetails.width && productDetails.height && selectedSubCatId.length > 0) {
       const updatedPayload = {
@@ -220,7 +211,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
         height: productDetails.height,
         quantity: productDetails.quantity,
         subCatId: JSON.stringify(selectedSubCatId),
-        ProductId: productDetails.ProductId || "",
+        ProductId: alldata?.id || "",
       };
 
       console.log("Saving to localStorage:", updatedPayload);
@@ -232,13 +223,16 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
   const handleCardClick = (categoryId, subCat) => {
     setSelectedCard((prevSelectedCards) => {
       const updatedCards = { ...prevSelectedCards, [categoryId]: subCat.id };
-      const subCatIdsArray = Object.values(updatedCards).filter((value) => value !== undefined);
+      const subCatIdsArray = Object.values(updatedCards).filter(Boolean); // Ensuring no undefined values
+
       setSelectedSubCatId(subCatIdsArray);
+
+      // Update localStorage with updated card and subcategory info
+      localStorage.setItem("selectedCard", JSON.stringify(updatedCards));
+
       return updatedCards;
     });
   };
-
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -292,6 +286,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
   useEffect(() => {
     const handleBeforeUnload = () => {
       localStorage.removeItem("productDetails");
+      localStorage.removeItem("selectedCard");
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -549,7 +544,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
                       <AccordionDetails>
                         <Grid container spacing={2}>
                           {category?.subCategories?.map((subCat) => {
-                            //console.log("iddddd", selectedCard[category.id]?.id);
+                            console.log("iddddd", selectedCard[category.id] === subCat.id);
                             return (
                               <Grid item xs={6} key={subCat.id}>
                                 <Paper
@@ -557,7 +552,8 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
                                   sx={{
                                     padding: 1,
                                     textAlign: "center",
-                                    border: selectedCard[category.id] === subCat.id ? "2px solid #ff9900" : "none",
+                                    border:
+                                      selectedCard[category.id] === subCat.id ? "2px solid blue" : "1px solid gray",
                                     cursor: "pointer",
                                     fontSize: "10px",
                                   }}

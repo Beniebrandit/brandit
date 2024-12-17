@@ -64,7 +64,7 @@ const Categories = () => {
 
      const res = await ProductService.ProductList(params);
      const data = res.data;
-     console.log("Fetched Data:", data);
+    // console.log("Fetched Data:", data);
 
      // Verify the filtered results directly
      const filteredCategories = {
@@ -76,7 +76,7 @@ const Categories = () => {
        signs: data.filter((product) => product.productCategory?.parent_name === "Signs"),
      };
 
-     console.log("Filtered Categories:", filteredCategories);
+    // console.log("Filtered Categories:", filteredCategories);
 
      // Update the state with the filtered data
      setCategoriesData(filteredCategories);

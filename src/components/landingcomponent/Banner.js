@@ -96,7 +96,7 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
       const updatedCards = { ...prevSelectedCards, [categoryId]: subCat.id };
       const subCatIdsArray = Object.values(updatedCards).filter((value) => value !== undefined);
       setSelectedSubCatId(subCatIdsArray);
-      console.log("selectedSubCatId", selectedSubCatId);
+      //console.log("selectedSubCatId", selectedSubCatId);
       return updatedCards;
     });
   };

@@ -253,7 +253,7 @@ const DesignOnline = () => {
       if (response.length > 0) {
         // Automatically set the first product as the default selection
         setgetId(id);
-        console.log("Initial product ID set:", getid);
+        console.log("Initial product ID set:", id);
       }
     } catch (error) {
       console.error("Error fetching all products:", error);
@@ -287,7 +287,7 @@ const DesignOnline = () => {
   const handleDeleteDropboxFile = (index) => {
     setDropData(dropdata.filter((_, i) => i !== index));
   };
-      console.log("storedPayload", storedPayload);
+      //console.log("storedPayload", storedPayload);
 
   return (
     <>
@@ -336,6 +336,7 @@ const DesignOnline = () => {
             setShowSection={setShowSection}
             setValue={setValue}
             setIsTabOpen={setIsTabOpen}
+            storedPayload={storedPayload}
           />
         )}
 
