@@ -24,6 +24,8 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
   const [selectedSubCatId, setSelectedSubCatId] = useState([]);
   const [isPayloadInitialized, setIsPayloadInitialized] = useState(false);
   const [isProductChanged, setIsProductChanged] = useState(false); // Track product change
+  const [eachProductPrice, setEachProductPrice] = useState("");
+
   //console.log("alldata", alldata);
   //console.log("storedPayload", storedPayload);
   //console.log("productDetails", productDetails);
@@ -256,10 +258,15 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
     }
   };
 
-  useEffect(() => {
-    // Handle debounce for price fetch based on product details
-    const timeout = setTimeout(() => {
-      if (productDetails.width && productDetails.height && selectedSubCatId.length > 0) {
+useEffect(() => {
+  let isCancelled = false;
+
+  // Set loading state for price
+  setEachProductPrice("Loading...");
+
+  const fetchPrice = async () => {
+    if (productDetails.width && productDetails.height && selectedSubCatId.length > 0) {
+      try {
         const payload = {
           width: productDetails.width,
           height: productDetails.height,
@@ -267,34 +274,35 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
           ProductId: alldata?.id,
           quantity: productDetails.quantity,
         };
-        ProductService.Dataprice(payload)
-          .then((res) => {
-            setProductDetails((prev) => ({
-              ...prev,
-              price: res.data?.totalPrice || 50,
-            }));
-          })
-          .catch((error) => {
-            console.error("Error fetching price:", error);
-          });
+
+        const res = await ProductService.Dataprice(payload);
+
+        if (!isCancelled) {
+          const totalPrice = res.data?.totalPrice || 50; // Default price fallback
+          setProductDetails((prev) => ({
+            ...prev,
+            price: totalPrice,
+          }));
+          setEachProductPrice((totalPrice / productDetails.quantity).toFixed(2));
+        }
+      } catch (error) {
+        console.error("Error fetching price:", error);
+        if (!isCancelled) {
+          setEachProductPrice("Error");
+        }
       }
-    }, 300);
+    }
+  };
 
-    return () => clearTimeout(timeout); // Cleanup debounce
-  }, [productDetails.width, productDetails.height, productDetails.quantity, selectedSubCatId]);
+  const timeout = setTimeout(fetchPrice, 300);
 
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      localStorage.removeItem("productDetails");
-      localStorage.removeItem("selectedCard");
-    };
+  return () => {
+    isCancelled = true;
+    clearTimeout(timeout); // Cleanup debounce
+  };
+}, [productDetails.width, productDetails.height, productDetails.quantity, selectedSubCatId, alldata?.id]);
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
 
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
   return (
     <>
       <Box>
@@ -552,8 +560,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
                                   sx={{
                                     padding: 1,
                                     textAlign: "center",
-                                    border:
-                                      selectedCard[category.id] === subCat.id ? "2px solid blue" : "1px solid gray",
+                                    border: selectedCard[category.id] === subCat.id ? "2px solid #ff9900" : "none",
                                     cursor: "pointer",
                                     fontSize: "10px",
                                   }}
@@ -596,12 +603,12 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
           }}
         >
           <Typography variant="h6" sx={{ color: "#1976d2" }}>
-            ${productDetails?.price} <br />
+            ${eachProductPrice || ""} <br />
             each
           </Typography>
           <Typography variant="body2">
             Subtotal:
-            <br /> $150.33
+            <br /> ${productDetails?.price}
           </Typography>
         </Box>
       </Box>

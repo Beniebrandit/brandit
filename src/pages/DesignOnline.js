@@ -12,10 +12,11 @@ import { Rnd } from "react-rnd";
 import { PremiumImage } from "../services/PremiumImage.service";
 import { ProductCategoryService } from "../services/ProductCategory.service";
 import { useLocation, useParams } from "react-router-dom";
+//import { jsonImg } from "../components/common/Constant";
 
 const DesignOnline = () => {
   const { id } = useParams();
-  const [storedPayload, setStoredPayload] = useState(null);
+    const [storedPayload, setStoredPayload] = useState(null);
   const [value, setValue] = React.useState(1);
   const [isTabOpen, setIsTabOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState([]);
@@ -42,7 +43,7 @@ const DesignOnline = () => {
     quantity: 1,
     price: null,
   });
-
+  
   useEffect(() => {
     const payload = localStorage.getItem("selectedData");
 
@@ -164,11 +165,10 @@ const DesignOnline = () => {
   const selectImage = (index, source) => {
     let selectedImageUrl = "";
     if (source === "premium" && premiumimg && premiumimg.length > 0) {
-      const selectedImage = premiumimg[index];
-
-      if (selectedImage?.path) {
-        selectedImageUrl = `${process.env.REACT_APP_API_BASE_URL}${selectedImage.path}`;
-        AddImage(selectedImageUrl); // Use the full URL here
+      const selectedImage = premiumimg;
+      if (selectedImage) {
+        selectedImageUrl = `${process.env.REACT_APP_API_BASE_URL}${selectedImage}`;
+        AddImage(selectedImage); // Use the full URL here
         openImgEditor();
       } else {
         console.error("No valid premium image at premium index", index);
@@ -266,7 +266,7 @@ const DesignOnline = () => {
 
   useEffect(() => {
     if (getid) {
-      console.log("getid changed:", getid);
+            console.log("getid changed:", getid);
       getApi(getid);
     }
   }, [getid]);
@@ -284,10 +284,33 @@ const DesignOnline = () => {
       setDropData((prevDropData) => [...prevDropData, ...updatedFiles]);
     }
   };
+  
   const handleDeleteDropboxFile = (index) => {
     setDropData(dropdata.filter((_, i) => i !== index));
   };
-      //console.log("storedPayload", storedPayload);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      // Prevent the default behavior (i.e., navigating away)
+      event.preventDefault();
+
+      // Custom message for the beforeunload event (for debugging purposes)
+      event.returnValue = ""; // For most modern browsers, this triggers the confirmation dialog
+
+      // Clear the localStorage items
+      localStorage.removeItem("productDetails");
+      localStorage.removeItem("selectedCard");
+      console.log("LocalStorage cleared on page unload");
+    };
+
+    // Add the beforeunload event listener
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Cleanup: Remove event listener when the component unmounts
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
   return (
     <>
@@ -312,6 +335,7 @@ const DesignOnline = () => {
             vectorimage={vectorimage}
             setImage={setQrImage}
             setPremiumimg={setPremiumimg}
+            premiumimg={premiumimg}
             alldata={alldata}
             allproduct={allproduct}
             handleDeleteDropboxFile={handleDeleteDropboxFile}

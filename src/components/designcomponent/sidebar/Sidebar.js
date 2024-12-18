@@ -85,6 +85,7 @@ const Sidebar = ({
   setIsTabOpen,
   setgetId,
   storedPayload,
+  premiumimg,
 }) => {
   const [open, setOpen] = React.useState(false);
   const [delopen, setDelOpen] = React.useState(false);
@@ -135,14 +136,17 @@ const Sidebar = ({
     setDelOpen(true); // Open the delete confirmation dialog
   };
 
-  const handleExpand = (index, source) => {
+  const handleExpand = (index, source, url) => {
     let image;
+
     setSelectedSource(source);
 
     if (source === "upload") {
       image = selectedFile[index];
-    } else if (source === "premium") {
-      image = `${process.env.REACT_APP_API_BASE_URL}/${vectorimage[index]}`;
+    } else if (source == "premium") {
+      console.log("indexSorce", source);
+      image = url;
+      // image = `${process.env.REACT_APP_API_BASE_URL}/${vectorimage[index]}`;
     } else if (source === "dropdata") {
       image = combinedImages[index].url;
     }
@@ -187,7 +191,6 @@ const Sidebar = ({
 
   const handlePremiumImage = (index, img) => {
     images = `${process.env.REACT_APP_API_BASE_URL}/${img}`;
-    console.log("index", img);
     setExpandImage(images);
     setExpandedImageIndex(index);
     handleClickOpen();
@@ -339,13 +342,6 @@ const Sidebar = ({
                     setProductDetails={setProductDetails}
                     productDetails={productDetails}
                     setgetId={setgetId}
-                    storedPayload={storedPayload}
-                    //selectedSubCatId={selectedSubCatId}
-                    //setSelectedSubCatId={setSelectedSubCatId}
-                    //selectedCard={selectedCard}
-                    //setSelectedCard={setSelectedCard}
-                    //payload={payload}
-                    //setPayload={setPayload}
                   />
                 </TabPanel>
                 <TabPanel value={value} index={1} style={{ width: "auto", maxWidth: "24rem" }}>
@@ -362,10 +358,12 @@ const Sidebar = ({
                     dropdata={dropdata}
                   />
                 </TabPanel>
-                <TabPanel value={value} index={2} style={{ width: "auto", maxWidth: "24rem" }}>
+                <TabPanel value={value} index={2} style={{ maxWidth: "24rem", padding: "0px" }} className="cust-panel">
                   <PremiumImg
+                    premiumimg={premiumimg}
                     selectImage={selectImage}
                     images={images}
+                    handleExpand={handleExpand}
                     vectorimage={vectorimage}
                     setPremiumimg={setPremiumimg}
                     handlePremiumImage={handlePremiumImage}

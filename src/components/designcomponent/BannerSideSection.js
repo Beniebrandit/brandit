@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -9,23 +10,50 @@ import {
   useTheme,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Vector from "../../asset/images/ArrowIcon.svg";
 import { ReactComponent as Sidebarsetting } from "../../asset/images/sidebar_setting.svg";
-import React, { useState } from "react";
 import { ReactComponent as Eye } from "../../asset/images/Eye.svg";
 
-const BannerSideSection = ({ onToggleAccordion, productDetails, alldata, setShowSection, setValue, setIsTabOpen }) => {
+const BannerSideSection = ({
+  onToggleAccordion,
+  productDetails,
+  alldata,
+  setShowSection,
+  setValue,
+  setIsTabOpen,
+  storedPayload,
+}) => {
   const [isAccordionOpen, setIsAccordionOpen] = useState(true);
+  const [finalProductData, setFinalProductData] = useState({});
   const theme = useTheme();
+
+  // Toggle Accordion
   const handleAccordionChange = () => {
-    setIsAccordionOpen((prevState) => !prevState); // Toggles the state
-    onToggleAccordion(!isAccordionOpen); // Notify parent of the new state
+    setIsAccordionOpen((prevState) => !prevState);
+    onToggleAccordion(!isAccordionOpen);
   };
 
+  // Open Config Tab
   const OpenConfig = () => {
     setValue(0);
     setIsTabOpen(true);
   };
+
+  // Set initial product data based on storedPayload
+  useEffect(() => {
+    if (storedPayload) {
+      setFinalProductData({
+        width: storedPayload.width || "",
+        height: storedPayload.height || "",
+        quantity: storedPayload.quantity || 1,
+        price: storedPayload.price || null,
+        ProductId: alldata?.id || null,
+      });
+    }
+  }, [storedPayload, alldata]);
+
+  //console.log("finalProductData", finalProductData);
+  //console.log("productDetails", productDetails);
+
   return (
     <Box
       sx={{
@@ -37,7 +65,6 @@ const BannerSideSection = ({ onToggleAccordion, productDetails, alldata, setShow
         flexDirection: "column",
         border: "1px solid #868686",
         alignItems: "end",
-        // padding: {md:"20px 0"},
         position: "fixed",
         background: "#fff",
         right: "0.5rem",
@@ -71,55 +98,66 @@ const BannerSideSection = ({ onToggleAccordion, productDetails, alldata, setShow
                 gridTemplateColumns: "1fr",
                 gap: "1rem",
                 backgroundColor: "white",
-                // padding: "1rem",
                 borderRadius: "1rem",
               }}
             >
+              {/* Material Section */}
               <Box sx={{ display: "grid", gap: "6px" }}>
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                   <Box>
                     <Typography sx={{ color: "#3F5163", fontSize: "16px", fontWeight: 500 }}>Material</Typography>
-                    <Typography sx={{ fontSize: "16px", color: "#868686" }}>Stickers and Decals</Typography>
+                    <Typography sx={{ fontSize: "16px", color: "#868686" }}>{alldata?.name}</Typography>
                   </Box>
                   <Box sx={{ display: "grid", paddingLeft: "2px" }} onClick={OpenConfig}>
-                    <Sidebarsetting
-                      style={{
-                        paddingLeft: "8px",
-                        height: "23px",
-                      }}
-                    />
+                    <Sidebarsetting style={{ paddingLeft: "8px", height: "23px" }} />
                     <Typography sx={{ fontSize: "16px", color: "#3F5163", fontWeight: 400 }}>Config</Typography>
                   </Box>
                 </Box>
               </Box>
+
+              {/* Size Section */}
               <Box>
                 <Typography sx={{ color: "#3F5163", fontSize: "16px", fontWeight: 500 }}>Size</Typography>
                 <Typography sx={{ fontSize: "16px", color: "#868686" }}>
-                  {productDetails?.width || alldata?.productSizes[0].size}" W X{" "}
-                  {productDetails?.height || alldata?.productSizes[3].size}" H
+                  {productDetails?.width == "" ? finalProductData?.width : productDetails?.width || "N/A"}" W X{" "}
+                  {productDetails?.height == "" ? finalProductData?.height : productDetails?.height || "N/A"}" H
                 </Typography>
               </Box>
+
+              {/* Quantity Section */}
               <Box>
                 <Typography sx={{ color: "#3F5163", fontSize: "16px", fontWeight: 500 }}>Quantity</Typography>
-                <Typography sx={{ fontSize: "16px", color: "#868686" }}>{productDetails?.quantity} qty</Typography>
-              </Box>{" "}
+                <Typography sx={{ fontSize: "16px", color: "#868686" }}>
+                  {productDetails?.quantity == "" ? finalProductData?.quantity : productDetails?.quantity || 1} qty
+                </Typography>
+              </Box>
+
+              {/* Price Section */}
               <Box>
                 <Typography sx={{ color: "#3F5163", fontSize: "16px", fontWeight: 500 }}>Price</Typography>
                 <Typography sx={{ fontSize: "16px", color: "#868686" }}>
-                  <span style={{ color: "#E0CE8F" }}>${productDetails?.price}</span> each{" "}
+                  <span style={{ color: "#E0CE8F" }}>
+                    ${finalProductData?.price || productDetails?.price || "0.00"}
+                  </span>{" "}
+                  each
                 </Typography>
               </Box>
+
+              {/* View Proof */}
               <Box sx={{ display: "flex" }}>
                 <Eye style={{ width: "25px", height: "auto" }} />
                 &nbsp;
                 <Typography
                   onClick={() => setShowSection(false)}
-                  sx={{ color: "#3F5163", fontWeight: "bold", fontSize: "20px" }}
+                  sx={{ color: "#3F5163", fontWeight: "bold", fontSize: "20px", cursor: "pointer" }}
                 >
                   View Proof
                 </Typography>
               </Box>
+
               <Divider />
+
+              {/* Save & Continue */}
               <Button
                 sx={{
                   borderRadius: "10px",
