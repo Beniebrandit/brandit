@@ -67,7 +67,6 @@ const Sidebar = ({
   selectedFile,
   onDeleteImage,
   selectImage,
-  onStyleChange,
   images,
   vectorimage,
   setImage,
@@ -185,7 +184,7 @@ const Sidebar = ({
       !tabRef.current.contains(event.target) &&
       (!dialogRef.current || !dialogRef.current.contains(event.target)) // Ensure clicks inside dialog don't close TabPanel
     ) {
-      setIsTabOpen(false); // Close the TabPanel if clicked outside
+      setIsTabOpen(false);
     }
   };
 
@@ -197,10 +196,8 @@ const Sidebar = ({
   };
 
   useEffect(() => {
-    // Add the event listener when the component is mounted
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      // Remove the event listener when the component is unmounted
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
@@ -342,6 +339,7 @@ const Sidebar = ({
                     setProductDetails={setProductDetails}
                     productDetails={productDetails}
                     setgetId={setgetId}
+                    storedPayload={storedPayload}
                   />
                 </TabPanel>
                 <TabPanel value={value} index={1} style={{ width: "auto", maxWidth: "24rem" }}>

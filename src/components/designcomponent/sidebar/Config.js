@@ -16,14 +16,14 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { ProductService } from "../../../services/Product.service";
 import FormControl from "@mui/material/FormControl";
+import { Circles } from "react-loader-spinner";
 
 const Config = ({ allproduct, alldata, setProductDetails, productDetails, setgetId, storedPayload }) => {
-  const [count, setCount] = useState(1);
+  const [loader, setLoader] = useState();
   const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedCard, setSelectedCard] = useState({});
   const [selectedSubCatId, setSelectedSubCatId] = useState([]);
-  const [isPayloadInitialized, setIsPayloadInitialized] = useState(false);
-  const [isProductChanged, setIsProductChanged] = useState(false); // Track product change
+  const [isProductChanged, setIsProductChanged] = useState(false); 
   const [eachProductPrice, setEachProductPrice] = useState("");
 
   //console.log("alldata", alldata);
@@ -261,8 +261,8 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
 useEffect(() => {
   let isCancelled = false;
 
-  // Set loading state for price
-  setEachProductPrice("Loading...");
+  // Show loader
+  setLoader(true);
 
   const fetchPrice = async () => {
     if (productDetails.width && productDetails.height && selectedSubCatId.length > 0) {
@@ -290,7 +290,13 @@ useEffect(() => {
         if (!isCancelled) {
           setEachProductPrice("Error");
         }
+      } finally {
+        if (!isCancelled) {
+          setLoader(false); // Hide loader after completion
+        }
       }
+    } else {
+      setLoader(false); // Hide loader if no valid input
     }
   };
 
@@ -300,7 +306,7 @@ useEffect(() => {
     isCancelled = true;
     clearTimeout(timeout); // Cleanup debounce
   };
-}, [productDetails.width, productDetails.height, productDetails.quantity, selectedSubCatId, alldata?.id]);
+}, [productDetails.width, productDetails.height, productDetails.quantity, selectedSubCatId]);
 
 
   return (
@@ -602,14 +608,28 @@ useEffect(() => {
             justifyContent: "space-around",
           }}
         >
-          <Typography variant="h6" sx={{ color: "#1976d2" }}>
-            ${eachProductPrice || ""} <br />
-            each
-          </Typography>
-          <Typography variant="body2">
-            Subtotal:
-            <br /> ${productDetails?.price}
-          </Typography>
+          {loader ? (
+            <Circles
+              height="40"
+              width="40"
+              color="#4fa94d"
+              ariaLabel="circles-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+            />
+          ) : (
+            <>
+              <Typography variant="h6" sx={{ color: "#1976d2" }}>
+                ${eachProductPrice || ""} <br />
+                each
+              </Typography>
+              <Typography variant="body2">
+                Subtotal:
+                <br /> ${productDetails?.price}
+              </Typography>
+            </>
+          )}
         </Box>
       </Box>
     </>

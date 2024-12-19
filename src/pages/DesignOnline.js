@@ -11,12 +11,12 @@ import CreateAccountDialog from "../components/common/CreateAccountDialog";
 import { Rnd } from "react-rnd";
 import { PremiumImage } from "../services/PremiumImage.service";
 import { ProductCategoryService } from "../services/ProductCategory.service";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 //import { jsonImg } from "../components/common/Constant";
 
 const DesignOnline = () => {
   const { id } = useParams();
-    const [storedPayload, setStoredPayload] = useState(null);
+  const [storedPayload, setStoredPayload] = useState(null);
   const [value, setValue] = React.useState(1);
   const [isTabOpen, setIsTabOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState([]);
@@ -43,7 +43,7 @@ const DesignOnline = () => {
     quantity: 1,
     price: null,
   });
-  
+
   useEffect(() => {
     const payload = localStorage.getItem("selectedData");
 
@@ -266,7 +266,7 @@ const DesignOnline = () => {
 
   useEffect(() => {
     if (getid) {
-            console.log("getid changed:", getid);
+      console.log("getid changed:", getid);
       getApi(getid);
     }
   }, [getid]);
@@ -284,33 +284,40 @@ const DesignOnline = () => {
       setDropData((prevDropData) => [...prevDropData, ...updatedFiles]);
     }
   };
-  
+
   const handleDeleteDropboxFile = (index) => {
     setDropData(dropdata.filter((_, i) => i !== index));
   };
 
   useEffect(() => {
-    const handleBeforeUnload = (event) => {
-      // Prevent the default behavior (i.e., navigating away)
-      event.preventDefault();
-
-      // Custom message for the beforeunload event (for debugging purposes)
-      event.returnValue = ""; // For most modern browsers, this triggers the confirmation dialog
-
-      // Clear the localStorage items
+    const clearLocalStorage = () => {
       localStorage.removeItem("productDetails");
       localStorage.removeItem("selectedCard");
-      console.log("LocalStorage cleared on page unload");
+      console.log("LocalStorage cleared on navigation or page reload");
     };
 
-    // Add the beforeunload event listener
+    // Clear localStorage on page reload
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue = ""; // This triggers the confirmation dialog
+      clearLocalStorage();
+    };
+
     window.addEventListener("beforeunload", handleBeforeUnload);
 
-    // Cleanup: Remove event listener when the component unmounts
+    // Cleanup: Remove event listeners
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    localStorage.removeItem("productDetails");
+    localStorage.removeItem("selectedCard");
+    console.log("LocalStorage cleared on navigation to", location.pathname);
+  }, [location.pathname]);
 
   return (
     <>

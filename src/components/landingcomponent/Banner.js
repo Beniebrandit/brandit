@@ -22,41 +22,7 @@ import { ProductService } from "../../services/Product.service";
 import { ProductCategoryService } from "../../services/ProductCategory.service";
 import SearchIcon from "@mui/icons-material/Search";
 import { Card, Grid } from "@mui/material";
-
-const allOptions = ["Option One", "Option Two", "Option Three", "Option Four"];
-
-const optionsData = [
-  {
-    title: "Printed Sides",
-    key: "printedSides",
-    defaultValue: "Single Sided",
-    options: ["Single Sided", "Double Sided", "Double Sided1", "Double Sided2"],
-  },
-  {
-    title: "Grommets",
-    key: "grommets",
-    defaultValue: "Every 2-3 ft",
-    options: ["Every 2-3 ft", "Every 4-5 ft"],
-  },
-  {
-    title: "Accessories",
-    key: "accessories",
-    defaultValue: "None",
-    options: ["None", "Ropes"],
-  },
-  {
-    title: "Edge Finish",
-    key: "edgeFinish",
-    defaultValue: "Welded Hem",
-    options: ["Welded Hem", "Stitched Hem"],
-  },
-  {
-    title: "Pole Pockets",
-    key: "polePockets",
-    defaultValue: "None",
-    options: ["None", "With Pockets"],
-  },
-];
+import { Circles } from "react-loader-spinner";
 
 const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduct, pricePerProduct }) => {
   const [open, setOpen] = React.useState(false);
@@ -71,23 +37,16 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
   const [selectedHeight, setSelectedHeight] = useState("");
   const [selectedSubCatId, setSelectedSubCatId] = useState([]);
   const [price, setPrice] = useState();
-  const [rating, setRating] = useState();
+  const [loadingPrice, setLoadingPrice] = useState(false);
   const [allcategories, setAllCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState();
   const [searchText, setSearchText] = useState("");
-  const [productSize, setProductSize] = useState();
   const [productDetails, setProductDetails] = useState([]);
   const [productId, setProductId] = useState();
   const [isPayloadReady, setIsPayloadReady] = useState(false);
 
   const [showOptions, setShowOptions] = useState(false);
   const [activeOptionKey, setActiveOptionKey] = useState(null);
-  const [selectedValues, setSelectedValues] = useState(
-    optionsData.reduce((acc, option) => {
-      acc[option.key] = option.defaultValue;
-      return acc;
-    }, {})
-  );
 
   const toggleOptions = () => setShowOptions(!showOptions);
 
@@ -257,16 +216,22 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
 
   useEffect(() => {
     if (isPayloadReady && payload) {
-      getPrice(payload);
-      setIsPayloadReady(false); // Reset the ready state after the call
+      fetchPrice(payload);
+      setIsPayloadReady(false);
     }
   }, [isPayloadReady, payload]);
 
-  const getPrice = (payload) => {
-    ProductService.Dataprice(payload).then((res) => {
+  const fetchPrice = async (payload) => {
+    setLoadingPrice(true); // Show loader
+    try {
+      const res = await ProductService.Dataprice(payload);
       setPrice(res.data.totalPrice);
       setPricePerProduct(res.data.totalPrice / count);
-    });
+    } catch (error) {
+      console.error("Error fetching price:", error);
+    } finally {
+      setLoadingPrice(false); // Hide loader
+    }
   };
 
   const handleClick = (id) => {
@@ -608,35 +573,51 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
                 />
               </Box>
 
-              {/* Price Section */}
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  paddingTop: "10px",
-                }}
-              >
-                <Typography sx={{ fontSize: "28px", color: "#3F5163", fontWeight: 700 }}>${price}</Typography>
+              <Box>
+                {/* Price Section */}
                 <Box
                   sx={{
                     display: "flex",
+                    flexDirection: "column",
                     alignItems: "center",
-                    justifyContent: "space-around",
-                    width: "100%",
+                    justifyContent: "center",
+                    paddingTop: "10px",
                   }}
                 >
-                  <Typography
-                    sx={{
-                      fontSize: "18px",
-                      color: "#E0CE8F",
-                      textDecoration: "line-through",
-                    }}
-                  >
-                    {pricePerProduct}
-                  </Typography>
-                  <Typography sx={{ fontSize: "28px", color: "#3F5163", fontWeight: 500 }}>each</Typography>
+                  {loadingPrice ? (
+                    <Circles
+                      height="40"
+                      width="40"
+                      color="#4fa94d"
+                      ariaLabel="circles-loading"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                      visible={true}
+                    />
+                  ) : (
+                    <>
+                      <Typography sx={{ fontSize: "28px", color: "#3F5163", fontWeight: 700 }}>${price}</Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-around",
+                          width: "100%",
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            fontSize: "18px",
+                            color: "#E0CE8F",
+                            textDecoration: "line-through",
+                          }}
+                        >
+                          {pricePerProduct}
+                        </Typography>
+                        <Typography sx={{ fontSize: "28px", color: "#3F5163", fontWeight: 500 }}>each</Typography>
+                      </Box>
+                    </>
+                  )}
                 </Box>
               </Box>
 
