@@ -476,7 +476,7 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
 
       <Box className="inner_header">
         <Container maxWidth="lg" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <Box className="header_box">
+          <Box className="header_box" href="/">
             <img alt="main_logo" src={main_logo} style={{ width: "50px", height: "auto" }} />
           </Box>
           <Box>

@@ -1,10 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
-import { Box, Button, Divider, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, Grid, Paper, styled, TextField, Typography } from "@mui/material";
 import { ReactComponent as SearchTemplete } from "../../asset/images/Vector.svg";
 import { ReactComponent as DesignOnline } from "../../asset/images/DesignOnline.svg";
+import searchIcon from "../../asset/images/search_Icon.svg";
 import { ReactComponent as UploadFile } from "../../asset/images/UploadFile.svg";
+import algoliasearch from "algoliasearch/lite";
+import { InstantSearch, SearchBox, Hits } from "react-instantsearch";
+import { searchClient } from "@algolia/client-search";
+import CustomPagination from "../common/CustomPagination";
+import { debounce } from "lodash";
+import PopUpPagination from "../common/PopUpPagination";
 import { useNavigate } from "react-router-dom";
+import { Blocks } from "react-loader-spinner";
+// const searchClient = algoliasearch("RG2O7GHZ1A", "f158f8d3e0b47c034f92caef34615240");
+
+const Hit = ({ hit }) => (
+  <div>
+    <h3>{hit.title}</h3>
+    <img src={hit.poster_path} alt={hit.original_title} style={{ width: "200px" }} />
+  </div>
+);
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(2),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+  ...theme.applyStyles("dark", {
+    backgroundColor: "#1A2027",
+  }),
+}));
 
 const style = {
   position: "absolute",
@@ -25,6 +51,62 @@ const style = {
 
 const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategory }) => {
   const navigate = useNavigate();
+  const searchClient = algoliasearch("2GHMAK1N6Y", "9bf2a62bc24c1fd0159cde3b9c7136e2");
+  const index = searchClient.initIndex("test"); // Your Algolia index name
+  const [value, setValue] = useState("");
+  const [openSearch, setOpenSearch] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [spinner, setSpinner] = useState(false);
+
+  const handleSearch = (e) => {
+    setValue(e.target.value);
+  };
+
+  const submitSearch = debounce(async (page = 1) => {
+    setSpinner(true);
+    try {
+      // Ensure the page is at least 1 before subtracting 1 for Algolia
+      const response = await index.search(value, {
+        page: page, // Pass current page to Algolia
+        hitsPerPage: 10,
+        query: value, // The search term
+        typoTolerance: true,
+        clickAnalytics: true,
+        facets: ["*"], // Retrieve all facets
+        facetFilters: {},
+        analyticsTags: ["Tracked Search", "Design Template", "Homepage", "Repeat"],
+      });
+
+      // Update the search results and pagination info
+      setSearchResults(response.hits);
+      setCurrentPage(response.page);
+      setTotalPages(response.nbPages);
+    } catch (error) {
+      console.error("Search Error:", error);
+    } finally {
+      setSpinner(false); // Hide spinner after completion
+    }
+    setOpenSearch(true);
+  }, 300);
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    submitSearch(newPage);
+  };
+  const handleCloseSearch = () => {
+    setValue("");
+    setOpenSearch(false);
+  };
+  useEffect(() => {
+    setSpinner(true);
+    if (value) {
+      setTimeout(() => {
+        submitSearch(); // Start search when value changes
+        setSpinner(false);
+      }, 2000);
+    }
+  }, [openSearch]);
   return (
     <div>
       <Modal
@@ -72,88 +154,214 @@ const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategor
               <b style={{ color: "#3F5163", fontWeight: 600 }}> ${price} sq/ft</b>
             </Typography>
           </Box>
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: { md: "1fr 1fr 1fr", sm: "1fr" },
-              padding: "1rem",
-            }}
-          >
-            <Button
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                margin: "auto",
-                backgroundColor: "#FAF8EE",
-                gap: "2rem",
-                height: "228px",
-                width: "310px",
-              }}
-              href="/design"
-            >
-              <DesignOnline />
-              <Typography
-                sx={{
-                  textAlign: "center",
-                  fontSize: "18px",
-                  textTransform: "capitalize",
-                  color: "#3F5163",
-                }}
-              >
-                Upload File
-              </Typography>
-            </Button>
-            <Button
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                padding: "1rem",
-                margin: "auto",
-                backgroundColor: "#FAF8EE",
-                gap: "2rem",
-                height: "228px",
-                width: "310px",
-              }}
-              onClick={() => {
-                if (payload0) {
-                  localStorage.setItem("selectedData", JSON.stringify(payload0));
-                } else {
-                  console.warn("payload0 is undefined or null");
-                }
-                navigate(`/design/${productId}`);
-              }}
-            >
-              <UploadFile />
-              <Typography
-                sx={{
-                  textAlign: "center",
-                  fontSize: "18px",
-                  textTransform: "capitalize",
-                  color: "#3F5163",
-                }}
-              >
-                Design Online
-              </Typography>
-            </Button>
-            <Button
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                padding: "1rem",
-                margin: "auto",
-                backgroundColor: "#FAF8EE",
-                gap: "2rem",
-                height: "228px",
-                width: "310px",
-              }}
-            >
-              <Box>
-                <SearchTemplete />
-              </Box>
 
-              <TextField sx={{ color: "#3F5163", backgroundColor: "white" }} placeholder="Search Template" />
-            </Button>
-          </Box>
+          {!openSearch && (
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: { md: "1fr 1fr 1fr", sm: "1fr" },
+                padding: "1rem",
+              }}
+            >
+              <Button
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  margin: "auto",
+                  backgroundColor: "#FAF8EE",
+                  gap: "2rem",
+                  height: "228px",
+                  width: "310px",
+                }}
+                href="/design"
+              >
+                <DesignOnline />
+                <Typography
+                  sx={{
+                    textAlign: "center",
+                    fontSize: "18px",
+                    textTransform: "capitalize",
+                    color: "#3F5163",
+                  }}
+                >
+                  Upload File
+                </Typography>
+              </Button>
+              <Button
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  padding: "1rem",
+                  margin: "auto",
+                  backgroundColor: "#FAF8EE",
+                  gap: "2rem",
+                  height: "228px",
+                  width: "310px",
+                }}
+                onClick={() => {
+                  if (payload0) {
+                    localStorage.setItem("selectedData", JSON.stringify(payload0));
+                  } else {
+                    console.warn("payload0 is undefined or null");
+                  }
+                  navigate(`/design/${productId}`);
+                }}
+              >
+                <UploadFile />
+                <Typography
+                  sx={{
+                    textAlign: "center",
+                    fontSize: "18px",
+                    textTransform: "capitalize",
+                    color: "#3F5163",
+                  }}
+                >
+                  Design Online
+                </Typography>
+              </Button>
+              <Button
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  padding: "1rem",
+                  margin: "auto",
+                  backgroundColor: "#FAF8EE",
+                  gap: "2rem",
+                  height: "228px",
+                  width: "310px",
+                }}
+              >
+                <Box>
+                  <SearchTemplete />
+                </Box>
+                <Box sx={{ display: "flex" }}>
+                  <TextField
+                    onChange={(e) => handleSearch(e)}
+                    sx={{
+                      color: "#3F5163",
+                      backgroundColor: "white",
+                      input: {
+                        height: "12px !important",
+                        width: "240px !important",
+                        "&::placeholder": {
+                          opacity: 1,
+                        },
+                      },
+                    }}
+                    placeholder="Search Template"
+                    className="search-dropdown-container"
+                  />
+
+                  <img
+                    src={searchIcon}
+                    alt="search"
+                    onClick={submitSearch}
+                    style={{
+                      paddingTop: "11px",
+                      position: "absolute",
+                      right: "32px",
+                      margin: "auto",
+                    }}
+                  />
+                </Box>
+              </Button>
+            </Box>
+          )}
+
+          {openSearch &&
+            (spinner ? (
+              <Box sx={{ margin: "auto", padding: "10px 0px 0px 23px",width: "max-content" }}>
+                <Blocks
+                  height="80"
+                  width="80"
+                  color="#4fa94d"
+                  ariaLabel="blocks-loading"
+                  wrapperStyle={{}}
+                  wrapperClass="blocks-wrapper"
+                  visible={true}
+                />
+              </Box>
+            ) : (
+              <Box sx={{ padding: "2rem 0rem" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-around",
+                    margin: "0 auto",
+                  }}
+                >
+                  <a href="#" onClick={handleCloseSearch} style={{ color: "#3F5163", textDecoration: "none" }}>
+                    Back to Desgin Option
+                  </a>
+
+                  <Box>
+                    <TextField
+                      value={value}
+                      onChange={(e) => handleSearch(e)}
+                      sx={{ color: "#3F5163", backgroundColor: "white", marginLeft: "-90px" }}
+                      placeholder="Search Template"
+                      className="search-dropdown-container"
+                    />
+                    <img
+                      onClick={() => submitSearch()}
+                      src={searchIcon}
+                      alt="search"
+                      style={{
+                        paddingTop: "7px",
+                        position: "absolute",
+                        right: "488px",
+                        margin: "auto",
+                      }}
+                    />
+                  </Box>
+                  <Typography>
+                    {" "}
+                    Page {currentPage} of {totalPages}{" "}
+                  </Typography>
+                </Box>
+                <Box sx={{ padding: "2rem" }}>
+                  <Grid
+                    container
+                    spacing={{ xs: 2, md: 3 }}
+                    columns={{ xs: 3, sm: 8, md: 12 }}
+                    sx={{ padding: "0rem 5rem" }}
+                  >
+                    {searchResults.length > 0 ? (
+                      searchResults.map((e, index) => (
+                        <Grid item xs={2.4} sm={2.4} md={2.4} key={index} sx={{ paddingBottom: "0rem" }}>
+                          <Box
+                            sx={{
+                              height: "125px",
+                              width: "125px",
+                              padding: "16px",
+                              display: "flex",
+                              justifyContent: "center",
+                              backgroundColor: "#F3F3F3",
+                            }}
+                          >
+                            <img
+                              id={e.objectID}
+                              src={e.Template_Image}
+                              alt={e.poster_path}
+                              style={{ height: "100%", width: "100%" }}
+                            />
+                          </Box>
+                        </Grid>
+                      ))
+                    ) : (
+                       <Box sx={{ margin: "auto", padding: "10px 0px 0px 23px",width: "max-content" }}>No Result found</Box>
+                    )}
+                  </Grid>
+                </Box>
+
+                <PopUpPagination
+                  totalItems={totalPages * 5}
+                  itemsPerPage={5}
+                  currentPages={currentPage} // Pass current page
+                  onPageChange={handlePageChange} // Handle page change
+                />
+              </Box>
+            ))}
           <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
             <Divider sx={{ flexGrow: 1 }} />
             <Typography sx={{ margin: "0 1rem", whiteSpace: "nowrap", fontSize: "20px" }}>
