@@ -37,7 +37,7 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
   const [selectedHeight, setSelectedHeight] = useState("");
   const [selectedSubCatId, setSelectedSubCatId] = useState([]);
   const [price, setPrice] = useState();
-  const [loadingPrice, setLoadingPrice] = useState(false);
+  const [loadingPrice, setLoadingPrice] = useState(true);
   const [allcategories, setAllCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState();
   const [searchText, setSearchText] = useState("");
@@ -139,10 +139,6 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
   const quantityChange = (event) => {
     const value = parseInt(event.target.value, 10);
     setCount(isNaN(value) || value <= 0 ? 1 : value);
-  };
-
-  const handleselectedCategory = (event) => {
-    setSelectedCategory(event.target.value);
   };
 
   useEffect(() => {

@@ -20,6 +20,7 @@ const HomePage = () => {
   const [currentUser, setCurrentUser] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [pricePerProduct, setPricePerProduct] = useState();
+  const [hidereviewbtn, setHideReviewBtn] = useState(true);
 
   const handleClickOpenLogin = () => setLoginOpen(true);
   const handleCloseLogin = () => setLoginOpen(false);
@@ -87,7 +88,7 @@ const HomePage = () => {
       <Categories />
       <TrendingProducts />
       <WhyBranditSignage />
-      <Reviews />
+      <Reviews hidereviewbtn={hidereviewbtn} />
       <HomeFooter />
 
       {isVisible && <AssistanceBanner pricePerProduct={pricePerProduct} />}

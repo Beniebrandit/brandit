@@ -4,6 +4,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import PopUp from "../landingcomponent/Pop_Up";
+import { Circles } from "react-loader-spinner";
 
 const AssistanceBanner = ({ pricePerProduct }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -83,15 +84,27 @@ const AssistanceBanner = ({ pricePerProduct }) => {
         </Box>
 
         {/* Price Each */}
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <LocalOfferIcon sx={{ marginRight: 1 }} />
-            <Typography>Price Each</Typography>
+        {!pricePerProduct ? (
+          <Circles
+            height="40"
+            width="40"
+            color="#4fa94d"
+            ariaLabel="circles-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        ) : (
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <LocalOfferIcon sx={{ marginRight: 1 }} />
+              <Typography>Price Each</Typography>
+            </Box>
+            <Typography variant="h5" color="#3f5163" sx={{ fontWeight: "bold" }}>
+              ${pricePerProduct && pricePerProduct}
+            </Typography>
           </Box>
-          <Typography variant="h5" color="#3f5163" sx={{ fontWeight: "bold" }}>
-            ${pricePerProduct && pricePerProduct}
-          </Typography>
-        </Box>
+        )}
 
         {/* Design Now Button */}
         <Box sx={{ display: "flex", justifyContent: "center", width: "14rem", height: "48px" }}>

@@ -30,6 +30,7 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { ProductCategoryService } from "../../services/ProductCategory.service";
 import { authHeader } from "../../library/authHeader";
+import { Circles } from "react-loader-spinner";
 
 // const url = `https://flagg.devlopix.com/api`;
 // const token = `6|q8mTawTdGKbRdLazOGLcm1Y0zJe5ks4IPUWRJNIR13495c0c`
@@ -47,10 +48,10 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
   const [selectedSubCatId, setSelectedSubCatId] = useState([]);
   const [price, setPrice] = useState();
   const [rating, setRating] = useState();
-  //const [getid, setgetId] = useState();
+  const [loadingPrice, setLoadingPrice] = useState(true);
 
   const [payload, setPayload] = useState({
-    productId: null, // Assuming `id` is the unique identifier for the product
+    productId: null,
     width: "",
     height: "",
     subCatId: [],
@@ -150,38 +151,6 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
     }
   };
 
-  // const data = {
-  //   name: ProductData[0].title,
-  //   description: ProductData[0].description,
-  // };
-
-  //const fetchProducts = async (productname) => {
-  //  if (productname) {
-  //    try {
-  //      const response = await axios.get(
-  //        `https://flagg.devlopix.com/api/product?with[]=images&with[]=productCategory&where[productCategoryId]=${productname}`,
-  //        {
-  //          headers: authHeader(),
-  //        }
-  //      );
-  //      console.log("Fetched products", response.data.data);
-  //
-  //      // Get the product ID from the response and set it
-  //      const fetchedId = response.data?.data[0].id;
-  //      setgetId(fetchedId);
-  //      setProductId(fetchedId);
-  //
-  //      // Call getApi only if fetchedId is valid
-  //      if (fetchedId) {
-  //        getApi(fetchedId);
-  //      }
-  //    } catch (error) {
-  //      console.error("Error fetching products:", error);
-  //      // Handle the error as needed
-  //    }
-  //  }
-  //};
-
   const getApi = async (id) => {
     try {
       const res = await ProductCategoryService.ProductDetail(id);
@@ -245,7 +214,7 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
         ProductId: productname,
         quantity: count,
       };
-
+      setLoadingPrice(true);
       ProductService.Dataprice(payload)
         .then((res) => {
           if (res.data && res.data.totalPrice) {
@@ -253,12 +222,14 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
             setPricePerProduct(res.data.totalPrice / count);
           } else {
             setPrice(55);
-            //setError("Failed to fetch pricing information.");
           }
         })
         .catch((error) => {
           console.error("API call failed:", error);
           //setError("Unable to fetch pricing. Please try again later.");
+        })
+        .finally(() => {
+          setLoadingPrice(false);
         });
     }
   }, [payload]);
@@ -640,7 +611,7 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
                                 <img
                                   src={`${process.env.REACT_APP_API_BASE_URL}${subCat.image}`}
                                   alt={subCat.subCatName}
-                                  style={{ width: "100%",height:"10rem", marginTop: "10px" }}
+                                  style={{ width: "100%", height: "10rem", marginTop: "10px" }}
                                 />
                               </Paper>
                             </Grid>
@@ -652,13 +623,25 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
                 </>
               ))}
               <Divider />
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Box sx={{ paddingTop: "13px" }}>
-                  <Typography>
-                    <b>Price:</b>
-                  </Typography>
-                  <Typography sx={{ fontSize: "22px", color: "rgb(63, 81, 99)" }}>${price}</Typography>
-                </Box>
+              <Box sx={{ display: "flex", justifyContent: "space-between",alignItems:"center" }}>
+                {loadingPrice ? (
+                  <Circles
+                    height="40"
+                    width="40"
+                    color="#4fa94d"
+                    ariaLabel="circles-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                    visible={true}
+                  />
+                ) : (
+                  <Box sx={{ paddingTop: "13px" }}>
+                    <Typography>
+                      <b>Price:</b>
+                    </Typography>
+                    <Typography sx={{ fontSize: "22px", color: "rgb(63, 81, 99)" }}>${price}</Typography>
+                  </Box>
+                )}
                 <Button
                   variant="contained"
                   onClick={handleClick}
