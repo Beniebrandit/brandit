@@ -87,7 +87,8 @@ code {
 
 .swiper-button-next,
 .swiper-button-prev {
-  color: #000; /* Ensure the color is visible */
+  color: #000;
+  /* Ensure the color is visible */
 }
 
 
@@ -104,56 +105,73 @@ code {
 }
 
 
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 4px; 
-  }
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
 
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: #f1f1f1; /* Track color */
-  }
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  /* Track color */
+}
 
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #888; /* Scrollbar thumb color */
-    border-radius: 10px; /* Rounded corners for thumb */
-  }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+  /* Scrollbar thumb color */
+  border-radius: 10px;
+  /* Rounded corners for thumb */
+}
 
-  /*.custom-scrollbar::-webkit-scrollbar-thumb-y {
+/*.custom-scrollbar::-webkit-scrollbar-thumb-y {
   width: 4px;
   }*/
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Darker thumb color on hover */
-  }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+  /* Darker thumb color on hover */
+}
 
-  .custom-scrollbar {
-    scrollbar-width: thin; /* Firefox thin scrollbar */
-    scrollbar-color: #888 #f1f1f1; /* Thumb and track color for Firefox */
-  }
+.custom-scrollbar {
+  scrollbar-width: thin;
+  /* Firefox thin scrollbar */
+  scrollbar-color: #888 #f1f1f1;
+  /* Thumb and track color for Firefox */
+}
 
 
 .custom-scrollbar-container {
-  overflow-x: auto; /* Allows horizontal scrolling if needed */
-  overflow-y: auto; /* Allows vertical scrolling if needed */
-  white-space: nowrap; /* Prevents wrapping of content */
-  max-width: 100%; /* Ensures the container doesn't exceed the screen width */
+  overflow-x: auto;
+  /* Allows horizontal scrolling if needed */
+  overflow-y: auto;
+  /* Allows vertical scrolling if needed */
+  white-space: nowrap;
+  /* Prevents wrapping of content */
+  max-width: 100%;
+  /* Ensures the container doesn't exceed the screen width */
   border: none !important;
 }
+
 .basic_tabs_example .css-heg063-MuiTabs-flexContainer {
   justify-content: space-between !important;
 }
-.basic_tabs_example  button{
+
+.basic_tabs_example button {
   font-weight: 400 !important;
-  color:#868686 !important;
+  color: #868686 !important;
 }
-.basic_tabs_example  button.Mui-selected{
+
+.basic_tabs_example button.Mui-selected {
   color: #3F5163 !important;
 }
-.basic_tabs_example span.MuiTabs-indicator{
+
+.basic_tabs_example span.MuiTabs-indicator {
   background-color: #3F5163 !important;
 }
-.tabs-cust span.MuiTabs-indicator{
+
+.tabs-cust span.MuiTabs-indicator {
   background-color: #E0CE8F !important;
+  margin-bottom: 8px;
 }
-.tabs-cust button.Mui-selected{
+
+.tabs-cust button.Mui-selected {
   color: #E0CE8F !important;
 }
 
@@ -166,16 +184,20 @@ code {
 }*/
 
 @media (min-width: 320px) {
+
   /* md screens */
   .background {
     height: 120vh;
   }
+
   .demophoto {
     justify-content: center;
   }
-  .protext{
+
+  .protext {
     text-align: center;
   }
+
   .categoriestext {
     text-align: center;
   }
@@ -185,14 +207,18 @@ code {
   .demophoto {
     justify-content: flex-start;
   }
-  .protext{
+
+  .protext {
     text-align: left;
   }
+
   .categoriestext {
     text-align: left;
   }
 }
+
 @media (min-width: 1024px) {
+
   /* lg screens */
   .background {
     height: 100vh;
@@ -259,58 +285,90 @@ html .pintura-editor {
 
 @media (prefers-color-scheme: dark) {
   html {
-      color: #fff;
-      background: #111;
+    color: #fff;
+    background: #111;
   }
 
   html .pintura-editor {
-      --color-background: 10, 10, 10;
-      --color-foreground: 255, 255, 255;
+    --color-background: 10, 10, 10;
+    --color-foreground: 255, 255, 255;
   }
 }
+
 .pintura-editor {
   height: 600px;
 }
-.product-image{
+
+.product-image {
   position: relative;
 }
-.category-img{
+
+.category-img {
   width: 100%;
-    aspect-ratio: 1 / 0.8;
-    object-fit: cover;
-    object-position: center center;
-    /*height: "18rem", */
-    /*width: "18rem"*/
+  aspect-ratio: 1 / 0.8;
+  object-fit: cover;
+  object-position: center center;
+  /*height: "18rem", */
+  /*width: "18rem"*/
 }
+
 .product-image .cust_arrow {
-    width: 61px !important;
-    height: 61px !important;
-    top: 100% !important;
-    right: 30px !important;
-    margin: 0px !important;
-    position: absolute;
-    transform: translateY(-50%);
-    box-shadow: 0px 0px 50px rgba(11, 58, 86, 0.1);
-    border-radius: 50%;
-    overflow: hidden;
+  width: 50px !important;
+  height: 50px !important;
+  padding: 15px;
+  background: #fff;
+  top: 100% !important;
+  right: 30px !important;
+  margin: 0px !important;
+  position: absolute;
+  transform: translateY(-50%);
+  box-shadow: 0px 0px 50px rgba(11, 58, 86, 0.1);
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
 }
+
+/* .product-image .cust_arrow:hover {
+  background: #f2d388;
+} */
+
+/* .imgdiv {
+  overflow: hidden;
+}
+
+.imgdiv:hover .category-img {
+  transform: scale(1.2);
+  transition: transform 0.5s ease-in-out;
+} */
+
+.productimgdiv {
+  overflow: hidden;
+}
+
+.productimgdiv:hover img {
+  transform: scale(1.2);
+  transition: transform 0.5s ease-in-out;
+}
+
 .customGridItem {
   padding-left: 0px !important;
 }
 
-.konvajs-content{
+.konvajs-content {
   height: 350px !important;
 }
-.social-icon{
+
+.social-icon {
   border-radius: 90%;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    background-color: white;
-    height: 48px;
-    width: 48px;
-    
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  background-color: white;
+  height: 48px;
+  width: 48px;
+
 }
+
 .cust-cancel {
   position: absolute;
   right: 6px;
@@ -322,4 +380,161 @@ html .pintura-editor {
 
 .MuiPaper {
   position: static;
+}
+
+.cust_bx_shadow {
+  padding: 10px;
+}
+.cust_bx_shadow:hover {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  padding: 10px;
+  border-radius: 8px;
+  transform: scale(0.9);
+}
+
+.cust_bx_shadow:hover .product-image .cust_arrow {
+  background: #f2d388;
+}
+.cust_div_range .css-19kzrtu{
+  padding: 0;
+}
+
+
+.shell {
+  padding: 60px 0;
+}
+
+.shell .container {
+  border: none;
+}
+
+.wsk-cp-product {
+  background: #fff;
+  padding: 25px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  position: relative;
+  margin-top: 20px;
+}
+
+.wsk-cp-img {
+  width: 100%;
+}
+
+.wsk-cp-img img {
+  max-height: 300px;
+  min-height: 300px;
+  width: 100%;
+  object-fit: fill;
+  border-radius: 6px;
+}
+
+.wsk-cp-product:hover .wsk-cp-img img {
+  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+}
+
+.wsk-cp-text .category {
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 5px;
+  margin-bottom: 20px;
+  position: relative;
+  transition: all 3s ease-in-out;
+}
+
+.wsk-cp-text .category>span {
+  padding: 12px 30px;
+  border: 1px solid #313131;
+  background: #212121;
+  color: #fff;
+  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+  border-radius: 27px;
+  transition: all 0.05s ease-in-out;
+
+}
+
+.wsk-cp-product:hover .wsk-cp-text .category>span {
+  border-color: #ddd;
+  box-shadow: none;
+  padding: 11px 28px;
+}
+
+.wsk-cp-product:hover .wsk-cp-text .category {
+  margin-top: 0px;
+}
+
+
+.wsk-cp-text .description-prod {
+  text-align: center;
+  width: 100%;
+  height: 62px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  margin-bottom: 15px;
+}
+
+
+.wsk-cp-product:hover .product-image {
+  transform: translateY(-40px);
+  transition: all 0.3s ease-in-out;
+}
+
+@media screen and (max-width: 991px) {
+
+  .wsk-cp-product .wsk-cp-img {
+    top: -40px;
+  }
+
+  .wsk-cp-product .wsk-cp-img img {
+    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+  }
+
+  .wsk-cp-product .wsk-cp-text .category>span {
+    border-color: #ddd;
+    box-shadow: none;
+    padding: 11px 28px;
+  }
+
+  .wsk-cp-product .wsk-cp-text .category {
+    margin-top: 10px;
+  }
+
+  a.buy-btn {
+    border-color: #FF9800;
+    background: #FF9800;
+    color: #fff;
+  }
+}
+
+@media screen and (max-width: 767px) {
+
+  .wsk-cp-product {
+    padding: 15px;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 767px) {
+  .wsk-cp-img img {
+    max-width: 100%;
+  }
+
+  .wsk-cp-product {
+    padding: 15px;
+  }
+}
+
+@media screen and (max-width: 599px) {
+  .wsk-cp-img img {
+    max-height: 300px;
+    min-height: unset;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .wsk-cp-img img {
+    max-height: 180px;
+  }
 }

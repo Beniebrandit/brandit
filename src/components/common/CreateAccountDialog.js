@@ -7,7 +7,6 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
 const CreateAccountDialog = ({ open, handleClose, setCurrentUser, handleOpenLogin }) => {
   const [state, setState] = useState({
     name: "",
@@ -91,7 +90,12 @@ const CreateAccountDialog = ({ open, handleClose, setCurrentUser, handleOpenLogi
           const token = res.access_token;
           localStorage.setItem("authToken", token);
           handleClose();
-          toast("registered successfully");
+          toast("registered successfully", {
+            autoClose: 3000,
+            onClose: () => {
+              window.location.reload();
+            },
+          });
           setState({ name: "", email: "", password: "", password_confirmation: "" });
         })
         .catch((error) => {

@@ -59,59 +59,55 @@ const LoginDialog = ({ open, handleClose, handleOpenSignUp, fetchUserData }) => 
   };
 
   const isFormValid = () => {
-    return (
-      !errors.email &&
-      !errors.password &&
-      state.email &&
-      state.password
-    );
+    return !errors.email && !errors.password && state.email && state.password;
   };
 
-const handleLogin = async () => {
-      if (!isFormValid()) {
-        toast.error("Invalid inputs");
-        return;
+  const handleLogin = async () => {
+    if (!isFormValid()) {
+      toast.error("Invalid inputs");
+      return;
+    }
+    try {
+      const response = await fetch("https://flagg.devlopix.com/api/getToken", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: state.email, password: state.password, device_name: deviceName }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
-  try {
-    const response = await fetch("https://flagg.devlopix.com/api/getToken", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: state.email, password: state.password, device_name: deviceName }),
-    });
 
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+      const token = await response.text();
+
+      // Validate the token format (example regex: alphanumeric and at least 20 characters)
+      const tokenRegex = /^[A-Za-z0-9|]{20,}$/; // Adjust regex based on actual token format
+      if (!tokenRegex.test(token)) {
+        throw new Error("Invalid token received");
+      }
+
+      // If token is valid, store it and proceed with login success
+      localStorage.setItem("authToken", token);
+      setState({ email: "", password: "" });
+
+      toast("Login successful", {
+        autoClose: 3000, // 3 seconds auto-close delay
+        onClose: () => {
+          handleClose(); // Close dialog only after toast finishes
+          window.location.reload();
+        },
+      });
+
+      // Fetch user data after successful login
+      await fetchUserData(token);
+    } catch (error) {
+      // Display error toast if anything goes wrong
+      toast.error(`Login failed: ${error.message}`);
+      console.error("Error:", error);
     }
-
-    const token = await response.text();
-
-    // Validate the token format (example regex: alphanumeric and at least 20 characters)
-    const tokenRegex = /^[A-Za-z0-9|]{20,}$/; // Adjust regex based on actual token format
-    if (!tokenRegex.test(token)) {
-      throw new Error("Invalid token received");
-    }
-
-    // If token is valid, store it and proceed with login success
-    localStorage.setItem("authToken", token);
-    setState({ email: "", password: "" });
-    
-       toast("Login successful", {
-         autoClose: 3000, // 3 seconds auto-close delay
-         onClose: () => {
-           handleClose(); // Close dialog only after toast finishes
-         },
-       });
-
-    // Fetch user data after successful login
-    await fetchUserData(token);
-  } catch (error) {
-    // Display error toast if anything goes wrong
-    toast.error(`Login failed: ${error.message}`);
-    console.error("Error:", error);
-  }
-};
+  };
 
   return (
     <>

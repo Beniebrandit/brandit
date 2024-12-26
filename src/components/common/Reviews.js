@@ -3,7 +3,6 @@ import {
   Container,
   Typography,
   Grid,
-  Pagination,
   Button,
   LinearProgress,
   Rating,
@@ -32,8 +31,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import { ReviewService } from "../../services/Review.service";
 import CustomPagination from "./CustomPagination";
 import { ProductService } from "../../services/Product.service";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const Reviews = ({ productId }) => {
+const Reviews = ({ productId, hidereviewbtn }) => {
   const [value, setValue] = useState(5);
   const [open, setOpen] = useState(false);
   const [emailNotification, setEmailNotification] = useState(true);
@@ -114,15 +115,14 @@ const Reviews = ({ productId }) => {
     }
   };
 
- const getAllProducts = async () => {
-   try {
-     const res = await ProductService.Allproduct();
-     setAllProducts(res.data);
-   } catch (error) {
-     console.error("Error fetching products:", error);
-   }
- };
-
+  const getAllProducts = async () => {
+    try {
+      const res = await ProductService.Allproduct();
+      setAllProducts(res.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
 
   useEffect(() => {
     getallReview();
@@ -135,20 +135,24 @@ const Reviews = ({ productId }) => {
   };
 
   function handleClick() {
-    ReviewService.Postreview(payload)
-      .then((res) => {
-        console.log("Postreview", res);
-      })
-      .catch((error) => {
-        console.error("API call failed:", error);
-        //setError("Unable to fetch pricing. Please try again later.");
+    if (userId) {
+      ReviewService.Postreview(payload)
+        .then((res) => {
+          toast.success("Thank you for your review!");
+          getallReview(); // Fetch updated reviews
+        })
+        .catch((error) => {
+          toast.error("Failed to submit the review. Please try again.");
+        });
+      setPayload({
+        user_id: "",
+        product_id: "",
+        stars: "",
+        review: "",
       });
-    setPayload({
-      user_id: "",
-      product_id: "",
-      stars: "",
-      review: "",
-    });
+    } else {
+      toast.warning("Please login first");
+    }
   }
 
   return (
@@ -266,23 +270,26 @@ const Reviews = ({ productId }) => {
                 paddingBottom: "20px",
               }}
             >
+              {hidereviewbtn ? null : (
+                <Button
+                  sx={{
+                    background: "white",
+                    border: "1px solid grey",
+                    color: "#868686",
+                    fontSize: "12px",
+                  }}
+                  onClick={handleOpen}
+                >
+                  Write a Review
+                </Button>
+              )}
               <Button
                 sx={{
                   background: "white",
                   border: "1px solid grey",
                   color: "#868686",
                   fontSize: "12px",
-                }}
-                onClick={handleOpen}
-              >
-                Write a Review
-              </Button>
-              <Button
-                sx={{
-                  background: "white",
-                  border: "1px solid grey",
-                  color: "#868686",
-                  fontSize: "12px",
+                  width: hidereviewbtn ? "100%" : "auto",
                 }}
               >
                 Most Helpful
@@ -510,9 +517,9 @@ const Reviews = ({ productId }) => {
           </Button>
           <Button
             onClick={() => {
-              // Submit action here
-              console.log("Submitted");
-              handleClose();
+              if (userId) {
+                handleClose();
+              }
               handleClick();
             }}
             variant="contained"
@@ -523,6 +530,7 @@ const Reviews = ({ productId }) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <ToastContainer />
     </>
   );
 };

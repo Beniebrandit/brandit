@@ -37,19 +37,28 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 1170,
+  width: "95%",
+  maxWidth: "min(1170px, 95%)",
   bgcolor: "background.paper",
   boxShadow: 24,
 
   input: {
+    // width: "95%",
     "&::placeholder": {
       textOverflow: "ellipsis !important",
       color: "#3F5163",
     },
   },
+  "@media (max-width: 767px)": {
+    top: "40px",
+    left: "2.5%",
+    margin: "auto",
+    transform: "translate(0)",
+    maxHeight: "90vh",
+    overflowY: "auto",
+  },
 };
-
-const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategory }) => {
+const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
   const navigate = useNavigate();
   const searchClient = algoliasearch("2GHMAK1N6Y", "9bf2a62bc24c1fd0159cde3b9c7136e2");
   const index = searchClient.initIndex("test"); // Your Algolia index name
@@ -121,7 +130,7 @@ const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategor
             id="keep-mounted-modal-title"
             variant="h6"
             component="h2"
-            sx={{ backgroundColor: "#3F5163", padding: "1rem 1rem 1rem 49px", color: "white" }}
+            sx={{ backgroundColor: "#3F5163", padding: { md: "1rem 1rem 1rem 55px", xs: "10px" }, color: "white" }}
           >
             Select one of the Following
           </Typography>
@@ -129,28 +138,43 @@ const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategor
             sx={{
               display: "flex",
               flexDirection: "row",
-              padding: "0px 40px",
+              padding: { sm: "0px 40px", xs: "0" },
               justifyContent: "space-between",
               margin: "0 auto",
               backgroundColor: "#FAF8EE",
             }}
           >
-            <Typography id="keep-mounted-modal-description" sx={{ padding: "1rem 1rem 1rem 10px" }}>
-              <span style={{ color: "#868686" }}>Type:</span>{" "}
+            <Typography
+              id="keep-mounted-modal-description"
+              sx={{ padding: { sm: "1rem", xs: "10px" }, display: "flex", flexDirection: { xs: "column", sm: "row" } }}
+            >
+              <span style={{ color: "#868686" }}>Type:</span> &nbsp;
               <b style={{ color: "#3F5163", fontWeight: 600 }}>{selectedCategory}</b>
             </Typography>
-            <Typography id="keep-mounted-modal-description" sx={{ padding: "1rem" }}>
+            <Typography
+              id="keep-mounted-modal-description"
+              sx={{ padding: { sm: "1rem", xs: "10px" }, display: "flex", flexDirection: { xs: "column", sm: "row" } }}
+            >
               <span style={{ color: "#868686" }}> Size:</span>
+              &nbsp;
               <b style={{ color: "#3F5163", fontWeight: 600 }}>
                 {payload0?.width}" W x {payload0?.height}" H
               </b>
             </Typography>
-            <Typography id="keep-mounted-modal-description" sx={{ padding: "1rem" }}>
+            <Typography
+              id="keep-mounted-modal-description"
+              sx={{ padding: { sm: "1rem", xs: "10px" }, display: "flex", flexDirection: { xs: "column", sm: "row" } }}
+            >
               <span style={{ color: "#868686" }}>QTY:</span>
+              &nbsp;
               <b style={{ color: "#3F5163", fontWeight: 600 }}>{payload0?.quantity}</b>
             </Typography>
-            <Typography id="keep-mounted-modal-description" sx={{ padding: "1rem" }}>
+            <Typography
+              id="keep-mounted-modal-description"
+              sx={{ padding: { sm: "1rem", xs: "10px" }, display: "flex", flexDirection: { xs: "column", sm: "row" } }}
+            >
               <span style={{ color: "#868686" }}>Price:</span>
+              &nbsp;
               <b style={{ color: "#3F5163", fontWeight: 600 }}> ${price} sq/ft</b>
             </Typography>
           </Box>
@@ -159,7 +183,8 @@ const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategor
             <Box
               sx={{
                 display: "grid",
-                gridTemplateColumns: { md: "1fr 1fr 1fr", sm: "1fr" },
+                gap: "15px",
+                gridTemplateColumns: { md: "1fr 1fr 1fr", sm: "1fr 1fr 1fr", xs: "1fr" },
                 padding: "1rem",
               }}
             >
@@ -170,8 +195,8 @@ const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategor
                   margin: "auto",
                   backgroundColor: "#FAF8EE",
                   gap: "2rem",
-                  height: "228px",
-                  width: "310px",
+                  height: "180px",
+                  width: "100%",
                 }}
                 href="/design"
               >
@@ -195,8 +220,8 @@ const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategor
                   margin: "auto",
                   backgroundColor: "#FAF8EE",
                   gap: "2rem",
-                  height: "228px",
-                  width: "310px",
+                  height: "180px",
+                  width: "100%",
                 }}
                 onClick={() => {
                   if (payload0) {
@@ -204,7 +229,7 @@ const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategor
                   } else {
                     console.warn("payload0 is undefined or null");
                   }
-                  navigate(`/design/${productId}`);
+                  navigate(`/design/${payload0?.ProductId}`);
                 }}
               >
                 <UploadFile />
@@ -227,22 +252,24 @@ const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategor
                   margin: "auto",
                   backgroundColor: "#FAF8EE",
                   gap: "2rem",
-                  height: "228px",
-                  width: "310px",
+                  height: "180px",
+                  width: "100%",
                 }}
               >
                 <Box>
                   <SearchTemplete />
                 </Box>
-                <Box sx={{ display: "flex" }}>
+                <Box sx={{ display: "flex", width: "100%" }}>
                   <TextField
                     onChange={(e) => handleSearch(e)}
                     sx={{
                       color: "#3F5163",
                       backgroundColor: "white",
+                      width: "100%",
                       input: {
                         height: "12px !important",
-                        width: "240px !important",
+                        fontSize: "14px",
+                        width: "100%",
                         "&::placeholder": {
                           opacity: 1,
                         },
@@ -259,7 +286,8 @@ const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategor
                     style={{
                       paddingTop: "11px",
                       position: "absolute",
-                      right: "32px",
+                      backgroundColor:"transparent",
+                      right: "40px",
                       margin: "auto",
                     }}
                   />
@@ -270,7 +298,7 @@ const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategor
 
           {openSearch &&
             (spinner ? (
-              <Box sx={{ margin: "auto", padding: "10px 0px 0px 23px",width: "max-content" }}>
+              <Box sx={{ margin: "auto", padding: "10px 0px 0px 23px", width: "max-content" }}>
                 <Blocks
                   height="80"
                   width="80"
@@ -286,19 +314,35 @@ const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategor
                 <Box
                   sx={{
                     display: "flex",
+                    flexWrap: "wrap",
                     justifyContent: "space-around",
                     margin: "0 auto",
                   }}
                 >
-                  <a href="#" onClick={handleCloseSearch} style={{ color: "#3F5163", textDecoration: "none" }}>
+                  <Button
+                    href="#"
+                    sx={{
+                      color: "#3F5163",
+                      marginBottom: "20px",
+                      textTransform: "none",
+                      width: { xs: "100%", sm: "unset" },
+                    }}
+                    onClick={handleCloseSearch}
+                  >
                     Back to Desgin Option
-                  </a>
+                  </Button>
 
-                  <Box>
+                  <Box sx={{ position: "relative", width: { xs: "100%", sm: "unset" } }}>
                     <TextField
                       value={value}
                       onChange={(e) => handleSearch(e)}
-                      sx={{ color: "#3F5163", backgroundColor: "white", marginLeft: "-90px" }}
+                      sx={{
+                        color: "#3F5163",
+                        backgroundColor: "white",
+                        width: "100%",
+                        padding: "0 20px",
+                        marginBottom: { xs: "20px", sm: "0" },
+                      }}
                       placeholder="Search Template"
                       className="search-dropdown-container"
                     />
@@ -309,9 +353,11 @@ const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategor
                       style={{
                         paddingTop: "7px",
                         position: "absolute",
-                        right: "488px",
+                        right: "40px",
+                        zIndex: "1",
                         margin: "auto",
                       }}
+                      sx={{}}
                     />
                   </Box>
                   <Typography>
@@ -319,16 +365,22 @@ const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategor
                     Page {currentPage} of {totalPages}{" "}
                   </Typography>
                 </Box>
-                <Box sx={{ padding: "2rem" }}>
+                <Box>
                   <Grid
                     container
                     spacing={{ xs: 2, md: 3 }}
-                    columns={{ xs: 3, sm: 8, md: 12 }}
-                    sx={{ padding: "0rem 5rem" }}
+                    columns={{ xs: 4, sm: 8, md: 12 }}
+                    // { md: "1fr 1fr 1fr", sm: "1fr 1fr 1fr", xs: "1fr" }
+                    sx={{
+                      padding: "20px",
+                      width: "100% !important",
+                      ml: "0 !important",
+                      justifyContent: "center !important",
+                    }}
                   >
                     {searchResults.length > 0 ? (
                       searchResults.map((e, index) => (
-                        <Grid item xs={2.4} sm={2.4} md={2.4} key={index} sx={{ paddingBottom: "0rem" }}>
+                        <Grid item md={2} key={index} sx={{ padding: "1rem !important" }}>
                           <Box
                             sx={{
                               height: "125px",
@@ -349,7 +401,9 @@ const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategor
                         </Grid>
                       ))
                     ) : (
-                       <Box sx={{ margin: "auto", padding: "10px 0px 0px 23px",width: "max-content" }}>No Result found</Box>
+                      <Box sx={{ margin: "auto", padding: "10px 0px 0px 23px", width: "max-content" }}>
+                        No Result found
+                      </Box>
                     )}
                   </Grid>
                 </Box>
@@ -370,7 +424,7 @@ const Pop_Up = ({ open, handleClose, productId, payload0, price, selectedCategor
             <Divider sx={{ flexGrow: 1 }} />
           </Box>
           <Box sx={{ padding: "1rem", margin: "auto" }}>
-            <Box sx={{ padding: "1rem", margin: "auto", width: "60%" }}>
+            <Box sx={{ padding: "1rem", margin: "auto", width: { md: "60%", xs: "100%" } }}>
               <Typography sx={{ textAlign: "center" }}>
                 <h2>Lorem Ipsum is simply dummy text</h2>
               </Typography>

@@ -31,6 +31,8 @@ import youtube_logo from "../../../asset/images/youtube_logo.svg";
 import MegaMenu from "./MegaMenu";
 import { ProductService } from "../../../services/Product.service";
 import { useMediaQuery, useTheme } from "@mui/material";
+import LoginDialog from "../../common/LoginDialog";
+import CreateAccountDialog from "../../common/CreateAccountDialog";
 
 const items = [
   { text: "Products", icon: <Dashboard /> },
@@ -46,13 +48,15 @@ const categories = [
   { label: "Sign Holders", category: "Signs" },
 ];
 
-const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
+const Navbar = () => {
   const navigate = useNavigate();
   const theme0 = useTheme();
   const isBelowMd = useMediaQuery(theme0.breakpoints.down("md"));
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [openSignUp, setOpenSignUp] = useState(false);
+  const [currentUser, setCurrentUser] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [currentUser, setCurrentUser] = useState("");
   const [selectedTab, setSelectedTab] = useState(isBelowMd ? "Products" : "Account"); // Default selected tab
   const [allProducts, setAllProducts] = useState([]); // Assuming all products are loaded here
   const [categoryContent, setCategoryContent] = useState([]); // To hold the content for the selected category
@@ -180,7 +184,7 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                   </a>
                 </li>
               ))}
-              <Divider orientation="horizontal" flexItem  sx={{margin:"8px 0px 8px"}}/>
+              <Divider orientation="horizontal" flexItem sx={{ margin: "8px 0px 8px" }} />
             </div>
           ))}
         </Box>
@@ -189,9 +193,7 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
   };
 
   const renderCategoryButtons = () => (
-    <Box
-      sx={{ display: "flex", flexDirection: "column", padding: "20px 15px"}}
-    >
+    <Box sx={{ display: "flex", flexDirection: "column", padding: "20px 15px" }}>
       {categories.map(({ label, category }) => (
         <Button
           key={category}
@@ -203,7 +205,7 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
             color: "#3F5163",
             textTransform: "capitalize",
             fontWeight: "bold",
-            borderLeft:"1px solid black",
+            borderLeft: "1px solid black",
             "&:hover": { backgroundColor: "#e0e0e0" },
           }}
           onClick={() => handleCategoryClick(category)}
@@ -247,83 +249,45 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
             </span>
           </span>
         </Button>
-          <Box
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            position: "absolute",
+            backgroundColor: "white",
+            mt: 1,
+            pl: "1rem",
+            width: "100%",
+            borderRadius: "4px",
+          }}
+        >
+          <Button
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              position: "absolute",
-              backgroundColor: "white",
-              mt: 1,
-              pl: "1rem",
-              width:"100%",
-              borderRadius: "4px",
+              p: "8px 16px",
+              width: "100%",
+              justifyContent: "flex-start",
+              color: "#3F5163",
+              textTransform: "capitalize",
+              fontWeight: "bold",
+              borderLeft: "1px solid black",
+              "&:hover": { backgroundColor: "#e0e0e0" },
+              mb: 1,
             }}
           >
-            <Button
-              sx={{
-                p: "8px 16px",
-                width: "100%",
-                justifyContent: "flex-start",
-                color: "#3F5163",
+            <Link
+              to="/saved-design"
+              style={{
+                textDecoration: "none",
                 textTransform: "capitalize",
-                fontWeight: "bold",
-                borderLeft: "1px solid black",
-                "&:hover": { backgroundColor: "#e0e0e0" },
-                mb: 1,
+                color: "#3F5163",
               }}
             >
-              <Link
-                to="/saved-design"
-                style={{
-                  textDecoration: "none",
-                  textTransform: "capitalize",
-                  color: "#3F5163",
-                }}
-              >
-                My design
-              </Link>
-            </Button>
+              My design
+            </Link>
+          </Button>
 
-            {!currentUser ? (
-              <>
-                <Button
-                  sx={{
-                    p: "8px 16px",
-                    width: "100%",
-                    justifyContent: "flex-start",
-                    color: "#3F5163",
-                    textTransform: "capitalize",
-                    fontWeight: "bold",
-                    borderLeft: "1px solid black",
-                    "&:hover": { backgroundColor: "#e0e0e0" },
-                    mb: 1,
-                  }}
-                  onClick={() => {
-                    handleClickOpenLogin();
-                  }}
-                >
-                  Sign in
-                </Button>
-                <Button
-                  sx={{
-                    p: "8px 16px",
-                    width: "100%",
-                    justifyContent: "flex-start",
-                    color: "#3F5163",
-                    textTransform: "capitalize",
-                    fontWeight: "bold",
-                    borderLeft: "1px solid black",
-                    "&:hover": { backgroundColor: "#e0e0e0" },
-                    mb: 1,
-                  }}
-                  onClick={() => {
-                    handleClickOpenSignUp();
-                  }}
-                >
-                  Create account
-                </Button>
-              </>
-            ) : (
+          {!currentUser ? (
+            <>
               <Button
                 sx={{
                   p: "8px 16px",
@@ -337,13 +301,51 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                   mb: 1,
                 }}
                 onClick={() => {
-                  Logout();
+                  handleClickOpenLogin();
                 }}
               >
-                Log out
+                Sign in
               </Button>
-            )}
-          </Box>
+              <Button
+                sx={{
+                  p: "8px 16px",
+                  width: "100%",
+                  justifyContent: "flex-start",
+                  color: "#3F5163",
+                  textTransform: "capitalize",
+                  fontWeight: "bold",
+                  borderLeft: "1px solid black",
+                  "&:hover": { backgroundColor: "#e0e0e0" },
+                  mb: 1,
+                }}
+                onClick={() => {
+                  handleClickOpenSignUp();
+                }}
+              >
+                Create account
+              </Button>
+            </>
+          ) : (
+            <Button
+              sx={{
+                p: "8px 16px",
+                width: "100%",
+                justifyContent: "flex-start",
+                color: "#3F5163",
+                textTransform: "capitalize",
+                fontWeight: "bold",
+                borderLeft: "1px solid black",
+                "&:hover": { backgroundColor: "#e0e0e0" },
+                mb: 1,
+              }}
+              onClick={() => {
+                Logout();
+              }}
+            >
+              Log out
+            </Button>
+          )}
+        </Box>
       </ThemeProvider>
     );
   };
@@ -383,11 +385,39 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
     },
   });
 
+  const handleClickOpenLogin = () => setLoginOpen(true);
+  const handleCloseLogin = () => setLoginOpen(false);
+
+  const handleClickOpenSignUp = () => {
+    setOpenSignUp(true);
+    setLoginOpen(false);
+  };
+
+  const handleCloseSignUp = () => setOpenSignUp(false);
+
+  const fetchUserData = async (token) => {
+    const response = await fetch("https://flagg.devlopix.com/api/user", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    setCurrentUser(data.name);
+    localStorage.setItem("currentUser", data.name);
+  };
+
   useEffect(() => {
+    const token = localStorage.getItem("authToken");
     const storedUser = localStorage.getItem("currentUser");
 
     if (storedUser) {
       setCurrentUser(storedUser);
+    }
+
+    if (token) {
+      fetchUserData(token);
     }
   }, []);
 
@@ -477,7 +507,9 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
       <Box className="inner_header">
         <Container maxWidth="lg" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <Box className="header_box" href="/">
-            <img alt="main_logo" src={main_logo} style={{ width: "50px", height: "auto" }} />
+            <Link to="/">
+              <img alt="logo" src={main_logo} style={{ width: "50%", height: "auto", maxWidth: "200px" }} />
+            </Link>
           </Box>
           <Box>
             <MegaMenu />
@@ -535,6 +567,10 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
                         boxShadow: "none !important",
                       },
                     }}
+                    disableScrollLock
+                    keepMounted
+                    disableAutoFocusItem
+                    disableAutoFocus
                   >
                     <MenuItem key="my-design" onClick={handleDropdownClose} component={Link} to="/saved-design">
                       My design
@@ -661,6 +697,13 @@ const Navbar = ({ handleClickOpenLogin, handleClickOpenSignUp }) => {
           </Box>
         </Drawer>
       </Box>
+      <LoginDialog
+        open={loginOpen}
+        handleClose={handleCloseLogin}
+        handleOpenSignUp={handleClickOpenSignUp}
+        fetchUserData={fetchUserData}
+      />
+      <CreateAccountDialog open={openSignUp} handleClose={handleCloseSignUp} setCurrentUser={setCurrentUser} />
     </>
   );
 };

@@ -3,14 +3,14 @@ import { Box, Button } from "@mui/material";
 import Prevpaginateicon from "../../asset/images/Prev_paginate_icon.svg";
 import Nextpaginateicon from "../../asset/images/Next_paginate_icon.svg";
 
-const PopUpPagination = ({ totalItems = 0, itemsPerPage = 5, currentPages, onPageChange }) => {
+const PopUpPagination = ({ totalItems = 0, itemsPerPage = 5, currentPages = 1, onPageChange }) => {
   const pageCount = Math.max(1, Math.ceil(totalItems / itemsPerPage));
 
   const handlePageClick = (page) => {
     onPageChange(page);
-    console.log("page",page);
+    console.log("page", page);
   };
-    console.log("currentPages",currentPages);
+  console.log("currentPages", currentPages);
 
   const handlePrevClick = () => {
     if (currentPages > 1) {

@@ -28,6 +28,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ReCAPTCHA from "react-google-recaptcha";
 import CloseIcon from "@mui/icons-material/Close";
 import cart from '../../asset/images/design_cart.svg'
+import { Link } from "react-router-dom";
 
 const HeaderDesign = ({ handleClickOpenLogin }) => {
   const [File, setFile] = React.useState("");
@@ -101,17 +102,19 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
   }
   return (
     <>
-      <Box sx={{
+      <Box
+        sx={{
           borderBottom: "1px solid lightgray",
-  position: "fixed",
-  width: "100%",
-  padding: "10px 0px",
-  height: "auto",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  backgroundColor: "white",
-      }}>
+          position: "fixed",
+          width: "100%",
+          padding: "10px 0px",
+          height: "auto",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          backgroundColor: "white",
+        }}
+      >
         {/* <Box
           // maxWidth="lg"
           style={{
@@ -122,197 +125,196 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
             marginX: "10rem",
           }}
         > */}
-          <Box className="header_box" sx={{ paddingLeft: { xs: "1rem", sm: "5rem" } }}>
-            <img alt="main_logo" src={main_logo} style={{ width: "50px", height: "auto" }} />
-          </Box>
+        <Box className="header_box" sx={{ paddingLeft: { xs: "1rem", sm: "5rem" } }}>
+          <Link to="/">
+            <img alt="logo" src={main_logo} style={{ width: "50%", height: "auto", maxWidth: "200px" }} />
+          </Link>
+        </Box>
 
-          <Box
-            sx={{
-              // display: "grid",
-              // gridTemplateColumns:"0.3fr 1.7fr 1fr",
-              // width:"40rem",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              // margin: "auto",
-            }}
-          >
-            <Box sx={{ minWidth: 80 }}className='search11'>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label" sx={{color:'black'}}>File</InputLabel>
-                <Select
-                IconComponent={(props) => (
-                  <ExpandMoreIcon style={{color:'black'}}/>
-                  )}
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={File}
-                  label="File"
-                  onChange={handleChangeFile}
-                  sx={{
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      border: "none",
-                    },
-                  }}
-                >
-                  <MenuItem value={10} sx={{ display: "flex", justifyContent: "space-between" }}>
-                    <Typography>Undo</Typography>
-                    <Typography>Crtl+Z</Typography>
-                  </MenuItem>
-                  <MenuItem value={20} sx={{ display: "flex", justifyContent: "space-between" }}>
-                    <Typography>Redo</Typography>
-                    <Typography>Crtl+Y</Typography>
-                  </MenuItem>
-                  <Divider />
-                  <MenuItem value={30}>Save</MenuItem>
-                  <MenuItem value={30}>Save as copy</MenuItem>
-                  <MenuItem value={30}>Load previous design</MenuItem>
-                  <Divider />
-                  <MenuItem value={30}>Show ruler</MenuItem>
-                  <MenuItem value={30}>Show grid</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-
-            <Box className='search'>
-              <TextField
-                variant="outlined"
-                placeholder="Name this Design"
+        <Box
+          sx={{
+            // display: "grid",
+            // gridTemplateColumns:"0.3fr 1.7fr 1fr",
+            // width:"40rem",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            // margin: "auto",
+          }}
+        >
+          <Box sx={{ minWidth: 80 }} className="search11">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label" sx={{ color: "black" }}>
+                File
+              </InputLabel>
+              <Select
+                IconComponent={(props) => <ExpandMoreIcon style={{ color: "black" }} />}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={File}
+                label="File"
+                onChange={handleChangeFile}
                 sx={{
-                  backgroundColor: "transparent",
-                  "& .MuiInputBase-input-MuiOutlinedInput-input": {
+                  "& .MuiOutlinedInput-notchedOutline": {
                     border: "none",
-                  },
-                  boxShadow: "0px 5px 30px -15px",
-                  // height: "36.2px",
-                  // fontSize:"10px"
-                }}
-                inputProps={{
-                  style: {
-                    padding: "7px",
-                  },
-                }}
-              />
-              <Button
-                sx={{
-                  backgroundColor: "#3F5163",
-                  color: "white",
-                  padding: "6px",
-                  paddingX: "1.4rem",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "#3F5163",
                   },
                 }}
               >
-                Save
-              </Button>
-            
-            </Box>
+                <MenuItem value={10} sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Typography>Undo</Typography>
+                  <Typography>Crtl+Z</Typography>
+                </MenuItem>
+                <MenuItem value={20} sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Typography>Redo</Typography>
+                  <Typography>Crtl+Y</Typography>
+                </MenuItem>
+                <Divider />
+                <MenuItem value={30}>Save</MenuItem>
+                <MenuItem value={30}>Save as copy</MenuItem>
+                <MenuItem value={30}>Load previous design</MenuItem>
+                <Divider />
+                <MenuItem value={30}>Show ruler</MenuItem>
+                <MenuItem value={30}>Show grid</MenuItem>
+              </Select>
+            </FormControl>
           </Box>
 
+          <Box className="search">
+            <TextField
+              variant="outlined"
+              placeholder="Name this Design"
+              sx={{
+                backgroundColor: "transparent",
+                "& .MuiInputBase-input-MuiOutlinedInput-input": {
+                  border: "none",
+                },
+                boxShadow: "0px 5px 30px -15px",
+                // height: "36.2px",
+                // fontSize:"10px"
+              }}
+              inputProps={{
+                style: {
+                  padding: "7px",
+                },
+              }}
+            />
+            <Button
+              sx={{
+                backgroundColor: "#3F5163",
+                color: "white",
+                padding: "6px",
+                paddingX: "1.4rem",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#3F5163",
+                },
+              }}
+            >
+              Save
+            </Button>
+          </Box>
+        </Box>
+
+        <Box
+          sx={{
+            display: { xs: "none", md: "flex" },
+            alignItems: "center",
+            gap: { xs: "0.5rem", sm: "1rem" },
+          }}
+          sm="auto"
+        >
+          <Button
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+            onClick={helpDialogOpen}
+          >
+            <Help sx={{ width: "20px", height: "auto" }} />
+            <Typography variant="body2" style={{ textTransform: "none", color: "#3F5163", fontSize: "14px" }}>
+              Get Design Help
+            </Typography>
+          </Button>
           <Box
             sx={{
-              display: { xs: "none", md: "flex" },
+              display: "flex",
               alignItems: "center",
-              gap: { xs: "0.5rem", sm: "1rem" },
+              gap: "0.5rem",
             }}
-            sm="auto"
           >
-            <Button
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
-              onClick={helpDialogOpen}
-            >
-              <Help sx={{ width: "20px", height: "auto" }} />
-              <Typography variant="body2" style={{ textTransform: "none", color: "#3F5163",fontSize:'14px' }}>
-                Get Design Help
-              </Typography>
-            </Button>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
-            >
-              <Share sx={{ width: "20px", height: "auto" }} />
-              <Typography variant="body2" sx={{color:'#3F5163',fontSize:'14px'}}>Share</Typography>
-            </Box>
-            <Button
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
-              onClick={handleClickOpenLogin}
-            >
-              <Save sx={{ width: "20px", height: "auto" }} />
-              <Typography variant="body2" style={{ textTransform: "none", color: "#3F5163" ,fontSize:'14px'}}>
-                Save
-              </Typography>
-            </Button>
-            <Button  sx={{height:'50px', width:'50px'}}> 
-                  <img src={cart} alt="cart" width='100%' height="100%"/>
-                  </Button>
-       
+            <Share sx={{ width: "20px", height: "auto" }} />
+            <Typography variant="body2" sx={{ color: "#3F5163", fontSize: "14px" }}>
+              Share
+            </Typography>
           </Box>
-          <Grid item xs={12} sm="auto" sx={{ display: { md: "none" } }}>
-          
-            <IconButton onClick={toggleDrawer(true)}>
-              <MenuIcon />
-            </IconButton>
-            <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
-              <List>
-                <ListItem>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    <Help sx={{ width: "20px", height: "auto" }} />
-                    <Typography variant="body2">Get Design Help</Typography>
-                  </Box>
-                </ListItem>
-                <ListItem>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    <Share sx={{ width: "20px", height: "auto" }} />
-                    <Typography variant="body2">Share</Typography>
-                  </Box>
-                </ListItem>
-             
-                <ListItem>
-                  <Button
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                      marginLeft: "-5px",
-                    }}
-                    onClick={handleClickOpenLogin}
-                  >
-                    <Save sx={{ width: "20px", height: "auto" }} />
-                    <Typography style={{ textTransform: "none", color: "black", paddingLeft: "4px" }} variant="body2">
-                      Save
-                    </Typography>
-                  </Button>
-                </ListItem>
-             
-              </List>
-             
-            </Drawer>
-          </Grid>
+          <Button
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+            onClick={handleClickOpenLogin}
+          >
+            <Save sx={{ width: "20px", height: "auto" }} />
+            <Typography variant="body2" style={{ textTransform: "none", color: "#3F5163", fontSize: "14px" }}>
+              Save
+            </Typography>
+          </Button>
+          <Button sx={{ height: "50px", width: "50px" }}>
+            <img src={cart} alt="cart" width="100%" height="100%" />
+          </Button>
+        </Box>
+        <Grid item xs={12} sm="auto" sx={{ display: { md: "none" } }}>
+          <IconButton onClick={toggleDrawer(true)}>
+            <MenuIcon />
+          </IconButton>
+          <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
+            <List>
+              <ListItem>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <Help sx={{ width: "20px", height: "auto" }} />
+                  <Typography variant="body2">Get Design Help</Typography>
+                </Box>
+              </ListItem>
+              <ListItem>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <Share sx={{ width: "20px", height: "auto" }} />
+                  <Typography variant="body2">Share</Typography>
+                </Box>
+              </ListItem>
+
+              <ListItem>
+                <Button
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    marginLeft: "-5px",
+                  }}
+                  onClick={handleClickOpenLogin}
+                >
+                  <Save sx={{ width: "20px", height: "auto" }} />
+                  <Typography style={{ textTransform: "none", color: "black", paddingLeft: "4px" }} variant="body2">
+                    Save
+                  </Typography>
+                </Button>
+              </ListItem>
+            </List>
+          </Drawer>
+        </Grid>
         {/* </Box> */}
       </Box>
 

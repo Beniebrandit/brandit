@@ -69,12 +69,12 @@ const TrendingProducts = () => {
   return (
     <>
       <Box className="background1" sx={{ position: "absolute", zIndex: "-1" }}></Box>
-      <Box sx={{ padding: { sx: "1rem", sm: "8rem" } }}>
+      <Box sx={{ padding: { xs: "1rem", md: "8rem" } }}>
         <Typography
           sx={{
             fontSize: { xs: "30px", sm: "50px" },
             paddingLeft: { xs: "1rem", sm: "0rem" },
-            marginTop: { xs: "5rem", sm: "0rem" },
+            marginTop: "5rem",
             color: "white",
             fontFamily: "Avenir LT Std",
           }}
@@ -90,24 +90,47 @@ const TrendingProducts = () => {
             onChange={handleChange}
             className="tabs-cust"
             sx={{
+              "& .MuiTabs-scroller": {
+                overflow: "auto !important",
+              },
               "& .MuiTabs-flexContainer": {
                 display: "flex",
-                flexWrap: "wrap",
+                flexWrap: "noWrap",
                 justifyContent: { xs: "left", sm: "space-between" },
                 alignItems: "center",
               },
-              width: "1450px",
+              width: "100%",
+              maxWidth: "1450px",
             }}
           >
             {tabData?.map((tab, index) => (
               <Tab
                 key={index}
-                sx={{ height: "185px" }}
+                sx={{
+                  height: "185px",
+                  width: {
+                    lg: "calc(100% / 5)",
+                    sm: "calc(100% / 3)",
+                    xs: "100%",
+                  },
+                  maxWidth: "unset",
+                }}
                 {...a11yProps(index)}
                 label={
-                  <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
                     <img src={tab.icon} alt={tab.alt} style={{ height: "113px", width: "113px" }} />
-                    <Box display="flex" alignItems="baseline" width="12rem" sx={{justifyContent:"center", columnGap: 1}}>
+                    <Box
+                      display="flex"
+                      alignItems="baseline"
+                      width="12rem"
+                      sx={{ justifyContent: "center", columnGap: 1 }}
+                    >
                       <Typography
                         variant="body2"
                         sx={{
@@ -124,7 +147,12 @@ const TrendingProducts = () => {
                         <img
                           src={treadingArrow}
                           alt="Arrow Icon"
-                          style={{ marginLeft: "5px",marginTop:"5px", height: "15px",width:"auto" }} // Adjust size as needed
+                          style={{
+                            marginLeft: "5px",
+                            marginTop: "5px",
+                            height: "15px",
+                            width: "auto",
+                          }} // Adjust size as needed
                         />
                       )}
                     </Box>
@@ -136,10 +164,11 @@ const TrendingProducts = () => {
         </Box>
         <CustomTabPanel
           sx={{
-            "& .19kzrtu": {
-              padding: "0px",
+            "& .css-19kzrtu": {
+              padding: "0px !important",
             },
           }}
+          className="cust_div_range"
           value={value}
           index={0}
         >
@@ -150,6 +179,7 @@ const TrendingProducts = () => {
               justifyContent: "space-between",
               alignItems: "center",
               marginTop: "3rem",
+              maxWidth: "1600px",
             }}
           >
             {data?.map((val) => {
@@ -165,7 +195,9 @@ const TrendingProducts = () => {
                   }}
                   py={10}
                 >
-                  <img src={val.image} style={{ height: "18rem", width: "18rem" }} alt="" />
+                  <div className="productimgdiv">
+                    <img src={val.image} style={{ height: "100%", width: "100%" }} alt="" />
+                  </div>
 
                   <Typography>{val.title}</Typography>
                   <Typography sx={{ fontSize: "20px" }}>{val.description}</Typography>

@@ -6,7 +6,7 @@ import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import PopUp from "../landingcomponent/Pop_Up";
 import { Circles } from "react-loader-spinner";
 
-const AssistanceBanner = ({ pricePerProduct }) => {
+const AssistanceBanner = ({ pricePerProduct, payload0, price, selectedCategory }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -107,7 +107,7 @@ const AssistanceBanner = ({ pricePerProduct }) => {
         )}
 
         {/* Design Now Button */}
-        <Box sx={{ display: "flex", justifyContent: "center", width: "14rem", height: "48px" }}>
+        <Box sx={{ display: "flex", justifyContent: "center", width: { sm: "14rem", xs: "10rem" }, height: "48px" }}>
           <Button
             variant="contained"
             onClick={handleOpen}
@@ -126,7 +126,13 @@ const AssistanceBanner = ({ pricePerProduct }) => {
         </Box>
       </Box>
 
-      <PopUp open={open} handleClose={handleClose} />
+      <PopUp
+        open={open}
+        handleClose={handleClose}
+        payload0={payload0}
+        price={price}
+        selectedCategory={selectedCategory}
+      />
     </>
   );
 };

@@ -24,7 +24,16 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Card, Grid } from "@mui/material";
 import { Circles } from "react-loader-spinner";
 
-const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduct, pricePerProduct }) => {
+const Banner = ({
+  setPricePerProduct,
+  pricePerProduct,
+  payload,
+  setPayload,
+  price,
+  setPrice,
+  selectedCategory,
+  setSelectedCategory,
+}) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -32,14 +41,11 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
   const [value, setValue] = useState(0);
   const [alldata, setAllData] = useState();
   const [selectedCard, setSelectedCard] = useState({});
-
   const [selectedWidth, setSelectedWidth] = useState("");
   const [selectedHeight, setSelectedHeight] = useState("");
   const [selectedSubCatId, setSelectedSubCatId] = useState([]);
-  const [price, setPrice] = useState();
   const [loadingPrice, setLoadingPrice] = useState(true);
   const [allcategories, setAllCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState();
   const [searchText, setSearchText] = useState("");
   const [productDetails, setProductDetails] = useState([]);
   const [productId, setProductId] = useState();
@@ -79,13 +85,6 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
     setSelectedCategory(e.target.value);
     setSearchText(""); // Clear search text after selection
   };
-
-  const [payload, setPayload] = useState({
-    productId: null, // Assuming `id` is the unique identifier for the product
-    width: "",
-    height: "",
-    subCatId: [],
-  });
 
   const widthSizes = productDetails
     ?.filter((val) => val.size_type === "W")
@@ -235,6 +234,7 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
   };
 
   //console.log("allcategories", allcategories);
+  console.log("payload", payload);
   return (
     <>
       <PopUp
@@ -243,12 +243,9 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
         payload0={payload}
         price={price}
         selectedCategory={selectedCategory}
-        productId={productId}
       />
 
       <Box>
-        <Navbar handleClickOpenSignUp={handleClickOpenSignUp} handleClickOpenLogin={handleClickOpenLogin} />
-
         <div style={{ position: "relative" }}>
           <div
             style={{
@@ -582,9 +579,9 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
                 >
                   {loadingPrice ? (
                     <Circles
-                      height="40"
-                      width="40"
-                      color="#4fa94d"
+                      height="35"
+                      width="35"
+                      color="#3F5163"
                       ariaLabel="circles-loading"
                       wrapperStyle={{}}
                       wrapperClass=""
@@ -721,11 +718,15 @@ const Banner = ({ handleClickOpenLogin, handleClickOpenSignUp, setPricePerProduc
                           <Grid item xs={6} sm={4} md={3} lg={2} key={subCat.id}>
                             <Card
                               sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "space-between",
                                 padding: "1rem",
                                 border: "1px solid",
                                 borderColor: selectedCard[category.id] === subCat.id ? "#3F5163" : "#ccc",
                                 textAlign: "center",
                                 width: "100%",
+                                height: "100%",
                                 cursor: "pointer",
                                 transition: "all 0.2s",
                                 "&:hover": { borderColor: "#3F5163" },

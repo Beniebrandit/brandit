@@ -469,6 +469,7 @@ const Header = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("recentSearches");
     window.location.reload();
+     toast.success("Logged out successfully!");
   };
 
     function ClickProduct(id) {
@@ -559,7 +560,9 @@ const Header = () => {
       <Container className="inner_header">
         <Grid container alignItems="center" justifyContent="space-between" spacing={2}>
           <Grid item xs={12} sm="auto" container justifyContent="center">
-            <img href="/" alt="main_logo" src={main_logo} style={{ width: "50%", height: "auto", maxWidth: "200px" }} />
+            <Link to="/">
+              <img alt="logo" src={main_logo} style={{ width: "50%", height: "auto", maxWidth: "200px" }} />
+            </Link>
           </Grid>
 
           <Grid item xs={12} sm="auto" sx={{ display: { xs: "none", md: "block" } }}>
@@ -584,7 +587,7 @@ const Header = () => {
                 {/* Button with Account Icon and User Name */}
                 <Button
                   id="basic-button"
-                  onClick={handleClick}
+                  //onClick={handleClick}
                   sx={{
                     color: "black",
                     textTransform: "capitalize",
@@ -622,6 +625,10 @@ const Header = () => {
                       boxShadow: "none !important",
                     },
                   }}
+                  disableScrollLock
+                  keepMounted
+                  disableAutoFocusItem
+                  disableAutoFocus
                 >
                   <MenuItem
                     onClick={() => {

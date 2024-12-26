@@ -6,22 +6,31 @@ import Brandit_icon2 from "../../asset/images/Brandit_icon2.svg";
 
 const WhyBranditSignage = () => {
   return (
-    <Box sx={{ marginTop: "10rem", padding: { xs: "1rem", md: "3rem" } }}>
+    <Box sx={{ marginTop: { sm: "10rem", xs: "3rem" }, padding: { sm: "1rem", md: "3rem" } }}>
       <Container>
         <Stack direction="row" sx={{ flexWrap: "wrap", justifyContent: "space-between" }}>
-          <Box sx={{}} style={{ width: "calc(50% - 30px)" }}>
+          <Box
+            sx={{ width: { md: "calc(50% - 30px)", sm: "calc(50% - 10px)", xs: "100%" }, pb: { sm: "0", xs: "30px" } }}
+          >
             {" "}
             <img
               src={whyBranditSignage}
               alt="Why Brandit Signage"
               style={{
                 width: "100%",
-                height: "auto",
+                height: "100%",
                 maxWidth: { xs: "100%", md: "500px" }, // Ensure image scales properly
               }}
             />
           </Box>
-          <Box sx={{ p: "20px" }} style={{ width: "calc(50% - 30px)" }}>
+          <Box
+            sx={{
+              width: { md: "calc(50% - 30px)", sm: "calc(50% - 10px)", xs: "100%" },
+              display: { sm: "flex" },
+              flexWrap: "wrap",
+              alignItems: "self-start",
+            }}
+          >
             <Typography
               variant="h4"
               sx={{
@@ -57,7 +66,7 @@ const WhyBranditSignage = () => {
                 flexDirection: { xs: "column", sm: "row" }, // Stack icons vertically on small screens, horizontally on larger screens
                 gap: 2,
                 justifyContent: { xs: "center", sm: "flex-start" },
-                alignItems: "center",
+                alignItems: { sm: "center", xs: "flex-start" },
               }}
             >
               <Box
@@ -101,7 +110,10 @@ const WhyBranditSignage = () => {
                 </Typography>
               </Box>
             </Box>
-            <Button variant="contained"   sx={{ marginTop: "1rem",backgroundColor: "#3F5163",color:'#fff' ,borderRadius:'8px',height:'60px'}}>
+            <Button
+              variant="contained"
+              sx={{ marginTop: "1rem", backgroundColor: "#3F5163", color: "#fff", borderRadius: "8px", height: "60px" }}
+            >
               Discover More
             </Button>
           </Box>

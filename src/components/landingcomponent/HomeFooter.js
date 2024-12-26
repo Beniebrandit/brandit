@@ -184,25 +184,25 @@ const HomeFooter = () => {
                   <img alt="facebook1" src={facebook1} width="100%" height="100%" />
                 </Grid>
                 <Grid item md={3}>
-                  <img alt="facebook2" src={facebook2} />
+                  <img alt="facebook2" src={facebook2} width="100%" height="100%" />
                 </Grid>
                 <Grid item md={3}>
-                  <img alt="facebook3" src={facebook3} />
+                  <img alt="facebook3" src={facebook3} width="100%" height="100%" />
                 </Grid>
                 <Grid item md={3}>
-                  <img alt="facebook4" src={facebook4} />
+                  <img alt="facebook4" src={facebook4} width="100%" height="100%" />
                 </Grid>
                 <Grid item md={3}>
-                  <img alt="facebook5" src={facebook5} />
+                  <img alt="facebook5" src={facebook5} width="100%" height="100%" />
                 </Grid>
                 <Grid item md={3}>
-                  <img alt="facebook6" src={facebook6} />
+                  <img alt="facebook6" src={facebook6} width="100%" height="100%" />
                 </Grid>
                 <Grid item md={3}>
-                  <img alt="facebook7" src={facebook7} />
+                  <img alt="facebook7" src={facebook7} width="100%" height="100%" />
                 </Grid>
                 <Grid item md={3}>
-                  <img alt="facebook8" src={facebook8} />
+                  <img alt="facebook8" src={facebook8} width="100%" height="100%" />
                 </Grid>
               </Grid>
             </Grid>
@@ -367,7 +367,15 @@ const HomeFooter = () => {
         </Container>
       </Box>
       <Box sx={{ backgroundColor: "#F9F9F9", height: "196px" }}>
-        <Container sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", height: "100%" }}>
+        <Container
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            height: "100%",
+            flexWrap: "wrap",
+          }}
+        >
           <Grid item md={6} sm={12} xs={12}>
             <Typography sx={{ color: "black", fontWeight: "600", fontSize: "20px", margin: "auto" }}>
               PAYMENT OPTIONS
@@ -390,7 +398,7 @@ const HomeFooter = () => {
                   borderRadius: "0px !important",
                   marginTop: "10px",
                   backgroundColor: "white",
-                  "& .MuiInputBase-input": { padding: "6.5px 14px !important" },
+                   "& .MuiInputBase-input": { padding: "6.5px 14px !important" },
                 }}
               />
               <Button
@@ -412,7 +420,7 @@ const HomeFooter = () => {
       <Box sx={{ backgroundColor: "#3F5163", padding: "90px 0px 160px 0px" }}>
         <Container>
           <Grid container gap={1} columns={13}>
-            <Grid item md={4} sm={12} xs={12} sx={{ margin: "auto" }}>
+            <Grid item md={4} sm={12} xs={12} sx={{ margin: "0 auto" }}>
               <Typography sx={{ color: "#FFFFFF", fontWeight: "600", fontSize: "20px" }}>Address</Typography>
               <Typography sx={{ color: "#FFFFFF", textAlign: "start", marginTop: "10px" }}>
                 Graphics Sign Shop 2773 Jefferson Street Austell,GA 30168
@@ -426,7 +434,9 @@ const HomeFooter = () => {
               </Typography>
             </Grid>
             <Grid item md={4} sm={12} xs={12}>
-              <Box sx={{ display: "flex", margin: "auto", justifyContent: "center", height: "100%" }}>
+              <Box
+                sx={{ display: "flex", margin: "auto", justifyContent: { sm: "center", xs: "left" }, height: "100%" }}
+              >
                 <Button
                   variant="contained"
                   sx={{
@@ -439,7 +449,7 @@ const HomeFooter = () => {
                     "&:hover": {
                       backgroundColor: "#E0CE8F",
                     },
-                    margin: "auto",
+                    margin: { sm: "auto", xs: "20px 0" },
                     width: "174px",
                     height: "60px",
                   }}
