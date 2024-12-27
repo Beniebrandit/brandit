@@ -48,31 +48,31 @@ const savedDesigns = [
   // Add more design objects here...
 ];
 
-const List = styled('ul')({
-  listStyle: 'none',
+const List = styled("ul")({
+  listStyle: "none",
   padding: 0,
   margin: 0,
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
 });
 
 // Pagination button styling
-const PaginationButton = styled('button')(({ theme, selected }) => ({
-  border: selected ? '1px solid #ccc' : '1px solid #eee',
-  backgroundColor: selected ? '#e7eaf3' : '#fff',
-  color: '#333',
-  cursor: 'pointer',
-  padding: '10px 15px',
+const PaginationButton = styled("button")(({ theme, selected }) => ({
+  border: selected ? "1px solid #ccc" : "1px solid #eee",
+  backgroundColor: selected ? "#e7eaf3" : "#fff",
+  color: "#333",
+  cursor: "pointer",
+  padding: "10px 15px",
   // margin: '0 5px',
-  minWidth: '40px',
-  minHeight: '40px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  '&:hover': {
-    backgroundColor: '#f5f5f5',
-    borderColor: '#ccc',
+  minWidth: "40px",
+  minHeight: "40px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  "&:hover": {
+    backgroundColor: "#f5f5f5",
+    borderColor: "#ccc",
   },
 }));
 
@@ -86,72 +86,17 @@ function TabPanel(props) {
   );
 }
 
-
 const SavedDesign = () => {
-  const [loginOpen, setLoginOpen] = useState(false);
-  const [openSignUp, setOpenSignUp] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
   const [tabValue, setTabValue] = useState(0);
   const [page, setPage] = useState(1);
 
   const itemsPerPage = 1; // Example: 5 items per page
-
-  const handleClickOpenLogin = () => {
-    setLoginOpen(true);
-    setOpenSignUp(false);
-  };
-  const handleCloseLogin = () => setLoginOpen(false);
-
-  const handleClickOpenSignUp = () => {
-    setOpenSignUp(true);
-    setLoginOpen(false);
-  };
-
-  const handleCloseSignUp = () => setOpenSignUp(false);
-
-  const fetchUserData = async (token) => {
-    if (!token) {
-      console.warn("Token is null or undefined, skipping fetch.");
-      return; // Exit the function if the token is null
-    }
-
-    console.log("Fetching user data from: https://flagg.devlopix.com/api/user");
-
-    try {
-      const response = await fetch("https://flagg.devlopix.com/api/user", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        console.error("Failed to fetch user data:", response.status);
-        return;
-      }
-
-      const data = await response.json();
-      setCurrentUser(data.name);
-      localStorage.setItem("currentUser", data.name);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
-
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
     const storedUser = localStorage.getItem("currentUser");
 
     if (storedUser) {
       setCurrentUser(storedUser);
-    } else {
-      // Open login dialog if no current user is found
-      setLoginOpen(true);
-    }
-
-    if (token) {
-      fetchUserData(token);
     }
   }, []);
 
@@ -173,7 +118,7 @@ const SavedDesign = () => {
 
   return (
     <div>
-      <Navbar handleClickOpenSignUp={handleClickOpenSignUp} handleClickOpenLogin={handleClickOpenLogin} />
+      <Navbar />
       {currentUser && (
         <>
           <h1 style={{ textAlign: "center" }}>Welcome, {currentUser || "Guest"}</h1>
@@ -504,21 +449,6 @@ const SavedDesign = () => {
           </Container>
         </>
       )}
-      {/*<button onClick={handleClickOpenLogin}>Login</button>
-      <button onClick={handleClickOpenSignUp}>Sign Up</button>*/}
-
-      <LoginDialog
-        open={loginOpen}
-        handleClose={handleCloseLogin}
-        handleOpenSignUp={handleClickOpenSignUp}
-        fetchUserData={fetchUserData}
-      />
-      <CreateAccountDialog
-        open={openSignUp}
-        handleClose={handleCloseSignUp}
-        setCurrentUser={setCurrentUser}
-        handleOpenLogin={handleClickOpenLogin}
-      />
       <DesignServiceFooter />
     </div>
   );

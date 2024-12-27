@@ -234,7 +234,6 @@ const Banner = ({
   };
 
   //console.log("allcategories", allcategories);
-  console.log("payload", payload);
   return (
     <>
       <PopUp
@@ -581,7 +580,7 @@ const Banner = ({
                     <Circles
                       height="35"
                       width="35"
-                      color="#3F5163"
+                      color="#f2d388"
                       ariaLabel="circles-loading"
                       wrapperStyle={{}}
                       wrapperClass=""

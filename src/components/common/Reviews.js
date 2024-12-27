@@ -15,6 +15,7 @@ import {
   FormControlLabel,
   Link,
   IconButton,
+  Divider,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
@@ -42,7 +43,7 @@ const Reviews = ({ productId, hidereviewbtn }) => {
   const [question, setQuestion] = useState("");
   const [rating, setRating] = useState(0);
   const [userId, setUserId] = useState();
-  const [allreviews, setAllReviews] = useState("");
+  const [allreviews, setAllReviews] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [allProducts, setAllProducts] = useState([]);
   const itemsPerPage = 6;
@@ -109,7 +110,7 @@ const Reviews = ({ productId, hidereviewbtn }) => {
       setValue(averageRating);
 
       setAllReviews(allreviewss);
-      //console.log(allreviewss, "allreviewss");
+      console.log(allreviewss, "allreviewss");
     } catch (error) {
       console.error("Error fetching review:", error);
     }
@@ -198,62 +199,86 @@ const Reviews = ({ productId, hidereviewbtn }) => {
                 />
               </Box>
               <Typography sx={{ color: "#868686", fontSize: "15px" }}>Based on {allreviews?.length} reviews</Typography>
+              <Divider orientation="vertical" flexItem />
             </Grid>
             <Grid item md={3} sm={12} xs={12}>
               <Box sx={{ display: "flex", flexDirection: "column" }}>
-                {Array(4)
-                  .fill("")
-                  .map((_, index) => (
+                {Array.from({ length: 5 }, (_, index) => {
+                  const starValue = 5 - index; // Generate star ratings in descending order
+                  const filteredReviews = allreviews?.filter((review) => review.stars === starValue); // Filter reviews for this star value
+                  const percentage = (filteredReviews.length / allreviews?.length) * 100; // Calculate percentage
+                  return (
                     <Box
-                      key={index}
+                      key={starValue}
                       sx={{
                         display: "flex",
                         alignItems: "center",
                         marginBottom: 1,
                       }}
                     >
+                      {/* Display star icons dynamically */}
                       <Typography sx={{ display: "flex" }}>
-                        {Array(5)
-                          .fill("")
-                          .map((_, i) => (
-                            <StarIcon key={i} sx={{ color: "#FCB20F" }} />
-                          ))}
+                        {Array.from({ length: starValue }, (_, i) => (
+                          <StarIcon key={i} sx={{ color: "#FCB20F" }} />
+                        ))}
+                        {Array.from({ length: 5 - starValue }, (_, i) => (
+                          <StarIcon key={i + starValue} sx={{ color: "#868686" }} />
+                        ))}
                       </Typography>
-                      <Box sx={{ flexGrow: 1, marginLeft: 2 }}>
-                        <LinearProgress
-                          variant="determinate"
-                          value={Math.random() * 100}
-                          sx={{
-                            height: 10,
-                            "& .MuiLinearProgress-bar": {
-                              backgroundColor: "#FCB20F",
-                            },
-                          }}
-                        />
+
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center", // Align items in the center vertically
+                          flexGrow: 1,
+                          marginLeft: 2,
+                        }}
+                      >
+                        {/* Linear Progress Bar */}
+                        <Box sx={{ flexGrow: 1, marginRight: 1 }}>
+                          <LinearProgress
+                            variant="determinate"
+                            value={percentage}
+                            sx={{
+                              height: 10,
+                              borderRadius: 5, // Add rounded edges
+                              backgroundColor: "#e0e0e0", // Background color for the track
+                              "& .MuiLinearProgress-bar": {
+                                backgroundColor: "#FCB20F", // Color of the progress bar
+                              },
+                            }}
+                          />
+                        </Box>
+                        {/* Display the count */}
+                        <Typography variant="body2" sx={{ color: "#868686" }}>
+                          {filteredReviews?.length}
+                        </Typography>
                       </Box>
                     </Box>
-                  ))}
+                  );
+                })}
               </Box>
             </Grid>
+
             <Grid item md={3} sm={12} xs={12}>
-              <Grid container>
-                <Grid item md={4}>
+              <Grid container sx={{ height: "100%" }}>
+                <Grid item md={4} sx={{ margin: "auto" }}>
                   <img alt="facebook1" src={facebook1} width="70%" height="70%" />
                 </Grid>
-                <Grid item md={4}>
+                <Grid item md={4} sx={{ margin: "auto" }}>
                   {" "}
                   <img alt="facebook2" src={facebook2} width="70%" height="70%" />
                 </Grid>
-                <Grid item md={4}>
+                <Grid item md={4} sx={{ margin: "auto" }}>
                   <img alt="facebook3" src={facebook3} width="70%" height="70%" />
                 </Grid>
-                <Grid item md={4}>
+                <Grid item md={4} sx={{ margin: "auto" }}>
                   <img alt="facebook4" src={facebook4} width="70%" height="70%" />
                 </Grid>
-                <Grid item md={4}>
+                <Grid item md={4} sx={{ margin: "auto" }}>
                   <img alt="facebook5" src={facebook5} width="70%" height="70%" />
                 </Grid>
-                <Grid item md={4}>
+                <Grid item md={4} sx={{ margin: "auto" }}>
                   <img alt="facebook6" src={facebook6} width="70%" height="70%" />
                 </Grid>
               </Grid>

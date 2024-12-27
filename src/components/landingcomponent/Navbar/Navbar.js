@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
   Container,
@@ -50,6 +50,7 @@ const categories = [
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const theme0 = useTheme();
   const isBelowMd = useMediaQuery(theme0.breakpoints.down("md"));
   const [loginOpen, setLoginOpen] = useState(false);
@@ -414,12 +415,15 @@ const Navbar = () => {
 
     if (storedUser) {
       setCurrentUser(storedUser);
+    } else if (location.pathname === "/saved-design") {
+      // Open login dialog if no current user and on /saved-design page
+      setLoginOpen(true);
     }
 
     if (token) {
       fetchUserData(token);
     }
-  }, []);
+  }, [location.pathname]); // Add location.pathname as a dependency
 
   const Logout = () => {
     localStorage.removeItem("currentUser");

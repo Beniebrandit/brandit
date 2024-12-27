@@ -612,7 +612,7 @@ useEffect(() => {
             <Circles
               height="40"
               width="40"
-              color="#3F5163"
+              color="#f2d388"
               ariaLabel="circles-loading"
               wrapperStyle={{}}
               wrapperClass=""

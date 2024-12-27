@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Grid, Typography, Button, Box, Divider } from "@mui/material";
+import { Container, Grid, Typography, Button, Box, Divider, TextField } from "@mui/material";
 import { styled } from "@mui/system";
 import Navbar from "../components/landingcomponent/Navbar/Navbar";
 import DesignRequestForm from "../components/designservice/DesignRequestForm";
@@ -7,7 +7,7 @@ import CustomerFeedback from "../components/designservice/CustomerFeedback";
 import { DesignServiceFooter } from "../components/designservice/DesignServiceFooter";
 import LoginDialog from "../components/common/LoginDialog";
 import CreateAccountDialog from "../components/common/CreateAccountDialog";
-
+import ReCAPTCHA from "react-google-recaptcha";
 // Styled button for uploading files
 const UploadButton = styled(Button)({
   marginTop: "1rem",
@@ -25,6 +25,15 @@ const DesignService = () => {
   const [loginOpen, setLoginOpen] = useState(false);
   const [openSignUp, setOpenSignUp] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
+  const [forms, setForms] = useState([{ id: 1 }]);
+
+  const addForm = () => {
+    setForms([...forms, { id: forms.length + 1 }]);
+  };
+
+  const deleteForm = (id) => {
+    setForms(forms.filter((form) => form.id !== id));
+  };
 
   const handleClickOpenLogin = () => setLoginOpen(true);
   const handleCloseLogin = () => setLoginOpen(false);
@@ -63,6 +72,10 @@ const DesignService = () => {
       console.error("Error fetching user data:", error);
     }
   };
+
+  function onChange(value) {
+    console.log("Captcha value:", value);
+  }
 
   return (
     <>
@@ -145,7 +158,46 @@ const DesignService = () => {
             borderBottomWidth: 2,
           }}
         />
-        <DesignRequestForm />
+        <Grid container spacing={3}>
+          {["First Name", "Last Name", "Email", "Phone Number"].map((label, index) => (
+            <Grid item xs={12} md={6} key={index}>
+              <Typography>{label}*</Typography>
+              <Box sx={{ mt: 2 }}>
+                <TextField fullWidth />
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+        {forms.map((form) => (
+          <DesignRequestForm key={form.id} formNumber={form.id} onDelete={() => deleteForm(form.id)} />
+        ))}
+        <Button sx={{ mt: 2 }} onClick={addForm}>
+          + Request another design item
+        </Button>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            mt: 2,
+          }}
+        >
+          <ReCAPTCHA sitekey="Your client site key" onChange={onChange} />
+          <Button
+            sx={{
+              border: "1px solid #8CC53F",
+              color: "#fff",
+              background: "#8CC53F",
+              cursor: "pointer",
+              fontWeight: "600",
+              mt: 3,
+              width: "35%",
+            }}
+          >
+            Continue to Cart
+          </Button>
+        </Box>
         <CustomerFeedback />
         <DesignServiceFooter />
       </Container>

@@ -31,6 +31,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { ProductCategoryService } from "../../services/ProductCategory.service";
 import { authHeader } from "../../library/authHeader";
 import { Circles } from "react-loader-spinner";
+import BreadcrumbSection from "../common/BreadcrumbSection";
 
 // const url = `https://flagg.devlopix.com/api`;
 // const token = `6|q8mTawTdGKbRdLazOGLcm1Y0zJe5ks4IPUWRJNIR13495c0c`
@@ -244,6 +245,7 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
   return (
     <Box className="product_box">
       <Container>
+        <BreadcrumbSection productName={alldata?.name} />
         <Grid container spacing={2} justifyContent="center">
           <Grid item xs={12} md={6}>
             <Box p={2}>
@@ -499,9 +501,10 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
                     <Typography
                       sx={{
                         fontSize: { xs: "18px", sm: "20px", md: "22px" },
+                        paddingTop: { xs: "10px !important", sm: "0px !important" },
                         lineHeight: "32px",
                         fontWeight: "bold",
-                        width: { md: "8rem", xs: "5.6rem", sm: "12.2rem", lg: "9.6rem", xl: "9.6rem" },
+                        width: { md: "7rem", xs: "100%", sm: "10.2rem", lg: "8.2rem", xl: "8.2rem" },
                       }}
                     >
                       Quantity:
@@ -628,7 +631,7 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
                   <Circles
                     height="40"
                     width="40"
-                    color="#3F5163"
+                    color="#f2d388"
                     ariaLabel="circles-loading"
                     wrapperStyle={{}}
                     wrapperClass=""

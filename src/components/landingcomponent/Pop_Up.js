@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
-import { Box, Button, Divider, Grid, Paper, styled, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, Grid, IconButton, Paper, styled, TextField, Typography } from "@mui/material";
 import { ReactComponent as SearchTemplete } from "../../asset/images/Vector.svg";
 import { ReactComponent as DesignOnline } from "../../asset/images/DesignOnline.svg";
 import searchIcon from "../../asset/images/search_Icon.svg";
@@ -13,7 +13,7 @@ import { debounce } from "lodash";
 import PopUpPagination from "../common/PopUpPagination";
 import { useNavigate } from "react-router-dom";
 import { Blocks } from "react-loader-spinner";
-// const searchClient = algoliasearch("RG2O7GHZ1A", "f158f8d3e0b47c034f92caef34615240");
+import CloseIcon from "@mui/icons-material/HighlightOffOutlined"; 
 
 const Hit = ({ hit }) => (
   <div>
@@ -126,6 +126,18 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
         aria-describedby="keep-mounted-modal-description"
       >
         <Box sx={style}>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={(theme) => ({
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: "#ffffffd6",
+            })}
+          >
+            <CloseIcon />
+          </IconButton>
           <Typography
             id="keep-mounted-modal-title"
             variant="h6"
@@ -286,7 +298,7 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
                     style={{
                       paddingTop: "11px",
                       position: "absolute",
-                      backgroundColor:"transparent",
+                      backgroundColor: "transparent",
                       right: "40px",
                       margin: "auto",
                     }}
@@ -295,10 +307,9 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
               </Button>
             </Box>
           )}
-
           {openSearch &&
             (spinner ? (
-              <Box sx={{ margin: "auto", padding: "10px 0px 0px 23px", width: "max-content" }}>
+              <Box sx={{ margin: "auto", padding: "15px", width: "max-content" }}>
                 <Blocks
                   height="80"
                   width="80"
@@ -329,7 +340,7 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
                     }}
                     onClick={handleCloseSearch}
                   >
-                    Back to Desgin Option
+                    Back to Design Option
                   </Button>
 
                   <Box sx={{ position: "relative", width: { xs: "100%", sm: "unset" } }}>
@@ -340,8 +351,9 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
                         color: "#3F5163",
                         backgroundColor: "white",
                         width: "100%",
-                        padding: "0 20px",
+                        margin: "0 30px 0 -30px",
                         marginBottom: { xs: "20px", sm: "0" },
+                        "& .MuiInputBase-input": { padding: "7.5px 14px !important" },
                       }}
                       placeholder="Search Template"
                       className="search-dropdown-container"
@@ -353,6 +365,7 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
                       style={{
                         paddingTop: "7px",
                         position: "absolute",
+                        backgroundColor: "transparent",
                         right: "40px",
                         zIndex: "1",
                         margin: "auto",

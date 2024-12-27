@@ -54,13 +54,12 @@ const items = [
   { text: "Account", icon: <AccountCircle /> },
 ];
 
-  const categories = [
-    { label: "Large Format", category: "Large Format" },
-    { label: "Stickers and Labels", category: "Decals" },
-    { label: "Fabrics", category: "Banners" },
-    { label: "Accessories", category: "Signs" },
-  ];
-
+const categories = [
+  { label: "Large Format", category: "Large Format" },
+  { label: "Stickers and Labels", category: "Decals" },
+  { label: "Fabrics", category: "Banners" },
+  { label: "Accessories", category: "Signs" },
+];
 
 const CustomMenu = styled(Menu)(({ theme }) => ({
   "& .MuiPaper-root": {
@@ -83,21 +82,21 @@ const CustomMenuItem = styled(MenuItem)(() => ({
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const Header = () => {
-    const navigate = useNavigate();
-    const theme0 = useTheme();
-    const isBelowMd = useMediaQuery(theme0.breakpoints.down("md"));
+  const navigate = useNavigate();
+  const theme0 = useTheme();
+  const isBelowMd = useMediaQuery(theme0.breakpoints.down("md"));
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [loginOpen, setLoginOpen] = useState(false);
   const [openSignUp, setOpenSignUp] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
-    const [selectedTab, setSelectedTab] = useState(isBelowMd ? "Products" : "Account"); // Default selected tab
-    const [allProducts, setAllProducts] = useState([]); // Assuming all products are loaded here
-    const [categoryContent, setCategoryContent] = useState([]); // To hold the content for the selected category
-    const [currentImage, setCurrentImage] = useState(""); // To track the current image
-    const [selectedCategory, setSelectedCategory] = useState("");
-    const [showCategoryContent, setShowCategoryContent] = useState(false);
-    const filteredItems = items.filter((item) => (item.text === "Products" ? isBelowMd : true));
+  const [selectedTab, setSelectedTab] = useState(isBelowMd ? "Products" : "Account"); // Default selected tab
+  const [allProducts, setAllProducts] = useState([]); // Assuming all products are loaded here
+  const [categoryContent, setCategoryContent] = useState([]); // To hold the content for the selected category
+  const [currentImage, setCurrentImage] = useState(""); // To track the current image
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [showCategoryContent, setShowCategoryContent] = useState(false);
+  const filteredItems = items.filter((item) => (item.text === "Products" ? isBelowMd : true));
 
   const handleCategoryClick = async (categoryName) => {
     setSelectedCategory(categoryName);
@@ -469,12 +468,12 @@ const Header = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("recentSearches");
     window.location.reload();
-     toast.success("Logged out successfully!");
+    toast.success("Logged out successfully!");
   };
 
-    function ClickProduct(id) {
-      navigate(`/product/${id}`);
-    }
+  function ClickProduct(id) {
+    navigate(`/product/${id}`);
+  }
   return (
     <>
       <Box className="header" sx={{ padding: { xs: "10px 0", sm: "15px 0" } }}>
@@ -489,21 +488,23 @@ const Header = () => {
         >
           <Grid
             container
-            alignItems="center"
-            spacing={2}
             sx={{
               marginBottom: { xs: "10px", sm: "0" },
               flexDirection: { xs: "column", sm: "row" },
               justifyContent: "space-between",
+              alignItems: { xs: "left", md: "center" },
+              width: "100%",
+              ml: "0",
+              // paddingX: "15px"
             }}
           >
             <Grid item xs={12} sm="auto">
               <Grid container alignItems="center" spacing={1}>
                 <Grid item>
-                  <EmailOutlinedIcon sx={{ color: "#E0CE8F" }} />
+                  <EmailOutlinedIcon sx={{ color: "#E0CE8F", fontSize: { xs: "16px", sm: "24px" } }} />
                 </Grid>
                 <Grid item>
-                  <Typography variant="body2" sx={{ color: "white" }}>
+                  <Typography variant="body2" sx={{ color: "white", fontSize: { xs: "12px", sm: "15px" } }}>
                     Email:{" "}
                     <a href="mailto:sales@brandt.net" style={{ color: "white", textDecoration: "none" }}>
                       mailto:sales@brandt.net
@@ -516,21 +517,21 @@ const Header = () => {
             <Grid item xs={12} sm="auto">
               <Grid container alignItems="center" spacing={1}>
                 <Grid item>
-                  <PhoneInTalkOutlinedIcon sx={{ color: "#E0CE8F" }} />
+                  <PhoneInTalkOutlinedIcon sx={{ color: "#E0CE8F", fontSize: { xs: "16px", sm: "24px" } }} />
                 </Grid>
                 <Grid item>
-                  <Typography variant="body2" sx={{ color: "white" }}>
+                  <Typography variant="body2" sx={{ color: "white", fontSize: { xs: "12px", sm: "15px" } }}>
                     Phone: 800-935-8231
                   </Typography>
                 </Grid>
               </Grid>
             </Grid>
 
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid>
               <SearchBar />
             </Grid>
 
-            <Grid item xs={12} sm="auto">
+            <Grid item xs={12} sm="auto" sx={{ display: { xs: "none", md: "unset" } }}>
               <Grid container spacing={1} justifyContent="center">
                 <Grid item>
                   <IconButton>
@@ -558,128 +559,136 @@ const Header = () => {
         </Container>
       </Box>
       <Container className="inner_header">
-        <Grid container alignItems="center" justifyContent="space-between" spacing={2}>
-          <Grid item xs={12} sm="auto" container justifyContent="center">
+        <Grid
+          container
+          maxWidth="lg"
+          style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
+        >
+          <Grid item container justifyContent="center" sx={{ width: "fit-content" }}>
             <Link to="/">
               <img alt="logo" src={main_logo} style={{ width: "50%", height: "auto", maxWidth: "200px" }} />
             </Link>
           </Grid>
 
-          <Grid item xs={12} sm="auto" sx={{ display: { xs: "none", md: "block" } }}>
+          <Grid item sm="auto" sx={{ display: { xs: "none", md: "block" } }}>
             <MegaMenuGrid />
           </Grid>
-          <Box sx={{ display: { xs: "none", lg: "flex" } }}>
-            {currentUser ? (
-              <Grid
-                item
-                xs={12}
-                sm="auto"
-                container
-                justifyContent="center"
-                sx={{
-                  paddingLeft: "0px !important",
-                  //backgroundColor: anchorEl ? "#e0e0e0" : "inherit",
-                  backgroundColor: "transparent",
-                  borderTopRightRadius: "5px",
-                  borderTopLeftRadius: "5px",
-                }}
-              >
-                {/* Button with Account Icon and User Name */}
-                <Button
-                  id="basic-button"
-                  //onClick={handleClick}
-                  sx={{
-                    color: "black",
-                    textTransform: "capitalize",
-                    width: "200px", // Set a fixed width or make it dynamic
-                    justifyContent: "left",
-                  }}
-                  aria-controls={anchorEl ? "basic-menu" : undefined}
-                  aria-expanded={anchorEl ? "true" : undefined}
-                  aria-haspopup={anchorEl ? "true" : undefined}
-                  onMouseOver={handleClick} // Trigger on hover
-                >
-                  <AccountCircleIcon sx={{ fontSize: "36px", color: "#3f5163" }} />
-                  <span style={{ color: "#3f5163", marginLeft: "8px" }}>
-                    <b>{currentUser ? currentUser : "My Account (Sign In)"}</b>
-                  </span>
-                </Button>
-
-                {/* Dropdown Menu */}
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                  MenuListProps={{
-                    "aria-labelledby": "basic-button",
-                    onMouseLeave: handleClose, // Close menu when mouse leaves
-                  }}
-                  PaperProps={{
-                    sx: {
-                      //borderRadius: "0px !important",
-                      //backgroundColor: "#e0e0e0 !important",
-                      backgroundColor: "white !important",
-                      width: anchorEl?.offsetWidth || "200px !important",
-                      marginTop: "0px !important",
-                      boxShadow: "none !important",
-                    },
-                  }}
-                  disableScrollLock
-                  keepMounted
-                  disableAutoFocusItem
-                  disableAutoFocus
-                >
-                  <MenuItem
-                    onClick={() => {
-                      Logout();
-                      handleClose();
-                    }}
-                  >
-                    Log Out
-                  </MenuItem>
-                </Menu>
-              </Grid>
-            ) : (
-              <Grid item xs={12} sm="auto" container justifyContent="center">
-                <Box sx={{ position: "relative", display: "flex" }}>
-                  <Grid item>
-                    <Button onClick={handleClickOpenLogin} variant="contained" className="header_btn">
-                      Login
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button onClick={handleClickOpenSignUp} variant="contained" className="header_btn">
-                      Register
-                    </Button>
-                  </Grid>
-                </Box>
-              </Grid>
-            )}
-          </Box>
-          <Grid
-            item
-            xs={12}
-            sm="auto"
-            container
-            justifyContent="center"
-            sx={{
-              //"&:hover": { backgroundColor: "#e0e0e0" },
-              borderTopRightRadius: "5px",
-              borderTopLeftRadius: "5px",
-              paddingLeft: "0px !important",
-            }}
+          <Box
+            sx={{ display: "flex", alignItems: "center", justifyContent: "space-around", columnGap: 2, height: "100%" }}
           >
-            <Button sx={{ position: "relative" }} href="/cart">
-              <img alt="cart_logo" src={cart_logo} style={{ width: "30px", height: "auto" }} />
-            </Button>
-          </Grid>
+            <Box sx={{ display: { xs: "none", lg: "flex" } }}>
+              {currentUser ? (
+                <Grid
+                  item
+                  xs={12}
+                  sm="auto"
+                  container
+                  justifyContent="center"
+                  sx={{
+                    paddingLeft: "0px !important",
+                    //backgroundColor: anchorEl ? "#e0e0e0" : "inherit",
+                    backgroundColor: "transparent",
+                    borderTopRightRadius: "5px",
+                    borderTopLeftRadius: "5px",
+                  }}
+                >
+                  {/* Button with Account Icon and User Name */}
+                  <Button
+                    id="basic-button"
+                    //onClick={handleClick}
+                    sx={{
+                      color: "black",
+                      textTransform: "capitalize",
+                      width: "200px", // Set a fixed width or make it dynamic
+                      justifyContent: "left",
+                    }}
+                    aria-controls={anchorEl ? "basic-menu" : undefined}
+                    aria-expanded={anchorEl ? "true" : undefined}
+                    aria-haspopup={anchorEl ? "true" : undefined}
+                    onMouseOver={handleClick} // Trigger on hover
+                  >
+                    <AccountCircleIcon sx={{ fontSize: "36px", color: "#3f5163" }} />
+                    <span style={{ color: "#3f5163", marginLeft: "8px" }}>
+                      <b>{currentUser ? currentUser : "My Account (Sign In)"}</b>
+                    </span>
+                  </Button>
 
-          <Grid item xs={12} sm="auto" sx={{ display: { lg: "none" } }}>
-            <IconButton onClick={toggleDrawer(true)}>
-              <MenuIcon />
-            </IconButton>
-          </Grid>
+                  {/* Dropdown Menu */}
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      "aria-labelledby": "basic-button",
+                      onMouseLeave: handleClose, // Close menu when mouse leaves
+                    }}
+                    PaperProps={{
+                      sx: {
+                        //borderRadius: "0px !important",
+                        //backgroundColor: "#e0e0e0 !important",
+                        backgroundColor: "white !important",
+                        width: anchorEl?.offsetWidth || "200px !important",
+                        marginTop: "0px !important",
+                        boxShadow: "none !important",
+                      },
+                    }}
+                    disableScrollLock
+                    keepMounted
+                    disableAutoFocusItem
+                    disableAutoFocus
+                  >
+                    <MenuItem
+                      onClick={() => {
+                        Logout();
+                        handleClose();
+                      }}
+                    >
+                      Log Out
+                    </MenuItem>
+                  </Menu>
+                </Grid>
+              ) : (
+                <Grid item xs={12} sm="auto" container justifyContent="center">
+                  <Box sx={{ position: "relative", display: "flex" }}>
+                    <Grid item>
+                      <Button onClick={handleClickOpenLogin} variant="contained" className="header_btn">
+                        Login
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button onClick={handleClickOpenSignUp} variant="contained" className="header_btn">
+                        Register
+                      </Button>
+                    </Grid>
+                  </Box>
+                </Grid>
+              )}
+            </Box>
+            <Grid
+              item
+              xs={12}
+              sm="auto"
+              container
+              justifyContent="center"
+              sx={{
+                //"&:hover": { backgroundColor: "#e0e0e0" },
+                borderTopRightRadius: "5px",
+                borderTopLeftRadius: "5px",
+                paddingLeft: "0px !important",
+              }}
+            >
+              <Button sx={{ position: "relative" }} href="/cart">
+                <img alt="cart_logo" src={cart_logo} style={{ width: "30px", height: "auto" }} />
+              </Button>
+            </Grid>
+
+            <Grid item xs={12} sm="auto" sx={{ display: { lg: "none" } }}>
+              <IconButton onClick={toggleDrawer(true)}>
+                <MenuIcon />
+              </IconButton>
+            </Grid>
+          </Box>
         </Grid>
       </Container>
 

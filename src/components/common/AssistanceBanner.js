@@ -88,7 +88,7 @@ const AssistanceBanner = ({ pricePerProduct, payload0, price, selectedCategory }
           <Circles
             height="40"
             width="40"
-            color="#4fa94d"
+            color="#f2d388"
             ariaLabel="circles-loading"
             wrapperStyle={{}}
             wrapperClass=""

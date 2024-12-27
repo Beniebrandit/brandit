@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Grid, Box, Typography, TextField, FormControl, Select, MenuItem, Button } from "@mui/material";
-import ReCAPTCHA from "react-google-recaptcha";
+import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 
-const DesignRequestForm = () => {
+const DesignRequestForm = ({ formNumber, onDelete }) => {
   const [fileUpload, setFileUpload] = useState(null); // State for file upload
   const [signtype, setSigntype] = useState("Banner");
   const [printedSides, setPrintedSides] = useState("Single Sided");
@@ -53,23 +53,9 @@ const DesignRequestForm = () => {
     setHeight(event.target.value);
   };
 
-  function onChange(value) {
-    console.log("Captcha value:", value);
-  }
-
   return (
     <div>
       {/* Personal Information Section */}
-      <Grid container spacing={3}>
-        {["First Name", "Last Name", "Email", "Phone Number"].map((label, index) => (
-          <Grid item xs={12} md={6} key={index}>
-            <Typography>{label}*</Typography>
-            <Box sx={{ mt: 2 }}>
-              <TextField fullWidth />
-            </Box>
-          </Grid>
-        ))}
-      </Grid>
 
       {/* Design Request Details Section */}
       <Box sx={{ border: "1px solid #cfd4d9", width: "100%", mt: 4 }}>
@@ -79,10 +65,17 @@ const DesignRequestForm = () => {
             padding: "8px 16px",
             backgroundColor: "#f3f3f3",
             color: "#333",
+            display: "flex",
+            justifyContent: "space-between",
             fontWeight: 400,
           }}
         >
-          Design request details
+          Design request details <Typography> Page {formNumber}</Typography>
+        </Box>
+        <Box>
+          <Button sx={{ float: "right" }} onClick={onDelete}>
+            <DeleteTwoToneIcon sx={{ color: "gray" }} />
+          </Button>
         </Box>
 
         <Grid container sx={{ padding: { sm: "21px 32px", xs: "12px" } }}>
@@ -211,31 +204,6 @@ const DesignRequestForm = () => {
             </Box>
           </Grid>
         </Grid>
-      </Box>
-      <Button sx={{ mt: 2 }}>+ Request another design item</Button>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-          mt: 2,
-        }}
-      >
-        <ReCAPTCHA sitekey="Your client site key" onChange={onChange} />
-        <Button
-          sx={{
-            border: "1px solid #8CC53F",
-            color: "#fff",
-            background: "#8CC53F",
-            cursor: "pointer",
-            fontWeight: "600",
-            mt: 3,
-            width: "35%",
-          }}
-        >
-          Continue to Cart
-        </Button>
       </Box>
     </div>
   );
