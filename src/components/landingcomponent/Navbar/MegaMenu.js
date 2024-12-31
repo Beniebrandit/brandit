@@ -169,9 +169,11 @@ const MegaMenu = () => {
     );
   };
 
-function ClickProduct(id) {
-navigate(`/product/${id}`);
-}
+  function ClickProduct(id) {
+    if (id) {
+      navigate(`/product/${id}`);
+    }
+  }
   return (
     <div>
       <ul className={`exo-menu ${menuVisible ? "display" : ""}`}>

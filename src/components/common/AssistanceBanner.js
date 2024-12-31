@@ -9,9 +9,23 @@ import { Circles } from "react-loader-spinner";
 const AssistanceBanner = ({ pricePerProduct, payload0, price, selectedCategory }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [displayedPrice, setDisplayedPrice] = useState(pricePerProduct);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  useEffect(() => {
+    if (pricePerProduct !== displayedPrice) {
+      setIsLoading(true);
+      const timeout = setTimeout(() => {
+        setIsLoading(false);
+        setDisplayedPrice(pricePerProduct);
+      }, 2000);
+
+      return () => clearTimeout(timeout); // Cleanup the timeout
+    }
+  }, [pricePerProduct, displayedPrice]);
 
   useEffect(() => {
     // Show the banner after a short delay
@@ -84,7 +98,7 @@ const AssistanceBanner = ({ pricePerProduct, payload0, price, selectedCategory }
         </Box>
 
         {/* Price Each */}
-        {!pricePerProduct ? (
+        {isLoading ? (
           <Circles
             height="40"
             width="40"
@@ -101,7 +115,7 @@ const AssistanceBanner = ({ pricePerProduct, payload0, price, selectedCategory }
               <Typography>Price Each</Typography>
             </Box>
             <Typography variant="h5" color="#3f5163" sx={{ fontWeight: "bold" }}>
-              ${pricePerProduct && pricePerProduct}
+              ${displayedPrice}
             </Typography>
           </Box>
         )}

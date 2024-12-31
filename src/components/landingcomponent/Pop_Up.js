@@ -13,7 +13,7 @@ import { debounce } from "lodash";
 import PopUpPagination from "../common/PopUpPagination";
 import { useNavigate } from "react-router-dom";
 import { Blocks } from "react-loader-spinner";
-import CloseIcon from "@mui/icons-material/HighlightOffOutlined"; 
+import CloseIcon from "@mui/icons-material/HighlightOffOutlined";
 
 const Hit = ({ hit }) => (
   <div>
@@ -68,6 +68,7 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [spinner, setSpinner] = useState(false);
+  const [finaldata, setFinaldata] = useState([]);
 
   const handleSearch = (e) => {
     setValue(e.target.value);
@@ -107,6 +108,11 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
     setValue("");
     setOpenSearch(false);
   };
+
+const data = {
+
+}
+
   useEffect(() => {
     setSpinner(true);
     if (value) {
@@ -210,7 +216,16 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
                   height: "180px",
                   width: "100%",
                 }}
-                href="/design"
+                onClick={() => {
+                  if (payload0) {
+                    const updatedPayload = { ...payload0, price: price };
+
+                    localStorage.setItem("selectedData", JSON.stringify(updatedPayload));
+                    navigate(`/design/${payload0?.ProductId}`);
+                  } else {
+                    console.warn("payload0 is undefined or null");
+                  }
+                }}
               >
                 <DesignOnline />
                 <Typography
@@ -237,11 +252,13 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
                 }}
                 onClick={() => {
                   if (payload0) {
-                    localStorage.setItem("selectedData", JSON.stringify(payload0));
+                    const updatedPayload = { ...payload0, price: price };
+
+                    localStorage.setItem("selectedData", JSON.stringify(updatedPayload));
+                    navigate(`/design/${payload0?.ProductId}`);
                   } else {
                     console.warn("payload0 is undefined or null");
                   }
-                  navigate(`/design/${payload0?.ProductId}`);
                 }}
               >
                 <UploadFile />

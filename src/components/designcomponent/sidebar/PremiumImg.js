@@ -9,12 +9,9 @@ import { PopularSearches } from "../../common/Constant";
 
 const PremiumImg = ({
   setPremiumimg,
-  handlePremiumImage,
   handleExpand,
-  premiumimg,
-  selectImage,
-  combinedImages,
-  setCombinedImages,
+  handleOpentoAdd,
+  selectedimg,
 }) => {
   const [selectedImages, setSelectedImages] = useState({
     premium: "",
@@ -30,7 +27,6 @@ const PremiumImg = ({
   const [hasMore, setHasMore] = useState(true);
   const [photosData, setPhotosData] = useState([]);
   const [vectorData, setVectorData] = useState([]);
-  const [selectedimg, setSelectedimg] = useState([]);
   const [showpopularData, setShowpopularData] = useState(true);
   const [showAll, setShowAll] = useState(false);
   const source = "premium";
@@ -170,36 +166,60 @@ const PremiumImg = ({
       fetchMedia(value, 0);
     }
   };
-  const handleOpentoAdd = (item) => {
-    const selectedimages = {
-      id: item.id, // You could use a unique ID here
-      title: item?.title,
-      thumbnail_url: item?.thumbnail_url,
-      type: source, // Use 'premium' or other identifier for media type
-    };
+  // const handleOpentoAdd = (item) => {
+  //   const selectedimages = {
+  //     id: item.id, // Unique ID
+  //     title: item?.title,
+  //     thumbnail_url: item?.thumbnail_url,
+  //     type: source, // 'premium' or other identifier for media type
+  //   };
 
-    setSelectedimg((prevData) => [...prevData, selectedimages]);
-  };
+  //   // Update the state and local storage
+  //   setSelectedimg((prevData) => {
+  //     const updatedData = [...prevData, selectedimages];
+  //     // Save the updated data to local storage
+  //     localStorage.setItem("selectedImages", JSON.stringify(updatedData));
+  //     return updatedData;
+  //   });
+  // };
+
+  // // Load data from local storage on component mount
+  // useEffect(() => {
+  //   const savedImages = localStorage.getItem("selectedImages");
+  //   if (savedImages) {
+  //     setSelectedimg(JSON.parse(savedImages));
+  //   }
+  // }, []);
 
   return (
     <Box
       sx={{
-        maxHeight: "720px",
-        overflowY: "hidden", // Allow scrolling vertically
-        overflowX: "hidden", // Hide horizontal scrolling
-        scrollbarWidth: "thin", // Use thin scrollbar in Firefox
+        maxHeight: "675px",
+        overflowY: "hidden",
+        overflowX: "hidden",
+        scrollbarWidth: "thin",
+        scrollbarGutter: "stable",
         padding: "0px !important",
         "&:hover": {
-          //     position: "absolute",
-          // opacity: 0,
-          // zIndex: 1,
-          overflowY: "scroll",
-          // Show scrollbar on hover in Firefox
+          overflowY: "auto",
+        },
+        "&::-webkit-scrollbar": {
+          width: "3px",
+        },
+        "&::-webkit-scrollbar-track": {
+          backgroundColor: "transparent",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "#888",
+          borderRadius: "10px",
+        },
+        "&::-webkit-scrollbar-thumb:hover": {
+          backgroundColor: "#555",
         },
       }}
       onScroll={handleScroll}
     >
-      <Box sx={{ margin: "20px !important" }}>
+      <Box sx={{}}>
         <Typography variant="body2" color="#3F5163" fontWeight="bold" mb={2}>
           Recently used images
         </Typography>
@@ -295,19 +315,20 @@ const PremiumImg = ({
             </Box>
           )}
         </Box>
-        <Typography variant="h6" fontWeight="bold" mb={2}>
+        <Typography variant="h6" fontWeight="bold" sx={{ fontSize: "14px" }} mb={2}>
           Explore Premium Images <HelpIcon />
         </Typography>
-        <Typography variant="body2" color="textSecondary" mb={3}>
+        <Typography variant="body2" color="textSecondary" mb={1} sx={{ fontSize: "11px" }}>
           Enhance your designs with exclusive, licensed images. Image licenses are just a flat fee of $5.99.
         </Typography>
 
-        <Tabs value={valuePremium} onChange={handleChangeTab} sx={{ mb: 2 }}>
+        <Tabs value={valuePremium} onChange={handleChangeTab} sx={{ mb: 1, "& .MuiTabs-flexContainer": { display: "flex", justifyContent: "space-between" } }}>
           <Tab
             label="Photos"
             sx={{
               fontWeight: valuePremium === 0 ? "bold" : "normal",
               color: valuePremium === 0 && "#3F5163 !important",
+              width: "50%"
             }}
           />
           <Tab
@@ -315,11 +336,12 @@ const PremiumImg = ({
             sx={{
               fontWeight: valuePremium === 1 ? "bold" : "normal",
               color: valuePremium === 1 && "#3F5163 !important",
+              width: "50%"
             }}
           />
         </Tabs>
 
-        <Box display="flex" alignItems="center" mb={4} position="relative">
+        <Box display="flex" alignItems="center" sx={{ marginBottom: "15px" }} position="relative">
           {valuePremium === 0 ? (
             <>
               <input
@@ -404,26 +426,32 @@ const PremiumImg = ({
         {!showpopularData ? (
           ""
         ) : (
-          <ul
-            style={{
-              overflow: "auto",
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(125px, 1fr))",
-              gap: "10px",
-            }}
-          >
-            {PopularSearches?.map((value, index) => (
-              <Typography
-                key={index}
-                variant="span"
-                fontSize="small"
-                sx={{ cursor: "pointer" }}
-                onClick={() => OpentoSearch(value)}
-              >
-                {value}
-              </Typography>
-            ))}
-          </ul>
+          <>
+            <Typography sx={{ fontSize: "13px", marginBottom: "10px", fontWeight: "600" }}>PopularSearches</Typography>
+            <ul
+              style={{
+                overflow: "auto",
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(125px, 1fr))",
+                gap: "10px",
+                lineHeight: "1.4",
+                fontSize: "12px"
+              }}
+            >
+
+              {PopularSearches?.map((value, index) => (
+                <Typography
+                  key={index}
+                  variant="span"
+                  fontSize="small"
+                  sx={{ cursor: "pointer", paddingLeft: "6px" }}
+                  onClick={() => OpentoSearch(value)}
+                >
+                  {value}
+                </Typography>
+              ))}
+            </ul>
+          </>
         )}
         <Box
         // style={{ maxHeight: "24rem", overflowY: "scroll", overflowX: "hidden" }}
@@ -433,7 +461,7 @@ const PremiumImg = ({
           <ul
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fill, minmax(95px, 1fr))",
               gap: "16px",
             }}
           >
@@ -575,7 +603,7 @@ const PremiumImg = ({
           {!hasMore && <Typography textAlign="center">No more images available.</Typography>}
         </Box>
       </Box>
-    </Box>
+    </Box >
   );
 };
 

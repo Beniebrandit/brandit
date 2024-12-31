@@ -40,7 +40,7 @@ const DesignOnline = () => {
   const [productDetails, setProductDetails] = useState({
     width: "",
     height: "",
-    quantity: 1,
+    quantity: "",
     price: null,
   });
 

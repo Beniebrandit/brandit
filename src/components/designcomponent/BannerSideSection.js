@@ -12,6 +12,8 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ReactComponent as Sidebarsetting } from "../../asset/images/sidebar_setting.svg";
 import { ReactComponent as Eye } from "../../asset/images/Eye.svg";
+import { Circles } from "react-loader-spinner";
+import { RingLoader } from "react-spinners";
 
 const BannerSideSection = ({
   onToggleAccordion,
@@ -24,6 +26,8 @@ const BannerSideSection = ({
 }) => {
   const [isAccordionOpen, setIsAccordionOpen] = useState(true);
   const [finalProductData, setFinalProductData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [displayedPrice, setDisplayedPrice] = useState(productDetails.price);
   const theme = useTheme();
 
   // Toggle Accordion
@@ -50,6 +54,23 @@ const BannerSideSection = ({
       });
     }
   }, [storedPayload, alldata]);
+
+  useEffect(() => {
+    // If productDetails is still loading, use the initial values from finalProductData
+    if (productDetails?.price === null && finalProductData?.price) {
+      setIsLoading(true);
+      const timeout = setTimeout(() => {
+        setIsLoading(false);
+        setDisplayedPrice(finalProductData.price);
+      }, 3000);
+     console.log("1",1)
+      return () => clearTimeout(timeout); // Cleanup the timeout
+    } else if (productDetails?.price !== null && productDetails?.quantity > 0) {
+      // If productDetails price is available, use that
+     console.log("2",2)
+      setDisplayedPrice(productDetails.price);
+    }
+  }, [productDetails?.price, productDetails?.quantity, finalProductData?.price, finalProductData?.quantity]);
 
   //console.log("finalProductData", finalProductData);
   //console.log("productDetails", productDetails);
@@ -91,89 +112,112 @@ const BannerSideSection = ({
         </AccordionSummary>
         <AccordionDetails>
           <Divider />
-          <Box sx={{ margin: "auto", marginTop: "1rem", position: "relative" }}>
+          {isLoading ? (
             <Box
               sx={{
-                display: "grid",
-                gridTemplateColumns: "1fr",
-                gap: "1rem",
-                backgroundColor: "white",
-                borderRadius: "1rem",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                margin: "auto",
+                height: "35rem",
+                width: "100%",
               }}
             >
-              {/* Material Section */}
-              <Box sx={{ display: "grid", gap: "6px" }}>
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                  <Box>
-                    <Typography sx={{ color: "#3F5163", fontSize: "16px", fontWeight: 500 }}>Material</Typography>
-                    <Typography sx={{ fontSize: "16px", color: "#868686" }}>{alldata?.name}</Typography>
-                  </Box>
-                  <Box sx={{ display: "grid", paddingLeft: "2px" }} onClick={OpenConfig}>
-                    <Sidebarsetting style={{ paddingLeft: "8px", height: "23px" }} />
-                    <Typography sx={{ fontSize: "16px", color: "#3F5163", fontWeight: 400 }}>Config</Typography>
-                  </Box>
-                </Box>
-              </Box>
-
-              {/* Size Section */}
-              <Box>
-                <Typography sx={{ color: "#3F5163", fontSize: "16px", fontWeight: 500 }}>Size</Typography>
-                <Typography sx={{ fontSize: "16px", color: "#868686" }}>
-                  {productDetails?.width == "" ? finalProductData?.width : productDetails?.width || "N/A"}" W X{" "}
-                  {productDetails?.height == "" ? finalProductData?.height : productDetails?.height || "N/A"}" H
-                </Typography>
-              </Box>
-
-              {/* Quantity Section */}
-              <Box>
-                <Typography sx={{ color: "#3F5163", fontSize: "16px", fontWeight: 500 }}>Quantity</Typography>
-                <Typography sx={{ fontSize: "16px", color: "#868686" }}>
-                  {productDetails?.quantity == "" ? finalProductData?.quantity : productDetails?.quantity || 1} qty
-                </Typography>
-              </Box>
-
-              {/* Price Section */}
-              <Box>
-                <Typography sx={{ color: "#3F5163", fontSize: "16px", fontWeight: 500 }}>Price</Typography>
-                <Typography sx={{ fontSize: "16px", color: "#868686" }}>
-                  <span style={{ color: "#E0CE8F" }}>
-                    ${finalProductData?.price || productDetails?.price || "0.00"}
-                  </span>{" "}
-                  each
-                </Typography>
-              </Box>
-
-              {/* View Proof */}
-              <Box sx={{ display: "flex" }}>
-                <Eye style={{ width: "25px", height: "auto" }} />
-                &nbsp;
-                <Typography
-                  onClick={() => setShowSection(false)}
-                  sx={{ color: "#3F5163", fontWeight: "bold", fontSize: "20px", cursor: "pointer" }}
-                >
-                  View Proof
-                </Typography>
-              </Box>
-
-              <Divider />
-
-              {/* Save & Continue */}
-              <Button
+              <RingLoader color="#3F5163" loading size={70} speedMultiplier={1} />
+            </Box>
+          ) : (
+            <Box sx={{ margin: "auto", marginTop: "1rem", position: "relative" }}>
+              <Box
                 sx={{
-                  borderRadius: "10px",
-                  height: "50px",
-                  color: "white",
-                  backgroundColor: "#3F5163",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "#3F5163",
-                  },
+                  display: "grid",
+                  gridTemplateColumns: "1fr",
+                  gap: "1rem",
+                  backgroundColor: "white",
+                  borderRadius: "1rem",
                 }}
               >
-                Save & Continue
-              </Button>
+                {/* Material Section */}
+                <Box sx={{ display: "grid", gap: "6px" }}>
+                  <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                    <Box>
+                      <Typography sx={{ color: "#3F5163", fontSize: "16px", fontWeight: 500 }}>Material</Typography>
+                      <Typography sx={{ fontSize: "16px", color: "#868686" }}>{alldata?.name}</Typography>
+                    </Box>
+                    <Box sx={{ display: "grid", paddingLeft: "2px" }} onClick={OpenConfig}>
+                      <Sidebarsetting style={{ paddingLeft: "8px", height: "23px" }} />
+                      <Typography sx={{ fontSize: "16px", color: "#3F5163", fontWeight: 400 }}>Config</Typography>
+                    </Box>
+                  </Box>
+                </Box>
+
+                {/* Size Section */}
+                <Box>
+                  <Typography sx={{ color: "#3F5163", fontSize: "16px", fontWeight: 500 }}>Size</Typography>
+                  <Typography sx={{ fontSize: "16px", color: "#868686" }}>
+                    {productDetails?.width == "" ? finalProductData?.width : productDetails?.width || "N/A"}" W X{" "}
+                    {productDetails?.height == "" ? finalProductData?.height : productDetails?.height || "N/A"}" H
+                  </Typography>
+                </Box>
+
+                {/* Quantity Section */}
+                <Box>
+                  <Typography sx={{ color: "#3F5163", fontSize: "16px", fontWeight: 500 }}>Quantity</Typography>
+                  <Typography sx={{ fontSize: "16px", color: "#868686" }}>
+                    {productDetails?.quantity == "" ? finalProductData?.quantity : productDetails?.quantity || 1} qty
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography sx={{ color: "#3F5163", fontSize: "16px", fontWeight: 500 }}>Price</Typography>
+                  <Typography sx={{ fontSize: "16px", color: "#868686" }}>
+                    <span style={{ color: "#E0CE8F" }}>
+                      $
+                      {(() => {
+                        // Check if productDetails is fully loaded or fallback to finalProductData
+                        if (productDetails?.price && productDetails?.quantity > 0) {
+                          return (productDetails?.price / productDetails?.quantity).toFixed(2);
+                        } else if (finalProductData?.price && finalProductData?.quantity > 0) {
+                          return (finalProductData?.price / finalProductData?.quantity).toFixed(2);
+                        } else {
+                          return "N/A";
+                        }
+                      })()}
+                    </span>{" "}
+                    each
+                  </Typography>
+                </Box>
+
+                {/* View Proof */}
+                <Box sx={{ display: "flex" }}>
+                  <Eye style={{ width: "25px", height: "auto" }} />
+                  &nbsp;
+                  <Typography
+                    onClick={() => setShowSection(false)}
+                    sx={{ color: "#3F5163", fontWeight: "bold", fontSize: "20px", cursor: "pointer" }}
+                  >
+                    View Proof
+                  </Typography>
+                </Box>
+
+                <Divider />
+
+                {/* Save & Continue */}
+                <Button
+                  sx={{
+                    borderRadius: "10px",
+                    height: "50px",
+                    color: "white",
+                    backgroundColor: "#3F5163",
+                    textTransform: "none",
+                    "&:hover": {
+                      backgroundColor: "#3F5163",
+                    },
+                  }}
+                >
+                  Save & Continue
+                </Button>
+              </Box>
             </Box>
-          </Box>
+          )}
         </AccordionDetails>
       </Accordion>
     </Box>

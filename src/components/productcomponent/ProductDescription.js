@@ -54,6 +54,10 @@ const ProductDescription = () => {
               "& .MuiTabs-indicator": {
                 display: "none",
               },
+              "& .MuiTabs-flexContainer": {
+                flexWrap: "wrap",
+                gap: "10px",
+              },
               mb: { xs: 2, sm: 3 },
               // width: "70rem",
             }}

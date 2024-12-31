@@ -136,17 +136,23 @@ code {
   /* Thumb and track color for Firefox */
 }
 
-
 .custom-scrollbar-container {
-  overflow-x: auto;
-  /* Allows horizontal scrolling if needed */
-  overflow-y: auto;
-  /* Allows vertical scrolling if needed */
+  overflow: auto;
   white-space: nowrap;
-  /* Prevents wrapping of content */
   max-width: 100%;
-  /* Ensures the container doesn't exceed the screen width */
   border: none !important;
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+  padding: 0px !important;
+}
+.custom-scrollbar-container::-webkit-scrollbar{
+  width: 0px,
+}
+.custom-scrollbar-container::-webkit-scrollbar-track {
+  background: transparent,
+}
+.custom-scrollbar-container::-webkit-scrollbar-thumb {
+  background: transparent,
 }
 
 .basic_tabs_example .css-heg063-MuiTabs-flexContainer {

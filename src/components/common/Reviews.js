@@ -110,7 +110,6 @@ const Reviews = ({ productId, hidereviewbtn }) => {
       setValue(averageRating);
 
       setAllReviews(allreviewss);
-      console.log(allreviewss, "allreviewss");
     } catch (error) {
       console.error("Error fetching review:", error);
     }

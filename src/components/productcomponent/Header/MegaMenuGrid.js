@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ProductService } from "../../../services/Product.service";
 import { useNavigate } from "react-router-dom";
-import dropdown from "../../../asset/images/chevron-down-svgrepo-com.svg"; 
+import dropdown from "../../../asset/images/chevron-down-svgrepo-com.svg";
 import "./MegaMenuGrid.css";
 import { Box } from "@mui/material";
 
@@ -95,7 +95,6 @@ const MegaMenu = () => {
     );
   };
 
-
   const renderCategoryProducts = (categoryName) => {
     const filteredProducts = allProduct.filter((product) => product.productCategory.parent_name === categoryName);
 
@@ -109,7 +108,7 @@ const MegaMenu = () => {
     const currentProduct = allProduct.find((product) => product.images?.[0]?.path === currentImage);
 
     return (
-      <Box sx={{ display: "flex", justifyContent: "space-between" ,gap:2}}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}>
         {renderMostPopular(categoryName)}
         <Box className="stander" sx={{ marginBottom: "15px" }}>
           {Object.entries(groupedProducts).map(([subCategory, products], index) => (
@@ -122,19 +121,18 @@ const MegaMenu = () => {
                 {subCategory}
               </h4>
               <Box>
-
-              {products.map((product, itemIndex) => (
-                <li
-                  key={itemIndex}
-                  style={{ paddingBottom: "5px" }}
-                  onMouseEnter={() => setCurrentImage(product.images?.[0]?.path || defaultImage)}
-                  onClick={() => navigate(`/product/${product.id}`)}
-                >
-                  <a href="#" style={{ fontSize: "14px" }}>
-                    {product.name}
-                  </a>
-                </li>
-              ))}
+                {products.map((product, itemIndex) => (
+                  <li
+                    key={itemIndex}
+                    style={{ paddingBottom: "5px" }}
+                    onMouseEnter={() => setCurrentImage(product.images?.[0]?.path || defaultImage)}
+                    onClick={() => navigate(`/product/${product.id}`)}
+                  >
+                    <a href="#" style={{ fontSize: "14px" }}>
+                      {product.name}
+                    </a>
+                  </li>
+                ))}
               </Box>
             </div>
           ))}
@@ -162,9 +160,12 @@ const MegaMenu = () => {
     );
   };
 
-function ClickProduct(id) {
-  navigate(`/product/${id}`);
-}
+  function ClickProduct(id) {
+    if (id) {
+      console.log("id", id);
+      navigate(`/product/${id}`);
+    }
+  }
   return (
     <ul className="exo-menu">
       {menuItems.map((menu, index) => (

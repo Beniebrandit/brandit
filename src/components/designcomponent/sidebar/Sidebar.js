@@ -95,21 +95,10 @@ const Sidebar = ({
   const dialogRef = useRef(null);
   const [selectedSource, setSelectedSource] = useState(null);
   const [selectedSourceToDelete, setSelectedSourceToDelete] = useState(null);
-  //  const [productDetails, setProductDetails] = useState({
-  //    width: "",
-  //    height: "",
-  //    quantity: 1,
-  //    price: 0,
-  //  });
-  //const [selectedSubCatId, setSelectedSubCatId] = useState([]);
-  //const [selectedCard, setSelectedCard] = useState({});
-  //const [payload, setPayload] = useState({
-  //  productId: null,
-  //  width: "",
-  //  height: "",
-  //  subCatId: [],
-  //  quantity: 1,
-  //});
+  const [selectedimg, setSelectedimg] = useState([]);
+  const [pendingImages, setPendingImages] = useState([]);
+  const source = "premium";
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -155,10 +144,19 @@ const Sidebar = ({
     handleClickOpen();
   };
 
-  // When calling selectImage
   const handleSelectImage = () => {
     if (expandedImageIndex !== null && selectedSource) {
-      selectImage(expandedImageIndex, selectedSource); // Pass the stored source here
+      selectImage(expandedImageIndex, selectedSource); // Perform your custom action
+
+      // Add pending images to selectedimg
+      const updatedSelectedImages = [...selectedimg, ...pendingImages];
+
+      // Update state and local storage
+      setSelectedimg(updatedSelectedImages);
+      localStorage.setItem("selectedImages", JSON.stringify(updatedSelectedImages));
+
+      // Clear pending images after they are processed
+      setPendingImages([]);
     }
   };
 
@@ -188,12 +186,25 @@ const Sidebar = ({
     }
   };
 
-  const handlePremiumImage = (index, img) => {
-    images = `${process.env.REACT_APP_API_BASE_URL}/${img}`;
-    setExpandImage(images);
-    setExpandedImageIndex(index);
-    handleClickOpen();
+  const handleOpentoAdd = (item) => {
+    const selectedImage = {
+      id: item.id,
+      title: item?.title,
+      thumbnail_url: item?.thumbnail_url,
+      type: source, // Use 'premium' or other identifier for media type
+    };
+
+    // Store the received image in the pending state
+    setPendingImages((prevPending) => [...prevPending, selectedImage]);
   };
+
+  // Load data from local storage on component mount
+  useEffect(() => {
+    const savedImages = localStorage.getItem("selectedImages");
+    if (savedImages) {
+      setSelectedimg(JSON.parse(savedImages));
+    }
+  }, []);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -228,7 +239,7 @@ const Sidebar = ({
             background: "#fff",
             zIndex: "3",
           }}
-          //ref={tabRef} // Reference to the entire box that holds the tabs and panel
+        //ref={tabRef} // Reference to the entire box that holds the tabs and panel
         >
           <Tabs
             orientation="vertical"
@@ -356,15 +367,12 @@ const Sidebar = ({
                     dropdata={dropdata}
                   />
                 </TabPanel>
-                <TabPanel value={value} index={2} style={{ maxWidth: "24rem", padding: "0px" }} className="cust-panel">
+                <TabPanel value={value} index={2} style={{ maxWidth: "21rem", padding: "0px" }} className="cust-panel">
                   <PremiumImg
-                    premiumimg={premiumimg}
-                    selectImage={selectImage}
-                    images={images}
                     handleExpand={handleExpand}
-                    vectorimage={vectorimage}
                     setPremiumimg={setPremiumimg}
-                    handlePremiumImage={handlePremiumImage}
+                    handleOpentoAdd={handleOpentoAdd}
+                    selectedimg={selectedimg}
                   />
                 </TabPanel>
                 <TabPanel value={value} index={3} style={{ height: "15rem" }}>

@@ -31,39 +31,39 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { ProductCategoryService } from "../../services/ProductCategory.service";
 import { authHeader } from "../../library/authHeader";
 import { Circles } from "react-loader-spinner";
-import BreadcrumbSection from "../common/BreadcrumbSection";
+ import BreadcrumbSection from "../common/BreadcrumbSection";
 
 // const url = `https://flagg.devlopix.com/api`;
 // const token = `6|q8mTawTdGKbRdLazOGLcm1Y0zJe5ks4IPUWRJNIR13495c0c`
 
-const Product = ({ productname, setLongDescription, setProductId, setPricePerProduct, ...props }) => {
+const Product = ({
+  productname,
+  setLongDescription,
+  setProductId,
+  setPricePerProduct,
+  payload,
+  setPayload,
+  setPrice,
+  price,
+  ...props
+}) => {
   const [count, setCount] = useState(1);
   const [value, setValue] = useState(0);
   const [alldata, setAllData] = useState();
 
   const [selectedCard, setSelectedCard] = useState({});
 
-  // New state to store selected width, height, and subCat ids
   const [selectedWidth, setSelectedWidth] = useState("");
   const [selectedHeight, setSelectedHeight] = useState("");
   const [selectedSubCatId, setSelectedSubCatId] = useState([]);
-  const [price, setPrice] = useState();
   const [rating, setRating] = useState();
   const [loadingPrice, setLoadingPrice] = useState(true);
-
-  const [payload, setPayload] = useState({
-    productId: null,
-    width: "",
-    height: "",
-    subCatId: [],
-  });
 
   const decrement = () => {
     if (count > 1) {
       setCount(count - 1);
     }
   };
-  // Use effect to set initial selected subcategory and capture their IDs
   useEffect(() => {
     if (alldata?.categories?.length > 0) {
       const initialSelection = {};
@@ -71,7 +71,6 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
 
       alldata?.categories?.forEach((category) => {
         if (category?.subCategories?.length > 0) {
-          // Set the first subcategory as the default selected card
           const firstSubCat = category.subCategories[0];
           initialSelection[category.id] = firstSubCat.id;
 
@@ -181,8 +180,6 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
       // Set the average rating and number of reviews
       setValue(averageRating); // Assuming `setValue` is used to store the average rating
       setRating(reviews.length); // Sets the number of reviews
-
-      console.log(reviews.length, "reviews.length");
     } catch (error) {
       console.error("Error fetching review:", error);
     }
@@ -199,14 +196,9 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
     //});
   };
 
-  //  useEffect(() => {
-  //console.log(payload, "payload");
-  //  }, [payload]);
-
   useEffect(() => {
     if (!selectedWidth || !selectedHeight || selectedSubCatId.length === 0) {
       console.error("Payload is incomplete. Ensure width, height, and subcategory are selected.");
-      //setError("Please select all required options before proceeding.");
     } else {
       const payload = {
         width: selectedWidth,
@@ -227,7 +219,6 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
         })
         .catch((error) => {
           console.error("API call failed:", error);
-          //setError("Unable to fetch pricing. Please try again later.");
         })
         .finally(() => {
           setLoadingPrice(false);
@@ -267,7 +258,12 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
                       <img
                         src={process.env.REACT_APP_API_BASE_URL + item?.path}
                         alt=""
-                        style={{ width: "100%", height: "643px", borderRadius: "30px" }}
+                        style={{
+                          width: "100%",
+                          height: { md: "643px", xs: "auto" },
+                          maxHeight: "643px",
+                          borderRadius: "30px",
+                        }}
                       />
                     </SwiperSlide>
                   ))}
@@ -343,9 +339,9 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
           <Grid item xs={12} md={6}>
             <Box p={2}>
               <Typography
-                style={{
+                sx={{
                   color: "#3F5163",
-                  fontSize: "60px",
+                  fontSize: { xs: "40px",xl: "60px"  },
                   lineHeight: "auto",
                   fontWeight: "bold",
                   fontFamily: "Avenir LT Std",
@@ -402,7 +398,7 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
                   <Grid
                     item
                     sx={{
-                      width: { xs: "100%", sm: "60%" }, // Set the width to 60%
+                      width: { xs: "100%", sm: "60%" },
                       padding: "0px !important",
                     }}
                   >
@@ -490,7 +486,7 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
                   <Grid
                     item
                     sx={{
-                      width: "40%", // Set the width to 40%
+                      width: "40%",
                       padding: "0px !important",
                       display: "flex",
                       flexDirection: "column",
@@ -515,7 +511,7 @@ const Product = ({ productname, setLongDescription, setProductId, setPricePerPro
                         border: "1px solid #868686",
                         width: { xs: "100%", sm: "60%" },
                         marginTop: "20px",
-                        height: "53%",
+                        height: "60px",
                         borderRadius: "10px",
                         display: "flex",
                         alignItems: "center",
