@@ -31,7 +31,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { ProductCategoryService } from "../../services/ProductCategory.service";
 import { authHeader } from "../../library/authHeader";
 import { Circles } from "react-loader-spinner";
- import BreadcrumbSection from "../common/BreadcrumbSection";
+import BreadcrumbSection from "../common/BreadcrumbSection";
 
 // const url = `https://flagg.devlopix.com/api`;
 // const token = `6|q8mTawTdGKbRdLazOGLcm1Y0zJe5ks4IPUWRJNIR13495c0c`
@@ -258,12 +258,7 @@ const Product = ({
                       <img
                         src={process.env.REACT_APP_API_BASE_URL + item?.path}
                         alt=""
-                        style={{
-                          width: "100%",
-                          height: { md: "643px", xs: "auto" },
-                          maxHeight: "643px",
-                          borderRadius: "30px",
-                        }}
+                        style={{ width: "100%", height: "643px", borderRadius: "30px" }}
                       />
                     </SwiperSlide>
                   ))}
@@ -341,7 +336,7 @@ const Product = ({
               <Typography
                 sx={{
                   color: "#3F5163",
-                  fontSize: { xs: "40px",xl: "60px"  },
+                  fontSize: { xs: "40px", xl: "60px" },
                   lineHeight: "auto",
                   fontWeight: "bold",
                   fontFamily: "Avenir LT Std",
@@ -356,9 +351,8 @@ const Product = ({
               >
                 <Rating style={{ color: "#F6AA03" }} name="simple-controlled" value={value} readOnly />
                 &nbsp;&nbsp;&nbsp;
-                <Typography sx={{ color: "#3F5163", display: "inline-block", paddingTop: "2px" }}>{`(${
-                  rating || " "
-                })`}</Typography>
+                <Typography sx={{ color: "#3F5163", display: "inline-block", paddingTop: "2px" }}>{`(${rating || " "
+                  })`}</Typography>
               </a>
               <Typography
                 style={{

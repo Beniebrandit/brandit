@@ -8,6 +8,12 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 import useDrivePicker from "react-google-drive-picker";
 import DropboxChooser from "react-dropbox-chooser";
+import { gapi } from 'gapi-script';
+
+const CLIENT_ID = "1062247369631-2i266asc9rltsjaknplpc6pl079ji3r1.apps.googleusercontent.com";
+const API_KEY = "AIzaSyDyHd1C_t-voUaaMejrVvL9eMnKa9QfNtc";
+const SCOPES = "https://www.googleapis.com/auth/drive.readonly";
+
 const MyUpload = ({
   handleImageChange,
   selectedFile,
@@ -24,69 +30,65 @@ const MyUpload = ({
   const [openPicker, data, authResponse] = useDrivePicker();
   const [accessToken, setAccessToken] = useState(null);
   const [drivedata, setDriveData] = useState([]);
+  const [errorMessage, setErrorMessage] = useState(null);
+
   let [thumbnail, setThbumnail] = React.useState("");
   const APP_KEY = "3astslwrlzfkcvc";
-  const refreshAccessToken = async () => {
-    const refreshToken =
-      "1//04UzctwiZsGc-CgYIARAAGAQSNwF-L9IrUqH-vptZxFZKC66P-yHu45GKRaTwQs7DSlLP08ajzINJzGiZ-TLMNoWs-96EM3_Kt8k"; // Update with your actual refresh token
-    const clientId = "1062247369631-2i266asc9rltsjaknplpc6pl079ji3r1.apps.googleusercontent.com"; // Update with your actual client ID
-    const clientSecret = "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"; // Update with your actual client secret
 
-    try {
-      const response = await fetch("https://oauth2.googleapis.com/token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-          grant_type: "refreshToken",
-          refresh_token: refreshToken,
-          client_id: clientId,
-          client_secret: clientSecret,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          `HTTP error! Status: ${response.status}, Error: ${errorData.error}, Description: ${errorData.error_description}`
-        );
+  useEffect(() => {
+    const loadScripts = async () => {
+      try {
+        const pickerScript = document.createElement("script");
+        pickerScript.src = "https://apis.google.com/js/api.js";
+        pickerScript.onload = () => gapi.load("client:auth2", initClient);
+        pickerScript.onerror = () => setErrorMessage("Error loading Google API scripts.");
+        document.body.appendChild(pickerScript);
+      } catch (error) {
+        setErrorMessage("Failed to load scripts.");
       }
+    };
 
-      const data = await response.json();
-      setAccessToken(data.access_token);
-    } catch (error) {
-      console.error("Failed to refresh access token:", error.message);
-    }
-  };
+    const initClient = async () => {
+      try {
+        await gapi.client.init({
+          apiKey: API_KEY,
+          clientId: CLIENT_ID,
+          discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
+          scope: SCOPES,
+        });
+      } catch (error) {
+        setErrorMessage("Failed to initialize Google API.");
+      }
+    };
 
-  const handleOpenPicker = async () => {
-    await refreshAccessToken();
+    loadScripts();
+  }, []);
 
-    openPicker({
-      clientId: "YOUR_CLIENT_ID",
-      developerKey: "YOUR_DEVELOPER_KEY",
-      viewId: "DOCS_IMAGES",
-      showUploadView: true,
-      showUploadFolders: true,
-      supportDrives: true,
-      multiselect: true,
-      callbackFunction: (data) => {
-        if (data.action === "cancel") return;
-
-        // Only set drive data if docs is an array
-        if (Array.isArray(data?.docs) && data?.docs?.length > 0) {
-          const driveFiles = data.docs.map((file) => ({
-            name: file.name,
-            embedUrl: file.embedUrl,
-            id: file.id,
-          }));
-          setDriveData((prevDriveData) => [...prevDriveData, ...driveFiles]);
+  const openDrivePicker = () => {
+    gapi.auth.authorize(
+      { client_id: CLIENT_ID, scope: SCOPES },
+      (response) => {
+        if (response.error) {
+          setErrorMessage("Error getting auth token.");
         } else {
-          console.error("No valid files found in the picker response");
+          gapi.load("picker", () => {
+            const picker = new window.google.picker.PickerBuilder()
+              .setOAuthToken(response.access_token)
+              .setDeveloperKey(API_KEY)
+              .addView(new window.google.picker.DocsView().setIncludeFolders(true).setSelectFolderEnabled(false))
+              .setCallback((data) => {
+                if (data.action === window.google.picker.Action.PICKED) {
+                  const fileId = data.docs[0].id;
+                  const fileUrl = `https://drive.google.com/uc?id=${fileId}`;
+                  setDriveData((prev) => [...prev, { source: "drive", url: fileUrl }]);
+                }
+              })
+              .build();
+            picker.setVisible(true);
+          });
         }
-      },
-    });
+      }
+    );
   };
 
   useEffect(() => {
@@ -95,7 +97,6 @@ const MyUpload = ({
       source: "upload", // Indicates this image is from the selectedFile
       url: file,
     }));
-    console.log("drivedata", drivedata);
 
     const driveFiles = drivedata?.map((file) => ({
       source: "drive", // Indicates this image is from Google Drive
@@ -109,50 +110,37 @@ const MyUpload = ({
 
     // Combine all three arrays
     const combined = [...selectedFiles, ...driveFiles, ...dropboxFiles];
-
-    setCombinedImages(combined); // Update the state with the combined array
+    setCombinedImages(combined);  // Update the state with the combined array
   }, [selectedFile, drivedata, dropdata]);
-
-  useEffect(() => {
-    if (data) {
-      data?.docs?.map((i) => console.log(i, "i"));
-      console.log(data.docs, "data.docs");
-      console.log(data, "data");
-    }
-  }, [data]);
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
 
-    // Create a loading state array: existing files are false, new files are true
     const newLoadingState = Array(selectedFile.length).fill(false).concat(Array(files.length).fill(true));
     setLoading(newLoadingState);
 
-    handleImageChange(event); // Call parent function to handle file input
+    handleImageChange(event);
 
     files.forEach((file, index) => {
       setTimeout(() => {
         setLoading((prev) => {
           const newState = [...prev];
-          newState[selectedFile.length + index] = false; // Set loading to false for each new image
+          newState[selectedFile.length + index] = false;
           return newState;
         });
-      }, 2000); // Simulate 2-second loading for each image
+      }, 2000); // Simulate loading for each new image
     });
   };
 
   const handleDeleteImage = (index, source) => {
-    handleDeleteClick(index, source); // Call parent function to delete image
+    handleDeleteClick(index, source);
     setLoading((prev) => {
       const updatedLoading = prev.filter((_, i) => i !== index);
       return updatedLoading.map((_, idx) => (idx < selectedFile.length ? false : true)); // Reset loaders
     });
   };
-  //const handleDeleteDropboxFile = (index) => {
-  //  setDropData(dropdata.filter((_, i) => i !== index));
-  //};
 
-  const handleMicrosoft = () => {};
+  const handleMicrosoft = () => { };
   return (
     <>
       <Box
@@ -276,7 +264,7 @@ const MyUpload = ({
               cursor: "pointer",
               zIndex: "3",
             }}
-            onClick={() => handleOpenPicker()}
+            onClick={() => openDrivePicker()}
           ></Box>
           <Googledrive style={{ width: "40px", height: "100%", pointerEvents: "none" }} />
         </Box>

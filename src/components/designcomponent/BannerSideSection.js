@@ -27,7 +27,9 @@ const BannerSideSection = ({
   const [isAccordionOpen, setIsAccordionOpen] = useState(true);
   const [finalProductData, setFinalProductData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [displayedPrice, setDisplayedPrice] = useState(productDetails.price);
+  const [displayedPrice, setDisplayedPrice] = useState(null);
+  const [isInitialPriceSet, setIsInitialPriceSet] = useState(false);
+
   const theme = useTheme();
 
   // Toggle Accordion
@@ -56,21 +58,23 @@ const BannerSideSection = ({
   }, [storedPayload, alldata]);
 
   useEffect(() => {
-    // If productDetails is still loading, use the initial values from finalProductData
-    if (productDetails?.price === null && finalProductData?.price) {
+    if (!isInitialPriceSet && finalProductData?.price && finalProductData?.quantity > 0) {
       setIsLoading(true);
       const timeout = setTimeout(() => {
         setIsLoading(false);
-        setDisplayedPrice(finalProductData.price);
+        setDisplayedPrice((finalProductData.price / finalProductData.quantity).toFixed(2));
+        setIsInitialPriceSet(true);
       }, 3000);
-     console.log("1",1)
-      return () => clearTimeout(timeout); // Cleanup the timeout
-    } else if (productDetails?.price !== null && productDetails?.quantity > 0) {
-      // If productDetails price is available, use that
-     console.log("2",2)
-      setDisplayedPrice(productDetails.price);
+
+    } else if (isInitialPriceSet && productDetails?.price && productDetails?.quantity > 0) {
+      // Update price from productDetails after initial price is set
+      const updateTimeout = setTimeout(() => {
+        setDisplayedPrice((productDetails.price / productDetails.quantity).toFixed(2));
+      }, 1700); // Delay by 500ms (adjust as needed)
+
+      return () => clearTimeout(updateTimeout); // Cleanup timeout
     }
-  }, [productDetails?.price, productDetails?.quantity, finalProductData?.price, finalProductData?.quantity]);
+  }, [finalProductData, productDetails, isInitialPriceSet]);
 
   //console.log("finalProductData", finalProductData);
   //console.log("productDetails", productDetails);
@@ -92,11 +96,11 @@ const BannerSideSection = ({
         top: "5rem",
         color: isAccordionOpen
           ? {
-              xs: "transparent",
-              sm: "transparent",
-              md: "#3F5163",
-              lg: "#3F5163",
-            }
+            xs: "transparent",
+            sm: "transparent",
+            md: "#3F5163",
+            lg: "#3F5163",
+          }
           : "transparent", // fully transparent when accordion is closed
         borderRadius: "6px",
         zIndex: "1000",
@@ -170,17 +174,7 @@ const BannerSideSection = ({
                   <Typography sx={{ color: "#3F5163", fontSize: "16px", fontWeight: 500 }}>Price</Typography>
                   <Typography sx={{ fontSize: "16px", color: "#868686" }}>
                     <span style={{ color: "#E0CE8F" }}>
-                      $
-                      {(() => {
-                        // Check if productDetails is fully loaded or fallback to finalProductData
-                        if (productDetails?.price && productDetails?.quantity > 0) {
-                          return (productDetails?.price / productDetails?.quantity).toFixed(2);
-                        } else if (finalProductData?.price && finalProductData?.quantity > 0) {
-                          return (finalProductData?.price / finalProductData?.quantity).toFixed(2);
-                        } else {
-                          return "N/A";
-                        }
-                      })()}
+                      ${displayedPrice || "N/A"}
                     </span>{" "}
                     each
                   </Typography>

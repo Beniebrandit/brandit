@@ -6,6 +6,7 @@ import HelpIcon from "@mui/icons-material/Help";
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 import axios from "axios";
 import { PopularSearches } from "../../common/Constant";
+import { InfinitySpin, ThreeCircles } from "react-loader-spinner";
 
 const PremiumImg = ({
   setPremiumimg,
@@ -599,7 +600,12 @@ const PremiumImg = ({
                 </>
               ))}
           </ul>
-          {loading && <Typography textAlign="center">Loading...</Typography>}
+          {loading && <Typography sx={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", height: "auto", width: "7rem" }}><InfinitySpin
+            visible={true}
+            width="200"
+            color="#4fa94d"
+            ariaLabel="infinity-spin-loading"
+          /></Typography>}
           {!hasMore && <Typography textAlign="center">No more images available.</Typography>}
         </Box>
       </Box>
