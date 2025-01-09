@@ -162,16 +162,22 @@ const DesignOnline = () => {
     }
   };
 
+  useEffect(() => {
+    if (premiumimg) {
+      AddImage(premiumimg); // Perform the action when premiumimg updates
+      openImgEditor();
+    }
+  }, [premiumimg]);
+
+
   const selectImage = (index, source) => {
-    let selectedImageUrl = "";
-    if (source === "premium" && premiumimg && premiumimg.length > 0) {
-      const selectedImage = premiumimg;
-      if (selectedImage) {
-        selectedImageUrl = `${process.env.REACT_APP_API_BASE_URL}${selectedImage}`;
-        AddImage(selectedImage); // Use the full URL here
-        openImgEditor();
+    // console.log("source", source)
+    if (source === "premium") {
+      if (premiumimg && premiumimg.length > 0) {
+        // console.log("premiumimg state will trigger the action through useEffect");
+        return; // useEffect will handle it
       } else {
-        console.error("No valid premium image at premium index", index);
+        console.error("No valid premium image found.");
       }
     } else if (source === "upload" && selectedFile && selectedFile.length > 0) {
       const selectedImage = selectedFile[index];
@@ -253,7 +259,7 @@ const DesignOnline = () => {
       if (response.length > 0) {
         // Automatically set the first product as the default selection
         setgetId(id);
-        console.log("Initial product ID set:", id);
+        // console.log("Initial product ID set:", id);
       }
     } catch (error) {
       console.error("Error fetching all products:", error);
@@ -266,7 +272,7 @@ const DesignOnline = () => {
 
   useEffect(() => {
     if (getid) {
-      console.log("getid changed:", getid);
+      // console.log("getid changed:", getid);
       getApi(getid);
     }
   }, [getid]);
@@ -316,7 +322,7 @@ const DesignOnline = () => {
   useEffect(() => {
     localStorage.removeItem("productDetails");
     localStorage.removeItem("selectedCard");
-    console.log("LocalStorage cleared on navigation to", location.pathname);
+    // console.log("LocalStorage cleared on navigation to", location.pathname);
   }, [location.pathname]);
 
   return (
@@ -351,7 +357,7 @@ const DesignOnline = () => {
             setgetId={setgetId}
             storedPayload={storedPayload}
             sx={{
-              width: { xs: "100px", sm: "100%" }, // Full width on xs, fixed width on sm and up
+              width: { xs: "100px", sm: "100%" },
               position: { xs: "relative", sm: "fixed" },
               left: { sm: 0 },
               top: { xs: 0, sm: "5rem" },
@@ -382,7 +388,6 @@ const DesignOnline = () => {
             },
             marginTop: "20px",
             marginLeft: { sm: "197px" },
-            // marginRight: { sm: isAccordionOpen ? "265px" : "0px" },
             padding: { xs: "10px", sm: "20px" },
             position: "relative",
             boxShadow: { sm: "0px 5px 30px -15px" },
@@ -398,7 +403,6 @@ const DesignOnline = () => {
               sx={{
                 backgroundColor: "#e1e1e1",
                 borderRadius: "10px",
-                // margin: "10px 0px 0px 0px",
                 justifyContent: "center",
                 alignItems: "center",
                 height: "40px",
@@ -457,7 +461,7 @@ const DesignOnline = () => {
                 defaultTabId={TABS.ANNOTATE}
                 defaultToolId={TOOLS.TEXT}
                 sx={{
-                  width: { xs: "100%", sm: "20rem" }, // Ensure FilerobotImageEditor resizes on small screens
+                  width: { xs: "100%", sm: "20rem" },
                 }}
               />
             )}

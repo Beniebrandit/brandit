@@ -374,6 +374,7 @@ const HomeFooter = () => {
             alignItems: "center",
             height: "100%",
             flexWrap: "wrap",
+            paddingRight: { xs: "24px", lg: "90px !important" }
           }}
         >
           <Grid item md={6} sm={12} xs={12}>
@@ -398,7 +399,7 @@ const HomeFooter = () => {
                   borderRadius: "0px !important",
                   marginTop: "10px",
                   backgroundColor: "white",
-                   "& .MuiInputBase-input": { padding: "6.5px 14px !important" },
+                  "& .MuiInputBase-input": { padding: "6.5px 14px !important" },
                 }}
               />
               <Button
@@ -433,9 +434,9 @@ const HomeFooter = () => {
                 brand is at stake ,why wait?
               </Typography>
             </Grid>
-            <Grid item md={4} sm={12} xs={12}>
+            <Grid item md={4} sm={12} xs={12} sx={{ margin: "auto" }}>
               <Box
-                sx={{ display: "flex", margin: "auto", justifyContent: { sm: "center", xs: "left" }, height: "100%" }}
+                sx={{ display: { md: "flex", sm: "block" }, margin: "auto", justifyContent: { sm: "center", xs: "left" }, alignItems: "center", height: "100%" }}
               >
                 <Button
                   variant="contained"

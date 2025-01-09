@@ -11,6 +11,7 @@ import { InfinitySpin, ThreeCircles } from "react-loader-spinner";
 const PremiumImg = ({
   setPremiumimg,
   handleExpand,
+  selectImage,
   handleOpentoAdd,
   selectedimg,
 }) => {
@@ -144,10 +145,12 @@ const PremiumImg = ({
     [loading, hasMore, valuePremium, searchTerm, searchVector, offset, fetchMedia]
   );
 
-  const handleCategoryClick = (imageUrl, title, type) => {
+  const handleCategoryClick = (imageUrl, title, type, index) => {
     setSelectedImages((prev) => ({ ...prev, [type]: imageUrl }));
     setImageName((prev) => ({ ...prev, [type]: title }));
     setPremiumimg(imageUrl);
+    selectImage(index, source);
+    // console.log("imageUrl", imageUrl);
   };
 
   const OpentoSearch = (value) => {
@@ -167,30 +170,6 @@ const PremiumImg = ({
       fetchMedia(value, 0);
     }
   };
-  // const handleOpentoAdd = (item) => {
-  //   const selectedimages = {
-  //     id: item.id, // Unique ID
-  //     title: item?.title,
-  //     thumbnail_url: item?.thumbnail_url,
-  //     type: source, // 'premium' or other identifier for media type
-  //   };
-
-  //   // Update the state and local storage
-  //   setSelectedimg((prevData) => {
-  //     const updatedData = [...prevData, selectedimages];
-  //     // Save the updated data to local storage
-  //     localStorage.setItem("selectedImages", JSON.stringify(updatedData));
-  //     return updatedData;
-  //   });
-  // };
-
-  // // Load data from local storage on component mount
-  // useEffect(() => {
-  //   const savedImages = localStorage.getItem("selectedImages");
-  //   if (savedImages) {
-  //     setSelectedimg(JSON.parse(savedImages));
-  //   }
-  // }, []);
 
   return (
     <Box
@@ -473,7 +452,9 @@ const PremiumImg = ({
                     <Box
                       className="hovimg"
                       key={index}
-                      onClick={() => handleCategoryClick(item.thumbnail_url, item.title, "premium")}
+                      onClick={() => {
+                        handleCategoryClick(item.thumbnail_url, item.title, "premium", index);
+                      }}
                       style={{
                         cursor: "pointer",
                         padding: "5px",
@@ -540,7 +521,10 @@ const PremiumImg = ({
                   <Box
                     className="hovimg"
                     key={index}
-                    onClick={() => handleCategoryClick(item.thumbnail_url, item.title, "premium")}
+                    onClick={() => {
+                      handleCategoryClick(item.thumbnail_url, item.title, "premium", index);
+                    }}
+
                     style={{
                       cursor: "pointer",
                       padding: "5px",

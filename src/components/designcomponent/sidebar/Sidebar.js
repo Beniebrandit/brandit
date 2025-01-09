@@ -25,7 +25,6 @@ import Config from "./Config";
 import MyUpload from "./MyUpload";
 import Text from "./Text";
 import PremiumImg from "./PremiumImg";
-import { useLocation } from "react-router-dom";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -223,14 +222,12 @@ const Sidebar = ({
     <>
       <ClickAwayListener mouseEvent="onMouseDown" touchEvent="onTouchStart" onClickAway={handleClickAway}>
         <Box
-          // className="custom-scrollbar custom-scrollbar-container"
           sx={{
             marginTop: "20px",
             flexGrow: 1,
             display: "flex",
             height: "78vh",
-            boxShadow: "0px 5px 30px -15px", // Background color of the sidebar
-            // padding: "20px 0",
+            boxShadow: "0px 5px 30px -15px",
             position: "fixed",
             left: "0.5rem",
             top: "5rem",
@@ -247,8 +244,6 @@ const Sidebar = ({
             onChange={handleChange}
             aria-label="Vertical tabs example"
             sx={{
-              // borderRight: 1,
-              // borderColor: "divider",
               height: "80vh",
               "& .MuiTabs-indicator": {
                 display: "none !important",
@@ -370,6 +365,7 @@ const Sidebar = ({
                 <TabPanel value={value} index={2} style={{ maxWidth: "21rem", padding: "0px" }} className="cust-panel">
                   <PremiumImg
                     handleExpand={handleExpand}
+                    selectImage={selectImage}
                     setPremiumimg={setPremiumimg}
                     handleOpentoAdd={handleOpentoAdd}
                     selectedimg={selectedimg}

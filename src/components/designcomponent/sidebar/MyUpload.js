@@ -160,7 +160,7 @@ const MyUpload = ({
       source: "upload", // Indicates this image is from the selectedFile
       url: file,
     }));
-    console.log("drivedata", drivedata);
+    // console.log("drivedata", drivedata);
 
     const driveFiles = drivedata?.map((file) => ({
       source: "drive", // Indicates this image is from Google Drive
