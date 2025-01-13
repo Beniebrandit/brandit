@@ -23,7 +23,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
   const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedCard, setSelectedCard] = useState({});
   const [selectedSubCatId, setSelectedSubCatId] = useState([]);
-  const [isProductChanged, setIsProductChanged] = useState(false); 
+  const [isProductChanged, setIsProductChanged] = useState(false);
   const [eachProductPrice, setEachProductPrice] = useState("");
 
   //console.log("alldata", alldata);
@@ -149,6 +149,42 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
           subCatId: JSON.stringify(initialSubCatIds),
         })
       );
+    } else if (!savedProductDetails && !storedPayload && alldata) {
+      console.log("Initializing with default product data");
+
+      const newWidth = widthSizes?.[0]?.size || "";
+      const newHeight = heightSizes?.[0]?.size || "";
+      const initialSelection = {};
+      const initialSubCatIds = [];
+
+      alldata?.categories?.forEach((category) => {
+        if (category?.subCategories?.length > 0) {
+          const firstSubCat = category.subCategories[0];
+          initialSelection[category.id] = firstSubCat.id;
+          initialSubCatIds.push(firstSubCat.id);
+        }
+      });
+
+      setProductDetails({
+        width: newWidth,
+        height: newHeight,
+        quantity: 1,
+      });
+
+      setSelectedCard(initialSelection);
+      localStorage.setItem("selectedCard", JSON.stringify(initialSelection));
+      setSelectedSubCatId(initialSubCatIds);
+
+      localStorage.setItem(
+        "productDetails",
+        JSON.stringify({
+          width: newWidth,
+          height: newHeight,
+          quantity: 1,
+          subCatId: JSON.stringify(initialSubCatIds),
+          ProductId: alldata?.id,
+        })
+      );
     } else if (savedProductDetails) {
       const parsedDetails = JSON.parse(savedProductDetails);
       setProductDetails({
@@ -165,7 +201,9 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
         setSelectedSubCatId(Object.values(parsedSelectedCard).filter(Boolean));
       }
     }
-  }, [storedPayload, alldata]);
+  }, [storedPayload, alldata, widthSizes, heightSizes]);
+
+
 
   useEffect(() => {
     if (isProductChanged && alldata) {
@@ -258,55 +296,55 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
     }
   };
 
-useEffect(() => {
-  let isCancelled = false;
+  useEffect(() => {
+    let isCancelled = false;
 
-  // Show loader
-  setLoader(true);
+    // Show loader
+    setLoader(true);
 
-  const fetchPrice = async () => {
-    if (productDetails.width && productDetails.height && selectedSubCatId.length > 0) {
-      try {
-        const payload = {
-          width: productDetails.width,
-          height: productDetails.height,
-          subCatId: JSON.stringify(selectedSubCatId),
-          ProductId: alldata?.id,
-          quantity: productDetails.quantity,
-        };
+    const fetchPrice = async () => {
+      if (productDetails.width && productDetails.height && selectedSubCatId.length > 0) {
+        try {
+          const payload = {
+            width: productDetails.width,
+            height: productDetails.height,
+            subCatId: JSON.stringify(selectedSubCatId),
+            ProductId: alldata?.id,
+            quantity: productDetails.quantity,
+          };
 
-        const res = await ProductService.Dataprice(payload);
+          const res = await ProductService.Dataprice(payload);
 
-        if (!isCancelled) {
-          const totalPrice = res.data?.totalPrice || 50; // Default price fallback
-          setProductDetails((prev) => ({
-            ...prev,
-            price: totalPrice,
-          }));
-          setEachProductPrice((totalPrice / productDetails.quantity).toFixed(2));
+          if (!isCancelled) {
+            const totalPrice = res.data?.totalPrice || 50; // Default price fallback
+            setProductDetails((prev) => ({
+              ...prev,
+              price: totalPrice,
+            }));
+            setEachProductPrice((totalPrice / productDetails.quantity).toFixed(2));
+          }
+        } catch (error) {
+          console.error("Error fetching price:", error);
+          if (!isCancelled) {
+            setEachProductPrice("Error");
+          }
+        } finally {
+          if (!isCancelled) {
+            setLoader(false); // Hide loader after completion
+          }
         }
-      } catch (error) {
-        console.error("Error fetching price:", error);
-        if (!isCancelled) {
-          setEachProductPrice("Error");
-        }
-      } finally {
-        if (!isCancelled) {
-          setLoader(false); // Hide loader after completion
-        }
+      } else {
+        setLoader(false); // Hide loader if no valid input
       }
-    } else {
-      setLoader(false); // Hide loader if no valid input
-    }
-  };
+    };
 
-  const timeout = setTimeout(fetchPrice, 300);
+    const timeout = setTimeout(fetchPrice, 300);
 
-  return () => {
-    isCancelled = true;
-    clearTimeout(timeout); // Cleanup debounce
-  };
-}, [productDetails.width, productDetails.height, productDetails.quantity, selectedSubCatId]);
+    return () => {
+      isCancelled = true;
+      clearTimeout(timeout); // Cleanup debounce
+    };
+  }, [productDetails.width, productDetails.height, productDetails.quantity, selectedSubCatId]);
 
 
   return (

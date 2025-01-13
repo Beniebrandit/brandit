@@ -14,6 +14,7 @@ import { ReactComponent as Sidebarsetting } from "../../asset/images/sidebar_set
 import { ReactComponent as Eye } from "../../asset/images/Eye.svg";
 import { Circles } from "react-loader-spinner";
 import { RingLoader } from "react-spinners";
+import { ProductService } from "../../services/Product.service";
 
 const BannerSideSection = ({
   onToggleAccordion,
@@ -46,13 +47,38 @@ const BannerSideSection = ({
 
   // Set initial product data based on storedPayload
   useEffect(() => {
-    if (storedPayload) {
+    if (!storedPayload) {
+      console.log("No storedPayload found. Initializing default data.");
+
+      const newWidth = alldata?.productSizes?.[0]?.size || "";
+      const newHeight = alldata?.productSizes?.[0]?.size || "";
+
+      const initialSubCatIds = [];
+
+      alldata?.categories?.forEach((category) => {
+        if (category?.subCategories?.length > 0) {
+          const firstSubCat = category.subCategories[0];
+          initialSubCatIds.push(firstSubCat.id);
+        }
+      });
+      // setSelectedSubCatId(initialSubCatIds);
+
+      setFinalProductData({
+        width: newWidth,
+        height: newHeight,
+        quantity: 1,
+        price: 0,
+        ProductId: alldata?.id || null,
+        subCatId: JSON.stringify(initialSubCatIds), // Store subCatId
+      });
+    } else {
       setFinalProductData({
         width: storedPayload.width || "",
         height: storedPayload.height || "",
         quantity: storedPayload.quantity || 1,
         price: storedPayload.price || null,
         ProductId: alldata?.id || null,
+        subCatId: storedPayload.subCatId || "", // Ensure subCatId is included from storedPayload
       });
     }
   }, [storedPayload, alldata]);
@@ -66,15 +92,58 @@ const BannerSideSection = ({
         setIsInitialPriceSet(true);
       }, 3000);
 
+      return () => clearTimeout(timeout);
     } else if (isInitialPriceSet && productDetails?.price && productDetails?.quantity > 0) {
-      // Update price from productDetails after initial price is set
       const updateTimeout = setTimeout(() => {
         setDisplayedPrice((productDetails.price / productDetails.quantity).toFixed(2));
-      }, 1700); // Delay by 500ms (adjust as needed)
+      }, 1700);
 
-      return () => clearTimeout(updateTimeout); // Cleanup timeout
+      return () => clearTimeout(updateTimeout);
     }
   }, [finalProductData, productDetails, isInitialPriceSet]);
+
+  useEffect(() => {
+    const fetchPrice = async () => {
+      if (finalProductData.width && finalProductData.height && finalProductData.quantity > 0) {
+        setIsLoading(true);
+
+        try {
+          const payload = {
+            width: finalProductData.width,
+            height: finalProductData.height,
+            ProductId: finalProductData.ProductId,
+            quantity: finalProductData.quantity,
+            subCatId: finalProductData.subCatId, // Include subCatId in the payload
+          };
+
+          const res = await ProductService.Dataprice(payload);
+          const totalPrice = res.data?.totalPrice || 50;
+          setDisplayedPrice((totalPrice / finalProductData.quantity).toFixed(2)); // Calculate price per item
+        } catch (error) {
+          console.error("Error fetching price:", error);
+          setDisplayedPrice("Error");
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchPrice();
+  }, [finalProductData]);
+
+  useEffect(() => {
+    if (productDetails) {
+      setFinalProductData((prevData) => ({
+        ...prevData,
+        width: productDetails.width || prevData.width,
+        height: productDetails.height || prevData.height,
+        quantity: productDetails.quantity || prevData.quantity,
+        price: productDetails.price || prevData.price,
+        subCatId: productDetails.subCatId || prevData.subCatId,
+      }));
+    }
+  }, [productDetails]);
+
 
   //console.log("finalProductData", finalProductData);
   //console.log("productDetails", productDetails);
