@@ -440,6 +440,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
                 border: "1px solid #868686",
                 width: "45%",
                 marginTop: "20px",
+                marginBottom: "10px",
                 height: "auto",
                 borderRadius: "10px",
                 display: "flex",
@@ -480,9 +481,11 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
               sx={{
                 position: "relative",
                 mt: 1,
+                display: "inline",
                 "&:hover .hover-content": {
-                  display: "inline",
+                  display: "inline !important",
                 },
+
               }}
             >
               <Typography variant="body1" color="primary" sx={{ display: "inline-block" }}>

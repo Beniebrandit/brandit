@@ -104,7 +104,12 @@ const BannerSideSection = ({
 
   useEffect(() => {
     const fetchPrice = async () => {
-      if (finalProductData.width && finalProductData.height && finalProductData.quantity > 0) {
+      if (
+        finalProductData.width &&
+        finalProductData.height &&
+        finalProductData.quantity > 0 &&
+        finalProductData.subCatId
+      ) {
         setIsLoading(true);
 
         try {
@@ -128,8 +133,17 @@ const BannerSideSection = ({
       }
     };
 
-    fetchPrice();
-  }, [finalProductData]);
+    // Using a debounce to prevent rapid fetch calls during quick state changes
+    const debounceFetch = setTimeout(fetchPrice, 500);
+
+    return () => clearTimeout(debounceFetch);
+  }, [
+    finalProductData.width,
+    finalProductData.height,
+    finalProductData.quantity,
+    finalProductData.subCatId, // Track only relevant fields
+  ]);
+
 
   useEffect(() => {
     if (productDetails) {
@@ -145,7 +159,7 @@ const BannerSideSection = ({
   }, [productDetails]);
 
 
-  //console.log("finalProductData", finalProductData);
+  console.log("finalProductData", finalProductData);
   //console.log("productDetails", productDetails);
 
   return (
@@ -162,7 +176,7 @@ const BannerSideSection = ({
         position: "fixed",
         background: "#fff",
         right: "0.5rem",
-        top: "5rem",
+        top: "5.5rem",
         color: isAccordionOpen
           ? {
             xs: "transparent",

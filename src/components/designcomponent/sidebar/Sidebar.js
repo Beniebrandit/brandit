@@ -230,7 +230,7 @@ const Sidebar = ({
             boxShadow: "0px 5px 30px -15px",
             position: "fixed",
             left: "0.5rem",
-            top: "5rem",
+            top: "5.5rem",
             color: "#3F5163",
             borderRadius: "6px",
             background: "#fff",

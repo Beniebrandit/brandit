@@ -13,6 +13,9 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  ListItemText,
+  ListItemIcon,
+  Menu,
 } from "@mui/material";
 import main_logo from "../../asset/images/main_logo.png";
 import { ReactComponent as Help } from "../../asset/images/help.svg";
@@ -29,6 +32,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import CloseIcon from "@mui/icons-material/Close";
 import cart from '../../asset/images/design_cart.svg'
 import { Link } from "react-router-dom";
+import CheckIcon from "@mui/icons-material/Check";
 
 const HeaderDesign = ({ handleClickOpenLogin }) => {
   const [File, setFile] = React.useState("");
@@ -45,6 +49,28 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
   const [height, setHeight] = useState(10);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedItems, setSelectedItems] = useState({
+    "Show ruler": true,
+    "Show grid": true,
+  });
+
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleToggle = (item) => {
+    setSelectedItems((prev) => ({
+      ...prev,
+      [item]: !prev[item],
+    }));
+  };
 
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
@@ -107,7 +133,7 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
           borderBottom: "1px solid lightgray",
           position: "fixed",
           width: "100%",
-          padding: "10px 0px",
+          paddingTop: "10px",
           height: "auto",
           display: "flex",
           alignItems: "center",
@@ -133,64 +159,79 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
 
         <Box
           sx={{
-            // display: "grid",
-            // gridTemplateColumns:"0.3fr 1.7fr 1fr",
-            // width:"40rem",
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "left",
             alignItems: "center",
-            // margin: "auto",
+            width: { sm: "auto", xl: "50rem" }
           }}
         >
-          <Box sx={{ minWidth: 80 }} className="search11">
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label" sx={{ color: "black" }}>
-                File
-              </InputLabel>
-              <Select
-                IconComponent={(props) => <ExpandMoreIcon style={{ color: "black" }} />}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={File}
-                label="File"
-                onChange={handleChangeFile}
-                sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    border: "none",
-                  },
-                }}
+          <Box>
+            <Button
+              onClick={handleClick}
+              endIcon={<ExpandMoreIcon />}
+              sx={{
+                textTransform: "none",
+                color: "black",
+                // border: "1px solid #ddd",
+                // padding: "6px 12px",
+                minWidth: "100px",
+              }}
+            >
+              File
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                sx: { width: 200 },
+              }}
+            >
+              <MenuItem sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Typography>Undo</Typography>
+                <Typography>Ctrl+Z</Typography>
+              </MenuItem>
+              <MenuItem sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Typography>Redo</Typography>
+                <Typography>Ctrl+Y</Typography>
+              </MenuItem>
+              <Divider />
+              <MenuItem>Save</MenuItem>
+              <MenuItem>Save as copy</MenuItem>
+              <MenuItem>Load previous design</MenuItem>
+              <Divider />
+              <MenuItem
+                onClick={() => handleToggle("Show ruler")}
+                sx={{ display: "flex", justifyContent: "space-between" }}
               >
-                <MenuItem value={10} sx={{ display: "flex", justifyContent: "space-between" }}>
-                  <Typography>Undo</Typography>
-                  <Typography>Crtl+Z</Typography>
-                </MenuItem>
-                <MenuItem value={20} sx={{ display: "flex", justifyContent: "space-between" }}>
-                  <Typography>Redo</Typography>
-                  <Typography>Crtl+Y</Typography>
-                </MenuItem>
-                <Divider />
-                <MenuItem value={30}>Save</MenuItem>
-                <MenuItem value={30}>Save as copy</MenuItem>
-                <MenuItem value={30}>Load previous design</MenuItem>
-                <Divider />
-                <MenuItem value={30}>Show ruler</MenuItem>
-                <MenuItem value={30}>Show grid</MenuItem>
-              </Select>
-            </FormControl>
+                <ListItemText>Show ruler</ListItemText>
+                {selectedItems["Show ruler"] && (
+                  <ListItemIcon>
+                    <CheckIcon fontSize="small" />
+                  </ListItemIcon>
+                )}
+              </MenuItem>
+              <MenuItem
+                onClick={() => handleToggle("Show grid")}
+                sx={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <ListItemText>Show grid</ListItemText>
+                {selectedItems["Show grid"] && (
+                  <ListItemIcon>
+                    <CheckIcon fontSize="small" />
+                  </ListItemIcon>
+                )}
+              </MenuItem>
+            </Menu>
           </Box>
 
-          <Box className="search">
+          <Box className="search" sx={{ display: "flex", alignItems: "center" }}>
             <TextField
               variant="outlined"
               placeholder="Name this Design"
               sx={{
                 backgroundColor: "transparent",
-                "& .MuiInputBase-input-MuiOutlinedInput-input": {
-                  border: "none",
-                },
                 boxShadow: "0px 5px 30px -15px",
-                // height: "36.2px",
-                // fontSize:"10px"
               }}
               inputProps={{
                 style: {
@@ -205,6 +246,7 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
                 padding: "6px",
                 paddingX: "1.4rem",
                 textTransform: "none",
+                borderRadius: "7px",
                 "&:hover": {
                   backgroundColor: "#3F5163",
                 },

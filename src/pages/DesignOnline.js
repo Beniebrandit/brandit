@@ -392,7 +392,7 @@ const DesignOnline = () => {
             position: "relative",
             boxShadow: { sm: "0px 5px 30px -15px" },
             alignItems: "flex-start",
-            top: { xs: "5rem", sm: "5rem" },
+            top: { xs: "5.5rem", sm: "5.5rem" },
             color: "#3F5163",
             borderRadius: "6px",
             zIndex: "2",
