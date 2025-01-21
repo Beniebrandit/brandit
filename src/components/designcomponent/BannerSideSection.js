@@ -30,6 +30,7 @@ const BannerSideSection = ({
   const [isLoading, setIsLoading] = useState(false);
   const [displayedPrice, setDisplayedPrice] = useState(null);
   const [isInitialPriceSet, setIsInitialPriceSet] = useState(false);
+  const [selectedSubCatId, setSelectedSubCatId] = useState([]);
 
   const theme = useTheme();
 
@@ -45,31 +46,21 @@ const BannerSideSection = ({
     setIsTabOpen(true);
   };
 
-  // Set initial product data based on storedPayload
   useEffect(() => {
     if (!storedPayload) {
-      console.log("No storedPayload found. Initializing default data.");
+      const initialSubCatIds = alldata?.categories
+        ?.flatMap((category) => category.subCategories || [])
+        .map((subCategory) => subCategory.id) || [];
 
-      const newWidth = alldata?.productSizes?.[0]?.size || "";
-      const newHeight = alldata?.productSizes?.[0]?.size || "";
-
-      const initialSubCatIds = [];
-
-      alldata?.categories?.forEach((category) => {
-        if (category?.subCategories?.length > 0) {
-          const firstSubCat = category.subCategories[0];
-          initialSubCatIds.push(firstSubCat.id);
-        }
-      });
-      // setSelectedSubCatId(initialSubCatIds);
+      setSelectedSubCatId(initialSubCatIds);
 
       setFinalProductData({
-        width: newWidth,
-        height: newHeight,
+        width: alldata?.productSizes?.[0]?.size || "",
+        height: alldata?.productSizes?.[0]?.size || "",
         quantity: 1,
         price: 0,
         ProductId: alldata?.id || null,
-        subCatId: JSON.stringify(initialSubCatIds), // Store subCatId
+        subCatId: JSON.stringify(initialSubCatIds),
       });
     } else {
       setFinalProductData({
@@ -78,7 +69,7 @@ const BannerSideSection = ({
         quantity: storedPayload.quantity || 1,
         price: storedPayload.price || null,
         ProductId: alldata?.id || null,
-        subCatId: storedPayload.subCatId || "", // Ensure subCatId is included from storedPayload
+        subCatId: JSON.stringify(selectedSubCatId) || "",
       });
     }
   }, [storedPayload, alldata]);
@@ -108,7 +99,7 @@ const BannerSideSection = ({
         finalProductData.width &&
         finalProductData.height &&
         finalProductData.quantity > 0 &&
-        finalProductData.subCatId
+        selectedSubCatId
       ) {
         setIsLoading(true);
 
@@ -118,12 +109,12 @@ const BannerSideSection = ({
             height: finalProductData.height,
             ProductId: finalProductData.ProductId,
             quantity: finalProductData.quantity,
-            subCatId: finalProductData.subCatId, // Include subCatId in the payload
+            subCatId: JSON.stringify(selectedSubCatId),
           };
 
           const res = await ProductService.Dataprice(payload);
           const totalPrice = res.data?.totalPrice || 50;
-          setDisplayedPrice((totalPrice / finalProductData.quantity).toFixed(2)); // Calculate price per item
+          setDisplayedPrice((totalPrice / finalProductData.quantity).toFixed(2));
         } catch (error) {
           console.error("Error fetching price:", error);
           setDisplayedPrice("Error");
@@ -133,7 +124,6 @@ const BannerSideSection = ({
       }
     };
 
-    // Using a debounce to prevent rapid fetch calls during quick state changes
     const debounceFetch = setTimeout(fetchPrice, 500);
 
     return () => clearTimeout(debounceFetch);
@@ -141,9 +131,8 @@ const BannerSideSection = ({
     finalProductData.width,
     finalProductData.height,
     finalProductData.quantity,
-    finalProductData.subCatId, // Track only relevant fields
+    selectedSubCatId,
   ]);
-
 
   useEffect(() => {
     if (productDetails) {
@@ -153,14 +142,14 @@ const BannerSideSection = ({
         height: productDetails.height || prevData.height,
         quantity: productDetails.quantity || prevData.quantity,
         price: productDetails.price || prevData.price,
-        subCatId: productDetails.subCatId || prevData.subCatId,
+        subCatId: JSON.stringify(selectedSubCatId) || prevData.subCatId,
       }));
     }
   }, [productDetails]);
 
 
   console.log("finalProductData", finalProductData);
-  //console.log("productDetails", productDetails);
+  // console.log("productDetails", productDetails);
 
   return (
     <Box

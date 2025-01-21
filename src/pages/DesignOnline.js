@@ -320,6 +320,16 @@ const DesignOnline = () => {
   const location = useLocation();
 
   useEffect(() => {
+    // Load previously selected image from local storage and initialize the editor
+    const storedImageLink = localStorage.getItem("selectedImage");
+
+    if (storedImageLink) {
+      AddImage(storedImageLink); // Set the image in the state
+      setIsImgEditorShown(true); // Open the editor
+    }
+  }, []);
+
+  useEffect(() => {
     localStorage.removeItem("productDetails");
     localStorage.removeItem("selectedCard");
     // console.log("LocalStorage cleared on navigation to", location.pathname);

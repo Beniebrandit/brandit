@@ -413,7 +413,7 @@ const PremiumImg = ({
                 overflow: "auto",
                 display: "grid",
                 gridTemplateColumns: "repeat(auto-fill, minmax(125px, 1fr))",
-                gap: "10px",
+                gap: "9px",
                 lineHeight: "1.4",
                 fontSize: "12px"
               }}

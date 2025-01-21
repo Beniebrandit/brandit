@@ -139,6 +139,7 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
           alignItems: "center",
           justifyContent: "space-between",
           backgroundColor: "white",
+          zIndex: "3",
         }}
       >
         {/* <Box

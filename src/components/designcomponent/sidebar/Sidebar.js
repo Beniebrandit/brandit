@@ -333,12 +333,13 @@ const Sidebar = ({
               position: "relative",
               backgroundColor: "whitesmoke",
               flexGrow: 1,
+              overflow: "hidden",
               // width:"24rem"
             }}
           >
             {isTabOpen && (
               <>
-                <TabPanel value={value} index={0} style={{ width: "22rem" }}>
+                <TabPanel value={value} index={0} style={{ width: "22rem" }} className="cust-panel">
                   <Config
                     allproduct={allproduct}
                     alldata={alldata}

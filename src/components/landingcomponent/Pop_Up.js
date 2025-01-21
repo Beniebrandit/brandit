@@ -109,9 +109,11 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
     setOpenSearch(false);
   };
 
-const data = {
+  const addImage = (imageLink) => {
+    localStorage.setItem('selectedImage', imageLink);
 
-}
+    navigate(`/design/${payload0?.ProductId}`);
+  };
 
   useEffect(() => {
     setSpinner(true);
@@ -313,7 +315,7 @@ const data = {
                     alt="search"
                     onClick={submitSearch}
                     style={{
-                      paddingTop: "11px",
+                      paddingTop: "12px",
                       position: "absolute",
                       backgroundColor: "transparent",
                       right: "40px",
@@ -380,7 +382,7 @@ const data = {
                       src={searchIcon}
                       alt="search"
                       style={{
-                        paddingTop: "7px",
+                        paddingTop: "9px",
                         position: "absolute",
                         backgroundColor: "transparent",
                         right: "40px",
@@ -420,6 +422,7 @@ const data = {
                               justifyContent: "center",
                               backgroundColor: "#F3F3F3",
                             }}
+                            onClick={() => addImage(e.Template_Image)}
                           >
                             <img
                               id={e.objectID}
