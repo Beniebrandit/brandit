@@ -3,13 +3,11 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
-  Button,
   Divider,
   Grid,
   MenuItem,
   Paper,
   Select,
-  TextField,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -44,7 +42,6 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
         ...productDetails,
         quantity: productDetails.quantity - 1,
       });
-      // setCount(count - 1);
     }
   };
 
@@ -254,7 +251,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
         ProductId: alldata?.id || "",
       };
 
-      console.log("Saving to localStorage:", updatedPayload);
+      // console.log("Saving to localStorage:", updatedPayload);
 
       localStorage.setItem("productDetails", JSON.stringify(updatedPayload));
     }
@@ -350,8 +347,32 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
   return (
     <>
       <Box>
-        <Box className="custom-scrollbar custom-scrollbar-container">
-          <Box sx={{ height: "38rem" }}>
+        <Box sx={{
+          position: "relative",
+          backgroundColor: "whitesmoke",
+          flexGrow: 1,
+          overflow: "hidden",
+          scrollbarGutter: "stable", // Prevents content shift
+          padding: "0px !important",
+          "&:hover": {
+            overflowY: "auto",
+          },
+          "&::-webkit-scrollbar": {
+            width: "3px",
+          },
+          "&::-webkit-scrollbar-track": {
+            backgroundColor: "transparent",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "#888",
+            borderRadius: "10px",
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            backgroundColor: "#555",
+          },
+        }}
+        >
+          <Box sx={{ height: "37rem" }}>
             <Typography>Select product :</Typography>
             <Select fullWidth value={selectedProduct} onChange={handleProductChange}>
               {allproduct?.map((product) => (
@@ -599,7 +620,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
                       <AccordionDetails>
                         <Grid container spacing={2}>
                           {category?.subCategories?.map((subCat) => {
-                            console.log("iddddd", selectedCard[category.id] === subCat.id);
+                            // console.log("iddddd", selectedCard[category.id] === subCat.id);
                             return (
                               <Grid item xs={6} key={subCat.id}>
                                 <Paper
@@ -610,6 +631,11 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
                                     border: selectedCard[category.id] === subCat.id ? "2px solid #ff9900" : "none",
                                     cursor: "pointer",
                                     fontSize: "10px",
+                                    height: "100%", width: "100%",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    overflow: "hidden",
+                                    justifyContent: "space-between"
                                   }}
                                   onClick={() => handleCardClick(category.id, subCat)}
                                 >
@@ -625,7 +651,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
                                   <img
                                     src={`${process.env.REACT_APP_API_BASE_URL}${subCat.image}`}
                                     alt={subCat.subCatName}
-                                    style={{ width: "100%", marginTop: "10px" }}
+                                    style={{ width: "100%", marginTop: "10px", height: "7rem" }}
                                   />
                                 </Paper>
                               </Grid>

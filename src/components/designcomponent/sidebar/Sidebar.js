@@ -334,7 +334,25 @@ const Sidebar = ({
               backgroundColor: "whitesmoke",
               flexGrow: 1,
               overflow: "hidden",
-              // width:"24rem"
+              // scrollbarWidth: "thin",
+              // scrollbarGutter: "stable",
+              // padding: "0px !important",
+              "&:hover": {
+                overflowY: "auto",
+              },
+              "&::-webkit-scrollbar": {
+                width: "3px",
+              },
+              "&::-webkit-scrollbar-track": {
+                backgroundColor: "transparent",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "#888",
+                borderRadius: "10px",
+              },
+              "&::-webkit-scrollbar-thumb:hover": {
+                backgroundColor: "#555",
+              },
             }}
           >
             {isTabOpen && (

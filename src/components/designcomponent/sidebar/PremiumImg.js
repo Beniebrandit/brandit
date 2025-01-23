@@ -174,7 +174,8 @@ const PremiumImg = ({
   return (
     <Box
       sx={{
-        maxHeight: "675px",
+        // maxHeight: "675px",
+        heigth: "100%",
         overflowY: "hidden",
         overflowX: "hidden",
         scrollbarWidth: "thin",

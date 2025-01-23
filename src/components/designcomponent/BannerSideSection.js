@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Button,
@@ -12,7 +12,6 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ReactComponent as Sidebarsetting } from "../../asset/images/sidebar_setting.svg";
 import { ReactComponent as Eye } from "../../asset/images/Eye.svg";
-import { Circles } from "react-loader-spinner";
 import { RingLoader } from "react-spinners";
 import { ProductService } from "../../services/Product.service";
 
@@ -31,6 +30,8 @@ const BannerSideSection = ({
   const [displayedPrice, setDisplayedPrice] = useState(null);
   const [isInitialPriceSet, setIsInitialPriceSet] = useState(false);
   const [selectedSubCatId, setSelectedSubCatId] = useState([]);
+  const [isFirstLoad, setIsFirstLoad] = useState(true); // Track initial load
+  const prevAlldataIdRef = useRef();
 
   const theme = useTheme();
 
@@ -47,38 +48,54 @@ const BannerSideSection = ({
   };
 
   useEffect(() => {
-    if (!storedPayload) {
-      const initialSubCatIds = alldata?.categories
-        ?.flatMap((category) => category.subCategories || [])
-        .map((subCategory) => subCategory.id) || [];
+    const selectedData = localStorage.getItem("selectedData");
+    if (isFirstLoad) {
+      setIsLoading(true); // Set loading state only on the first load
+      setIsFirstLoad(false); // After the first load, set it to false
+    }
+
+    if (!storedPayload && !selectedData) {
+      // Initialize selectedSubCatId
+      const initialSubCatIds = [];
+
+      alldata?.categories?.forEach((category) => {
+        if (category?.subCategories?.length > 0) {
+          const firstSubCat = category.subCategories[0];
+          initialSubCatIds.push(firstSubCat.id);
+        }
+      });
 
       setSelectedSubCatId(initialSubCatIds);
 
-      setFinalProductData({
+      // Use a callback to ensure the state is updated properly
+      setFinalProductData((prevState) => ({
+        ...prevState,
         width: alldata?.productSizes?.[0]?.size || "",
         height: alldata?.productSizes?.[0]?.size || "",
         quantity: 1,
         price: 0,
         ProductId: alldata?.id || null,
         subCatId: JSON.stringify(initialSubCatIds),
-      });
-    } else {
+      }));
+
+      console.log("Initial setup - first", initialSubCatIds);
+    } else if (storedPayload?.subCatId && alldata) {
       setFinalProductData({
-        width: storedPayload.width || "",
-        height: storedPayload.height || "",
-        quantity: storedPayload.quantity || 1,
-        price: storedPayload.price || null,
-        ProductId: alldata?.id || null,
-        subCatId: JSON.stringify(selectedSubCatId) || "",
+        width: storedPayload?.width || "",
+        height: storedPayload?.height || "",
+        quantity: storedPayload?.quantity || 1,
+        price: storedPayload?.price || null,
+        ProductId: alldata?.id,
+        subCatId: storedPayload?.subCatId,
       });
+      console.log("Restored from storedPayload", storedPayload?.subCatId);
     }
-  }, [storedPayload, alldata]);
+  }, [storedPayload, alldata, isFirstLoad]);
 
   useEffect(() => {
     if (!isInitialPriceSet && finalProductData?.price && finalProductData?.quantity > 0) {
-      setIsLoading(true);
       const timeout = setTimeout(() => {
-        setIsLoading(false);
+        setIsLoading(false); // Stop loader after setting price
         setDisplayedPrice((finalProductData.price / finalProductData.quantity).toFixed(2));
         setIsInitialPriceSet(true);
       }, 3000);
@@ -93,25 +110,34 @@ const BannerSideSection = ({
     }
   }, [finalProductData, productDetails, isInitialPriceSet]);
 
+  // Track changes in alldata.id
+  useEffect(() => {
+    if (alldata?.id !== prevAlldataIdRef.current) {
+      // Only trigger loader when alldata.id changes
+      setIsLoading(true);
+      prevAlldataIdRef.current = alldata?.id; // Update the ref with the new id
+    }
+  }, [alldata?.id]);
+
+  // Fetch price when necessary
   useEffect(() => {
     const fetchPrice = async () => {
       if (
         finalProductData.width &&
         finalProductData.height &&
         finalProductData.quantity > 0 &&
-        selectedSubCatId
+        finalProductData.subCatId &&
+        alldata
       ) {
-        setIsLoading(true);
-
         try {
           const payload = {
             width: finalProductData.width,
             height: finalProductData.height,
             ProductId: finalProductData.ProductId,
             quantity: finalProductData.quantity,
-            subCatId: JSON.stringify(selectedSubCatId),
+            subCatId: finalProductData.subCatId,
           };
-
+          console.log("Payload before API call", payload);
           const res = await ProductService.Dataprice(payload);
           const totalPrice = res.data?.totalPrice || 50;
           setDisplayedPrice((totalPrice / finalProductData.quantity).toFixed(2));
@@ -125,30 +151,37 @@ const BannerSideSection = ({
     };
 
     const debounceFetch = setTimeout(fetchPrice, 500);
-
     return () => clearTimeout(debounceFetch);
-  }, [
-    finalProductData.width,
-    finalProductData.height,
-    finalProductData.quantity,
-    selectedSubCatId,
-  ]);
+  }, [finalProductData, alldata?.id]);
 
   useEffect(() => {
-    if (productDetails) {
-      setFinalProductData((prevData) => ({
-        ...prevData,
-        width: productDetails.width || prevData.width,
-        height: productDetails.height || prevData.height,
-        quantity: productDetails.quantity || prevData.quantity,
-        price: productDetails.price || prevData.price,
-        subCatId: JSON.stringify(selectedSubCatId) || prevData.subCatId,
-      }));
+    // Retrieve subCatId from localStorage
+    const storedSubCatId = JSON.parse(localStorage.getItem("selectedCard"));
+
+    if (productDetails && storedSubCatId) {
+      // Extract values and format as an array
+      const formattedSubCatId = JSON.stringify(
+        Object.values(storedSubCatId)
+      );
+
+      setFinalProductData((prevData) => {
+        const updatedData = {
+          ...prevData,
+          width: productDetails.width || prevData.width,
+          height: productDetails.height || prevData.height,
+          quantity: productDetails.quantity || prevData.quantity,
+          price: productDetails.price || prevData.price,
+          subCatId: formattedSubCatId || prevData.subCatId, // Use formatted value
+        };
+        console.log("Updated finalProductData", updatedData);
+        return updatedData;
+      });
     }
   }, [productDetails]);
 
 
-  console.log("finalProductData", finalProductData);
+
+  // console.log("finalProductData", finalProductData);
   // console.log("productDetails", productDetails);
 
   return (
