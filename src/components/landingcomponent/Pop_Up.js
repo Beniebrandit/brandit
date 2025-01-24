@@ -14,6 +14,7 @@ import PopUpPagination from "../common/PopUpPagination";
 import { useNavigate } from "react-router-dom";
 import { Blocks } from "react-loader-spinner";
 import CloseIcon from "@mui/icons-material/HighlightOffOutlined";
+import { ProductCategoryService } from "../../services/ProductCategory.service";
 
 const Hit = ({ hit }) => (
   <div>
@@ -68,7 +69,6 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [spinner, setSpinner] = useState(false);
-  const [finaldata, setFinaldata] = useState([]);
 
   const handleSearch = (e) => {
     setValue(e.target.value);
@@ -113,6 +113,15 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
     localStorage.setItem('selectedImage', imageLink);
 
     navigate(`/design/${payload0?.ProductId}`);
+  };
+  const productImgAdd = async (id) => {
+    try {
+      const res = await ProductCategoryService.ProductDetail(id);
+      const response = `${process.env.REACT_APP_API_BASE_URL}/${res.data.images[0].path}`;
+      localStorage.setItem('selectedImage', response);
+    } catch (error) {
+      console.error("Error fetching product details:", error);
+    }
   };
 
   useEffect(() => {
@@ -258,6 +267,7 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
 
                     localStorage.setItem("selectedData", JSON.stringify(updatedPayload));
                     navigate(`/design/${payload0?.ProductId}`);
+                    productImgAdd(payload0?.ProductId);
                   } else {
                     console.warn("payload0 is undefined or null");
                   }

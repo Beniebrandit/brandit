@@ -25,6 +25,7 @@ import Config from "./Config";
 import MyUpload from "./MyUpload";
 import Text from "./Text";
 import PremiumImg from "./PremiumImg";
+import axios from "axios";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -97,6 +98,21 @@ const Sidebar = ({
   const [selectedimg, setSelectedimg] = useState([]);
   const [pendingImages, setPendingImages] = useState([]);
   const source = "premium";
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [offset, setOffset] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchVector, setSearchVector] = useState("");
+  const [valuePremium, setValuePremium] = useState(0);
+  const [photosData, setPhotosData] = useState([]);
+  const [vectorData, setVectorData] = useState([]);
+  const [showpopularData, setShowpopularData] = useState(true);
+  const API_URL = "https://stock.adobe.io/Rest/Media/1/Search/Files";
+  const API_HEADERS = {
+    "x-api-key": "0ca35b55dd684868acacd3a0c4e5264b", // Replace with your actual API key
+    "X-Product": "DRIStock/1.0",
+    "Content-Type": "application/json",
+  };
 
 
   const handleClickOpen = () => {
@@ -152,7 +168,7 @@ const Sidebar = ({
 
       // Update state and local storage
       setSelectedimg(updatedSelectedImages);
-      localStorage.setItem("selectedImages", JSON.stringify(updatedSelectedImages));
+      localStorage.setItem("recentImage", JSON.stringify(updatedSelectedImages));
 
       // Clear pending images after they are processed
       setPendingImages([]);
@@ -199,7 +215,7 @@ const Sidebar = ({
 
   // Load data from local storage on component mount
   useEffect(() => {
-    const savedImages = localStorage.getItem("selectedImages");
+    const savedImages = localStorage.getItem("recentImage");
     if (savedImages) {
       setSelectedimg(JSON.parse(savedImages));
     }
@@ -217,6 +233,64 @@ const Sidebar = ({
     if (open || delopen) return;
     setIsTabOpen(false);
   };
+  const fetchMedia = useCallback(
+    async (searchQuery, offsetValue) => {
+      if (loading || !hasMore) return;
+      setLoading(true);
+
+      try {
+        if (searchQuery) {
+          const response = await axios.get(API_URL, {
+            params: {
+              "search_parameters[words]": `${searchQuery} ${valuePremium === 0 ? "" : searchQuery ? "svg" : ""}`,
+              "search_parameters[limit]": 10,
+              "search_parameters[offset]": offsetValue,
+              "search_parameters[thumbnail_size]": 240,
+              "search_parameters[filters][premium]": false,
+              "search_parameters[filters][content_type:photo]": valuePremium === 0 ? 1 : 0,
+              "search_parameters[filters][content_type:illustration]": valuePremium === 0 ? 1 : 0,
+              "search_parameters[filters][content_type:vector]": valuePremium === 0 ? 0 : 1,
+              "search_parameters[filters][content_type:video]": 0,
+              "search_parameters[filters][content_type:template]": 0,
+              "search_parameters[filters][content_type:3d]": 0,
+            },
+            headers: API_HEADERS,
+          });
+
+          const newMedia = response.data.files;
+          if (valuePremium === 0) {
+            setPhotosData((prevData) => [...prevData, ...newMedia]);
+            setShowpopularData(false);
+          } else {
+            setVectorData((prevData) => [...prevData, ...newMedia]);
+            setShowpopularData(false);
+          }
+
+          setOffset(offsetValue + 10);
+          setHasMore(newMedia.length > 0); // Check if more data is available
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [loading, hasMore, valuePremium] // Make sure valuePremium is included in the dependencies
+  );
+
+  const handleScroll = useCallback(
+    (e) => {
+      const bottom = e.target.scrollHeight === e.target.scrollTop + e.target.clientHeight;
+
+      // Check if we're at the bottom and if the loading flag is false
+      if (bottom && !loading && hasMore) {
+        // Perform API call
+        fetchMedia(valuePremium === 0 ? searchTerm : searchVector, offset);
+      }
+    },
+    [loading, hasMore, valuePremium, searchTerm, searchVector, offset, fetchMedia]
+  );
+
 
   return (
     <>
@@ -354,10 +428,11 @@ const Sidebar = ({
                 backgroundColor: "#555",
               },
             }}
+            onScroll={handleScroll}
           >
             {isTabOpen && (
               <>
-                <TabPanel value={value} index={0} style={{ width: "22rem" }} className="cust-panel">
+                <TabPanel value={value} index={0} style={{ width: "22rem" }}>
                   <Config
                     allproduct={allproduct}
                     alldata={alldata}
@@ -381,13 +456,31 @@ const Sidebar = ({
                     dropdata={dropdata}
                   />
                 </TabPanel>
-                <TabPanel value={value} index={2} style={{ maxWidth: "21rem", padding: "0px" }} className="cust-panel">
+                <TabPanel value={value} index={2} style={{ maxWidth: "21rem", padding: "0px" }}>
                   <PremiumImg
                     handleExpand={handleExpand}
                     selectImage={selectImage}
                     setPremiumimg={setPremiumimg}
                     handleOpentoAdd={handleOpentoAdd}
                     selectedimg={selectedimg}
+                    loading={loading}
+                    setLoading={setLoading}
+                    hasMore={hasMore}
+                    setHasMore={setHasMore}
+                    setOffset={setOffset}
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    searchVector={searchVector}
+                    setSearchVector={setSearchVector}
+                    valuePremium={valuePremium}
+                    setValuePremium={setValuePremium}
+                    setPhotosData={setPhotosData}
+                    photosData={photosData}
+                    vectorData={vectorData}
+                    showpopularData={showpopularData}
+                    setVectorData={setVectorData}
+                    setShowpopularData={setShowpopularData}
+                    fetchMedia={fetchMedia}
                   />
                 </TabPanel>
                 <TabPanel value={value} index={3} style={{ height: "15rem" }}>

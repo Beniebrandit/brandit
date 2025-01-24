@@ -14,30 +14,35 @@ const PremiumImg = ({
   selectImage,
   handleOpentoAdd,
   selectedimg,
+  loading,
+  hasMore,
+  fetchMedia,
+  setHasMore, setOffset, searchTerm, setSearchTerm, searchVector, setSearchVector, valuePremium, setValuePremium, setPhotosData, photosData, vectorData, showpopularData, setVectorData, setShowpopularData,
 }) => {
   const [selectedImages, setSelectedImages] = useState({
     premium: "",
     vector: "",
   });
   const [imageName, setImageName] = useState({ premium: "", vector: "" });
-  const [valuePremium, setValuePremium] = useState(0);
-  const [mediaData, setMediaData] = useState([]);
-  const [searchTerm, setSearchTerm] = useState();
-  const [searchVector, setSearchVector] = useState("");
-  const [offset, setOffset] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [photosData, setPhotosData] = useState([]);
-  const [vectorData, setVectorData] = useState([]);
-  const [showpopularData, setShowpopularData] = useState(true);
+  // const [valuePremium, setValuePremium] = useState(0);
+  // const [mediaData, setMediaData] = useState([]);
+  // const [searchTerm, setSearchTerm] = useState();
+  // const [searchVector, setSearchVector] = useState("");
+  // const [offset, setOffset] = useState(0);
+  // const [loading, setLoading] = useState(false);
+  // const [hasMore, setHasMore] = useState(true);
+  // const [photosData, setPhotosData] = useState([]);
+  // const [vectorData, setVectorData] = useState([]);
+  // const [showpopularData, setShowpopularData] = useState(true);
   const [showAll, setShowAll] = useState(false);
+  const [recentImage, setRecentImage] = useState(null);
   const source = "premium";
-  const API_URL = "https://stock.adobe.io/Rest/Media/1/Search/Files";
-  const API_HEADERS = {
-    "x-api-key": "0ca35b55dd684868acacd3a0c4e5264b", // Replace with your actual API key
-    "X-Product": "DRIStock/1.0",
-    "Content-Type": "application/json",
-  };
+  // const API_URL = "https://stock.adobe.io/Rest/Media/1/Search/Files";
+  // const API_HEADERS = {
+  //   "x-api-key": "0ca35b55dd684868acacd3a0c4e5264b", // Replace with your actual API key
+  //   "X-Product": "DRIStock/1.0",
+  //   "Content-Type": "application/json",
+  // };
 
   const handleViewMore = () => {
     setShowAll(true);
@@ -53,51 +58,6 @@ const PremiumImg = ({
       setShowpopularData(true);
     }
   };
-
-  const fetchMedia = useCallback(
-    async (searchQuery, offsetValue) => {
-      if (loading || !hasMore) return;
-      setLoading(true);
-
-      try {
-        if (searchQuery) {
-          const response = await axios.get(API_URL, {
-            params: {
-              "search_parameters[words]": `${searchQuery} ${valuePremium === 0 ? "" : searchQuery ? "svg" : ""}`,
-              "search_parameters[limit]": 10,
-              "search_parameters[offset]": offsetValue,
-              "search_parameters[thumbnail_size]": 240,
-              "search_parameters[filters][premium]": false,
-              "search_parameters[filters][content_type:photo]": valuePremium === 0 ? 1 : 0,
-              "search_parameters[filters][content_type:illustration]": valuePremium === 0 ? 1 : 0,
-              "search_parameters[filters][content_type:vector]": valuePremium === 0 ? 0 : 1,
-              "search_parameters[filters][content_type:video]": 0,
-              "search_parameters[filters][content_type:template]": 0,
-              "search_parameters[filters][content_type:3d]": 0,
-            },
-            headers: API_HEADERS,
-          });
-
-          const newMedia = response.data.files;
-          if (valuePremium === 0) {
-            setPhotosData((prevData) => [...prevData, ...newMedia]);
-            setShowpopularData(false);
-          } else {
-            setVectorData((prevData) => [...prevData, ...newMedia]);
-            setShowpopularData(false);
-          }
-
-          setOffset(offsetValue + 10);
-          setHasMore(newMedia.length > 0); // Check if more data is available
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [loading, hasMore, valuePremium] // Make sure valuePremium is included in the dependencies
-  );
 
   const handleSearch = (e) => {
     const value = e.target.value;
@@ -132,19 +92,6 @@ const PremiumImg = ({
     setShowpopularData(true);
   };
 
-  const handleScroll = useCallback(
-    (e) => {
-      const bottom = e.target.scrollHeight === e.target.scrollTop + e.target.clientHeight;
-
-      // Check if we're at the bottom and if the loading flag is false
-      if (bottom && !loading && hasMore) {
-        // Perform API call
-        fetchMedia(valuePremium === 0 ? searchTerm : searchVector, offset);
-      }
-    },
-    [loading, hasMore, valuePremium, searchTerm, searchVector, offset, fetchMedia]
-  );
-
   const handleCategoryClick = (imageUrl, title, type, index) => {
     setSelectedImages((prev) => ({ ...prev, [type]: imageUrl }));
     setImageName((prev) => ({ ...prev, [type]: title }));
@@ -176,7 +123,7 @@ const PremiumImg = ({
       sx={{
         // maxHeight: "675px",
         heigth: "100%",
-        overflowY: "hidden",
+        overflowY: "auto",
         overflowX: "hidden",
         scrollbarWidth: "thin",
         scrollbarGutter: "stable",
@@ -198,12 +145,11 @@ const PremiumImg = ({
           backgroundColor: "#555",
         },
       }}
-      onScroll={handleScroll}
     >
       <Box sx={{}}>
-        <Typography variant="body2" color="#3F5163" fontWeight="bold" mb={2}>
+        {selectedimg.length > 0 && <Typography variant="body2" color="#3F5163" fontWeight="bold" mb={2}>
           Recently used images
-        </Typography>
+        </Typography>}
         <Box
           sx={{
             display: "grid",
