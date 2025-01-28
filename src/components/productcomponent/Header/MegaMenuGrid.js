@@ -162,7 +162,7 @@ const MegaMenu = () => {
 
   function ClickProduct(id) {
     if (id) {
-      console.log("id", id);
+      // console.log("id", id);
       navigate(`/product/${id}`);
     }
   }

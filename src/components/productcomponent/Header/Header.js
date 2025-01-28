@@ -107,7 +107,7 @@ const Header = () => {
       const res = await ProductService.ProductList(params);
       const filteredContent = res.data.filter((product) => product.productCategory?.parent_name === categoryName);
       setCategoryContent(filteredContent); // Set the content to display
-      console.log("categoryContent", categoryContent);
+      // console.log("categoryContent", categoryContent);
     } catch (error) {
       console.error("Error fetching category content:", error);
     }
@@ -120,7 +120,7 @@ const Header = () => {
 
   const renderMostPopular = (categoryName) => {
     const filteredProducts = categoryContent.filter((product) => product.productCategory?.parent_name === categoryName);
-    console.log("filteredProducts", filteredProducts);
+    // console.log("filteredProducts", filteredProducts);
     // Group products by their subcategory
     const groupedBySubCategory = filteredProducts.reduce((acc, product) => {
       const subCategoryName = product.productCategory?.name;
@@ -147,7 +147,7 @@ const Header = () => {
         </h4>
         <ul style={{ listStyleType: "none", padding: 0, display: "flex", justifyContent: "space-between" }}>
           {mostPopularProducts.map((product, index) => {
-            console.log("mostPopularProducts", mostPopularProducts);
+            // console.log("mostPopularProducts", mostPopularProducts);
             return (
               <li
                 key={index}

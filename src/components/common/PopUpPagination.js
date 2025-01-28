@@ -1,16 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box, Button } from "@mui/material";
 import Prevpaginateicon from "../../asset/images/Prev_paginate_icon.svg";
 import Nextpaginateicon from "../../asset/images/Next_paginate_icon.svg";
 
-const PopUpPagination = ({ totalItems = 0, itemsPerPage = 5, currentPages = 1, onPageChange }) => {
-  const pageCount = Math.max(1, Math.ceil(totalItems / itemsPerPage));
-
+const PopUpPagination = ({ totalPages = 1, currentPages = 1, onPageChange }) => {
   const handlePageClick = (page) => {
-    onPageChange(page);
-    console.log("page", page);
+    if (page >= 1 && page <= totalPages) {
+      onPageChange(page);
+    }
   };
-  console.log("currentPages", currentPages);
 
   const handlePrevClick = () => {
     if (currentPages > 1) {
@@ -19,20 +17,20 @@ const PopUpPagination = ({ totalItems = 0, itemsPerPage = 5, currentPages = 1, o
   };
 
   const handleNextClick = () => {
-    if (currentPages < pageCount) {
+    if (currentPages < totalPages) {
       handlePageClick(currentPages + 1);
     }
   };
 
   // Calculate visible pages
-  const maxVisiblePages = 3;
+  const maxVisiblePages = 5; // Adjust based on design preferences
   const startPage = Math.max(1, currentPages - Math.floor(maxVisiblePages / 2));
-  const endPage = Math.min(pageCount, startPage + maxVisiblePages - 1);
+  const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
   const visiblePages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "0px" }}>
-      <Button
+    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "1rem" }}>
+      {totalPages > 0 && <Button
         sx={{
           margin: "0 5px",
           minWidth: "40px",
@@ -49,8 +47,9 @@ const PopUpPagination = ({ totalItems = 0, itemsPerPage = 5, currentPages = 1, o
             width: "14px",
           }}
           src={Prevpaginateicon}
+          alt="Previous"
         />
-      </Button>
+      </Button>}
       {visiblePages.map((page) => (
         <Button
           key={page}
@@ -71,7 +70,7 @@ const PopUpPagination = ({ totalItems = 0, itemsPerPage = 5, currentPages = 1, o
           {page}
         </Button>
       ))}
-      <Button
+      {totalPages > 0 && <Button
         sx={{
           margin: "0 5px",
           minWidth: "40px",
@@ -81,15 +80,16 @@ const PopUpPagination = ({ totalItems = 0, itemsPerPage = 5, currentPages = 1, o
           border: "1px solid #ddd",
         }}
         onClick={handleNextClick}
-        disabled={currentPages === pageCount}
+        disabled={currentPages === totalPages}
       >
         <img
           src={Nextpaginateicon}
+          alt="Next"
           style={{
             width: "14px",
           }}
         />
-      </Button>
+      </Button>}
     </Box>
   );
 };

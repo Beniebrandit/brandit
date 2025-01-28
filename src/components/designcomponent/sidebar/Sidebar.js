@@ -147,7 +147,7 @@ const Sidebar = ({
     if (source === "upload") {
       image = selectedFile[index];
     } else if (source == "premium") {
-      console.log("indexSorce", source);
+      // console.log("indexSorce", source);
       image = url;
       // image = `${process.env.REACT_APP_API_BASE_URL}/${vectorimage[index]}`;
     } else if (source === "dropdata") {
@@ -155,7 +155,7 @@ const Sidebar = ({
     }
     setExpandImage(image);
     setExpandedImageIndex(index);
-    console.log("Expanded image index:", index, "Source:", source);
+    // console.log("Expanded image index:", index, "Source:", source);
     handleClickOpen();
   };
 
@@ -176,7 +176,7 @@ const Sidebar = ({
   };
 
   const handleDeleteConfirm = () => {
-    console.log("imageToDelete", imageToDelete);
+    // console.log("imageToDelete", imageToDelete);
     if (imageToDelete !== null) {
       onDeleteImage(imageToDelete, selectedSourceToDelete); // Pass the source to the delete function
       setDelOpen(false);
@@ -442,7 +442,7 @@ const Sidebar = ({
                     storedPayload={storedPayload}
                   />
                 </TabPanel>
-                <TabPanel value={value} index={1} style={{ width: "auto", maxWidth: "24rem" }}>
+                <TabPanel value={value} index={1} style={{ width: "auto", maxWidth: "20rem" }}>
                   <MyUpload
                     combinedImages={combinedImages}
                     setCombinedImages={setCombinedImages}

@@ -58,12 +58,18 @@ const Product = ({
   const [selectedSubCatId, setSelectedSubCatId] = useState([]);
   const [rating, setRating] = useState();
   const [loadingPrice, setLoadingPrice] = useState(true);
+  const [expandedAccordion, setExpandedAccordion] = useState(null);
 
   const decrement = () => {
     if (count > 1) {
       setCount(count - 1);
     }
   };
+
+  const handleAccordionChange = (panel) => (event, isExpanded) => {
+    setExpandedAccordion(isExpanded ? panel : null);
+  };
+
   useEffect(() => {
     if (alldata?.categories?.length > 0) {
       const initialSelection = {};
@@ -541,6 +547,8 @@ const Product = ({
                 <>
                   <Accordion
                     key={category.id}
+                    expanded={expandedAccordion === category.id}
+                    onChange={handleAccordionChange(category.id)}
                     className="MuiPaper"
                     sx={{
                       marginBottom: "10px",

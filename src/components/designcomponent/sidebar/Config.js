@@ -23,6 +23,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
   const [selectedSubCatId, setSelectedSubCatId] = useState([]);
   const [isProductChanged, setIsProductChanged] = useState(false);
   const [eachProductPrice, setEachProductPrice] = useState("");
+  const [expandedAccordion, setExpandedAccordion] = useState(null);
 
   //console.log("alldata", alldata);
   //console.log("storedPayload", storedPayload);
@@ -35,6 +36,10 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
     subCatId: [],
     quantity: 1,
   });
+
+  const handleAccordionChange = (panel) => (event, isExpanded) => {
+    setExpandedAccordion(isExpanded ? panel : null);
+  };
 
   const decrement = () => {
     if (productDetails.quantity > 1) {
@@ -91,7 +96,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
       setSelectedSubCatId(initialSubCatIds || []);
 
       // Update localStorage immediately
-      console.log("selectedProduct.id", selectedProduct.id);
+      // console.log("selectedProduct.id", selectedProduct.id);
       localStorage.setItem(
         "productDetails",
         JSON.stringify({
@@ -108,7 +113,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
     const savedSelectedCard = localStorage.getItem("selectedCard");
 
     if (!savedProductDetails && storedPayload) {
-      console.log("Initializing from storedPayload on page reload");
+      // console.log("Initializing from storedPayload on page reload");
 
       const initialProductDetails = {
         width: storedPayload.width || "",
@@ -147,7 +152,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
         })
       );
     } else if (!savedProductDetails && !storedPayload && alldata) {
-      console.log("Initializing with default product data");
+      // console.log("Initializing with default product data");
 
       const newWidth = widthSizes?.[0]?.size || "";
       const newHeight = heightSizes?.[0]?.size || "";
@@ -237,7 +242,7 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
           ProductId: alldata?.id,
         })
       );
-      console.log("alldata?.id", alldata?.id);
+      // console.log("alldata?.id", alldata?.id);
     }
   }, [isProductChanged, alldata, widthSizes, heightSizes]);
   // Update localStorage with productDetails whenever it changes
@@ -578,91 +583,86 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
               </Box>
             </Box>
             <Box sx={{ marginTop: "1rem" }}>
-              {alldata?.categories?.map((category) => {
-                return (
-                  <>
-                    <Accordion
-                      //   defaultExpanded
-                      key={category.id}
-                    >
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls={`panel${category.id}-content`}
-                        id={`panel${category.id}-header`}
+              {alldata?.categories?.map((category) => (
+                <Accordion
+                  key={category.id}
+                  expanded={expandedAccordion === category.id}
+                  onChange={handleAccordionChange(category.id)}
+                >
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls={`panel${category.id}-content`}
+                    id={`panel${category.id}-header`}
+                    sx={{
+                      "& .MuiAccordionSummary-content": {
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      },
+                    }}
+                  >
+                    {category?.name}
+                    {/* Display the selected subcategory's name */}
+                    {selectedCard[category.id] && (
+                      <Typography
                         sx={{
-                          "& .MuiAccordionSummary-content": {
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          },
+                          marginLeft: "10px",
+                          display: "flex",
+                          flexWrap: "wrap",
+                          justifyContent: "center",
+                          fontSize: "12px",
                         }}
                       >
-                        {category?.name}
-                        {/* Display the selected subcategory's name */}
-                        {selectedCard[category.id] && (
-                          <Typography
+                        {
+                          alldata.categories
+                            .find((cat) => cat.id === category.id)
+                            ?.subCategories.find((sub) => sub.id === selectedCard[category.id])?.subCatName
+                        }
+                      </Typography>
+                    )}
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Grid container spacing={2}>
+                      {category?.subCategories?.map((subCat) => (
+                        <Grid item xs={6} key={subCat.id}>
+                          <Paper
+                            elevation={3}
                             sx={{
-                              marginLeft: "10px",
+                              padding: 1,
+                              textAlign: "center",
+                              border: selectedCard[category.id] === subCat.id ? "2px solid #ff9900" : "none",
+                              cursor: "pointer",
+                              fontSize: "10px",
+                              height: "100%",
+                              width: "100%",
                               display: "flex",
-                              flexWrap: "wrap",
-                              justifyContent: "center",
-                              fontSize: "12px",
+                              flexDirection: "column",
+                              overflow: "hidden",
+                              justifyContent: "space-between",
                             }}
+                            onClick={() => handleCardClick(category.id, subCat)}
                           >
-                            {
-                              alldata.categories
-                                .find((cat) => cat.id === category.id)
-                                ?.subCategories.find((sub) => sub.id === selectedCard[category.id])?.subCatName
-                            }
-                          </Typography>
-                        )}
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <Grid container spacing={2}>
-                          {category?.subCategories?.map((subCat) => {
-                            // console.log("iddddd", selectedCard[category.id] === subCat.id);
-                            return (
-                              <Grid item xs={6} key={subCat.id}>
-                                <Paper
-                                  elevation={3}
-                                  sx={{
-                                    padding: 1,
-                                    textAlign: "center",
-                                    border: selectedCard[category.id] === subCat.id ? "2px solid #ff9900" : "none",
-                                    cursor: "pointer",
-                                    fontSize: "10px",
-                                    height: "100%", width: "100%",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    overflow: "hidden",
-                                    justifyContent: "space-between"
-                                  }}
-                                  onClick={() => handleCardClick(category.id, subCat)}
-                                >
-                                  <Typography
-                                    variant="body1"
-                                    sx={{
-                                      fontWeight: "bold",
-                                      fontSize: "10px",
-                                    }}
-                                  >
-                                    {subCat.subCatName}
-                                  </Typography>
-                                  <img
-                                    src={`${process.env.REACT_APP_API_BASE_URL}${subCat.image}`}
-                                    alt={subCat.subCatName}
-                                    style={{ width: "100%", marginTop: "10px", height: "7rem" }}
-                                  />
-                                </Paper>
-                              </Grid>
-                            );
-                          })}
+                            <Typography
+                              variant="body1"
+                              sx={{
+                                fontWeight: "bold",
+                                fontSize: "10px",
+                              }}
+                            >
+                              {subCat.subCatName}
+                            </Typography>
+                            <img
+                              src={`${process.env.REACT_APP_API_BASE_URL}${subCat.image}`}
+                              alt={subCat.subCatName}
+                              style={{ width: "100%", marginTop: "10px", height: "7rem" }}
+                            />
+                          </Paper>
                         </Grid>
-                      </AccordionDetails>
-                    </Accordion>
-                  </>
-                );
-              })}
+                      ))}
+                    </Grid>
+                  </AccordionDetails>
+                </Accordion>
+              ))}
             </Box>
           </Box>
         </Box>

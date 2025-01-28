@@ -80,10 +80,10 @@ const CreateAccountDialog = ({ open, handleClose, setCurrentUser, handleOpenLogi
 
   const createAccount = () => {
     if (isFormValid()) {
-      console.log("Form is valid, proceed with account creation");
+      // console.log("Form is valid, proceed with account creation");
       ProductService.registers(state)
         .then((res) => {
-          console.log("registers", res);
+          // console.log("registers", res);
           // Handle success here, e.g., redirecting or updating UI
           setCurrentUser(res?.user.name);
           localStorage.setItem("currentUser", res?.user.name); // Store user name in local storage

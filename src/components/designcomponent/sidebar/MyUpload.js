@@ -150,7 +150,7 @@ const MyUpload = ({
       );
 
       setSelectedFiles(files);
-      console.log("Selected Files:", files);
+      // console.log("Selected Files:", files);
     }
   };
 
@@ -177,14 +177,6 @@ const MyUpload = ({
 
     setCombinedImages(combined); // Update the state with the combined array
   }, [selectedFile, drivedata, dropdata]);
-
-  useEffect(() => {
-    if (data) {
-      data?.docs?.map((i) => console.log(i, "i"));
-      console.log(data.docs, "data.docs");
-      console.log(data, "data");
-    }
-  }, [data]);
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);

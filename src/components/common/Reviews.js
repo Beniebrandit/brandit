@@ -78,7 +78,7 @@ const Reviews = ({ productId, hidereviewbtn }) => {
 
     if (data) {
       setUserId(data.id);
-      console.log("userId", data.id);
+      // console.log("userId", data.id);
     }
   };
 
@@ -323,12 +323,20 @@ const Reviews = ({ productId, hidereviewbtn }) => {
           <Grid container spacing={2}>
             {paginatedReviews?.length > 0
               ? paginatedReviews?.map((item, index) => (
-                  <Grid item md={6} sm={12} xs={12} key={index}>
+                <Grid item md={6} sm={12} xs={12} key={index}>
+                  <Box
+                    sx={{
+                      backgroundColor: "#F5F5F5",
+                      padding: "15px",
+                      borderRadius: "8px",
+                    }}
+                  >
                     <Box
                       sx={{
-                        backgroundColor: "#F5F5F5",
-                        padding: "15px",
-                        borderRadius: "8px",
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        marginBottom: "10px",
                       }}
                     >
                       <Box
@@ -339,138 +347,130 @@ const Reviews = ({ productId, hidereviewbtn }) => {
                           marginBottom: "10px",
                         }}
                       >
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            width: "50px", // Adjust size as needed
+                            height: "50px", // Adjust size as needed
+                            borderRadius: "50%", // This makes it a circle
+                            border: "1px solid black",
+                            backgroundColor: "white", // Black background
+                            color: "black", // White text color
+                            fontWeight: "bold", // Optional: Make the letter bold
+                            fontSize: "20px", // Adjust the font size of the letter inside the circle
+                            fontFamily: "cerebri-font",
+                          }}
+                        >
+                          {item.user_name ? item.user_name[0].toUpperCase() : ""}
+                        </div>
                         <Box
                           sx={{
                             display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            marginBottom: "10px",
+                            alignItems: "flex-start",
+                            flexDirection: "column",
+                            paddingLeft: "10px",
+                            marginBottom: "5px",
                           }}
                         >
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              width: "50px", // Adjust size as needed
-                              height: "50px", // Adjust size as needed
-                              borderRadius: "50%", // This makes it a circle
-                              border: "1px solid black",
-                              backgroundColor: "white", // Black background
-                              color: "black", // White text color
-                              fontWeight: "bold", // Optional: Make the letter bold
-                              fontSize: "20px", // Adjust the font size of the letter inside the circle
-                              fontFamily: "cerebri-font",
-                            }}
-                          >
-                            {item.user_name ? item.user_name[0].toUpperCase() : ""}
-                          </div>
                           <Box
                             sx={{
                               display: "flex",
-                              alignItems: "flex-start",
-                              flexDirection: "column",
-                              paddingLeft: "10px",
-                              marginBottom: "5px",
+                              alignItems: "center",
+                              flexDirection: "row",
                             }}
                           >
-                            <Box
+                            <Typography
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                flexDirection: "row",
+                                fontSize: "16px",
+                                fontWeight: "500",
+                                color: "#000",
                               }}
                             >
-                              <Typography
-                                sx={{
-                                  fontSize: "16px",
-                                  fontWeight: "500",
-                                  color: "#000",
-                                }}
-                              >
-                                {item.user_name}
-                              </Typography>
-                              <Typography
-                                sx={{
-                                  fontSize: "16px",
-                                  lineHeight: "14px",
-                                  color: "#D4BA46",
-                                  marginLeft: "50px",
-                                }}
-                              >
-                                Verified Buyer
-                              </Typography>
-                            </Box>
-                            <Box sx={{ display: "flex", alignItems: "center" }}>
-                              {Array.from({ length: item.stars }).map((_, i) => (
-                                <StarIcon key={i} sx={{ color: "black" }} />
-                              ))}
-                            </Box>
+                              {item.user_name}
+                            </Typography>
+                            <Typography
+                              sx={{
+                                fontSize: "16px",
+                                lineHeight: "14px",
+                                color: "#D4BA46",
+                                marginLeft: "50px",
+                              }}
+                            >
+                              Verified Buyer
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: "flex", alignItems: "center" }}>
+                            {Array.from({ length: item.stars }).map((_, i) => (
+                              <StarIcon key={i} sx={{ color: "black" }} />
+                            ))}
                           </Box>
                         </Box>
-                        <Typography
-                          sx={{
-                            textAlign: "end",
-                            color: "#000000",
-                            fontWeight: "400",
-                            fontSize: "12px",
-                          }}
-                        >
-                          {item.date}
-                        </Typography>
                       </Box>
-
                       <Typography
                         sx={{
-                          color: "#868686",
-                          fontSize: "16px",
-                          lineHeight: "25px",
-                          fontWeight: "500",
-                        }}
-                      >
-                        {item.review}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          color: "#4D4D4D",
+                          textAlign: "end",
+                          color: "#000000",
+                          fontWeight: "400",
                           fontSize: "12px",
-                          lineHeight: "20px",
-                          fontWeight: "500",
-                          marginTop: "10px",
                         }}
                       >
-                        <b>ITEM TYPE:</b>
+                        {item.date}
                       </Typography>
+                    </Box>
+
+                    <Typography
+                      sx={{
+                        color: "#868686",
+                        fontSize: "16px",
+                        lineHeight: "25px",
+                        fontWeight: "500",
+                      }}
+                    >
+                      {item.review}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        color: "#4D4D4D",
+                        fontSize: "12px",
+                        lineHeight: "20px",
+                        fontWeight: "500",
+                        marginTop: "10px",
+                      }}
+                    >
+                      <b>ITEM TYPE:</b>
+                    </Typography>
+                    <Typography
+                      sx={{
+                        color: "#4D4D4D",
+                        fontSize: "16px",
+                        lineHeight: "20px",
+                        fontWeight: "500",
+                        marginTop: "10px",
+                      }}
+                    >
+                      {getProductName(item.product_id)}
+                    </Typography>
+                    <Box sx={{ display: "flex", alignItems: "center", marginTop: "15px" }}>
                       <Typography
                         sx={{
-                          color: "#4D4D4D",
-                          fontSize: "16px",
-                          lineHeight: "20px",
-                          fontWeight: "500",
-                          marginTop: "10px",
+                          color: "#000000",
+                          fontSize: "15px",
+                          fontWeight: "400",
+                          marginRight: "10px",
                         }}
                       >
-                        {getProductName(item.product_id)}
+                        Was this helpful?
                       </Typography>
-                      <Box sx={{ display: "flex", alignItems: "center", marginTop: "15px" }}>
-                        <Typography
-                          sx={{
-                            color: "#000000",
-                            fontSize: "15px",
-                            fontWeight: "400",
-                            marginRight: "10px",
-                          }}
-                        >
-                          Was this helpful?
-                        </Typography>
-                        <ThumbUpIcon sx={{ color: "black" }} />
-                        &nbsp; 0
-                        <ThumbDownAltIcon sx={{ marginLeft: "10px", color: "black" }} />
-                        &nbsp;0
-                      </Box>
+                      <ThumbUpIcon sx={{ color: "black" }} />
+                      &nbsp; 0
+                      <ThumbDownAltIcon sx={{ marginLeft: "10px", color: "black" }} />
+                      &nbsp;0
                     </Box>
-                  </Grid>
-                ))
+                  </Box>
+                </Grid>
+              ))
               : "No reviews available"}
           </Grid>
 

@@ -78,7 +78,7 @@ const BannerSideSection = ({
         subCatId: JSON.stringify(initialSubCatIds),
       }));
 
-      console.log("Initial setup - first", initialSubCatIds);
+      // console.log("Initial setup - first", initialSubCatIds);
     } else if (storedPayload?.subCatId && alldata) {
       setFinalProductData({
         width: storedPayload?.width || "",
@@ -88,7 +88,7 @@ const BannerSideSection = ({
         ProductId: alldata?.id,
         subCatId: storedPayload?.subCatId,
       });
-      console.log("Restored from storedPayload", storedPayload?.subCatId);
+      // console.log("Restored from storedPayload", storedPayload?.subCatId);
     }
   }, [storedPayload, alldata, isFirstLoad]);
 
@@ -137,7 +137,7 @@ const BannerSideSection = ({
             quantity: finalProductData.quantity,
             subCatId: finalProductData.subCatId,
           };
-          console.log("Payload before API call", payload);
+          // console.log("Payload before API call", payload);
           const res = await ProductService.Dataprice(payload);
           const totalPrice = res.data?.totalPrice || 50;
           setDisplayedPrice((totalPrice / finalProductData.quantity).toFixed(2));
@@ -173,7 +173,7 @@ const BannerSideSection = ({
           price: productDetails.price || prevData.price,
           subCatId: formattedSubCatId || prevData.subCatId, // Use formatted value
         };
-        console.log("Updated finalProductData", updatedData);
+        // console.log("Updated finalProductData", updatedData);
         return updatedData;
       });
     }

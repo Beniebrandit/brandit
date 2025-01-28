@@ -47,52 +47,50 @@ const Cart = () => {
   const [openSignUp, setOpenSignUp] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
 
-    const handleClickOpenLogin = () => {
-      setLoginOpen(true);
-      setOpenSignUp(false);
-    };
-    const handleCloseLogin = () => setLoginOpen(false);
+  const handleClickOpenLogin = () => {
+    setLoginOpen(true);
+    setOpenSignUp(false);
+  };
+  const handleCloseLogin = () => setLoginOpen(false);
 
-    const handleClickOpenSignUp = () => {
-      setOpenSignUp(true);
-      setLoginOpen(false);
-    };
+  const handleClickOpenSignUp = () => {
+    setOpenSignUp(true);
+    setLoginOpen(false);
+  };
 
-    const handleCloseSignUp = () => setOpenSignUp(false);
+  const handleCloseSignUp = () => setOpenSignUp(false);
 
-    const fetchUserData = async (token) => {
-      if (!token) {
-        console.warn("Token is null or undefined, skipping fetch.");
-        return; // Exit the function if the token is null
+  const fetchUserData = async (token) => {
+    if (!token) {
+      console.warn("Token is null or undefined, skipping fetch.");
+      return; // Exit the function if the token is null
+    }
+
+    try {
+      const response = await fetch("https://flagg.devlopix.com/api/user", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        console.error("Failed to fetch user data:", response.status);
+        return;
       }
 
-      console.log("Fetching user data from: https://flagg.devlopix.com/api/user");
-
-      try {
-        const response = await fetch("https://flagg.devlopix.com/api/user", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          console.error("Failed to fetch user data:", response.status);
-          return;
-        }
-
-        const data = await response.json();
-        setCurrentUser(data.name);
-        localStorage.setItem("currentUser", data.name);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
+      const data = await response.json();
+      setCurrentUser(data.name);
+      localStorage.setItem("currentUser", data.name);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
   return (
     <>
       <Navbar handleClickOpenLogin={handleClickOpenLogin} handleClickOpenSignUp={handleClickOpenSignUp} />
-      <Cartform/>
+      <Cartform />
       <Container maxWidth="lg" sx={{ mt: 4, mb: 6 }}>
         {/* Shopping Cart Heading */}
         <Box textAlign="center" mb={4}>

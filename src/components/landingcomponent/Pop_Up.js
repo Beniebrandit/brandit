@@ -65,45 +65,53 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
   const index = searchClient.initIndex("test"); // Your Algolia index name
   const [value, setValue] = useState("");
   const [openSearch, setOpenSearch] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [allResults, setAllResults] = useState([]); // Store all products
+  const [paginatedResults, setPaginatedResults] = useState([]); // Paginated results
+  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [spinner, setSpinner] = useState(false);
+  const itemsPerPage = 12; // Items per page for client-side pagination
 
   const handleSearch = (e) => {
     setValue(e.target.value);
   };
 
-  const submitSearch = debounce(async (page = 1) => {
+  const submitSearch = debounce(async () => {
     setSpinner(true);
     try {
-      // Ensure the page is at least 1 before subtracting 1 for Algolia
       const response = await index.search(value, {
-        page: page, // Pass current page to Algolia
-        hitsPerPage: 10,
-        query: value, // The search term
-        typoTolerance: true,
-        clickAnalytics: true,
-        facets: ["*"], // Retrieve all facets
-        facetFilters: {},
-        analyticsTags: ["Tracked Search", "Design Template", "Homepage", "Repeat"],
+        query: value, // Search term
+        hitsPerPage: 1000, // Retrieve a large number of products
       });
-
-      // Update the search results and pagination info
-      setSearchResults(response.hits);
-      setCurrentPage(response.page);
-      setTotalPages(response.nbPages);
+      setAllResults(response.hits);
+      setTotalPages(Math.ceil(response.hits.length / itemsPerPage));
+      setCurrentPage(1); // Reset to the first page
     } catch (error) {
       console.error("Search Error:", error);
     } finally {
-      setSpinner(false); // Hide spinner after completion
+      setSpinner(false);
     }
     setOpenSearch(true);
   }, 300);
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-    submitSearch(newPage);
+
+  const paginateResults = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    setPaginatedResults(allResults.slice(startIndex, endIndex));
   };
+
+  // useEffect(() => {
+  //   if (value) fetchAllProducts();
+  // }, [value]);
+
+  useEffect(() => {
+    paginateResults();
+  }, [allResults, currentPage]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   const handleCloseSearch = () => {
     setValue("");
     setOpenSearch(false);
@@ -111,9 +119,13 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
 
   const addImage = (imageLink) => {
     localStorage.setItem('selectedImage', imageLink);
+    const updatedPayload = { ...payload0, price: price };
+
+    localStorage.setItem("selectedData", JSON.stringify(updatedPayload));
 
     navigate(`/design/${payload0?.ProductId}`);
   };
+
   const productImgAdd = async (id) => {
     try {
       const res = await ProductCategoryService.ProductDetail(id);
@@ -125,12 +137,13 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
   };
 
   useEffect(() => {
-    setSpinner(true);
     if (value) {
-      setTimeout(() => {
-        submitSearch(); // Start search when value changes
-        setSpinner(false);
+      setSpinner(true); // Show spinner only when there is a search value
+      const timeout = setTimeout(() => {
+        submitSearch(); // Perform the search
       }, 2000);
+
+      return () => clearTimeout(timeout); // Clear timeout on cleanup
     }
   }, [openSearch]);
   return (
@@ -380,7 +393,7 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
                         color: "#3F5163",
                         backgroundColor: "white",
                         width: "100%",
-                        margin: "0 30px 0 -30px",
+                        margin: "0 35px 0 -40px",
                         marginBottom: { xs: "20px", sm: "0" },
                         "& .MuiInputBase-input": { padding: "7.5px 14px !important" },
                       }}
@@ -395,14 +408,14 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
                         paddingTop: "9px",
                         position: "absolute",
                         backgroundColor: "transparent",
-                        right: "40px",
+                        right: "50px",
                         zIndex: "1",
                         margin: "auto",
                       }}
                       sx={{}}
                     />
                   </Box>
-                  <Typography>
+                  <Typography sx={{ visibility: totalPages < 1 ? "hidden" : "visible" }}>
                     {" "}
                     Page {currentPage} of {totalPages}{" "}
                   </Typography>
@@ -420,8 +433,8 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
                       justifyContent: "center !important",
                     }}
                   >
-                    {searchResults.length > 0 ? (
-                      searchResults.map((e, index) => (
+                    {paginatedResults.length > 0 ? (
+                      paginatedResults.map((e, index) => (
                         <Grid item md={2} key={index} sx={{ padding: "1rem !important" }}>
                           <Box
                             sx={{
@@ -444,7 +457,7 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
                         </Grid>
                       ))
                     ) : (
-                      <Box sx={{ margin: "auto", padding: "10px 0px 0px 23px", width: "max-content" }}>
+                      <Box sx={{ margin: "auto", padding: "10px 0px 0px 0px", width: "max-content" }}>
                         No Result found
                       </Box>
                     )}
@@ -452,13 +465,14 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
                 </Box>
 
                 <PopUpPagination
-                  totalItems={totalPages * 5}
-                  itemsPerPage={5}
-                  currentPages={currentPage} // Pass current page
-                  onPageChange={handlePageChange} // Handle page change
+                  totalPages={totalPages}
+                  itemsPerPage={itemsPerPage}
+                  currentPages={currentPage}
+                  onPageChange={handlePageChange}
                 />
               </Box>
             ))}
+
           <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
             <Divider sx={{ flexGrow: 1 }} />
             <Typography sx={{ margin: "0 1rem", whiteSpace: "nowrap", fontSize: "20px" }}>
