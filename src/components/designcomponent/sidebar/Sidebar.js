@@ -63,7 +63,6 @@ function a11yProps(index) {
 const Sidebar = ({
   setProductDetails,
   productDetails,
-  handleImageChange,
   selectedFile,
   onDeleteImage,
   selectImage,
@@ -73,8 +72,6 @@ const Sidebar = ({
   setPremiumimg,
   allproduct,
   alldata,
-  handleDeleteDropboxFile,
-  handleSuccess,
   dropdata,
   combinedImages,
   setCombinedImages,
@@ -141,16 +138,16 @@ const Sidebar = ({
 
   const handleExpand = (index, source, url) => {
     let image;
-
+    // console.log("source", source);
     setSelectedSource(source);
 
     if (source === "upload") {
-      image = selectedFile[index];
+      image = combinedImages[index].url;
     } else if (source == "premium") {
       // console.log("indexSorce", source);
       image = url;
       // image = `${process.env.REACT_APP_API_BASE_URL}/${vectorimage[index]}`;
-    } else if (source === "dropdata") {
+    } else if (source === "dropbox") {
       image = combinedImages[index].url;
     }
     setExpandImage(image);
@@ -446,13 +443,10 @@ const Sidebar = ({
                   <MyUpload
                     combinedImages={combinedImages}
                     setCombinedImages={setCombinedImages}
-                    handleImageChange={handleImageChange}
                     selectedFile={selectedFile}
                     handleDeleteClick={handleDeleteClick}
                     selectImage={selectImage}
                     handleExpand={handleExpand}
-                    handleDeleteDropboxFile={handleDeleteDropboxFile}
-                    handleSuccess={handleSuccess}
                     dropdata={dropdata}
                   />
                 </TabPanel>
@@ -555,11 +549,11 @@ const Sidebar = ({
             color="success"
             onClick={() => {
               if (expandedImageIndex !== null) {
-                // Check if value is 1 for "upload" or a different condition for "dropdata"
+                // Check if value is 1 for "upload" or a different condition for "dropbox"
                 if (value === 1) {
                   selectImage(expandedImageIndex, "upload");
                 } else if (value === 1 && dropdata[expandedImageIndex]) {
-                  selectImage(expandedImageIndex, "dropdata");
+                  selectImage(expandedImageIndex, "dropbox");
                 } else {
                   selectImage(expandedImageIndex, "premium");
                 }

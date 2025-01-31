@@ -144,24 +144,23 @@ const DesignOnline = () => {
     });
   };
 
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const base64Image = await convertBlobToBase64(file);
-      setSelectedFile((prevFiles) => [...prevFiles, base64Image]);
-    }
-  };
-
   const onDeleteImage = (index, source) => {
     if (source === "upload") {
       // Remove image from selectedFile
       setSelectedFile((prev) => prev.filter((_, i) => i !== index));
-    } else if (source === "dropdata") {
-      // Remove image from dropdata
-      handleDeleteDropboxFile(dropdata[index].id); // Assume you have a function to delete from Dropbox
+    } else if (source === "dropbox") {
+      // Ensure dropdata exists and has the index
+      if (dropdata && dropdata.length > index) {
+        // handleDeleteDropboxFile(index);
+      }
     }
-  };
 
+    // Update combinedImages to reflect the deletion
+    setCombinedImages((prev) => prev.filter((_, i) => i !== index));
+
+    // Update local storage
+    localStorage.setItem("uploadedImages", JSON.stringify(combinedImages.filter((_, i) => i !== index)));
+  };
   useEffect(() => {
     if (premiumimg) {
       AddImage(premiumimg); // Perform the action when premiumimg updates
@@ -172,6 +171,7 @@ const DesignOnline = () => {
 
   const selectImage = (index, source) => {
     // console.log("source", source)
+    // console.log("index", index)
     if (source === "premium") {
       if (premiumimg && premiumimg.length > 0) {
         // console.log("premiumimg state will trigger the action through useEffect");
@@ -179,15 +179,15 @@ const DesignOnline = () => {
       } else {
         console.error("No valid premium image found.");
       }
-    } else if (source === "upload" && selectedFile && selectedFile.length > 0) {
-      const selectedImage = selectedFile[index];
+    } else if (source === "upload" && combinedImages && combinedImages.length > 0) {
+      const selectedImage = combinedImages[index].url;
       if (selectedImage) {
         AddImage(selectedImage);
         openImgEditor();
       } else {
         console.error("No valid uploaded image at upload index", index);
       }
-    } else if (source === "dropdata" && combinedImages && combinedImages.length > 0) {
+    } else if (source === "dropbox" && combinedImages && combinedImages.length > 0) {
       const DropImage = combinedImages[index];
       if (DropImage) {
         AddImage(DropImage.url);
@@ -277,29 +277,12 @@ const DesignOnline = () => {
     }
   }, [getid]);
 
-  const handleSuccess = (files) => {
-    if (files && files.length > 0) {
-      const updatedFiles = files.map((file) => {
-        const imageUrl = file.link.replace("&dl=0", "&dl=1");
-        return {
-          name: file.name,
-          link: imageUrl,
-          thumbnail: file.thumbnailLink,
-        };
-      });
-      setDropData((prevDropData) => [...prevDropData, ...updatedFiles]);
-    }
-  };
-
-  const handleDeleteDropboxFile = (index) => {
-    setDropData(dropdata.filter((_, i) => i !== index));
-  };
 
   useEffect(() => {
     const clearLocalStorage = () => {
       localStorage.removeItem("productDetails");
       localStorage.removeItem("selectedCard");
-      console.log("LocalStorage cleared on navigation or page reload");
+      // console.log("LocalStorage cleared on navigation or page reload");
     };
 
     // Clear localStorage on page reload
@@ -349,7 +332,6 @@ const DesignOnline = () => {
             isTabOpen={isTabOpen}
             setProductDetails={setProductDetails}
             productDetails={productDetails}
-            handleImageChange={handleImageChange}
             selectedFile={selectedFile}
             onDeleteImage={onDeleteImage}
             selectImage={selectImage}
@@ -361,8 +343,6 @@ const DesignOnline = () => {
             premiumimg={premiumimg}
             alldata={alldata}
             allproduct={allproduct}
-            handleDeleteDropboxFile={handleDeleteDropboxFile}
-            handleSuccess={handleSuccess}
             dropdata={dropdata}
             setgetId={setgetId}
             storedPayload={storedPayload}

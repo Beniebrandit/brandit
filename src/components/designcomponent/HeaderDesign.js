@@ -152,7 +152,7 @@ const HeaderDesign = ({ handleClickOpenLogin }) => {
             marginX: "10rem",
           }}
         > */}
-        <Box className="header_box" sx={{ paddingLeft: { xs: "1rem", sm: "5rem" } }}>
+        <Box className="header_box" sx={{ paddingLeft: { xs: "1rem", sm: "4rem" } }}>
           <Link to="/">
             <img alt="logo" src={main_logo} style={{ width: "50%", height: "auto", maxWidth: "200px" }} />
           </Link>

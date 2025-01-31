@@ -17,13 +17,10 @@ const SCOPES = "https://www.googleapis.com/auth/drive.readonly";
 const APP_ID = "1062247369631";
 
 const MyUpload = ({
-  handleImageChange,
   selectedFile,
   handleDeleteClick,
   selectImage,
   handleExpand,
-  handleDeleteDropboxFile,
-  handleSuccess,
   dropdata,
   combinedImages,
   setCombinedImages,
@@ -32,11 +29,10 @@ const MyUpload = ({
   const [openPicker, data, authResponse] = useDrivePicker();
   const [accessToken, setAccessToken] = useState(null);
   const [drivedata, setDriveData] = useState([]);
-  const [errorMessage, setErrorMessage] = useState(null);
   const [pickerInited, setPickerInited] = useState(false);
   const [gisInited, setGisInited] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
-  let [thumbnail, setThbumnail] = React.useState("");
+  const [loadingImages, setLoadingImages] = useState({});
   const APP_KEY = "3astslwrlzfkcvc";
 
   useEffect(() => {
@@ -168,44 +164,119 @@ const MyUpload = ({
     }));
 
     const dropboxFiles = dropdata?.map((file) => ({
-      source: "dropdata", // Indicates this image is from Dropbox
+      source: "dropbox", // Indicates this image is from Dropbox
       url: file?.link, // Assuming link is the image URL
     }));
 
     // Combine all three arrays
-    const combined = [...selectedFiles, ...driveFiles, ...dropboxFiles];
+    setCombinedImages((prev) => [...new Set([...prev, ...selectedFiles, ...driveFiles, ...dropboxFiles])]);
 
-    setCombinedImages(combined); // Update the state with the combined array
   }, [selectedFile, drivedata, dropdata]);
 
-  const handleFileChange = (event) => {
-    const files = Array.from(event.target.files);
+  useEffect(() => {
+    const storedImages = JSON.parse(localStorage.getItem("uploadedImages")) || [];
+    if (storedImages.length > 0) {
+      setCombinedImages(storedImages);
+    }
+  }, []);  // Runs only on mount
 
-    // Create a loading state array: existing files are false, new files are true
-    const newLoadingState = Array(selectedFile.length).fill(false).concat(Array(files.length).fill(true));
-    setLoading(newLoadingState);
+  // Update local storage whenever combinedImages changes
+  useEffect(() => {
+    if (combinedImages.length > 0) { // Prevent overwriting with empty array on reload
+      localStorage.setItem("uploadedImages", JSON.stringify([...new Map(combinedImages.map(img => [img.url, img])).values()]));
+    }
+  }, [combinedImages]);
 
-    handleImageChange(event); // Call parent function to handle file input
-
-    files.forEach((file, index) => {
-      setTimeout(() => {
-        setLoading((prev) => {
-          const newState = [...prev];
-          newState[selectedFile.length + index] = false; // Set loading to false for each new image
-          return newState;
-        });
-      }, 2000); // Simulate 2-second loading for each image
+  const handleNewImages = (newImages) => {
+    const newLoadingState = {};
+    newImages.forEach((img) => {
+      newLoadingState[img.url] = true; // Mark as loading
     });
+
+    setLoadingImages((prev) => ({ ...prev, ...newLoadingState }));
+
+    setCombinedImages((prevImages) => {
+      const uniqueNewImages = newImages.filter(
+        (newImg) => !prevImages.some((img) => img.url === newImg.url)
+      );
+      return [...prevImages, ...uniqueNewImages];
+    });
+
+    // Simulate a loading delay, then remove loaders
+    setTimeout(() => {
+      setLoadingImages((prev) => {
+        const updatedState = { ...prev };
+        newImages.forEach((img) => delete updatedState[img.url]);
+        return updatedState;
+      });
+    }, 2000);
   };
+
+  const handleFileChange = async (event) => {
+    const files = Array.from(event.target.files);
+    if (!files.length) return;
+
+    const fileReaders = files.map((file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve({ source: "upload", url: reader.result });
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file);
+      });
+    });
+
+    const newImages = await Promise.all(fileReaders);
+    handleNewImages(newImages);
+  };
+
+  useEffect(() => {
+    if (dropdata && dropdata.length > 0) {
+      const newDropImages = dropdata.map((data) => ({
+        source: "dropbox",
+        url: data.link.replace("&dl=0", "&dl=1"), // Convert to a direct download URL
+      }));
+
+      // Filter out duplicates based on URLs
+      const filteredImages = newDropImages.filter(
+        (newImage) => !combinedImages.some((image) => image.url === newImage.url)
+      );
+
+      if (filteredImages.length > 0) {
+        // Add new Dropbox images to the combined images list
+        setCombinedImages((prev) => [...prev, ...filteredImages]);
+
+        // Set loading state specifically for the newly added Dropbox images
+        setLoading((prev) => {
+          const newLoadingState = [...prev];
+          // Add new loaders (true) for each of the new Dropbox images
+          newLoadingState.push(...filteredImages.map(() => true));
+          return newLoadingState;
+        });
+
+        // Simulate image loading delay and reset loading state
+        setTimeout(() => {
+          setLoading((prev) => {
+            // Reset loading state for the newly added Dropbox images
+            const newState = [...prev];
+            newState.splice(-filteredImages.length, filteredImages.length, ...filteredImages.map(() => false));
+            return newState;
+          });
+        }, 2000); // Adjust this timeout as needed
+      }
+    }
+  }, [dropdata, combinedImages]);
+
 
   const handleDeleteImage = (index, source) => {
-    handleDeleteClick(index, source); // Call parent function to delete image
+    handleDeleteClick(index, source);
     setLoading((prev) => {
-      const updatedLoading = prev.filter((_, i) => i !== index);
-      return updatedLoading.map((_, idx) => (idx < selectedFile.length ? false : true)); // Reset loaders
+      const updatedLoading = [...prev];
+      updatedLoading.splice(index, 1); // Remove the loading spinner for the deleted image
+      return updatedLoading;
     });
   };
-  const handleMicrosoft = () => { };
+  console.log("combinedImages", combinedImages)
+  // const handleMicrosoft = () => { };
   return (
     <>
       <Box
@@ -302,12 +373,43 @@ const MyUpload = ({
         >
           <DropboxChooser
             appKey={APP_KEY}
-            success={handleSuccess}
-            cancel={() => console.log("closed")}
+            success={(files) => {
+              if (files && files.length > 0) {
+                // Add loading state for Dropbox images
+                const newLoadingState = [...loading, ...files.map(() => true)];
+                setLoading(newLoadingState);
+
+                const newDropImages = files.map((file) => ({
+                  source: "dropbox",
+                  url: file.link.replace("&dl=0", "&dl=1"), // Convert to a direct download URL
+                }));
+
+                // Call handleNewImages ONCE, which already filters duplicates
+                handleNewImages(newDropImages);
+
+                // Remove this duplicate setCombinedImages call!
+                // setCombinedImages((prev) => [...prev, ...filteredImages]); ❌ REMOVE THIS LINE
+
+                // Simulate a loading delay for image display and hide the loader
+                setTimeout(() => {
+                  setLoading((prev) => {
+                    const updatedState = [...prev];
+                    updatedState.splice(-files.length); // Remove the loading states for the images that just loaded
+                    return updatedState;
+                  });
+                }, 2000);
+              }
+            }}
+            cancel={() => {
+              console.log("Dropbox chooser closed");
+              setLoading(false); // Hide spinner if the user cancels the file selection
+            }}
             multiselect={true}
           >
             <Dropbox style={{ width: "40px", height: "100%", pointerEvents: "none" }} />
           </DropboxChooser>
+
+
         </Box>
         <Box
           sx={{
@@ -334,7 +436,7 @@ const MyUpload = ({
           ></Box>
           <Googledrive style={{ width: "40px", height: "100%", pointerEvents: "none" }} />
         </Box>
-        <Box
+        {/* <Box
           onClick={() => handleMicrosoft()}
           sx={{
             textAlign: "center",
@@ -345,13 +447,16 @@ const MyUpload = ({
           }}
         >
           <Microsoft style={{ width: "40px", height: "100%", pointerEvents: "none" }} />
-        </Box>
+        </Box> */}
       </Box>
       <Typography variant="caption" display="block" textAlign="center">
         JPG, JPEG, PNG, GIF, TIFF, BMP, AI, EPS, SVG, PDF, HEIC, JFIF, PJPEG , WEBP
         <br />
         Max file size: 200 MB
       </Typography>
+      {combinedImages?.length > 0 && <Typography variant="caption" display="block" textAlign="start" sx={{ padding: "5px 0px 13px" }}>
+        Your uploaded images
+      </Typography>}
       <Box sx={{ display: "flex" }}>
         {combinedImages?.length > 0 && (
           <Box
@@ -362,21 +467,18 @@ const MyUpload = ({
             }}
           >
             {combinedImages.map((image, index) => (
-              <Box
-                key={index}
-                sx={{
-                  position: "relative",
-                  width: "100px",
-                  height: "100px",
-                  margin: "auto",
-                }}
-              >
+              <Box key={index} sx={{
+                position: "relative", width: "85px", height: "75px", margin: "auto", "&:hover .hover-container": {
+                  opacity: 1,
+                },
+              }}>
                 <img
                   src={image.url}
                   style={{
-                    height: "100px",
-                    width: "100px",
+                    height: "100%",
+                    width: "100%",
                     display: "block",
+                    borderRadius: "10px",
                     opacity: loading[index] ? 0.5 : 1,
                   }}
                   alt={image.source}
@@ -384,7 +486,7 @@ const MyUpload = ({
                     selectImage(index, image.source);
                   }}
                 />
-                {loading[index] && (
+                {loadingImages[image.url] && (
                   <Box
                     sx={{
                       position: "absolute",
@@ -401,12 +503,13 @@ const MyUpload = ({
                     <CircularProgress size={24} />
                   </Box>
                 )}
+
                 <Box
                   sx={{
                     position: "absolute",
                     top: "0",
-                    marginTop: "5px",
-                    left: "21%",
+                    marginTop: "7px",
+                    left: "50%",
                     transform: "translateX(-50%)",
                     display: "flex",
                     justifyContent: "space-between",
@@ -414,12 +517,10 @@ const MyUpload = ({
                     width: "70px",
                     opacity: 0,
                     transition: "opacity 0.3s ease", // Smooth transition for opacity
-                    "&:hover": {
-                      opacity: 1, // Show buttons on hover
-                    },
                   }}
+                  className="hover-container"
                 >
-                  <Button onClick={() => handleDeleteImage(index, image.source)}>
+                  <Button onClick={() => handleDeleteImage(index, image.source)} sx={{ padding: "0px 0px !important", minWidth: "auto" }}>
                     <DeleteOutlinedIcon
                       sx={{
                         backgroundColor: "whitesmoke",
@@ -428,7 +529,7 @@ const MyUpload = ({
                       }}
                     />
                   </Button>
-                  <Button onClick={() => handleExpand(index, image.source)}>
+                  <Button onClick={() => handleExpand(index, image.source)} sx={{ padding: "0px 0px !important", minWidth: "auto" }}>
                     <OpenInFullOutlinedIcon
                       sx={{
                         backgroundColor: "whitesmoke",
@@ -440,6 +541,7 @@ const MyUpload = ({
                 </Box>
               </Box>
             ))}
+
           </Box>
         )}
       </Box>
