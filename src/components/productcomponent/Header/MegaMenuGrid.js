@@ -115,7 +115,7 @@ const MegaMenu = () => {
             <div key={index} style={{ paddingBottom: "10px" }}>
               <h4
                 className="row mega-title"
-                onMouseEnter={() => setCurrentImage(products[0]?.productCategory?.image?.path || defaultImage)}
+                // onMouseEnter={() => setCurrentImage(products[0]?.productCategory?.image?.path || defaultImage)}
                 style={{ paddingBottom: "7px", fontSize: "16px", maxWidth: "10rem", textTransform: "capitalize" }}
               >
                 {subCategory}

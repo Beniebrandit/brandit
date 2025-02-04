@@ -33,7 +33,7 @@ a, a:hover, a.active, a:active, a:visited, a:focus {
 }
 
 .exo-menu > li > a {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   color: #8c8e8f;
   padding: 10px 15px;
@@ -143,6 +143,11 @@ a, a:hover, a.active, a:active, a:visited, a:focus {
 @media (max-width: 768px){
   .exo-menu {
     display: none;
+  }
+}
+@media (max-width: 1024px){
+  .exo-menu > li > a {
+    font-size: 13px;
   }
 }
 

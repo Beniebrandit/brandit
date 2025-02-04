@@ -10,6 +10,7 @@ const menuItems = [
   { name: "Small Format", category: "Small Format" },
   { name: "Stickers and Decals", category: "Decals" },
   { name: "Flags", category: "Flags" },
+  { name: "Fabric", category: "Fabric" },
   { name: "Sign Holders", category: "Signs" },
 ];
 
@@ -126,7 +127,7 @@ const MegaMenu = () => {
             <div key={index} style={{ paddingBottom: "10px" }}>
               <h4
                 className="row mega-title"
-                onMouseEnter={() => setCurrentImage(products[0]?.productCategory?.image?.path || defaultImage)}
+                // onMouseEnter={() => setCurrentImage(products[0]?.productCategory?.image?.path || defaultImage)}
                 style={{ paddingBottom: "7px", fontSize: "16px", maxWidth: "10rem", textTransform: "capitalize" }}
               >
                 {subCategory}
@@ -184,7 +185,7 @@ const MegaMenu = () => {
             onMouseEnter={() => setSelectedCategory(menu.category)}
             onMouseLeave={() => setSelectedCategory("")}
           >
-            <a href="#" className={selectedCategory === menu.category ? "active" : ""}>
+            <a href="#" style={{ fontSize: { sm: "13px", lg: "14px" } }} className={selectedCategory === menu.category ? "active" : ""}>
               <i className="fa fa-list"></i> {menu.name === "Banners" ? "Home" : menu.name}
             </a>
             <div

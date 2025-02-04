@@ -6,6 +6,7 @@ import categories_icon3 from "../../asset/images/categories_icon3.svg";
 import categories_icon4 from "../../asset/images/categories_icon4.svg";
 import categories_icon5 from "../../asset/images/categories_icon5.svg";
 import categories_icon6 from "../../asset/images/categories_icon6.svg";
+import categories_icon7 from "../../asset/images/fabric-icon.svg";
 // import ArrowIcon from "../../asset/images/Icon_t.png";
 import ArrowIcon2 from "../../asset/images/Next_paginate_icon.svg";
 import Tabs from "@mui/material/Tabs";
@@ -27,6 +28,7 @@ const tabData = [
     label: "Stickers and Decals",
   },
   { icon: categories_icon5, alt: "categories_icon5", label: "Flags" },
+  { icon: categories_icon7, alt: "categories_icon5", label: "Fabric" },
   { icon: categories_icon6, alt: "categories_icon6", label: "Sign Holders" },
 ];
 
@@ -41,6 +43,7 @@ const Categories = () => {
     smallFormat: [],
     decals: [],
     flags: [],
+    fabric: [],
     signs: [],
   });
 
@@ -78,6 +81,7 @@ const Categories = () => {
         smallFormat: data.filter((product) => product.productCategory?.parent_name === "Small Format"),
         decals: data.filter((product) => product.productCategory?.parent_name === "Decals"),
         flags: data.filter((product) => product.productCategory?.parent_name === "Flags"),
+        fabric: data.filter((product) => product.productCategory?.parent_name === "Fabric"),
         signs: data.filter((product) => product.productCategory?.parent_name === "Signs"),
       };
 
@@ -103,14 +107,16 @@ const Categories = () => {
       value === 0
         ? categoriesData.all
         : value === 1
-        ? categoriesData.largeFormat
-        : value === 2
-        ? categoriesData.smallFormat
-        : value === 3
-        ? categoriesData.decals
-        : value === 4
-        ? categoriesData.flags
-        : categoriesData.signs;
+          ? categoriesData.largeFormat
+          : value === 2
+            ? categoriesData.smallFormat
+            : value === 3
+              ? categoriesData.decals
+              : value === 4
+                ? categoriesData.flags
+                : value === 5
+                  ? categoriesData.fabric
+                  : categoriesData.signs;
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -121,14 +127,16 @@ const Categories = () => {
     return value === 0
       ? categoriesData.all.length
       : value === 1
-      ? categoriesData.largeFormat.length
-      : value === 2
-      ? categoriesData.smallFormat.length
-      : value === 3
-      ? categoriesData.decals.length
-      : value === 4
-      ? categoriesData.flags.length
-      : categoriesData.signs.length;
+        ? categoriesData.largeFormat.length
+        : value === 2
+          ? categoriesData.smallFormat.length
+          : value === 3
+            ? categoriesData.decals.length
+            : value === 4
+              ? categoriesData.flags.length
+              : value === 5
+                ? categoriesData.fabric.length
+                : categoriesData.signs.length;
   };
 
   const productClick = (id) => {
@@ -179,9 +187,9 @@ const Categories = () => {
                 }
                 sx={{
                   width: {
-                    xl: "calc(100% / 6)",
-                    lg: "calc(100% / 6)",
-                    md: "calc(100% / 6)",
+                    xl: "calc(100% / 7)",
+                    lg: "calc(100% / 7)",
+                    md: "calc(100% / 5)",
                     sm: "calc(100% / 4)",
                     xs: "100%",
                   },
@@ -239,8 +247,8 @@ const CategoryGrid = ({ items, onItemClick }) => (
         key={index}
         onClick={() => onItemClick(val.id)}
         className="wsk-cp-product"
-        // sx={{ m: "24px 0 !important" }}
-        // className="cust_bx_shadow"
+      // sx={{ m: "24px 0 !important" }}
+      // className="cust_bx_shadow"
       >
         <Box className="product-image">
           <div className="wsk-cp-img">
