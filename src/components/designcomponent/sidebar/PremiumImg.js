@@ -17,7 +17,7 @@ const PremiumImg = ({
   loading,
   hasMore,
   fetchMedia,
-  setHasMore, setOffset, searchTerm, setSearchTerm, searchVector, setSearchVector, valuePremium, setValuePremium, setPhotosData, photosData, vectorData, showpopularData, setVectorData, setShowpopularData,
+  setHasMore, setOffset, searchTerm, setSearchTerm, searchVector, setSearchVector, valuePremium, setValuePremium, setPhotosData, photosData, vectorData, showpopularData, setVectorData, setShowpopularData, handleAddToRecent
 }) => {
   const [selectedImages, setSelectedImages] = useState({
     premium: "",
@@ -92,12 +92,16 @@ const PremiumImg = ({
     setShowpopularData(true);
   };
 
-  const handleCategoryClick = (imageUrl, title, type, index) => {
-    setSelectedImages((prev) => ({ ...prev, [type]: imageUrl }));
-    setImageName((prev) => ({ ...prev, [type]: title }));
+  const handleImageClick = (imageUrl, index, item) => {
     setPremiumimg(imageUrl);
-    selectImage(index, source);
-    // console.log("imageUrl", imageUrl);
+    selectImage(index, source, imageUrl);
+    handleOpentoAdd(item);
+    handleAddToRecent(item); // Use handleOpentoAdd instead of handleAddToRecent
+  };
+
+  const handleExpandClick = (e, index, url, item) => {
+    e.stopPropagation(); // Prevent parent click
+    handleExpand(index, source, url, item); // Open the dialog
   };
 
   const OpentoSearch = (value) => {
@@ -162,12 +166,16 @@ const PremiumImg = ({
             <Box
               className="hovimg"
               key={index}
-              onClick={() => handleCategoryClick(item.thumbnail_url, item.title, "premium")}
-              style={{
+              onClick={() => handleImageClick(item.thumbnail_url, index, item)}
+              sx={{
                 cursor: "pointer",
                 padding: "5px",
+                position: "relative",
                 borderRadius: "10px",
                 transition: "transform 0.3s",
+                "&:hover .cut-hov": {
+                  opacity: 1,
+                },
               }}
               onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")}
               onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
@@ -188,26 +196,23 @@ const PremiumImg = ({
                 className="cut-hov"
                 sx={{
                   position: "absolute",
-                  top: "0",
-                  marginTop: "5px",
-                  left: "21%",
-                  transform: "translateX(-50%)",
+                  top: "5px",
+                  // marginTop: "5px",
+                  left: "-10px",
+                  // transform: "translateX(-50%)",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
                   width: "60px",
                   opacity: 0,
-                  transition: "opacity 0.3s ease", // Smooth transition for opacity
+                  // transition: "opacity 0.3s ease",
                   "&:hover": {
                     opacity: 1, // Show buttons on hover
                   },
                 }}
               >
                 <Button
-                  onClick={() => {
-                    handleExpand(index, source, item.thumbnail_url);
-                    handleOpentoAdd(item);
-                  }}
+                  onClick={(e) => handleExpandClick(e, index, item.thumbnail_url, item)}
                 >
                   <OpenInFullOutlinedIcon
                     sx={{
@@ -399,14 +404,16 @@ const PremiumImg = ({
                     <Box
                       className="hovimg"
                       key={index}
-                      onClick={() => {
-                        handleCategoryClick(item.thumbnail_url, item.title, "premium", index);
-                      }}
-                      style={{
+                      onClick={() => handleImageClick(item.thumbnail_url, index, item)}
+                      sx={{
                         cursor: "pointer",
                         padding: "5px",
                         borderRadius: "10px",
                         transition: "transform 0.3s",
+                        position: "relative", // Ensure parent is relative for proper positioning
+                        "&:hover .cut-hov": {
+                          opacity: 1,
+                        },
                       }}
                       onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")}
                       onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
@@ -415,8 +422,7 @@ const PremiumImg = ({
                         src={item.thumbnail_url}
                         alt={item.title}
                         style={{
-                          position: "relative",
-                          width: "100%",
+                          width: "120px",
                           height: "100px",
                           borderRadius: "10px",
                           objectFit: "cover",
@@ -427,10 +433,10 @@ const PremiumImg = ({
                         className="cut-hov"
                         sx={{
                           position: "absolute",
-                          top: "0",
-                          marginTop: "5px",
-                          left: "21%",
-                          transform: "translateX(-50%)",
+                          top: "5px",
+                          // marginTop: "5px",
+                          left: "-10px",
+                          // transform: "translateX(-50%)",
                           display: "flex",
                           justifyContent: "space-between",
                           alignItems: "center",
@@ -443,10 +449,7 @@ const PremiumImg = ({
                         }}
                       >
                         <Button
-                          onClick={() => {
-                            handleExpand(index, source, item.thumbnail_url);
-                            handleOpentoAdd(item);
-                          }}
+                          onClick={(e) => handleExpandClick(e, index, item.thumbnail_url, item)}
                         >
                           <OpenInFullOutlinedIcon
                             sx={{
@@ -468,15 +471,16 @@ const PremiumImg = ({
                   <Box
                     className="hovimg"
                     key={index}
-                    onClick={() => {
-                      handleCategoryClick(item.thumbnail_url, item.title, "premium", index);
-                    }}
-
-                    style={{
+                    onClick={() => handleImageClick(item.thumbnail_url, index, item)}
+                    sx={{
                       cursor: "pointer",
                       padding: "5px",
                       borderRadius: "10px",
                       transition: "transform 0.3s",
+                      position: "relative", // Ensure parent is relative for proper positioning
+                      "&:hover .cut-hov": {
+                        opacity: 1,
+                      },
                     }}
                     onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")}
                     onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
@@ -486,8 +490,8 @@ const PremiumImg = ({
                       alt={item.title}
                       style={{
                         position: "relative",
-                        width: "100%",
-                        height: "125px",
+                        width: "120px",
+                        height: "100px",
                         borderRadius: "10px",
                         objectFit: "cover",
                       }}
@@ -497,10 +501,10 @@ const PremiumImg = ({
                       className="cut-hov"
                       sx={{
                         position: "absolute",
-                        top: "0",
-                        marginTop: "5px",
-                        left: "21%",
-                        transform: "translateX(-50%)",
+                        top: "5px",
+                        // marginTop: "5px",
+                        left: "-10px",
+                        // transform: "translateX(-50%)",
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
@@ -513,10 +517,7 @@ const PremiumImg = ({
                       }}
                     >
                       <Button
-                        onClick={() => {
-                          handleExpand(index, source, item.thumbnail_url);
-                          handleOpentoAdd(item);
-                        }}
+                        onClick={(e) => handleExpandClick(e, index, item.thumbnail_url, item)}
                       >
                         <OpenInFullOutlinedIcon
                           sx={{

@@ -174,7 +174,9 @@ const DesignOnline = () => {
     // console.log("index", index)
     if (source === "premium") {
       if (premiumimg && premiumimg.length > 0) {
-        // console.log("premiumimg state will trigger the action through useEffect");
+        console.log("premiumimg", premiumimg);
+        AddImage(premiumimg);
+        openImgEditor();
         return; // useEffect will handle it
       } else {
         console.error("No valid premium image found.");

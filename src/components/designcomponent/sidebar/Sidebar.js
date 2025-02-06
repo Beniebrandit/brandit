@@ -104,6 +104,11 @@ const Sidebar = ({
   const [photosData, setPhotosData] = useState([]);
   const [vectorData, setVectorData] = useState([]);
   const [showpopularData, setShowpopularData] = useState(true);
+  const [dialogContext, setDialogContext] = useState({
+    item: null,
+    index: null,
+    source: null
+  });
   const API_URL = "https://stock.adobe.io/Rest/Media/1/Search/Files";
   const API_HEADERS = {
     "x-api-key": "0ca35b55dd684868acacd3a0c4e5264b", // Replace with your actual API key
@@ -136,7 +141,7 @@ const Sidebar = ({
     setDelOpen(true); // Open the delete confirmation dialog
   };
 
-  const handleExpand = (index, source, url) => {
+  const handleExpand = (index, source, url, item) => {
     let image;
     // console.log("source", source);
     setSelectedSource(source);
@@ -146,28 +151,30 @@ const Sidebar = ({
     } else if (source == "premium") {
       // console.log("indexSorce", source);
       image = url;
+      setDialogContext({ item, index, source });
       // image = `${process.env.REACT_APP_API_BASE_URL}/${vectorimage[index]}`;
     } else if (source === "dropbox") {
       image = combinedImages[index].url;
     }
     setExpandImage(image);
     setExpandedImageIndex(index);
-    // console.log("Expanded image index:", index, "Source:", source);
     handleClickOpen();
+  };
+
+  const handleAddToRecent = (item) => {
+    const isDuplicate = selectedimg.some(img => img.id === item.id);
+    if (!isDuplicate) {
+      const updatedSelectedImages = [item, ...selectedimg].slice(0, 10); // Limit to 10 items
+      setSelectedimg(updatedSelectedImages);
+      localStorage.setItem("recentImage", JSON.stringify(updatedSelectedImages));
+    }
   };
 
   const handleSelectImage = () => {
     if (expandedImageIndex !== null && selectedSource) {
-      selectImage(expandedImageIndex, selectedSource); // Perform your custom action
-
-      // Add pending images to selectedimg
-      const updatedSelectedImages = [...selectedimg, ...pendingImages];
-
-      // Update state and local storage
-      setSelectedimg(updatedSelectedImages);
-      localStorage.setItem("recentImage", JSON.stringify(updatedSelectedImages));
-
-      // Clear pending images after they are processed
+      selectImage(expandedImageIndex, selectedSource);
+      // Add pending images to recent
+      pendingImages.forEach(item => handleAddToRecent(item));
       setPendingImages([]);
     }
   };
@@ -203,12 +210,22 @@ const Sidebar = ({
       id: item.id,
       title: item?.title,
       thumbnail_url: item?.thumbnail_url,
-      type: source, // Use 'premium' or other identifier for media type
+      type: source,
     };
 
-    // Store the received image in the pending state
-    setPendingImages((prevPending) => [...prevPending, selectedImage]);
+    setSelectedimg((prev) => {
+      const existingIndex = prev.findIndex((img) => img.id === selectedImage.id);
+      if (existingIndex !== -1) {
+        const updated = prev.filter((_, index) => index !== existingIndex);
+        return [selectedImage, ...updated];
+      }
+      return [selectedImage, ...prev].slice(0, 10);
+    });
   };
+
+  // useEffect(() => {
+  //   localStorage.setItem("recentImage", JSON.stringify(selectedimg));
+  // }, [selectedimg]);
 
   // Load data from local storage on component mount
   useEffect(() => {
@@ -475,6 +492,7 @@ const Sidebar = ({
                     setVectorData={setVectorData}
                     setShowpopularData={setShowpopularData}
                     fetchMedia={fetchMedia}
+                    handleAddToRecent={handleAddToRecent}
                   />
                 </TabPanel>
                 <TabPanel value={value} index={3} style={{ height: "15rem" }}>
@@ -555,7 +573,11 @@ const Sidebar = ({
                 } else if (value === 1 && dropdata[expandedImageIndex]) {
                   selectImage(expandedImageIndex, "dropbox");
                 } else {
-                  selectImage(expandedImageIndex, "premium");
+                  if (dialogContext.item) {
+                    setPremiumimg(dialogContext.item.thumbnail_url);
+                    selectImage(dialogContext.index, dialogContext.source);
+                    handleOpentoAdd(dialogContext.item);
+                  }
                 }
                 handleSelectImage();
                 handleClose();
