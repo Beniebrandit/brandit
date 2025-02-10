@@ -15,8 +15,8 @@ const MegaMenu = () => {
   const menuItems = [
     { name: "Large Format", category: "Large Format" },
     { name: "Stickers and Labels", category: "Decals" },
-    { name: "Fabrics", category: "Banners" },
-    { name: "Accessories", category: "Signs" },
+    { name: "Fabrics", category: "Fabric" },
+    { name: "Accessories", category: "Accessories" },
   ];
 
   const fetchAllProducts = async () => {
@@ -180,7 +180,7 @@ const MegaMenu = () => {
             className={selectedCategory === menu.category ? "active" : ""}
           >
             {menu.name}
-            {menu.name !== "Fabrics" && menu.name !== "Accessories" && (
+            {menu.name !== "Fabric" && menu.name !== "Accessories" && (
               <img src={dropdown} style={{ height: "auto", width: "22px", paddingLeft: "5px", fontWeight: "900" }} />
             )}
           </a>

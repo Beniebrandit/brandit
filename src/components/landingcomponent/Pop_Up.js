@@ -246,6 +246,7 @@ const Pop_Up = ({ open, handleClose, payload0, price, selectedCategory }) => {
 
                     localStorage.setItem("selectedData", JSON.stringify(updatedPayload));
                     navigate(`/design/${payload0?.ProductId}`);
+                    productImgAdd(payload0?.ProductId);
                   } else {
                     console.warn("payload0 is undefined or null");
                   }

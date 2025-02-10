@@ -215,11 +215,19 @@ const Sidebar = ({
 
     setSelectedimg((prev) => {
       const existingIndex = prev.findIndex((img) => img.id === selectedImage.id);
+      let updatedImages;
+
       if (existingIndex !== -1) {
         const updated = prev.filter((_, index) => index !== existingIndex);
-        return [selectedImage, ...updated];
+        updatedImages = [selectedImage, ...updated];
+      } else {
+        updatedImages = [selectedImage, ...prev].slice(0, 10);
       }
-      return [selectedImage, ...prev].slice(0, 10);
+
+      // **Update local storage** after modifying the list
+      localStorage.setItem("recentImage", JSON.stringify(updatedImages));
+
+      return updatedImages;
     });
   };
 

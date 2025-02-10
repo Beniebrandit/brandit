@@ -16,6 +16,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const DesignOnline = () => {
   const { id } = useParams();
+  const location = useLocation();
   const [storedPayload, setStoredPayload] = useState(null);
   const [value, setValue] = React.useState(1);
   const [isTabOpen, setIsTabOpen] = useState(false);
@@ -302,17 +303,20 @@ const DesignOnline = () => {
     };
   }, []);
 
-  const location = useLocation();
-
   useEffect(() => {
-    // Load previously selected image from local storage and initialize the editor
-    const storedImageLink = localStorage.getItem("selectedImage");
+    // Add a delay to ensure localStorage is updated
+    const delay = 3000;
+    const timeoutId = setTimeout(() => {
+      const storedImageLink = localStorage.getItem("selectedImage");
+      if (storedImageLink) {
+        AddImage(storedImageLink);
+        setIsImgEditorShown(true);
+      }
+    }, delay);
 
-    if (storedImageLink) {
-      AddImage(storedImageLink); // Set the image in the state
-      setIsImgEditorShown(true); // Open the editor
-    }
-  }, []);
+    // Cleanup the timeout to avoid memory leaks
+    return () => clearTimeout(timeoutId);
+  }, [location.key]);
 
   useEffect(() => {
     localStorage.removeItem("productDetails");

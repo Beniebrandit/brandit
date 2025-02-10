@@ -57,8 +57,8 @@ const items = [
 const categories = [
   { label: "Large Format", category: "Large Format" },
   { label: "Stickers and Labels", category: "Decals" },
-  { label: "Fabrics", category: "Banners" },
-  { label: "Accessories", category: "Signs" },
+  { label: "Fabric", category: "Fabric" },
+  { label: "Accessories", category: "Accessories" },
 ];
 
 const CustomMenu = styled(Menu)(({ theme }) => ({
