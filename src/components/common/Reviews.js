@@ -34,10 +34,12 @@ import CustomPagination from "./CustomPagination";
 import { ProductService } from "../../services/Product.service";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 
 const Reviews = ({ productId, hidereviewbtn }) => {
   const [value, setValue] = useState(5);
   const [open, setOpen] = useState(false);
+  const [opengallery, setOpenGallery] = useState(false);
   const [emailNotification, setEmailNotification] = useState(true);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [question, setQuestion] = useState("");
@@ -46,6 +48,7 @@ const Reviews = ({ productId, hidereviewbtn }) => {
   const [allreviews, setAllReviews] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [allProducts, setAllProducts] = useState([]);
+  const [allImages, setAllImages] = useState([]);
   const itemsPerPage = 6;
   const paginatedReviews = allreviews?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
   const [payload, setPayload] = useState({
@@ -53,7 +56,12 @@ const Reviews = ({ productId, hidereviewbtn }) => {
     product_id: "",
     stars: "",
     review: "",
+    file: {},
   });
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [loading, setLoading] = useState([]);
+  // const [allreviews, setAllReviews] = useState([]);
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -64,6 +72,13 @@ const Reviews = ({ productId, hidereviewbtn }) => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+  const handleGalleryOpen = () => {
+    setOpenGallery(true);
+  };
+
+  const handleGalleryClose = () => {
+    setOpenGallery(false);
   };
 
   const fetchUserData = async (token) => {
@@ -91,19 +106,28 @@ const Reviews = ({ productId, hidereviewbtn }) => {
   }, []);
 
   useEffect(() => {
+    const imageObject = selectedFiles.reduce((obj, image, index) => {
+      obj[`${index}`] = image; // Assign a unique key for each image
+      return obj;
+    }, {});
+
     setPayload({
       user_id: userId,
       product_id: productId,
       stars: rating,
       review: question,
+      file: imageObject[0] // Convert array to object
     });
-  }, [rating, question]);
-  //console.log("payload", payload);
+  }, [rating, question, selectedFiles]);
+  console.log("payload", payload);
+  console.log("selectedFiles", selectedFiles);
 
   const getallReview = async () => {
     try {
       const res = await ReviewService.Reviews();
       const allreviewss = res.data;
+      const allImages = allreviewss.filter((img) => img.images !== null);
+      setAllImages(allImages)
 
       const totalStars = allreviewss.reduce((acc, review) => acc + review.stars, 0);
       const averageRating = allreviewss.length > 0 ? (totalStars / allreviewss.length).toFixed(1) : "0.0";
@@ -134,6 +158,43 @@ const Reviews = ({ productId, hidereviewbtn }) => {
     return product ? product.name : "Unknown Product";
   };
 
+  const convertBlobToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  const handleFileChange = async (event) => {
+    const files = Array.from(event.target.files);
+    if (files.length === 0) return;
+
+    // Show loading state for new images
+    setLoading((prev) => [...prev, ...Array(files.length).fill(true)]);
+
+    // Convert images to base64
+    const newBase64Images = await Promise.all(files.map(file => convertBlobToBase64(file)));
+
+    setSelectedFiles((prevFiles) => [...prevFiles, ...newBase64Images]);
+
+    // Simulate a loading delay
+    files.forEach((_, index) => {
+      setTimeout(() => {
+        setLoading((prev) => {
+          const newState = [...prev];
+          newState[selectedFiles.length + index] = false;
+          return newState;
+        });
+      }, 2000);
+    });
+  };
+  const handleRemoveImage = (index) => {
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+    setLoading((prev) => prev.filter((_, i) => i !== index));
+  };
+
   function handleClick() {
     if (userId) {
       ReviewService.Postreview(payload)
@@ -149,11 +210,60 @@ const Reviews = ({ productId, hidereviewbtn }) => {
         product_id: "",
         stars: "",
         review: "",
+        file: "",
       });
     } else {
       toast.warning("Please login first");
     }
   }
+
+  // const fetchReviewData = async (item) => {
+  //   console.log("id222", item)
+  //   try {
+  //     const response = await ReviewService.GetReviewById(item); // Replace with actual API call
+  //     setLikesCount(response.data.likes_count);
+  //     setDislikesCount(response.data.dislikes_count);
+  //     setUserReaction(response.data.user_reaction); // If backend tracks user reaction
+  //   } catch (error) {
+  //     console.error("Error fetching review data:", error);
+  //   }
+  // };
+
+  const handleLikeDislike = async (review_id, type) => {
+    console.log("review_id", review_id);
+
+    if (!userId) {
+      toast.warning("Please login to react to reviews.");
+      return;
+    }
+    const user_id = userId;
+    const payload = { user_id, review_id, type };
+
+    try {
+      await ReviewService.LikeDislike(payload);
+
+      // Fetch the updated review data
+      const response = await ReviewService.GetReviewById(review_id);
+      const updatedReview = response.data;
+      getallReview();
+
+      // Update the specific review in allreviews
+      setAllReviews(prevReviews =>
+        prevReviews.map(review =>
+          review.id === review_id ? { ...review, ...updatedReview } : review
+        )
+      );
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // // Fetch updated review data on mount
+  // useEffect(() => {
+  //   fetchReviewData();
+  // }, []);
+
 
   return (
     <>
@@ -261,27 +371,122 @@ const Reviews = ({ productId, hidereviewbtn }) => {
 
             <Grid item md={3} sm={12} xs={12}>
               <Grid container sx={{ height: "100%" }}>
-                <Grid item md={4} sx={{ margin: "auto" }}>
-                  <img alt="facebook1" src={facebook1} width="70%" height="70%" />
-                </Grid>
-                <Grid item md={4} sx={{ margin: "auto" }}>
-                  {" "}
-                  <img alt="facebook2" src={facebook2} width="70%" height="70%" />
-                </Grid>
-                <Grid item md={4} sx={{ margin: "auto" }}>
-                  <img alt="facebook3" src={facebook3} width="70%" height="70%" />
-                </Grid>
-                <Grid item md={4} sx={{ margin: "auto" }}>
-                  <img alt="facebook4" src={facebook4} width="70%" height="70%" />
-                </Grid>
-                <Grid item md={4} sx={{ margin: "auto" }}>
-                  <img alt="facebook5" src={facebook5} width="70%" height="70%" />
-                </Grid>
-                <Grid item md={4} sx={{ margin: "auto" }}>
-                  <img alt="facebook6" src={facebook6} width="70%" height="70%" />
-                </Grid>
+                {allImages.slice(0, 5).map((img, index) => (
+                  <Grid item md={4} sx={{ margin: "auto" }} key={index}>
+                    <img
+                      src={process.env.REACT_APP_API_BASE_URL + img.images.path}
+                      width="70px"
+                      height="70px"
+                      alt={`img-${index}`}
+                    />
+                  </Grid>
+                ))}
+
+                {allImages.length > 5 && (
+                  <Grid item md={4} sx={{ margin: "auto" }}>
+                    <Button sx={{ width: "70px", height: "70px", textTransform: "capitalize", color: "#868686", }} onClick={handleGalleryOpen}>
+                      View All
+                    </Button>
+                  </Grid>
+                )}
               </Grid>
             </Grid>
+
+            {/* Dialog for viewing all images */}
+            <Dialog open={opengallery} onClose={handleGalleryClose} fullWidth maxWidth="md">
+              <DialogContent>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    textAlign: "center",
+                    fontWeight: "bold",
+                    marginBottom: "20px",
+                    color: "#3F5163",
+                  }}
+                >
+                  Review Images
+                </Typography>
+                <Grid
+                  container
+                  spacing={2}
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: {
+                      xs: "repeat(1, 1fr)", // 1 column on extra small screens
+                      sm: "repeat(2, 1fr)", // 2 columns on small screens
+                      md: "repeat(3, 1fr)", // 3 columns on medium screens
+                    },
+                    gap: "16px", // Spacing between images
+                  }}
+                >
+                  {allImages.map((img, index) => (
+                    <Grid
+                      item
+                      key={index}
+                      sx={{
+                        position: "relative",
+                        borderRadius: "8px",
+                        overflow: "hidden",
+                        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                        transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                        "&:hover": {
+                          transform: "scale(1.05)",
+                          boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
+                        },
+                      }}
+                    >
+                      <img
+                        src={process.env.REACT_APP_API_BASE_URL + img.images.path}
+                        alt={`img-${index}`}
+                        style={{
+                          width: "100%",
+                          height: "200px", // Fixed height for uniformity
+                          objectFit: "cover", // Ensure images cover the area
+                        }}
+                      />
+                      {/* Optional: Add a hover overlay with details */}
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          backgroundColor: "rgba(0, 0, 0, 0.5)",
+                          opacity: 0,
+                          transition: "opacity 0.3s ease",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "white",
+                          "&:hover": {
+                            opacity: 1,
+                          },
+                        }}
+                      >
+                        <Typography variant="body2" sx={{ textAlign: "center" }}>
+                          Review by: {img.user_name}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={handleGalleryClose}
+                  sx={{
+                    backgroundColor: "#3F5163",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "#2C3A4B",
+                    },
+                  }}
+                >
+                  Close
+                </Button>
+              </DialogActions>
+            </Dialog>
             <Grid
               item
               md={3}
@@ -419,54 +624,62 @@ const Reviews = ({ productId, hidereviewbtn }) => {
                         {item.date}
                       </Typography>
                     </Box>
-
-                    <Typography
-                      sx={{
-                        color: "#868686",
-                        fontSize: "16px",
-                        lineHeight: "25px",
-                        fontWeight: "500",
-                      }}
-                    >
-                      {item.review}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        color: "#4D4D4D",
-                        fontSize: "12px",
-                        lineHeight: "20px",
-                        fontWeight: "500",
-                        marginTop: "10px",
-                      }}
-                    >
-                      <b>ITEM TYPE:</b>
-                    </Typography>
-                    <Typography
-                      sx={{
-                        color: "#4D4D4D",
-                        fontSize: "16px",
-                        lineHeight: "20px",
-                        fontWeight: "500",
-                        marginTop: "10px",
-                      }}
-                    >
-                      {getProductName(item.product_id)}
-                    </Typography>
-                    <Box sx={{ display: "flex", alignItems: "center", marginTop: "15px" }}>
-                      <Typography
-                        sx={{
-                          color: "#000000",
-                          fontSize: "15px",
-                          fontWeight: "400",
-                          marginRight: "10px",
-                        }}
-                      >
-                        Was this helpful?
-                      </Typography>
-                      <ThumbUpIcon sx={{ color: "black" }} />
-                      &nbsp; 0
-                      <ThumbDownAltIcon sx={{ marginLeft: "10px", color: "black" }} />
-                      &nbsp;0
+                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                      <Box>
+                        <Typography
+                          sx={{
+                            color: "#868686",
+                            fontSize: "16px",
+                            lineHeight: "25px",
+                            fontWeight: "500",
+                          }}
+                        >
+                          {item.review}
+                        </Typography>
+                        <Typography
+                          sx={{
+                            color: "#4D4D4D",
+                            fontSize: "12px",
+                            lineHeight: "20px",
+                            fontWeight: "500",
+                            marginTop: "10px",
+                          }}
+                        >
+                          <b>ITEM TYPE:</b>
+                        </Typography>
+                        <Typography
+                          sx={{
+                            color: "#4D4D4D",
+                            fontSize: "16px",
+                            lineHeight: "20px",
+                            fontWeight: "500",
+                            marginTop: "10px",
+                          }}
+                        >
+                          {getProductName(item.product_id)}
+                        </Typography>
+                        <Box sx={{ display: "flex", alignItems: "center", marginTop: "15px" }}>
+                          <Typography
+                            sx={{
+                              color: "#000000",
+                              fontSize: "15px",
+                              fontWeight: "400",
+                              marginRight: "10px",
+                            }}
+                          >
+                            Was this helpful?
+                          </Typography>
+                          <Button onClick={() => handleLikeDislike(item.id, "like")}>
+                            <ThumbUpIcon sx={{ color: item.likes_count >= 1 ? "#f2d388" : "black" }} />
+                            &nbsp;{item.likes_count}
+                          </Button>
+                          <Button onClick={() => handleLikeDislike(item.id, "dislike")}>
+                            <ThumbDownAltIcon sx={{ color: item.dislikes_count >= 1 ? "#f2d388" : "black" }} />
+                            &nbsp;{item.dislikes_count}
+                          </Button>
+                        </Box>
+                      </Box>
+                      {item?.images?.path && <img style={{ height: "120px", width: "120px" }} src={process.env.REACT_APP_API_BASE_URL + item?.images?.path} />}
                     </Box>
                   </Box>
                 </Grid>
@@ -519,6 +732,63 @@ const Reviews = ({ productId, hidereviewbtn }) => {
             inputProps={{ maxLength: 255 }}
             helperText={`${question.length}/255 characters`}
           />
+          <Box sx={{ width: "100%", margin: "10px 0px", textAlign: "center" }}>
+            {/* Upload Button */}
+            <Button
+              sx={{
+                display: "flex",
+                margin: "auto",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "70%",
+                border: "2px solid lightgray",
+                borderRadius: "25px",
+              }}
+              component="label"
+            >
+              <AddAPhotoIcon />
+              <span style={{ marginLeft: "10px", paddingTop: "3px" }}>Add Photos</span>
+              <input type="file" accept="image/*" onChange={handleFileChange} hidden />
+            </Button>
+
+            {/* Display Selected Images */}
+            <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center", marginTop: "15px" }}>
+              {selectedFiles.map((image, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    position: "relative",
+                    margin: "10px",
+                    width: "100px",
+                    height: "100px",
+                    borderRadius: "10px",
+                    overflow: "hidden",
+                    boxShadow: "0px 0px 5px rgba(0,0,0,0.2)",
+                  }}
+                >
+                  <img
+                    src={image}
+                    alt={`Selected ${index}`}
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                  {/* Remove Button */}
+                  <IconButton
+                    onClick={() => handleRemoveImage(index)}
+                    sx={{
+                      position: "absolute",
+                      top: "5px",
+                      right: "5px",
+                      backgroundColor: "rgba(255,255,255,0.7)",
+                      "&:hover": { backgroundColor: "rgba(255,255,255,1)" },
+                    }}
+                    size="small"
+                  >
+                    <CloseIcon fontSize="small" color="error" />
+                  </IconButton>
+                </Box>
+              ))}
+            </Box>
+          </Box>
           <FormControlLabel
             control={<Checkbox checked={emailNotification} onChange={(e) => setEmailNotification(e.target.checked)} />}
             label="You will be able to receive emails in connection with this review (eg if others comment on your review). All emails contain the option to unsubscribe. We can use the text and star rating from your review in other marketing."

@@ -4,6 +4,7 @@ import { authHeader } from "../library/authHeader";
 
 
 export const ProductService = {
+  User,
   product,
   ProductList,
   Allproduct,
@@ -13,21 +14,36 @@ export const ProductService = {
 
 const token = localStorage.getItem("authToken");
 
-function product(){
-    return (
-      axios
-        .get(
-          apiEndpoint.product,
-          {
-            headers: { "Content-Type": "application/json","Authorization": `Bearer ${token}` },
-          }
-        ).then(res => {
-          if(res && res.status === 200){
-            return res.data;
-          }
-        })
-    );
-  }
+function User() {
+  return (
+    axios
+      .get(
+        apiEndpoint.user,
+        {
+          headers: authHeader(),
+        }
+      ).then(res => {
+        if (res && res.status === 200) {
+          return res.data;
+        }
+      })
+  );
+}
+function product() {
+  return (
+    axios
+      .get(
+        apiEndpoint.product,
+        {
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        }
+      ).then(res => {
+        if (res && res.status === 200) {
+          return res.data;
+        }
+      })
+  );
+}
 function ProductList(params) {
   return axios
     .get(apiEndpoint.productlist, {
@@ -40,7 +56,7 @@ function ProductList(params) {
       }
     });
 }
-  
+
 function Allproduct() {
   return axios
     .get(apiEndpoint.allproduct, {
@@ -53,19 +69,19 @@ function Allproduct() {
     });
 }
 
- async function Dataprice(data, id = null) {
-   const res = await (id
-     ? axios.put(apiEndpointFunction.selectedproductdata(id), data, {
-         headers: authHeader(),
-       })
-     : axios.post(apiEndpoint.selectedproductdata, data, {
-         headers: authHeader(),
-       }));
-   if (res && res.status === 200) {
-     return res.data;
-   }
-   return {};
- }
+async function Dataprice(data, id = null) {
+  const res = await (id
+    ? axios.put(apiEndpointFunction.selectedproductdata(id), data, {
+      headers: authHeader(),
+    })
+    : axios.post(apiEndpoint.selectedproductdata, data, {
+      headers: authHeader(),
+    }));
+  if (res && res.status === 200) {
+    return res.data;
+  }
+  return {};
+}
 
 function registers(data) {
   return axios

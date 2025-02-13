@@ -1,8 +1,5 @@
 import { Box, Button, Container, Grid, TextField, Typography } from "@mui/material";
 import React from "react";
-import footer_logo from "../../asset/images/footer_logo.png";
-import blog1_img from "../../asset/images/blog1_img (1).png";
-import care_img from "../../asset/images/care_img.png";
 import facebook1 from "../../asset/images/facebook1.png";
 import facebook2 from "../../asset/images/facebook2.png";
 import facebook3 from "../../asset/images/facebook3.png";
@@ -16,7 +13,10 @@ import paypal from "../../asset/images/paypal_image.svg";
 import twitter from "../../asset/images/twiiter1.svg";
 import facebook from "../../asset/images/facebook.svg";
 import youtube from "../../asset/images/youtube.svg";
-import linkedin_logo from "../../asset/images/linkedin_logo.svg";
+import logo from "../../asset/images/logo1.svg";
+import logo2 from "../../asset/images/logo2.svg";
+import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
+
 
 const Footer = () => {
   return (
@@ -31,14 +31,16 @@ const Footer = () => {
         <Container sx={{ paddingTop: "90px" }}>
           <Grid container spacing={2}>
             <Grid item md={4} sm={12} xs={12}>
-              <img alt="footer_logo" src={footer_logo} width="50%" height="30%" />
+              <Box sx={{ display: "flex", gap: "1rem", padding: "0rem 0rem 1rem 0rem" }}>
+                <img alt="footer_logo" src={logo} />
+                <img alt="footer_logo" src={logo2} />
+              </Box>
               <Typography
                 sx={{
                   fontSize: "18px",
                   lineHeight: "27px",
                   color: "#545454",
                   fontWeight: "600",
-                  marginTop: "10px",
                 }}
               >
                 Brandit brings your brand to life from the moment you get in touch{" "}
@@ -56,25 +58,16 @@ const Footer = () => {
               </Typography>
               <Box sx={{ marginTop: "20px", display: "flex", gap: "1rem" }}>
                 <Box className="social-icon">
+                  <img src={twitter} alt="Twitter" height="16" width="21px" />
+                </Box>
+                {/* <Box className="social-icon" sx={{ backgroundColor: "#3F5163" }}>
+                  <img src={printrest} alt="Printrest" width="20px" height="23px" />
+                </Box> */}
+                <Box className="social-icon">
                   <img src={facebook} alt="facebook" width="12px" height="22px" />
                 </Box>
                 <Box className="social-icon">
-                  <img src={twitter} alt="Twitter" height="16" width="21px" />
-                </Box>
-                <Box className="social-icon">
-                  <img
-                    src={linkedin_logo}
-                    alt="youtube"
-                    width="22px"
-                    height="15.46px"
-                    style={{
-                      backgroundColor: "#3F5163",
-                      height: "auto",
-                      width: "auto",
-                      padding: "3px",
-                      borderRadius: "3px",
-                    }}
-                  />
+                  <img src={youtube} alt="youtube" width="22px" height="15.46px" />
                 </Box>
               </Box>
             </Grid>
@@ -88,7 +81,7 @@ const Footer = () => {
                   lineHeight: "17px",
                 }}
               >
-                About Us
+                Shop
               </Typography>
               <Typography
                 sx={{
@@ -99,7 +92,29 @@ const Footer = () => {
                   marginTop: "30px",
                 }}
               >
-                About Brandit{" "}
+                Shop apparel
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "18px",
+                  lineHeight: "27px",
+                  color: "#545454",
+                  fontWeight: "600",
+                  marginTop: "10px",
+                }}
+              >
+                Shop Promo/Gifts
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "18px",
+                  lineHeight: "27px",
+                  color: "#545454",
+                  fontWeight: "600",
+                  marginTop: "10px",
+                }}
+              >
+                Brandit.net
               </Typography>
             </Grid>
 
@@ -166,40 +181,32 @@ const Footer = () => {
                   <img alt="facebook1" src={facebook1} width="100%" height="100%" />
                 </Grid>
                 <Grid item md={3}>
-                  <img alt="facebook2" src={facebook2} />
+                  <img alt="facebook2" src={facebook2} width="100%" height="100%" />
                 </Grid>
                 <Grid item md={3}>
-                  <img alt="facebook3" src={facebook3} />
+                  <img alt="facebook3" src={facebook3} width="100%" height="100%" />
                 </Grid>
                 <Grid item md={3}>
-                  <img alt="facebook4" src={facebook4} />
+                  <img alt="facebook4" src={facebook4} width="100%" height="100%" />
                 </Grid>
                 <Grid item md={3}>
-                  <img alt="facebook5" src={facebook5} />
+                  <img alt="facebook5" src={facebook5} width="100%" height="100%" />
                 </Grid>
                 <Grid item md={3}>
-                  <img alt="facebook6" src={facebook6} />
+                  <img alt="facebook6" src={facebook6} width="100%" height="100%" />
                 </Grid>
                 <Grid item md={3}>
-                  <img alt="facebook7" src={facebook7} />
+                  <img alt="facebook7" src={facebook7} width="100%" height="100%" />
                 </Grid>
                 <Grid item md={3}>
-                  <img alt="facebook8" src={facebook8} />
+                  <img alt="facebook8" src={facebook8} width="100%" height="100%" />
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
 
-          <Grid
-            container
-            style={{
-              marginTop: "30px",
-              marginLeft: "0px",
-              width: "auto",
-            }}
-            spacing={8}
-          >
-            <Grid className="customGridItem" sx={{ paddingLeft: "0px" }} item md={4} sm={12} xs={12}>
+          {/*<Grid container sx={{ marginTop: "30px" }} spacing={8}>
+            <Grid item md={3} sm={12} xs={12}>
               <Typography
                 sx={{
                   color: "#000000",
@@ -212,22 +219,40 @@ const Footer = () => {
               </Typography>
               <Typography
                 sx={{
-                  textAlign: "left",
                   fontSize: "18px",
                   lineHeight: "27px",
                   color: "#545454",
                   fontWeight: "600",
-                  marginTop: "40px",
-                  // width: "22rem",
+                  marginTop: "30px",
                 }}
               >
-                Need help? Just give us call at <span style={{ color: "#E0CE8F" }}> 800-905-8851</span> or email us at{" "}
-                <span style={{ color: "#E0CE8F" }}> contactus@brandit.net</span> and one of our associates will be happy
-                to assist you
+                Lorem Ipsum
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "18px",
+                  lineHeight: "27px",
+                  color: "#545454",
+                  fontWeight: "600",
+                  marginTop: "10px",
+                }}
+              >
+                Lorem Ipsum
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "18px",
+                  lineHeight: "27px",
+                  color: "#545454",
+                  fontWeight: "600",
+                  marginTop: "10px",
+                }}
+              >
+                Lorem Ipsum
               </Typography>
             </Grid>
 
-            <Grid className="customGridItem" item md={4} sm={12} xs={12}>
+            <Grid item md={2} sm={12} xs={12}>
               <Typography
                 sx={{
                   color: "#000000",
@@ -236,7 +261,53 @@ const Footer = () => {
                   lineHeight: "17px",
                 }}
               >
-                Recent Blogs
+                Shop
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "18px",
+                  lineHeight: "27px",
+                  color: "#545454",
+                  fontWeight: "600",
+                  marginTop: "30px",
+                }}
+              >
+                Shop apparel
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "18px",
+                  lineHeight: "27px",
+                  color: "#545454",
+                  fontWeight: "600",
+                  marginTop: "10px",
+                }}
+              >
+                Shop Promo/Gifts
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "18px",
+                  lineHeight: "27px",
+                  color: "#545454",
+                  fontWeight: "600",
+                  marginTop: "10px",
+                }}
+              >
+                Brandit.net
+              </Typography>
+            </Grid>
+
+            <Grid item md={3} sm={12} xs={12}>
+              <Typography
+                sx={{
+                  color: "#000000",
+                  fontWeight: "600",
+                  fontSize: "20px",
+                  lineHeight: "17px",
+                }}
+              >
+                Recent News
               </Typography>
               <Box
                 sx={{
@@ -266,7 +337,7 @@ const Footer = () => {
               </Box>
             </Grid>
 
-            <Grid className="customGridItem" item md={4} sm={12} xs={12}>
+            <Grid item md={4} sm={12} xs={12}>
               <Typography
                 sx={{
                   color: "#000000",
@@ -275,102 +346,95 @@ const Footer = () => {
                   lineHeight: "17px",
                 }}
               >
-                Youtube
+                Instagram
               </Typography>
-              <Box sx={{ marginTop: "30px", height: "53%" }}>
-                <img alt="care_img" src={care_img} width="100%" height="100%" />
+              <Box sx={{ marginTop: "30px", padding: "3px" }}>
+                <Button sx={{ color: "#545454", border: "1px solid #545454", margin: "3px" }}>STDIO</Button>
+                <Button sx={{ color: "#545454", border: "1px solid #545454", margin: "3px" }}>EVENT</Button>
+                <Button sx={{ color: "#545454", border: "1px solid #545454", margin: "3px" }}>SPORTS</Button>
+                <Button sx={{ color: "#545454", border: "1px solid #545454", margin: "3px" }}>BLOG</Button>
+                <Button sx={{ color: "#545454", border: "1px solid #545454", margin: "3px" }}>CLEAN</Button>
+                <Button sx={{ color: "#545454", border: "1px solid #545454", margin: "3px" }}>CREATIVE</Button>
+                <Button sx={{ color: "#545454", border: "1px solid #545454", margin: "3px" }}>ELEGENT</Button>
+                <Button sx={{ color: "#545454", border: "1px solid #545454", margin: "3px" }}>MINIMAL</Button>
+                <Button sx={{ color: "#545454", border: "1px solid #545454", margin: "3px" }}>MEGA</Button>
               </Box>
             </Grid>
+          </Grid>*/}
+        </Container>
+      </Box>
+      <Box sx={{ backgroundColor: "#F9F9F9", height: "196px" }}>
+        <Container
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            height: "100%",
+            flexWrap: "wrap",
+            paddingRight: { xs: "24px", lg: "90px !important" }
+          }}
+        >
+          <Grid item md={6} sm={12} xs={12}>
+            <Typography sx={{ color: "black", fontWeight: "600", fontSize: "20px", margin: "auto" }}>
+              PAYMENT OPTIONS
+            </Typography>
+            <Box sx={{ margin: "auto" }}>
+              <img src={visa} alt="" />
+              &nbsp;&nbsp;
+              <img src={paypal} alt="" />
+            </Box>
+          </Grid>
+
+          <Grid item md={6} sm={12} xs={12} sx={{ display: "flex", flexDirection: "column" }}>
+            <Typography sx={{ color: "black", fontWeight: "600", fontSize: "20px", width: "53%" }}>
+              Subscribe
+            </Typography>
+            <Box>
+              <TextField
+                placeholder="Email address"
+                sx={{
+                  borderRadius: "0px !important",
+                  marginTop: "10px",
+                  backgroundColor: "white",
+                  "& .MuiInputBase-input": { padding: "6.5px 14px !important" },
+                }}
+              />
+              <Button
+                sx={{
+                  backgroundColor: "#3F5163",
+                  marginTop: "10px",
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: "#3F5163",
+                  },
+                }}
+              >
+                <ArrowForwardIosOutlinedIcon />
+              </Button>
+            </Box>
           </Grid>
         </Container>
       </Box>
-      <Box sx={{ backgroundColor: "#3F5163", padding: "90px 0px 150px 0px" }}>
+      <Box sx={{ backgroundColor: "#3F5163", padding: "90px 0px 160px 0px" }}>
         <Container>
-          <Grid container spacing={8}>
-            <Grid item md={4} sm={12} xs={12}>
+          <Grid container gap={1} columns={13}>
+            <Grid item md={4} sm={12} xs={12} sx={{ margin: "0 auto" }}>
               <Typography sx={{ color: "#FFFFFF", fontWeight: "600", fontSize: "20px" }}>Address</Typography>
               <Typography sx={{ color: "#FFFFFF", textAlign: "start", marginTop: "10px" }}>
                 Graphics Sign Shop 2773 Jefferson Street Austell,GA 30168
               </Typography>
-              <Typography sx={{ color: "#FFFFFF", textAlign: "start", marginTop: "40px" }}>
-                Apparel and Corporate Office 1395 S. Marietta Parkway SE Building 100,Suitte 116 Marietta,GA 30067
-              </Typography>
             </Grid>
-            <Grid item md={4} sm={12} xs={12}>
-              <Typography sx={{ color: "#FFFFFF", fontWeight: "600", fontSize: "20px" }}>
-                Need a Helping Hand?
-              </Typography>
+            <Grid item md={4} sm={12} xs={12} sx={{ margin: "auto" }}>
+              <Typography sx={{ color: "#FFFFFF", fontWeight: "600", fontSize: "20px" }}>Help</Typography>
               <Typography sx={{ color: "#FFFFFF", marginTop: "10px" }}>
                 Reach out and connect with the Brandit team and we'll bring your vision to life without delay.when your
                 brand is at stake ,why wait?
               </Typography>
-              <Typography
-                sx={{
-                  color: "#FFFFFF",
-                  marginTop: "10px",
-                  fontWeight: "600",
-                  fontSize: "20px",
-                }}
-              >
-                Payment Options
-              </Typography>
-              <Box>
-                <img src={visa} alt="" />
-                <img src={paypal} alt="" />
-              </Box>
             </Grid>
-            <Grid item md={4} sm={12} xs={12}>
-              <Typography
-                sx={{
-                  color: "#FFFFFF",
-                  fontWeight: "600",
-                  fontSize: "20px",
-                }}
-              >
-                Subscribe
-              </Typography>
+            <Grid item md={4} sm={12} xs={12} sx={{ margin: "auto" }}>
               <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                }}
+                sx={{ display: { md: "flex", sm: "block" }, margin: "auto", justifyContent: { sm: "center", xs: "left" }, alignItems: "center", height: "100%" }}
               >
-                <TextField
-                  placeholder="Email address"
-                  sx={{
-                    borderRadius: "1px",
-                    backgroundColor: "white",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    "& .MuiInputBase-input": { padding: "7.5px 14px !important" },
-                  }}
-                />
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "#E0CE8F",
-                    color: "#3F5163",
-
-                    fontWeight: "400",
-                    padding: "9px",
-                    width: "100px",
-                    height: "38px",
-                    textTransform: "none",
-                    "&:hover": {
-                      backgroundColor: "#E0CE8F",
-                    },
-
-                    "& .MuiButtonBase-root": {
-                      borderRadius: "0px !important",
-                    },
-                  }}
-                >
-                  Send
-                </Button>
-              </Box>
-              <Box sx={{ marginTop: "40px" }}>
                 <Button
                   variant="contained"
                   sx={{
@@ -379,11 +443,13 @@ const Footer = () => {
                     borderRadius: "8px",
                     fontWeight: "400",
                     padding: "9px",
-                    width: "7rem",
                     textTransform: "none",
                     "&:hover": {
                       backgroundColor: "#E0CE8F",
                     },
+                    margin: { sm: "auto", xs: "20px 0" },
+                    width: "174px",
+                    height: "60px",
                   }}
                 >
                   Contact Us{" "}

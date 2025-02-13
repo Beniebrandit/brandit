@@ -63,9 +63,9 @@ const HomeFooter = () => {
                 <Box className="social-icon">
                   <img src={twitter} alt="Twitter" height="16" width="21px" />
                 </Box>
-                <Box className="social-icon" sx={{ backgroundColor: "#3F5163" }}>
+                {/* <Box className="social-icon" sx={{ backgroundColor: "#3F5163" }}>
                   <img src={printrest} alt="Printrest" width="20px" height="23px" />
-                </Box>
+                </Box> */}
                 <Box className="social-icon">
                   <img src={facebook} alt="facebook" width="12px" height="22px" />
                 </Box>

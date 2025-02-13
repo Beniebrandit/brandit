@@ -7,6 +7,8 @@ export const ReviewService = {
   Reviews,
   ProductReview,
   Faq,
+  LikeDislike,
+  GetReviewById
 };
 
 function Reviews() {
@@ -47,6 +49,29 @@ function ProductReview(id) {
 function Postreview(data) {
   return axios
     .post(apiEndpoint.review, data, {
+      headers: authHeader(),
+    })
+    .then((res) => {
+      if (res && res.status === 200) {
+        return res.data;
+      }
+    });
+}
+function LikeDislike(data) {
+  return axios
+    .post(apiEndpoint.likedislike, data, {
+      headers: authHeader(),
+    })
+    .then((res) => {
+      if (res && res.status === 200) {
+        return res.data;
+      }
+    });
+}
+function GetReviewById(id) {
+  console.log("id111", id)
+  return axios
+    .get(apiEndpointFunction.getreviewbyid(id), {
       headers: authHeader(),
     })
     .then((res) => {
