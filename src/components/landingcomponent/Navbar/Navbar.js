@@ -15,6 +15,7 @@ import {
   ListItem,
   ListItemText,
   Divider,
+  Grid,
 } from "@mui/material";
 import "./MegaMenu.css";
 import { Search, AccountCircle, Dashboard } from "@mui/icons-material";
@@ -33,6 +34,7 @@ import { ProductService } from "../../../services/Product.service";
 import { useMediaQuery, useTheme } from "@mui/material";
 import LoginDialog from "../../common/LoginDialog";
 import CreateAccountDialog from "../../common/CreateAccountDialog";
+import SearchBar from "./Searchbar";
 
 const items = [
   { text: "Products", icon: <Dashboard /> },
@@ -440,7 +442,7 @@ const Navbar = () => {
       <Box className="header">
         <Container
           maxWidth="lg"
-          sx={{ padding: "0px", justifyContent: "space-between", display: "flex", alignItems: "center" }}
+          sx={{ padding: "0px", justifyContent: "space-between", display: "flex", flexDirection: { xs: "column", sm: "row" }, alignItems: "center" }}
         >
           {/* Email and Phone Info */}
           <Box
@@ -489,6 +491,9 @@ const Navbar = () => {
                 Phone: 800-935-8231
               </Typography>
             </Box>
+          </Box>
+          <Box sx={{ marginTop: { xs: "7px", sm: "0px" } }}>
+            <SearchBar />
           </Box>
           {/* Social Media Icons */}
           <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}>

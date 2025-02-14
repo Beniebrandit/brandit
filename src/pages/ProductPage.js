@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/productcomponent/Header/Header";
 import ProductDescription from "../components/productcomponent/ProductDescription";
 import Services from "../components/productcomponent/Services";
 import BannerFeature from "../components/productcomponent/BannerFeature";
@@ -12,6 +11,7 @@ import Reviews from "../components/common/Reviews";
 import AssistanceBanner from "../components/common/AssistanceBanner";
 import { useParams } from "react-router-dom";
 import { ProductCategoryService } from "../services/ProductCategory.service";
+import Navbar from "../components/landingcomponent/Navbar/Navbar";
 
 const ProductPage = () => {
   const params = useParams();
@@ -61,7 +61,7 @@ const ProductPage = () => {
   }, []);
   return (
     <>
-      <Header />
+      <Navbar />
       <Product
         productname={params.id}
         setLongDescription={setLongDescription}

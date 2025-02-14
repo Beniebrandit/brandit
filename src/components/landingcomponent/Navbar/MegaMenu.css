@@ -27,7 +27,7 @@ a, a:hover, a.active, a:active, a:visited, a:focus {
   justify-content: center;
   background-color: #fff;
   float: left;
-  padding: 10px 20px;
+  /* padding: 10px 20px; */
   /*width: 100vh;*/
   list-style: none;
   position: relative;
@@ -39,7 +39,7 @@ a, a:hover, a.active, a:active, a:visited, a:focus {
 }*/
 
 .exo-menu > li > a {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
   color: #8c8e8f;
   padding: 10px 15px;
