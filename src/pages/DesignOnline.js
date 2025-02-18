@@ -44,6 +44,8 @@ const DesignOnline = () => {
     quantity: "",
     price: null,
   });
+  const [allImages, setAllImages] = useState([]);
+
 
   useEffect(() => {
     const payload = localStorage.getItem("selectedData");
@@ -175,7 +177,6 @@ const DesignOnline = () => {
     // console.log("index", index)
     if (source === "premium") {
       if (premiumimg && premiumimg.length > 0) {
-        console.log("premiumimg", premiumimg);
         AddImage(premiumimg);
         openImgEditor();
         return; // useEffect will handle it
@@ -183,7 +184,7 @@ const DesignOnline = () => {
         console.error("No valid premium image found.");
       }
     } else if (source === "upload" && combinedImages && combinedImages.length > 0) {
-      const selectedImage = combinedImages[index].url;
+      const selectedImage = process.env.REACT_APP_API_BASE_URL + combinedImages[index]?.image.path;
       if (selectedImage) {
         AddImage(selectedImage);
         openImgEditor();
@@ -191,9 +192,17 @@ const DesignOnline = () => {
         console.error("No valid uploaded image at upload index", index);
       }
     } else if (source === "dropbox" && combinedImages && combinedImages.length > 0) {
-      const DropImage = combinedImages[index];
+      const DropImage = combinedImages[index]?.url;
       if (DropImage) {
-        AddImage(DropImage.url);
+        AddImage(DropImage);
+        openImgEditor();
+      } else {
+        console.error("No valid uploaded image at dropdata index", index);
+      }
+    } else if (source === "drive" && combinedImages && combinedImages.length > 0) {
+      const Driveimg = process.env.REACT_APP_API_BASE_URL + combinedImages[index]?.image.path;
+      if (Driveimg) {
+        AddImage(Driveimg);
         openImgEditor();
       } else {
         console.error("No valid uploaded image at dropdata index", index);
@@ -352,6 +361,8 @@ const DesignOnline = () => {
             dropdata={dropdata}
             setgetId={setgetId}
             storedPayload={storedPayload}
+            setAllImages={setAllImages}
+            AddImage={AddImage}
             sx={{
               width: { xs: "100px", sm: "100%" },
               position: { xs: "relative", sm: "fixed" },

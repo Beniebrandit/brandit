@@ -10,6 +10,9 @@ import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 import useDrivePicker from "react-google-drive-picker";
 import DropboxChooser from "react-dropbox-chooser";
 import { gapi } from 'gapi-script';
+import { MyUploadService } from "../../../services/MyUpload.service";
+import { ProductService } from "../../../services/Product.service";
+import { v4 as uuidv4 } from 'uuid';
 
 const CLIENT_ID = "1062247369631-2i266asc9rltsjaknplpc6pl079ji3r1.apps.googleusercontent.com"; // OAuth 2.0 Client ID
 const API_KEY = "AIzaSyDyHd1C_t-voUaaMejrVvL9eMnKa9QfNtc"; // API Key
@@ -33,15 +36,26 @@ const MyUpload = ({
   const [gisInited, setGisInited] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [loadingImages, setLoadingImages] = useState({});
+  const [myUploadsData, setMyUploadsData] = useState([]);
+  const [userId, setUserId] = useState();
+  const [uploadingFiles, setUploadingFiles] = useState([]);
+
   const APP_KEY = "3astslwrlzfkcvc";
 
   useEffect(() => {
-    // Load Google APIs and Picker
-    const loadScripts = async () => {
-      loadGapi();
-      loadGis();
-    };
+    const token = localStorage.getItem("authToken");
+    if (token) fetchUserData(token);
+  }, []);
 
+  const fetchUserData = async (token) => {
+    const response = await fetch("https://flagg.devlopix.com/api/user", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    setUserId((await response.json()).id);
+  };
+
+  // Initialize Google APIs
+  useEffect(() => {
     const loadGapi = () => {
       const script = document.createElement("script");
       script.src = "https://apis.google.com/js/api.js";
@@ -62,91 +76,80 @@ const MyUpload = ({
     };
 
     const initializeGis = () => {
-      const tokenClient = google.accounts.oauth2.initTokenClient({
+      window.tokenClient = google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
         scope: SCOPES,
-        callback: (response) => {
-          if (response.error) {
-            console.error("Error during authorization", response);
-          } else {
-            setAccessToken(response.access_token);
-          }
-        },
+        callback: (response) => response.error ? console.error(response) : setAccessToken(response.access_token)
       });
-
       setGisInited(true);
-
-      // Attach token client to window for later use
-      window.tokenClient = tokenClient;
     };
 
-    loadScripts();
+    loadGapi();
+    loadGis();
   }, []);
 
+  // Handle Google Drive picker
   const openDrivePicker = () => {
     if (!gisInited) return;
-
-    // If access token exists, create the picker immediately
-    if (accessToken) {
-      createPicker();
-    } else {
-      // If no token, authorize the user and open the picker afterward
-      window.tokenClient.requestAccessToken({ prompt: "" });
-    }
+    accessToken ? createPicker() : window.tokenClient.requestAccessToken({ prompt: "" });
   };
 
   const createPicker = () => {
-    if (!pickerInited) {
-      console.error("Picker is not initialized.");
-      return;
-    }
+    if (!pickerInited || !accessToken) return;
 
-    if (!accessToken) {
-      console.error("Access token is missing. Requesting a new token...");
-      window.tokenClient.requestAccessToken({ prompt: "" });
-      return;
-    }
+    const view = new google.picker.View(google.picker.ViewId.DOCS)
+      .setMimeTypes("image/png,image/jpeg,image/jpg");
 
-    const view = new google.picker.View(google.picker.ViewId.DOCS);
-    view.setMimeTypes("image/png,image/jpeg,image/jpg");
-
-    const picker = new google.picker.PickerBuilder()
+    new google.picker.PickerBuilder()
       .enableFeature(google.picker.Feature.NAV_HIDDEN)
       .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
       .setDeveloperKey(API_KEY)
       .setAppId(APP_ID)
       .setOAuthToken(accessToken)
       .addView(view)
-      .addView(new google.picker.DocsUploadView())
       .setCallback(pickerCallback)
-      .build();
-
-    picker.setVisible(true);
+      .build()
+      .setVisible(true);
   };
 
   const pickerCallback = async (data) => {
     if (data.action === google.picker.Action.PICKED) {
       const files = await Promise.all(
         data[google.picker.Response.DOCUMENTS].map(async (doc) => {
-          const fileMetadata = await gapi.client.drive.files.get({
-            fileId: doc[google.picker.Document.ID],
-            fields: "id, name, mimeType, webContentLink, webViewLink",
-          });
+          const fileId = doc[google.picker.Document.ID];
+          try {
+            // Get file metadata
+            const metadata = await gapi.client.drive.files.get({
+              fileId,
+              fields: "mimeType,name",
+            });
 
-          // Use webContentLink for direct access or webViewLink as fallback
-          const isEmbeddable = fileMetadata.result.mimeType.startsWith("image/");
-          return {
-            id: fileMetadata.result.id,
-            name: fileMetadata.result.name,
-            mimeType: fileMetadata.result.mimeType,
-            embedUrl: isEmbeddable ? fileMetadata.result.webContentLink : null,
-            viewUrl: fileMetadata.result.webViewLink,
-          };
+            // Get file content
+            const response = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
+              headers: { Authorization: `Bearer ${accessToken}` }
+            });
+            const blob = await response.blob();
+
+            return new Promise((resolve) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve({
+                source: "drive",
+                url: reader.result,
+                name: metadata.result.name,
+                mimeType: metadata.result.mimeType,
+                data_id: uuidv4(),
+              });
+              reader.readAsDataURL(blob);
+            });
+          } catch (error) {
+            console.error("Error processing Drive file:", error);
+            return null;
+          }
         })
       );
 
-      setSelectedFiles(files);
-      // console.log("Selected Files:", files);
+      const validFiles = files.filter(file => file !== null);
+      handleNewImages(validFiles);
     }
   };
 
@@ -163,70 +166,153 @@ const MyUpload = ({
       url: file?.embedUrl, // Assuming embedUrl is the image link
     }));
 
-    const dropboxFiles = dropdata?.map((file) => ({
+    const newDropImages = dropdata.map((file) => ({
       source: "dropbox", // Indicates this image is from Dropbox
       url: file?.link, // Assuming link is the image URL
     }));
 
     // Combine all three arrays
-    setCombinedImages((prev) => [...new Set([...prev, ...selectedFiles, ...driveFiles, ...dropboxFiles])]);
+    setCombinedImages((prev) => [...new Set([...prev, ...selectedFiles, ...driveFiles, ...newDropImages])]);
 
   }, [selectedFile, drivedata, dropdata]);
 
-  useEffect(() => {
-    const storedImages = JSON.parse(localStorage.getItem("uploadedImages")) || [];
-    if (storedImages.length > 0) {
-      setCombinedImages(storedImages);
+  const fetchUploadedImages = async () => {
+    try {
+      const res = await MyUploadService.Getmyupload();
+      setMyUploadsData(res.data || []);
+      setCombinedImages(res.data || [])
+    } catch (error) {
+      console.error("Fetch failed:", error);
     }
-  }, []);  // Runs only on mount
-
-  // Update local storage whenever combinedImages changes
+  };
   useEffect(() => {
-    if (combinedImages.length > 0) { // Prevent overwriting with empty array on reload
-      localStorage.setItem("uploadedImages", JSON.stringify([...new Map(combinedImages.map(img => [img.url, img])).values()]));
-    }
-  }, [combinedImages]);
+    fetchUploadedImages();
+  }, []);
 
-  const handleNewImages = (newImages) => {
-    const newLoadingState = {};
-    newImages.forEach((img) => {
-      newLoadingState[img.url] = true; // Mark as loading
-    });
+  const fetchImageAsBase64 = async (url) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
 
-    setLoadingImages((prev) => ({ ...prev, ...newLoadingState }));
+      // Infer MIME type from the file extension in the URL
+      const extension = url.split('.').pop().toLowerCase();
+      let mimeType = "application/binary"; // Default fallback
 
-    setCombinedImages((prevImages) => {
-      const uniqueNewImages = newImages.filter(
-        (newImg) => !prevImages.some((img) => img.url === newImg.url)
-      );
-      return [...prevImages, ...uniqueNewImages];
-    });
+      switch (extension) {
+        case "png":
+          mimeType = "image/png";
+          break;
+        case "jpg":
+        case "jpeg":
+          mimeType = "image/jpeg";
+          break;
+        case "gif":
+          mimeType = "image/gif";
+          break;
+        case "webp":
+          mimeType = "image/webp";
+          break;
+        case "bmp":
+          mimeType = "image/bmp";
+          break;
+        case "svg":
+          mimeType = "image/svg+xml";
+          break;
+        // Add more cases as needed
+        default:
+          console.warn(`Unsupported file extension: ${extension}. Using default MIME type.`);
+      }
 
-    // Simulate a loading delay, then remove loaders
-    setTimeout(() => {
-      setLoadingImages((prev) => {
-        const updatedState = { ...prev };
-        newImages.forEach((img) => delete updatedState[img.url]);
-        return updatedState;
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          // Replace the MIME type in the base64 string
+          const base64 = reader.result.replace(/^data:.*;base64,/, `data:${mimeType};base64,`);
+          resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
       });
-    }, 2000);
+    } catch (error) {
+      console.error("Error fetching image:", error);
+      return null;
+    }
+  };
+
+  const handleDropboxFiles = async (files) => {
+    const processedFiles = files.map(file => ({
+      source: "dropbox",
+      url: file.link.replace("&dl=0", "&dl=1"),
+      data_id: uuidv4(),
+    }));
+    handleNewImages(processedFiles);
   };
 
   const handleFileChange = async (event) => {
     const files = Array.from(event.target.files);
-    if (!files.length) return;
-
-    const fileReaders = files.map((file) => {
-      return new Promise((resolve, reject) => {
+    const processedFiles = await Promise.all(
+      files.map(file => new Promise(resolve => {
         const reader = new FileReader();
-        reader.onload = () => resolve({ source: "upload", url: reader.result });
-        reader.onerror = (error) => reject(error);
+        reader.onload = () => resolve({
+          source: "upload",
+          url: reader.result,
+          data_id: uuidv4(),
+        });
         reader.readAsDataURL(file);
-      });
-    });
+      }))
+    );
+    handleNewImages(processedFiles);
+  };
 
-    const newImages = await Promise.all(fileReaders);
-    handleNewImages(newImages);
+  const handleNewImages = async (newImages) => {
+    if (!userId || !newImages.length) return;
+
+    // Add to uploading files with loading state
+    setUploadingFiles(prev => [...prev, ...newImages]);
+    setLoadingImages(prev => ({
+      ...prev,
+      ...Object.fromEntries(newImages.map(img => [img.data_id, true]))
+    }));
+
+    try {
+      const formattedImages = newImages.map(img => {
+        const Dropsource = img.source === "dropbox";
+
+        return {
+          data_id: img.data_id,
+          user_id: userId,
+          source: img.source,
+          ...(Dropsource ? { url: img.url } : { image: img.url }) // Include only `url` or `image`
+        };
+      });
+
+
+      const response = await MyUploadService.Postmyupload({ myUploadsData: formattedImages });
+      // Assuming server returns saved images with data_id
+      setMyUploadsData(prev => [...prev, ...formattedImages]);
+      fetchUploadedImages();
+    } catch (error) {
+      console.error("Upload failed:", error);
+    } finally {
+      // Remove from uploading files and clear loading
+      setUploadingFiles(prev => prev.filter(file =>
+        !newImages.some(newImg => newImg.data_id === file.data_id)
+      ));
+      setLoadingImages(prev => {
+        const updated = { ...prev };
+        newImages.forEach(img => delete updated[img.data_id]);
+        return updated;
+      });
+    }
+  };
+
+  const handleDeleteImage = async (dataId) => {
+    try {
+      await MyUploadService.Myuploaddel(dataId);
+      setMyUploadsData(prev => prev.filter(img => img.id !== dataId));
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
   };
 
   useEffect(() => {
@@ -267,16 +353,31 @@ const MyUpload = ({
   }, [dropdata, combinedImages]);
 
 
-  const handleDeleteImage = (index, source) => {
-    handleDeleteClick(index, source);
-    setLoading((prev) => {
-      const updatedLoading = [...prev];
-      updatedLoading.splice(index, 1); // Remove the loading spinner for the deleted image
-      return updatedLoading;
-    });
-  };
-  console.log("combinedImages", combinedImages)
+
+  // console.log("myUploadsData", myUploadsData)
   // const handleMicrosoft = () => { };
+
+  const ImageComponent = ({ image, source, index }) => {
+    const imageUrl = image.url || (image.image?.path ? `${process.env.REACT_APP_API_BASE_URL}${image.image.path}` : '');
+    const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(imageUrl);
+
+    return isImage ? (
+      <img
+        src={imageUrl}
+        style={{ width: "100%", height: "100%", borderRadius: "10px" }}
+        alt={source}
+        onClick={() => selectImage(index, image.source)}
+      />
+    ) : (
+      <img
+        src={imageUrl}
+        style={{ width: "100%", height: "100%", borderRadius: "10px" }}
+        alt={source}
+        onClick={() => selectImage(index, image.source)}
+      />
+    );
+  };
+
   return (
     <>
       <Box
@@ -313,6 +414,7 @@ const MyUpload = ({
             <input
               type="file"
               accept="image/*"
+              multiple
               onChange={handleFileChange} // Use handleFileChange to trigger the loader
               style={{
                 display: "none", // Hide the file input
@@ -341,6 +443,7 @@ const MyUpload = ({
           <input
             type="file"
             accept="image/*"
+            multiple
             onChange={handleFileChange} // Use handleFileChange to trigger the loader
             style={{
               position: "absolute",
@@ -373,43 +476,11 @@ const MyUpload = ({
         >
           <DropboxChooser
             appKey={APP_KEY}
-            success={(files) => {
-              if (files && files.length > 0) {
-                // Add loading state for Dropbox images
-                const newLoadingState = [...loading, ...files.map(() => true)];
-                setLoading(newLoadingState);
-
-                const newDropImages = files.map((file) => ({
-                  source: "dropbox",
-                  url: file.link.replace("&dl=0", "&dl=1"), // Convert to a direct download URL
-                }));
-
-                // Call handleNewImages ONCE, which already filters duplicates
-                handleNewImages(newDropImages);
-
-                // Remove this duplicate setCombinedImages call!
-                // setCombinedImages((prev) => [...prev, ...filteredImages]); ❌ REMOVE THIS LINE
-
-                // Simulate a loading delay for image display and hide the loader
-                setTimeout(() => {
-                  setLoading((prev) => {
-                    const updatedState = [...prev];
-                    updatedState.splice(-files.length); // Remove the loading states for the images that just loaded
-                    return updatedState;
-                  });
-                }, 2000);
-              }
-            }}
-            cancel={() => {
-              console.log("Dropbox chooser closed");
-              setLoading(false); // Hide spinner if the user cancels the file selection
-            }}
-            multiselect={true}
+            success={handleDropboxFiles}
+            multiselect
           >
-            <Dropbox style={{ width: "40px", height: "100%", pointerEvents: "none" }} />
+            <Dropbox style={{ width: 40, height: "100%", pointerEvents: "none" }} />
           </DropboxChooser>
-
-
         </Box>
         <Box
           sx={{
@@ -454,11 +525,42 @@ const MyUpload = ({
         <br />
         Max file size: 200 MB
       </Typography>
-      {combinedImages?.length > 0 && <Typography variant="caption" display="block" textAlign="start" sx={{ padding: "5px 0px 13px" }}>
+      {uploadingFiles.length > 0 && (
+        <Typography variant="caption" display="block" textAlign="start" sx={{ padding: "5px 0px 13px" }}>
+          Uploading...
+        </Typography>
+      )}
+      <Box sx={{ display: "flex" }}>
+        {uploadingFiles.length > 0 && (
+          <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 2 }}>
+            {uploadingFiles.map((image, index) => (
+              <Box key={image.data_id} sx={{ position: "relative", width: 85, height: 75, mx: "auto" }}>
+                {loadingImages[image.data_id] && (
+                  <Box sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "rgba(255, 255, 255, 0.7)",
+                  }}>
+                    <CircularProgress size={24} />
+                  </Box>
+                )}
+                <ImageComponent image={image} index={index} source={image.source} />
+              </Box>
+            ))}
+          </Box>
+        )}
+      </Box>
+      {myUploadsData?.length > 0 && <Typography variant="caption" display="block" textAlign="start" sx={{ padding: "5px 0px 13px" }}>
         Your uploaded images
       </Typography>}
       <Box sx={{ display: "flex" }}>
-        {combinedImages?.length > 0 && (
+        {myUploadsData?.length > 0 && (
           <Box
             sx={{
               display: "grid",
@@ -466,27 +568,25 @@ const MyUpload = ({
               gap: 2,
             }}
           >
-            {combinedImages.map((image, index) => (
+            {myUploadsData.map((image, index) => (
               <Box key={index} sx={{
-                position: "relative", width: "85px", height: "75px", margin: "auto", "&:hover .hover-container": {
+                position: "relative", width: 85, height: 75, mx: "auto", "&:hover .hover-container": {
                   opacity: 1,
                 },
               }}>
-                <img
-                  src={image.url}
-                  style={{
-                    height: "100%",
-                    width: "100%",
-                    display: "block",
-                    borderRadius: "10px",
-                    opacity: loading[index] ? 0.5 : 1,
-                  }}
-                  alt={image.source}
-                  onClick={() => {
-                    selectImage(index, image.source);
-                  }}
+                {/* {loadingImages[image.data_id] && (
+                  <Box sx={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <CircularProgress size={24} />
+                  </Box>
+                )} */}
+                <ImageComponent
+                  image={image}
+                  index={index}
+                  loadingImages={loadingImages}
+                  selectImage={selectImage}
                 />
-                {loadingImages[image.url] && (
+
+                {/* {loadingImages[image.url] && (
                   <Box
                     sx={{
                       position: "absolute",
@@ -502,7 +602,7 @@ const MyUpload = ({
                   >
                     <CircularProgress size={24} />
                   </Box>
-                )}
+                )} */}
 
                 <Box
                   sx={{
@@ -520,7 +620,7 @@ const MyUpload = ({
                   }}
                   className="hover-container"
                 >
-                  <Button onClick={() => handleDeleteImage(index, image.source)} sx={{ padding: "0px 0px !important", minWidth: "auto" }}>
+                  <Button onClick={() => handleDeleteImage(image.id)} sx={{ padding: "0px 0px !important", minWidth: "auto" }}>
                     <DeleteOutlinedIcon
                       sx={{
                         backgroundColor: "whitesmoke",
@@ -541,11 +641,10 @@ const MyUpload = ({
                 </Box>
               </Box>
             ))}
-
           </Box>
         )}
       </Box>
-      <ul>
+      {/* <ul>
         {selectedFiles.map((file) => (
           <li key={file.id}>
             {file.embedUrl ? (
@@ -564,9 +663,11 @@ const MyUpload = ({
             )}
           </li>
         ))}
-      </ul>
+      </ul> */}
     </>
   );
 };
 
 export default MyUpload;
+
+

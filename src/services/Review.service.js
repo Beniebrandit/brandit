@@ -69,7 +69,6 @@ function LikeDislike(data) {
     });
 }
 function GetReviewById(id) {
-  console.log("id111", id)
   return axios
     .get(apiEndpointFunction.getreviewbyid(id), {
       headers: authHeader(),

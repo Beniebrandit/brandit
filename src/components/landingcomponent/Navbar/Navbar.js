@@ -468,10 +468,10 @@ const Navbar = () => {
                 Email:{" "}
                 <a
                   className="verdana-font"
-                  href="mailto:sales@brandt.net"
+                  href="sales@brandit.net"
                   style={{ color: "white", textDecoration: "none" }}
                 >
-                  sales@brandt.net
+                  sales@brandit.net
                 </a>
               </Typography>
             </Box>

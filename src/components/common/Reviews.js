@@ -119,8 +119,8 @@ const Reviews = ({ productId, hidereviewbtn }) => {
       file: imageObject[0] // Convert array to object
     });
   }, [rating, question, selectedFiles]);
-  console.log("payload", payload);
-  console.log("selectedFiles", selectedFiles);
+  // console.log("payload", payload);
+  // console.log("selectedFiles", selectedFiles);
 
   const getallReview = async () => {
     try {
@@ -230,7 +230,7 @@ const Reviews = ({ productId, hidereviewbtn }) => {
   // };
 
   const handleLikeDislike = async (review_id, type) => {
-    console.log("review_id", review_id);
+    // console.log("review_id", review_id);
 
     if (!userId) {
       toast.warning("Please login to react to reviews.");
@@ -428,6 +428,8 @@ const Reviews = ({ productId, hidereviewbtn }) => {
                         borderRadius: "8px",
                         overflow: "hidden",
                         boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                        paddingLeft: "0px !important",
+                        paddingTop: "0px !important",
                         transition: "transform 0.3s ease, box-shadow 0.3s ease",
                         "&:hover": {
                           transform: "scale(1.05)",
@@ -669,11 +671,11 @@ const Reviews = ({ productId, hidereviewbtn }) => {
                           >
                             Was this helpful?
                           </Typography>
-                          <Button onClick={() => handleLikeDislike(item.id, "like")}>
+                          <Button sx={{ color: "black" }} onClick={() => handleLikeDislike(item.id, "like")}>
                             <ThumbUpIcon sx={{ color: item.likes_count >= 1 ? "#f2d388" : "black" }} />
                             &nbsp;{item.likes_count}
                           </Button>
-                          <Button onClick={() => handleLikeDislike(item.id, "dislike")}>
+                          <Button sx={{ color: "black" }} onClick={() => handleLikeDislike(item.id, "dislike")}>
                             <ThumbDownAltIcon sx={{ color: item.dislikes_count >= 1 ? "#f2d388" : "black" }} />
                             &nbsp;{item.dislikes_count}
                           </Button>

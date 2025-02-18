@@ -82,6 +82,8 @@ const Sidebar = ({
   setgetId,
   storedPayload,
   premiumimg,
+  setAllImages,
+  AddImage,
 }) => {
   const [open, setOpen] = React.useState(false);
   const [delopen, setDelOpen] = React.useState(false);
@@ -147,14 +149,16 @@ const Sidebar = ({
     setSelectedSource(source);
 
     if (source === "upload") {
-      image = combinedImages[index].url;
+      image = process.env.REACT_APP_API_BASE_URL + combinedImages[index]?.image.path;
     } else if (source == "premium") {
       // console.log("indexSorce", source);
       image = url;
       setDialogContext({ item, index, source });
       // image = `${process.env.REACT_APP_API_BASE_URL}/${vectorimage[index]}`;
     } else if (source === "dropbox") {
-      image = combinedImages[index].url;
+      image = combinedImages[index]?.url;
+    } else if (source === "drive") {
+      image = process.env.REACT_APP_API_BASE_URL + combinedImages[index]?.image.path;
     }
     setExpandImage(image);
     setExpandedImageIndex(index);
@@ -462,6 +466,7 @@ const Sidebar = ({
                     productDetails={productDetails}
                     setgetId={setgetId}
                     storedPayload={storedPayload}
+                    AddImage={AddImage}
                   />
                 </TabPanel>
                 <TabPanel value={value} index={1} style={{ width: "auto", maxWidth: "20rem" }}>
@@ -473,6 +478,7 @@ const Sidebar = ({
                     selectImage={selectImage}
                     handleExpand={handleExpand}
                     dropdata={dropdata}
+                    setAllImages={setAllImages}
                   />
                 </TabPanel>
                 <TabPanel value={value} index={2} style={{ maxWidth: "21rem", padding: "0px" }}>
@@ -576,9 +582,9 @@ const Sidebar = ({
             onClick={() => {
               if (expandedImageIndex !== null) {
                 // Check if value is 1 for "upload" or a different condition for "dropbox"
-                if (value === 1) {
+                if (combinedImages[expandedImageIndex].source === "upload") {
                   selectImage(expandedImageIndex, "upload");
-                } else if (value === 1 && dropdata[expandedImageIndex]) {
+                } else if (combinedImages[expandedImageIndex].source === "dropbox") {
                   selectImage(expandedImageIndex, "dropbox");
                 } else {
                   if (dialogContext.item) {
