@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button } from "@mui/material";
+import { Box, Button, useMediaQuery } from "@mui/material";
 import Prevpaginateicon from "../../asset/images/Prev_paginate_icon.svg";
 import Nextpaginateicon from "../../asset/images/Next_paginate_icon.svg";
 
@@ -7,10 +7,13 @@ const CustomPagination = ({
   totalItems = 0,
   itemsPerPage = 6,
   onPageChange,
-  maxPagesToShow = 5, // Default to showing 5 pages
+  maxPagesToShow = { xs: 2, sm: 3 },
 }) => {
   const pageCount = Math.max(1, Math.ceil(totalItems / itemsPerPage));
   const [currentPage, setCurrentPage] = useState(1);
+
+  const isSmallScreen = useMediaQuery("(max-width:600px)");
+  const pagesToShow = isSmallScreen ? maxPagesToShow.xs : maxPagesToShow.sm;
 
   const handlePageClick = (page) => {
     setCurrentPage(page);
@@ -31,12 +34,12 @@ const CustomPagination = ({
 
   const getPageNumbers = () => {
     const pages = [];
-    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
-    let endPage = startPage + maxPagesToShow - 1;
+    let startPage = Math.max(1, currentPage - Math.floor(pagesToShow / 2));
+    let endPage = startPage + pagesToShow - 1;
 
     if (endPage > pageCount) {
       endPage = pageCount;
-      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+      startPage = Math.max(1, endPage - pagesToShow + 1);
     }
 
     for (let i = startPage; i <= endPage; i++) {

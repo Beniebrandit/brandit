@@ -16,7 +16,7 @@ import { ProductService } from "../../../services/Product.service";
 import FormControl from "@mui/material/FormControl";
 import { Circles } from "react-loader-spinner";
 
-const Config = ({ allproduct, alldata, setProductDetails, productDetails, setgetId, storedPayload }) => {
+const Config = ({ allproduct, alldata, setProductDetails, productDetails, setgetId, storedPayload, AddImage }) => {
   const [loader, setLoader] = useState();
   const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedCard, setSelectedCard] = useState({});
@@ -94,9 +94,9 @@ const Config = ({ allproduct, alldata, setProductDetails, productDetails, setget
 
       setProductDetails(updatedProductDetails);
       setSelectedSubCatId(initialSubCatIds || []);
-
+      AddImage(process.env.REACT_APP_API_BASE_URL + selectedProduct?.images?.[0].path);
       // Update localStorage immediately
-      // console.log("selectedProduct.id", selectedProduct.id);
+      // console.log("selectedProduct", selectedProduct);
       localStorage.setItem(
         "productDetails",
         JSON.stringify({
